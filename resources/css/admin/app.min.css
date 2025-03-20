@@ -7231,24 +7231,6 @@ button {
     position: relative
 }
 
-.table .sort::before {
-    content: "\f035d";
-    position: absolute;
-    right: .5rem;
-    top: 18px;
-    font-size: .8rem;
-    font-family: "Material Design Icons"
-}
-
-.table .sort::after {
-    position: absolute;
-    right: .5rem;
-    content: "\f0360";
-    font-family: "Material Design Icons";
-    font-size: .8rem;
-    top: 12px
-}
-
 .modal-title {
     font-weight: 600
 }

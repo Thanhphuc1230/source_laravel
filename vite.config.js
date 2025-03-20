@@ -11,7 +11,7 @@ export default defineConfig({
                 'resources/css/admin/app.min.css',
                 'resources/css/admin/custom.min.css',
                 'resources/js/lord-icon-2.1.0.js',
-
+                'resources/css/admin/custom-fixes.css',
                 // admin js
                 'resources/js/admin/layout.js',
                 'resources/js/admin/plugins.js',
