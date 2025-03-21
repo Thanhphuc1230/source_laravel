@@ -23,6 +23,7 @@ cd source_laravel_10
 3. **Install Dependencies**
 ```bash
 composer install
+npm install
 ```
 
 4. **Create and Configure Environment File**
