@@ -32,6 +32,30 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.analytics.index') }}">
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-widgets">Thống kê</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.page.index') }}">
+                        <i class="ri-dashboard-2-line"></i> <span data-key="t-widgets">Trang nội dung</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarApps">
+                        <i class="ri-honour-line"></i></i> <span data-key="t-layouts">Giao diện</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarLayouts">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.menu.index') }}" class="nav-link" data-key="t-calendar">Menu
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarProduct" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarProduct">
                         <i class="ri-layout-grid-line"></i> <span data-key="t-tables">Sản phẩm</span>
