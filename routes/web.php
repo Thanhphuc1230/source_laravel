@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\AnalyticController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\SystemController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
 
@@ -122,6 +123,15 @@ Route::prefix('admin')
                 Route::post('/update/{uuid}', 'update')->name('update');
                 Route::get('/destroy/{uuid}', 'destroy')->name('destroy');
             });
+         // Quản lý hệ thống
+         Route::controller(SystemController::class)
+         ->prefix('system')
+         ->name('system.')
+         ->group(function () {
+             Route::get('/', 'index')->name('index');
+             Route::post('/store', 'store')->name('store');
+             Route::post('/update/{id}', 'update')->name('update');
+         });
     });
 
 Route::get('/test-hello', function () {
