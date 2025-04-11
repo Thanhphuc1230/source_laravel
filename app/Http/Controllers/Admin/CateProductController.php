@@ -13,8 +13,7 @@ use App\Services\DataRemovalService;
 
 class CateProductController extends BaseController
 {   
-    protected $imageService;
-    protected $dataRemovalService;
+    protected $imageService, $dataRemovalService;
 
     public function __construct(ImageService $imageService, DataRemovalService $dataRemovalService)
     {

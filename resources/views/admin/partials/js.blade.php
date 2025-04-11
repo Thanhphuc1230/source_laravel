@@ -1,21 +1,16 @@
 <!-- JAVASCRIPT -->
-@vite(['resources/js/admin/bootstrap/js/bootstrap.bundle.min.js'])
-@vite(['resources/js/admin/simplebar/simplebar.min.js'])
-@vite(['resources/js/admin/node-waves/waves.min.js'])
-@vite(['resources/js/admin/feather-icons/feather.min.js'])
-@vite(['resources/js/admin/list.js/list.min.js'])
-@vite(['resources/js/admin/list.pagination.js/list.pagination.min.js'])
+<script src="{{ asset('admin/libs/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{ asset('admin/libs/simplebar/simplebar.min.js')}}"></script>
+<script src="{{ asset('admin/libs/node-waves/waves.min.js')}}"></script>
+<script src="{{ asset('admin/libs/feather-icons/feather.min.js')}}"></script>
+<script src="{{ asset('admin/js/pages/plugins/lord-icon-2.1.0.js')}}"></script>
+<script src="{{ asset('admin/js/plugins.js')}}"></script>
+
 <!-- prismjs plugin -->
-@vite(['resources/js/admin/prismjs/prism.js'])
-@vite(['resources/js/admin/lord-icon-2.1.0.js'])
-
-
-<!-- listjs init -->
-@vite(['resources/js/admin/listjs.init.js'])
+<script src="{{ asset('admin/libs/prismjs/prism.js')}}"></script>
 
 <!-- App js -->
-@vite(['resources/js/admin/app.js'])
-@vite(['resources/js/admin/plugins.js'])
+<script src="{{ asset('admin/js/app.js')}}"></script>
 
 <!-- Thêm hàm preview image -->
 <script>
@@ -41,5 +36,4 @@
 </script>
 
 <!-- Stack cho script từ các trang con -->
-@stack('scripts')
 

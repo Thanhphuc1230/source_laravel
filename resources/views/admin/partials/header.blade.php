@@ -6,22 +6,22 @@
                 <div class="navbar-brand-box horizontal-logo">
                     <a href="index.html" class="logo logo-dark">
                         <span class="logo-sm">
-                            <img src="{{ Vite::asset('resources/images/admin/logo-sm.png') }}" alt=""
+                            <img src="{{ asset('admin/images/logo-sm.png') }}" alt=""
                                 height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ Vite::asset('resources/images/admin/logo-dark.png') }}" alt=""
+                            <img src="{{ asset('admin/images/logo-dark.png') }}" alt=""
                                 height="17">
                         </span>
                     </a>
 
                     <a href="index.html" class="logo logo-light">
                         <span class="logo-sm">
-                            <img src="{{ Vite::asset('resources/images/admin/logo-sm.png') }}" alt=""
+                            <img src="{{ asset('admin/images/logo-sm.png') }}" alt=""
                                 height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="{{ Vite::asset('resources/images/admin/logo-light.png') }}" alt=""
+                            <img src="{{ asset('admin/images/logo-light.png') }}" alt=""
                                 height="17">
                         </span>
                     </a>
@@ -90,7 +90,7 @@
                                 <!-- item -->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
-                                        <img src="{{ Vite::asset('resources/images/admin/users/avatar-2.jpg ') }}"
+                                        <img src="{{ asset('admin/images/users/avatar-2.jpg ') }}"
                                             class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                         <div class="flex-grow-1">
                                             <h6 class="m-0">Angela Bernier</h6>
@@ -101,7 +101,7 @@
                                 <!-- item -->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
-                                        <img src="{{ Vite::asset('resources/images/admin/users/avatar-3.jpg ') }}"
+                                        <img src="{{ asset('admin/images/users/avatar-3.jpg ') }}"
                                             class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                         <div class="flex-grow-1">
                                             <h6 class="m-0">David Grasso</h6>
@@ -112,7 +112,7 @@
                                 <!-- item -->
                                 <a href="javascript:void(0);" class="dropdown-item notify-item py-2">
                                     <div class="d-flex">
-                                        <img src="{{ Vite::asset('resources/images/admin/users/avatar-5.jpg ') }}"
+                                        <img src="{{ asset('admin/images/users/avatar-5.jpg ') }}"
                                             class="me-3 rounded-circle avatar-xs" alt="user-pic">
                                         <div class="flex-grow-1">
                                             <h6 class="m-0">Mike Bunch</h6>
@@ -138,7 +138,7 @@
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             <img class="rounded-circle header-profile-user"
-                                src="{{ Vite::asset('resources/images/admin/users/avatar-1.jpg ') }}" alt="Header Avatar">
+                                src="{{ asset('resources/images/users/avatar-1.jpg ') }}" alt="Header Avatar">
                             <span class="text-start ms-xl-2">
                                 <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">Anna
                                     Adame</span>

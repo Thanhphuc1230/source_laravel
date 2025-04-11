@@ -33,27 +33,17 @@
             <ul class="navbar-nav" id="navbar-nav">
 
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarTables" data-bs-toggle="collapse"
-                        role="button" aria-expanded="false" aria-controls="sidebarTables">
-                        <i class="ri-layout-grid-line"></i> <span data-key="t-tables">Tables</span>
+                    <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarAuth">
+                        <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Sản phẩm</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarTables">
+                    <div class="collapse menu-dropdown" id="sidebarAuth">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="tables-basic.html" class="nav-link"
-                                    data-key="t-basic-tables">Basic Tables</a>
+                                <a href="{{ route('admin.cate_product.index') }}" class="nav-link">Chủ đề</a>
                             </li>
                             <li class="nav-item">
-                                <a href="tables-gridjs.html" class="nav-link" data-key="t-grid-js">Grid
-                                    Js</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="tables-listjs.html" class="nav-link" data-key="t-list-js">List
-                                    Js</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="tables-datatables.html" class="nav-link"
-                                    data-key="t-datatables">Datatables</a>
+                                <a href="{{ route('admin.product.index') }}" class="nav-link">Bài viết</a>
                             </li>
                         </ul>
                     </div>

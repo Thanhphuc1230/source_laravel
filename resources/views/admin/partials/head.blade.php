@@ -1,16 +1,22 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>Listjs | Velzon - Admin & Dashboard Template</title>
+    <title>@yield('module') | @yield('action')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
-    <!-- App favicon -->
-    <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <meta content="Admin" name="description" />
+    <meta content="Admin" name="author" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {{-- css --}}
-    @vite(['resources/css/admin/admin.css'])
-    {{-- js --}}
-    @vite(['resources/js/admin/layout.js'])
-    <script src="https://cdn.lordicon.com/libs/mssddfmo/lord-icon-2.1.0.js"></script>
+    <!-- Layout config Js -->
+    <script src="{{asset('admin/js/layout.js')}}"></script>
+    <!-- Bootstrap Css -->
+    <link href="{{asset('admin/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{{asset('admin/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{{asset('admin/css/app.min.css')}}" rel="stylesheet" type="text/css" />
+    <!-- custom Css-->
+    <link href="{{asset('admin/css/custom.min.css')}}" rel="stylesheet" type="text/css" />
+    {{-- ckeditor --}}
+    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
 </head>

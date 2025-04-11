@@ -137,4 +137,40 @@ class ImageService
         
         return $prefix ? $prefix . '-' . $fileName : $fileName;
     }
+
+    // xử lý hình ảnh chi tiết
+    public function handleDetailImages($request, $imageFolder)
+    {
+        $files = [];
+        if ($request->hasFile('image_detail')) {
+            foreach ($request->file('image_detail') as $file) {
+                $name = time() . rand(1, 100) . '.' . $file->extension();
+                $file->move(public_path('images/' . $imageFolder), $name);
+                $files[] = $name;
+            }
+        }
+        return json_encode($files); // Return JSON encoded array of image names
+    }
+
+    // xử lý hình ảnh chi tiết lúc update
+    public function updateDetailImages($request, $current, $imageFolder)
+    {
+        $existingImages = json_decode($current->image_detail, true) ?: [];
+        $newImages = [];
+
+        // Handle new uploaded images
+        if ($request->hasFile('image_detail')) {
+            foreach ($request->file('image_detail') as $file) {
+                $name = time() . rand(1, 100) . '.' . $file->extension();
+                $file->move(public_path('images/' . $imageFolder), $name);
+                $newImages[] = $name; // Thêm hình ảnh mới vào mảng
+            }
+        }
+
+        // Kết hợp hình ảnh cũ và hình ảnh mới
+        $allImages = array_merge($existingImages, $newImages);
+
+        // Trả về tất cả hình ảnh đã giữ lại và hình ảnh mới
+        return json_encode($allImages); // Cập nhật để trả về mảng hình ảnh
+    }
 } 

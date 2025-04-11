@@ -1,0 +1,16 @@
+/* Tùy chỉnh chiều cao của CKEditor */
+.ck-editor__editable {
+    min-height: 300px;
+}
+
+/* Tùy chỉnh màu sắc */
+.ck.ck-editor__main > .ck-editor__editable {
+    background-color: #fff;
+    color: #333;
+}
+
+/* Tùy chỉnh toolbar */
+.ck.ck-toolbar {
+    background-color: #f8f9fa;
+    border-color: #ddd;
+}
