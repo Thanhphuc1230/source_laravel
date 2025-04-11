@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 // admin
 use App\Http\Controllers\Admin\CateProductController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CateNewController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
 
@@ -51,6 +52,21 @@ Route::prefix('admin')
                 Route::post('/destroyAll', 'destroyAll')->name('destroyAll');
                 Route::post('/update-stt/{uuid}', 'numericalOrder')->name('numericalOrder');
                 Route::delete('/{uuid}/delete-image/{index}', 'deleteImage')->name('deleteImage');
+            });
+        //Category News
+        Route::controller(CateNewController::class)
+            ->prefix('cate_new')
+            ->name('cate_new.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/create', 'create')->name('create');
+                Route::post('/status/{uuid}/{status}/{field}', 'status')->name('status');
+                Route::post('/store', 'store')->name('store');
+                Route::get('/edit/{uuid}/{page}', 'edit')->name('edit');
+                Route::post('/update/{uuid}', 'update')->name('update');
+                Route::get('/destroy/{uuid}', 'destroy')->name('destroy');
+                Route::post('/destroyAll', 'destroyAll')->name('destroyAll');
+                Route::post('/update-stt/{uuid}', 'numericalOrder')->name('numericalOrder');
             });
     });
 
