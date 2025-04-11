@@ -18,7 +18,7 @@ class CateProductController extends BaseController
     public function __construct(ImageService $imageService, DataRemovalService $dataRemovalService)
     {
         $this->model = new CateProduct();
-        $this->nameItem = 'Chủ đề sản phẩm';
+        $this->nameItem = 'danh mục sản phẩm';
         $this->imageFolder = 'cate_product';
 
         parent::__construct($this->imageFolder);

@@ -23,12 +23,22 @@
                                     @endif
                                     <div class="row">
                                         <div class="mb-3">
-                                            <label class="form-label" for="product-title-input">Tiêu đề
+                                            <label class="form-label" for="product-title-input">Tiêu đề VN
                                             </label>
                                             <input type="text" id="name_vn" class="form-control @error('name_vn') is-invalid @enderror" name="name_vn"
                                                 value="{{ old('name_vn', $page->name_vn ?? '') }}"
                                                 placeholder="Enter your title page ">
                                             @error('name_vn')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="product-title-input">Tiêu đề EN
+                                            </label>
+                                            <input type="text" class="form-control @error('name_en') is-invalid @enderror" name="name_en"
+                                                value="{{ old('name_en', $page->name_en ?? '') }}"
+                                                placeholder="Enter your title page ">
+                                            @error('name_en')
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -78,20 +88,20 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Hình ảnh</label>
-                                                <input type="file" id="fileInput" name="avatar" class="form-control @error('avatar') is-invalid @enderror">
+                                                <input type="file" id="fileInput" name="image" class="form-control @error('image') is-invalid @enderror">
                                                 <div id="imageContainer"></div>
-                                                @error('avatar')
+                                                @error('image')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
 
-                                        @if (!empty($page->avatar))
+                                        @if (!empty($page->image))
                                             <div class="col-md-6">
                                                 <div class="mb-3" style="display:flex;flex-direction: column;">
                                                     <label for="firstNameinput" class="form-label">Hình ảnh hiện
                                                         tại</label>
-                                                    <img src="{{ asset('images/' . $imageFolder . '/' . $page->avatar) }}"
+                                                    <img src="{{ asset('images/' . $imageFolder . '/' . $page->image) }}"
                                                         alt="" width="200px" height="auto">
                                                 </div>
                                             </div>

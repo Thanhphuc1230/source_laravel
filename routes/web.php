@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CateProductController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CateNewController;
+use App\Http\Controllers\Admin\NewsController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
 
@@ -68,11 +69,26 @@ Route::prefix('admin')
                 Route::post('/destroyAll', 'destroyAll')->name('destroyAll');
                 Route::post('/update-stt/{uuid}', 'numericalOrder')->name('numericalOrder');
             });
+        //News
+        Route::controller(NewsController::class)
+            ->prefix('news')
+            ->name('news.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/create', 'create')->name('create');
+                Route::post('/status/{uuid}/{status}/{field}', 'status')->name('status');
+                Route::post('/store', 'store')->name('store');
+                Route::get('/edit/{uuid}/{page}', 'edit')->name('edit');
+                Route::post('/update/{uuid}', 'update')->name('update');
+                Route::get('/destroy/{uuid}', 'destroy')->name('destroy');
+                Route::post('/destroyAll', 'destroyAll')->name('destroyAll');
+                Route::post('/update-stt/{uuid}', 'numericalOrder')->name('numericalOrder');
+            });
     });
 
-    Route::get('/test-hello', function() {
-        return '<h1>Hello Test</h1>';
-    });
+Route::get('/test-hello', function () {
+    return '<h1>Hello Test</h1>';
+});
 
 // frontend
 Route::name('web.')->group(function () {

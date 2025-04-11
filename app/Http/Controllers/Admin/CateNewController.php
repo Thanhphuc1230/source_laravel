@@ -15,7 +15,7 @@ class CateNewController extends BaseController
     public function __construct($imageFolder = 'cate_new')
     {
         $this->model = new CateNew();
-        $this->nameItem = 'Chủ đề tin tức';
+        $this->nameItem = 'danh mục tin tức';
         $this->imageFolder = $imageFolder;
 
         parent::__construct($imageFolder);

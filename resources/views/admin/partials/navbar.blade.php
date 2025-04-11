@@ -31,19 +31,35 @@
             <div id="two-column-menu">
             </div>
             <ul class="navbar-nav" id="navbar-nav">
-
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarAuth" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarAuth">
-                        <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Sản phẩm</span>
+                    <a class="nav-link menu-link" href="#sidebarProduct" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarProduct">
+                        <i class="ri-layout-grid-line"></i> <span data-key="t-tables">Sản phẩm</span>
                     </a>
-                    <div class="collapse menu-dropdown" id="sidebarAuth">
+                    <div class="collapse menu-dropdown" id="sidebarProduct">
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
-                                <a href="{{ route('admin.cate_product.index') }}" class="nav-link">Chủ đề</a>
+                                <a href="{{ route('admin.cate_product.index') }}" class="nav-link"
+                                    data-key="t-basic-tables">Danh mục </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('admin.product.index') }}" class="nav-link">Bài viết</a>
+                                <a href="{{ route('admin.product.index') }}" class="nav-link" data-key="t-grid-js">Bài viết</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarNews">
+                        <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Tin tức</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarNews">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.cate_new.index') }}" class="nav-link">Chủ đề</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.news.index') }}" class="nav-link">Bài viết</a>
                             </li>
                         </ul>
                     </div>

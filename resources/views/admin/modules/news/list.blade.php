@@ -33,21 +33,6 @@
                                                 <form action="{{ route('admin.' . $nameClass . '.index') }}" method="get"
                                                     style="display: flex">
                                                     @csrf
-                                                    <select class="form-select mb-3" name="category">
-                                                        <option value="0" selected>Chọn chủ đề </option>
-                                                        @foreach ($category as $item)
-                                                            <option value="{{ $item->id_category_new }}">
-                                                                {{ $item->name_vn }}
-                                                            </option>
-                                                            @if ($item->children)
-                                                                @foreach ($item->children as $child)
-                                                                    <option value="{{ $child->id_category_new }}">
-                                                                        |---{{ $child->name_vn }}
-                                                                    </option>
-                                                                @endforeach
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
                                                     <input type="text" class="form-control search" name="search"
                                                         placeholder="Search..." style="height: 37.5px">
                                                     <button type="submit"
@@ -68,7 +53,6 @@
                                                 <th class="sort">Ảnh</th>
                                                 <th class="sort">Tiêu đề</th>
                                                 <th class="sort">Hiển thị</th>
-                                                <th class="sort">Trang chủ</th>
                                                 <th class="sort">STT</th>
                                                 <th class="sort">Ngày cập nhật</th>
                                                 <th class="sort">Hành động</th>
@@ -101,17 +85,6 @@
                                                                         {{ $item->status == 1 ? 'checked' : '' }}>
                                                                 </div>
                                                             </td>
-                                                            <td class="home">
-                                                                <div
-                                                                    class="form-check form-switch form-switch-success mb-3">
-                                                                    <input class="form-check-input status-checkbox"
-                                                                        type="checkbox" role="switch"
-                                                                        value="{{ $item->home }}"
-                                                                        data-uuid="{{ $item->uuid }}" data-name="home"
-                                                                        data-status="{{ $item->home }}"
-                                                                        {{ $item->home == 1 ? 'checked' : '' }}>
-                                                                </div>
-                                                            </td>
                                                             <td>
                                                                 <input type="number" class="form-control stt-input"
                                                                     value="{{ $item->stt }}"
@@ -120,8 +93,6 @@
                                                             </td>
                                                             <td class="date">
                                                                 {{ $item->updated_at ? $item->updated_at->format('d-m-Y') : $item->created_at->format('d-m-Y') }}
-                                                            </td>
-
                                                             </td>
                                                             <td>
                                                                 <div class="d-flex gap-2">
