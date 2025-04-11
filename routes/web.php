@@ -9,19 +9,19 @@ use App\Http\Controllers\Admin\NewsController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+// auth
+use App\Http\Controllers\Auth\LoginController;
+
+
+// login admin
+Route::controller(LoginController::class)->group(function () {
+    Route::get('/admintv', 'getLogin')->name('getLogin');
+    Route::get('/admintv_logout', 'logout')->name('logout');
+    Route::post('/admintv_post_login', 'postLogin')->name('postLogin');
+});
 
 Route::prefix('admin')
-    ->name('admin.')
+    ->name('admin.')->middleware('checkAuth')
     ->group(function () {
         //Category Product
         Route::controller(CateProductController::class)
