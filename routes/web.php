@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CateProductController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CateNewController;
 use App\Http\Controllers\Admin\NewsController;
+use App\Http\Controllers\Admin\AnalyticController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
 
@@ -23,6 +24,13 @@ Route::controller(LoginController::class)->group(function () {
 Route::prefix('admin')
     ->name('admin.')->middleware('checkAuth')
     ->group(function () {
+        // Analytics
+        Route::controller(AnalyticController::class)
+            ->prefix('analytics')
+            ->name('analytics.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+            });
         //Category Product
         Route::controller(CateProductController::class)
             ->prefix('cate_product')
@@ -91,6 +99,6 @@ Route::get('/test-hello', function () {
 });
 
 // frontend
-Route::name('web.')->group(function () {
+Route::name('web.')->middleware(['web', 'visit'])->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
 });
