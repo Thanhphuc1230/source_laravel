@@ -23,6 +23,10 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('/admintv_post_login', 'postLogin')->name('postLogin');
 });
 
+Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
+
 Route::prefix('admin')
     ->name('admin.')
     ->middleware('checkAuth')
