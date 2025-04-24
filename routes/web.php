@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AnalyticController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\SystemController;
+use App\Http\Controllers\Admin\SliderController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
 
@@ -114,6 +115,21 @@ Route::prefix('admin')
                 Route::post('/destroyAll', 'destroyAll')->name('destroyAll');
                 Route::post('/update-stt/{uuid}', 'numericalOrder')->name('numericalOrder');
             });
+        //Page
+        Route::controller(SliderController::class)
+            ->prefix('slider')
+            ->name('slider.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/create', 'create')->name('create');
+                Route::post('/status/{uuid}/{status}/{field}', 'status')->name('status');
+                Route::post('/store', 'store')->name('store');
+                Route::get('/edit/{uuid}/{page}', 'edit')->name('edit');
+                Route::post('/update/{uuid}', 'update')->name('update');
+                Route::get('/destroy/{uuid}', 'destroy')->name('destroy');
+                Route::post('/destroyAll', 'destroyAll')->name('destroyAll');
+                Route::post('/update-stt/{uuid}', 'numericalOrder')->name('numericalOrder');
+            });
         //menu
         Route::controller(MenuController::class)
             ->prefix('menu')
@@ -127,15 +143,15 @@ Route::prefix('admin')
                 Route::post('/update/{uuid}', 'update')->name('update');
                 Route::get('/destroy/{uuid}', 'destroy')->name('destroy');
             });
-         // Quản lý hệ thống
-         Route::controller(SystemController::class)
-         ->prefix('system')
-         ->name('system.')
-         ->group(function () {
-             Route::get('/', 'index')->name('index');
-             Route::post('/store', 'store')->name('store');
-             Route::post('/update/{id}', 'update')->name('update');
-         });
+        // Quản lý hệ thống
+        Route::controller(SystemController::class)
+            ->prefix('system')
+            ->name('system.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::post('/store', 'store')->name('store');
+                Route::post('/update/{id}', 'update')->name('update');
+            });
     });
 
 Route::get('/test-hello', function () {
