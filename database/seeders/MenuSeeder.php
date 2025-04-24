@@ -74,6 +74,6 @@ class MenuSeeder extends Seeder
             ],
         ];
         
-        DB::table('tp_menu')->insert($menus);
+        DB::table('tp_menus')->insert($menus);
     }
 }

@@ -26,6 +26,7 @@ class User extends Authenticatable
         'level',
         'avatar',
         'status',
+        'email_verified_at',
     ];
 
     /**

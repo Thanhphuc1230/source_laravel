@@ -42,6 +42,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.slider.index') }}">
+                        <i class="ri-pages-line"></i> <span data-key="t-widgets">Slider</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-honour-line"></i></i> <span data-key="t-layouts">Giao diện</span>
