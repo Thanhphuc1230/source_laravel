@@ -28,6 +28,17 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
 
+Route::group(['middleware' => 'web'], function () {
+    Route::get('lang/{locale}', function ($locale = 'vn') {
+        // Set default to 'vn'
+        if (!in_array($locale, ['en', 'vn'])) {
+            abort(404);
+        }
+        session()->put('locale', $locale);
+        return redirect()->back();
+    })->name('lang');
+});
+
 // frontend
 Route::name('web.')
     ->middleware(['web', 'visit'])
