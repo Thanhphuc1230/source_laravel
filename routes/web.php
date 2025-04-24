@@ -28,6 +28,41 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
 
+// frontend
+Route::name('web.')
+    ->middleware(['web', 'visit'])
+    ->group(function () {
+        Route::get('/', [HomeController::class, 'home'])->name('home');
+        // contact
+        Route::get('/lien-he.html', [Contact::class, 'contact'])->name('contact');
+        Route::post('/gui-yeu-cau-lien-he', [Contact::class, 'postContact'])->name('postContact');
+        // subscribe
+        Route::post('/subscribe', [Contact::class, 'postSubscribe'])->name('postSubscribe');
+        // cart
+        Route::get('/cart', [CartController::class, 'index'])->name('cart');
+        Route::get('/add-to-cart/{uuid}/{quantity?}', [CartController::class, 'addToCart'])->name('addToCart');
+        Route::post('/update-cart', [CartController::class, 'updateCart'])->name('updateCart');
+        // checkout
+        Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+        Route::post('/checkout-store', [CheckoutController::class, 'checkoutStore'])->name('checkoutStore');
+        route::get('/order-success', [CheckoutController::class, 'orderSuccess'])->name('orderSuccess');
+        // page
+        Route::get('/page/{slug_page}.html', [Page::class, 'page'])->name('page');
+        //Category Product
+        Route::get('category/{slug_cate_product}.html', [Product::class, 'categoryProduct'])->name('categoryProduct');
+
+        //Category News
+        Route::get('news/{slug_cate_new}.html', [News::class, 'categoryNews'])->name('categoryNews');
+        // detail news
+        Route::get('news/{slug_cate_new}/{slug_news}.html', [News::class, 'detailNews'])->name('detailNews');
+        // product
+        Route::get('{slug_product}-{id_product}.html', function ($slug_product, $id_product) {
+            return app(Product::class)->detailProduct($slug_product, $id_product);
+        })
+            ->where('slug_product', '.*')
+            ->name('detailProduct');
+    });
+
 Route::prefix('admin')
     ->name('admin.')
     ->middleware('checkAuth')
