@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Exception;
+use Intervention\Image\Facades\Image;
 
 class ImageService
 {
@@ -16,6 +17,9 @@ class ImageService
      * @param string $imageFolder Tên thư mục lưu ảnh
      * @param string $fieldName Tên field chứa ảnh trong request
      * @param array $options Các tùy chọn thêm
+     *      - mimeTypes: array - Các định dạng cho phép
+     *      - convertToWebp: bool - Có chuyển sang WebP không
+     *      - quality: int - Chất lượng ảnh WebP (1-100)
      * @return string|null Tên file ảnh đã lưu hoặc null nếu không có ảnh
      * @throws \Exception
      */
@@ -24,7 +28,6 @@ class ImageService
         if (!$request->hasFile($fieldName)) {
             return null;
         }
-
         try {
             $file = $request->file($fieldName);
             
@@ -38,14 +41,17 @@ class ImageService
             
             // Đảm bảo thư mục tồn tại
             $this->ensureDirectoryExists($imageFolder);
-            
-            // Lưu file
-            $file->move(public_path("images/{$imageFolder}"), $fileName);
+
+            // Xử lý chuyển đổi WebP nếu được yêu cầu
+            if (isset($options['convertToWebp']) && $options['convertToWebp']) {
+                return $this->handleWebpConversion($file, $imageFolder, $fileName, $options);
+            } else {
+                // Lưu file gốc nếu không chuyển WebP
+                $file->move(public_path("images/{$imageFolder}"), $fileName);
+            }
             
             return $fileName;
         } catch (Exception $e) {
-            // Log lỗi nếu cần
-            \Log::error("Lỗi lưu file: " . $e->getMessage());
             throw $e;
         }
     }
@@ -74,7 +80,6 @@ class ImageService
             // Lưu file mới
             return $this->saveImage($request, $imageFolder, $fieldName, $options);
         } catch (Exception $e) {
-            \Log::error("Lỗi cập nhật file: " . $e->getMessage());
             throw $e;
         }
     }
@@ -138,32 +143,150 @@ class ImageService
         return $prefix ? $prefix . '-' . $fileName : $fileName;
     }
 
+    /**
+     * Chuyển đổi ảnh sang định dạng WebP
+     * 
+     * @param string $sourcePath Đường dẫn file nguồn
+     * @param string $targetPath Đường dẫn file đích (webp)
+     * @param int $quality Chất lượng ảnh (1-100)
+     * @return bool
+     */
+    public function convertToWebp(string $sourcePath, string $targetPath, int $quality = 80): bool
+    {
+        try {
+            // Kiểm tra file nguồn
+            if (!file_exists($sourcePath)) {
+                throw new Exception("File nguồn không tồn tại: {$sourcePath}");
+            }
+
+            // Kiểm tra và tạo thư mục đích
+            $targetDir = dirname($targetPath);
+            if (!File::exists($targetDir)) {
+                File::makeDirectory($targetDir, 0755, true);
+            }
+
+            // Kiểm tra quyền ghi
+            if (!is_writable($targetDir)) {
+                throw new Exception("Không có quyền ghi vào thư mục: {$targetDir}");
+            }
+
+            // Tải và xử lý ảnh
+            $image = Image::make($sourcePath);
+            
+            // Kiểm tra xem ảnh có được tải thành công không
+            if (!$image) {
+                throw new Exception("Không thể tải ảnh từ nguồn");
+            }
+
+            // Encode sang WebP
+            $result = $image->encode('webp', $quality);
+            
+            // Lưu file
+            $result->save($targetPath);
+
+            // Kiểm tra file đã được tạo
+            if (!file_exists($targetPath)) {
+                throw new Exception("File WebP không được tạo thành công");
+            }
+
+            return true;
+
+        } catch (Exception $e) {
+            // Thử lưu file gốc nếu không chuyển được WebP
+            try {
+                if (copy($sourcePath, str_replace('.webp', '.jpg', $targetPath))) {
+                    return true;
+                }
+            } catch (Exception $copyError) {
+                return false;
+            }
+            
+            return false;
+        }
+    }
+
+    /**
+     * Xử lý chuyển đổi và lưu ảnh dạng WebP
+     * 
+     * @param UploadedFile $file File ảnh gốc
+     * @param string $imageFolder Thư mục lưu ảnh
+     * @param string $fileName Tên file (sẽ được đổi đuôi thành .webp)
+     * @param array $options Tùy chọn (quality)
+     * @return string Tên file WebP đã lưu
+     * @throws Exception
+     */
+    private function handleWebpConversion(UploadedFile $file, string $imageFolder, string $fileName, array $options = []): string
+    {
+        // Đảm bảo thư mục tồn tại
+        $this->ensureDirectoryExists($imageFolder);
+
+        $webpFileName = pathinfo($fileName, PATHINFO_FILENAME) . '.webp';
+        $targetPath = public_path("images/{$imageFolder}/{$webpFileName}");
+        $quality = $options['quality'] ?? 80;
+
+        if (!$this->convertToWebp($file->getPathname(), $targetPath, $quality)) {
+            throw new Exception("Không thể chuyển đổi ảnh sang WebP");
+        }
+
+        return $webpFileName;
+    }
+
     // xử lý hình ảnh chi tiết
-    public function handleDetailImages($request, $imageFolder)
+    public function handleDetailImages($request, $imageFolder, array $options = [])
     {
         $files = [];
         if ($request->hasFile('image_detail')) {
             foreach ($request->file('image_detail') as $file) {
-                $name = time() . rand(1, 100) . '.' . $file->extension();
-                $file->move(public_path('images/' . $imageFolder), $name);
-                $files[] = $name;
+                try {
+                    // Tạo tên file duy nhất
+                    $fileName = $this->generateFileName($file, $options);
+                    
+                    // Đảm bảo thư mục tồn tại
+                    $this->ensureDirectoryExists($imageFolder);
+
+                    // Xử lý chuyển đổi WebP nếu được yêu cầu
+                    if (isset($options['convertToWebp']) && $options['convertToWebp']) {
+                        $fileName = $this->handleWebpConversion($file, $imageFolder, $fileName, $options);
+                    } else {
+                        $file->move(public_path("images/{$imageFolder}"), $fileName);
+                    }
+                    
+                    $files[] = $fileName;
+                } catch (Exception $e) {
+                    continue;
+                }
             }
         }
-        return json_encode($files); // Return JSON encoded array of image names
+        return json_encode($files);
     }
 
     // xử lý hình ảnh chi tiết lúc update
-    public function updateDetailImages($request, $current, $imageFolder)
+    public function updateDetailImages($request, $current, $imageFolder, $fieldName = 'image_detail', array $options = [])
     {
         $existingImages = json_decode($current->image_detail, true) ?: [];
         $newImages = [];
 
         // Handle new uploaded images
-        if ($request->hasFile('image_detail')) {
-            foreach ($request->file('image_detail') as $file) {
-                $name = time() . rand(1, 100) . '.' . $file->extension();
-                $file->move(public_path('images/' . $imageFolder), $name);
-                $newImages[] = $name; // Thêm hình ảnh mới vào mảng
+        if ($request->hasFile($fieldName)) {
+            foreach ($request->file($fieldName) as $file) {
+                try {
+                    // Tạo tên file duy nhất
+                    $fileName = $this->generateFileName($file, $options);
+                    
+                    // Đảm bảo thư mục tồn tại
+                    $this->ensureDirectoryExists($imageFolder);
+
+                    // Xử lý chuyển đổi WebP nếu được yêu cầu
+                    if (isset($options['convertToWebp']) && $options['convertToWebp']) {
+                        $fileName = $this->handleWebpConversion($file, $imageFolder, $fileName, $options);
+                    } else {
+                        $file->move(public_path("images/{$imageFolder}"), $fileName);
+                    }
+                    
+                    $newImages[] = $fileName;
+                } catch (Exception $e) {
+                    continue;
+                }
             }
         }
 
@@ -171,6 +294,42 @@ class ImageService
         $allImages = array_merge($existingImages, $newImages);
 
         // Trả về tất cả hình ảnh đã giữ lại và hình ảnh mới
-        return json_encode($allImages); // Cập nhật để trả về mảng hình ảnh
+        return json_encode($allImages);
+    }
+
+    /**
+     * Lưu và chuyển đổi ảnh sang WebP
+     */
+    public function saveImageAsWebp($request, string $imageFolder, string $fieldName, array $options = [])
+    {
+        if (!$request->hasFile($fieldName)) {
+            return null;
+        }
+
+        try {
+            $file = $request->file($fieldName);
+            
+            // Kiểm tra mime type
+            if (isset($options['mimeTypes']) && !in_array($file->getMimeType(), $options['mimeTypes'])) {
+                throw new Exception("File không đúng định dạng cho phép");
+            }
+            
+            // Tạo tên file WebP
+            $fileName = pathinfo($this->generateFileName($file, $options), PATHINFO_FILENAME) . '.webp';
+            
+            // Đảm bảo thư mục tồn tại
+            $this->ensureDirectoryExists($imageFolder);
+            
+            // Đường dẫn file đích
+            $targetPath = public_path("images/{$imageFolder}/{$fileName}");
+            
+            // Chuyển đổi và lưu ảnh dạng WebP
+            $quality = $options['quality'] ?? 80;
+            $this->convertToWebp($file->getPathname(), $targetPath, $quality);
+            
+            return $fileName;
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 } 
