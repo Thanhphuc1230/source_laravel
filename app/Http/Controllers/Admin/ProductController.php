@@ -74,12 +74,20 @@ class ProductController extends BaseController
 
         // handle image
         if ($request->hasFile('image')) {
-            $data['image'] = $this->imageService->saveImage($request, $this->imageFolder, 'image');
+            $data['image'] = $this->imageService->saveImage($request, $this->imageFolder, 'image', [
+                'convertToWebp' => true,
+                'quality' => 80,
+                'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
+            ]);
         }
 
         // handle image detail
         if ($request->hasFile('image_detail')) {
-            $data['image_detail'] = $this->imageService->handleDetailImages($request, $this->imageFolder);
+            $data['image_detail'] = $this->imageService->handleDetailImages($request, $this->imageFolder, [
+                'convertToWebp' => true,
+                'quality' => 80,
+                'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
+            ]);
         }
 
         $this->model::create($data);
@@ -117,9 +125,17 @@ class ProductController extends BaseController
 
         $data['updated_at'] = new \DateTime();
         // Handle image
-        $data['image'] = $this->imageService->updateImage($request, $current, $this->imageFolder, 'image');
+        $data['image'] = $this->imageService->updateImage($request, $current, $this->imageFolder, 'image', [
+            'convertToWebp' => true,
+            'quality' => 80,
+            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
+        ]);
 
-        $data['image_detail'] = $this->imageService->updateDetailImages($request, $current, $this->imageFolder, 'image_detail');
+        $data['image_detail'] = $this->imageService->updateDetailImages($request, $current, $this->imageFolder, 'image_detail', [
+            'convertToWebp' => true,
+            'quality' => 80,
+            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
+        ]);
 
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');

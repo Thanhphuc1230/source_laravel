@@ -33,10 +33,17 @@ class SystemController extends BaseController
         $system = System::find($id);
 
         //Logo
-        $data['logo'] = $this->imageService->updateImage($request, $system,'logo', 'logo');
+        $data['logo'] = $this->imageService->updateImage($request, $system,'logo', 'logo', [
+            'convertToWebp' => true,
+            'quality' => 80,
+            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
+        ]);
         //Favicon
-        $data['favicon'] = $this->imageService->updateImage($request, $system, 'logo', 'favicon');
-
+        $data['favicon'] = $this->imageService->updateImage($request, $system, 'logo', 'favicon', [
+            'convertToWebp' => true,
+            'quality' => 80,
+            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
+        ]);
         if ($system) {
             $system->update($data);
             toast('Cập nhật hệ thống thành công', 'success');

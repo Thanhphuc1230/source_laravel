@@ -57,7 +57,11 @@ class PageController extends BaseController
 
         // handle image
         if ($request->hasFile('image')) {
-            $data['image'] = $this->imageService->saveImage($request, $this->imageFolder, 'image');
+            $data['image'] = $this->imageService->saveImage($request, $this->imageFolder, 'image', [
+                'convertToWebp' => true,
+                'quality' => 80,
+                'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
+            ]);
         }
 
         $this->model::create($data);
@@ -92,7 +96,11 @@ class PageController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['updated_at'] = new \DateTime();
         // update image
-        $data['image'] = $this->imageService->updateImage($request, $current, $this->imageFolder, 'image');
+        $data['image'] = $this->imageService->updateImage($request, $current, $this->imageFolder, 'image', [
+            'convertToWebp' => true,
+            'quality' => 80,
+            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
+        ]);
 
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
