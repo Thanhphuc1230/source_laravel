@@ -12,7 +12,7 @@ class HomeController extends Controller
     public function home()
     {
         $data['sliders'] = Slider::where('status', 1)->orderBy('stt', 'asc')->get();
-        return view('frontend.modules.home.index', $data);
+        return view('welcome', $data);
     }
 
    
