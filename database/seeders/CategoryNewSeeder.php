@@ -14,13 +14,13 @@ class CategoryNewSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tp_category_new')->insert([
+        DB::table('tp_cate_news')->insert([
             'uuid' => Str::uuid(),
             'name_vn' => 'Tin tức', 
             'name_en' => 'News', 
             'slug' => 'tin-tuc', 
-            'meta_keywords' => null,
-            'meta_description' => null,
+            'keywords' => null,
+            'description' => null,
             'status' => true,
             'stt' => 0,
             'parent_id' => 0,

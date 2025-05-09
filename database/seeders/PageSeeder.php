@@ -13,7 +13,7 @@ class PageSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tp_page')->insert([
+        DB::table('tp_pages')->insert([
             'uuid' => Str::uuid(), // Generate a UUID
             'name_vn' => 'Giới thiệu', // {{ edit_1 }} Insert the value "sản phẩm"
             'name_en' => 'About us', // Optional English name
@@ -22,8 +22,8 @@ class PageSeeder extends Seeder
             'content_en' => 'About us', // Optional content in English
             'status' => true,
             'stt' => 1,
-            'meta_keywords' => null,
-            'meta_description' => null,
+            'keywords' => null,
+            'description' => null,
             'parent_id' => 0,
             'created_at' => now(),
             'updated_at' => now(),

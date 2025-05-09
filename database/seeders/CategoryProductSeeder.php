@@ -14,13 +14,13 @@ class CategoryProductSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tp_category_product')->insert([
+        DB::table('tp_cate_products')->insert([
             'uuid' => Str::uuid(), 
             'name_vn' => 'Sản phẩm', 
             'name_en' => 'Product', 
             'slug' => 'san-pham', 
-            'meta_keywords' => null,
-            'meta_description' => null,
+            'keywords' => null,
+            'description' => null,
             'status' => true,
             'home' => false,
             'stt' => 0,
