@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\ProfileController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
 
@@ -84,6 +85,16 @@ Route::prefix('admin')
             ->name('analytics.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
+            });
+        // Profile admin
+        Route::controller(ProfileController::class)
+            ->prefix('profile')
+            ->name('profile.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::post('/store', 'store')->name('store');
+                Route::post('/update/{uuid}', 'update')->name('update');
+                Route::post('/change_password', 'changePassword')->name('changePassword');
             });
         //Category Product
         Route::controller(CateProductController::class)
