@@ -16,7 +16,7 @@ class CateProduct extends Model
         'slug',
         'keywords',
         'description',
-        'avatar',
+        'image',
         'status',
         'stt',
     ];

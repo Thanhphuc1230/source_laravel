@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name_vn');
             $table->string('name_en')->nullable();
             $table->string('slug');
-            $table->string('avatar')->nullable();
+            $table->string('image')->nullable();
             $table->string('keywords')->nullable();
             $table->string('description')->nullable();
             $table->boolean('status')->default(true);

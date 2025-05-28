@@ -22,7 +22,7 @@ class Product extends Model
         'price_old',
         'content_vn',
         'content_en',
-        'avatar',
+        'image',
         'image_detail',
         'status',
         'hot',

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->decimal('price_old', 15,0)->nullable(); 
             $table->longText('content_vn');
             $table->longText('content_en')->nullable();
-            $table->string('avatar')->nullable();
+            $table->string('image')->nullable();
             $table->longText('image_detail')->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('hot')->default(false);
