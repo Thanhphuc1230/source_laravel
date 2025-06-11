@@ -12,7 +12,7 @@ A comprehensive Laravel admin dashboard with CRUD operations, SweetAlert notific
 
 1. **Clone the Project**
 ```bash
-git clone https://github.com/Thanhphuc1230/source_laravel_10.git
+git clone https://github.com/Thanhphuc1230/source_laravel.git
 ```
 
 2. **Navigate to the Project Directory**
