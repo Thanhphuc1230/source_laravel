@@ -33,23 +33,23 @@
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.analytics.index') }}">
-                        <i class="ri-dashboard-2-line"></i> <span data-key="t-widgets">Thống kê</span>
+                        <i class="ri-bar-chart-line"></i> <span data-key="t-widgets">Thống kê</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.page.index') }}">
-                        <i class="ri-pages-line"></i> <span data-key="t-widgets">Trang nội dung</span>
+                        <i class="ri-file-list-3-line"></i> <span data-key="t-widgets">Trang nội dung</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.slider.index') }}">
-                        <i class="ri-pages-line"></i> <span data-key="t-widgets">Slider</span>
+                        <i class="ri-image-edit-line"></i> <span data-key="t-widgets">Slider</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="ri-honour-line"></i></i> <span data-key="t-layouts">Giao diện</span>
+                        <i class="ri-layout-4-line"></i> <span data-key="t-layouts">Giao diện</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarLayouts">
                         <ul class="nav nav-sm flex-column">
@@ -63,7 +63,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarProduct" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarProduct">
-                        <i class="ri-layout-grid-line"></i> <span data-key="t-tables">Sản phẩm</span>
+                        <i class="ri-shopping-bag-3-line"></i> <span data-key="t-tables">Sản phẩm</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarProduct">
                         <ul class="nav nav-sm flex-column">
@@ -80,7 +80,7 @@
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarNews">
-                        <i class="ri-layout-3-line"></i> <span data-key="t-layouts">Tin tức</span>
+                        <i class="ri-newspaper-line"></i> <span data-key="t-layouts">Tin tức</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarNews">
                         <ul class="nav nav-sm flex-column">
@@ -98,7 +98,7 @@
                     <li class="nav-item">
                         <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button"
                             aria-expanded="false" aria-controls="sidebarApps">
-                            <i class="ri-share-line"></i> <span data-key="t-dashboards">Hệ thống</span>
+                            <i class="ri-settings-3-line"></i> <span data-key="t-dashboards">Hệ thống</span>
                         </a>
                         <div class="collapse menu-dropdown" id="sidebarApps">
                             <ul class="nav nav-sm flex-column">
