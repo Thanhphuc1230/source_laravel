@@ -28,8 +28,8 @@ class PageRequest extends FormRequest
             'name_en' => [
                 'nullable','max:255',
             ],
-            'content_vn' => 'required|max:10000',
-            'content_en' => 'nullable|max:10000',
+            'content_vn' => 'required|max:65535',
+            'content_en' => 'nullable|max:65535',
             'keywords' => 'required',
             'description' => 'required',
             'image' => request()->route('uuid')
@@ -54,8 +54,8 @@ class PageRequest extends FormRequest
             'keywords.required' => 'Vui lòng nhập từ khóa',
             'description.required' => 'Vui lòng nhập mô tả ngắn',
             'content_vn.required' => 'Vui lòng nhập nội dung trang',
-            'content_vn.max' => 'Nội dung trang không được quá 10000 ký tự',
-            'content_en.max' => 'Nội dung trang tiếng Anh không được quá 10000 ký tự',
+            'content_vn.max' => 'Nội dung trang không được quá 65535 ký tự',
+            'content_en.max' => 'Nội dung trang tiếng Anh không được quá 65535 ký tự',
             'image.required' => 'Vui lòng chọn hình ảnh',
             'image.image' => 'File phải là hình ảnh',
             'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif hoặc webp',
