@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+    <url>
+        <loc>http://localhost:8000/category/san-pham.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/san-pham-1-1.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/san-pham-2-2.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/san-pham-3-3.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/san-pham-4-4.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/san-pham-5-5.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/san-pham-6-6.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/san-pham-7-7.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/san-pham-8-8.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/san-pham-9-9.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/san-pham-10-10.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc/tin-tuc-1.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc/tin-tuc-2.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc/tin-tuc-3.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc/tin-tuc-4.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc/tin-tuc-5.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc/tin-tuc-6.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc/tin-tuc-7.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc/tin-tuc-8.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc/tin-tuc-9.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/news/tin-tuc/tin-tuc-10.html</loc>
+    
+            </url>
+    <url>
+        <loc>http://localhost:8000/page/gioi-thieu.html</loc>
+    
+            </url>
+</urlset>

@@ -43,7 +43,20 @@
     @include('admin.partials.js')
     @stack('scripts')
 
-
+    <script>
+        document.getElementById('create-sitemap-btn').addEventListener('click', function() {
+            fetch('{{ route('admin.sitemap.generate') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => alert(data.message))
+                .catch(error => alert('Có lỗi xảy ra!'));
+        });
+    </script>
 
 </body>
 

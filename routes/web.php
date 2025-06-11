@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SitemapController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
 
@@ -38,6 +39,11 @@ Route::group(['middleware' => 'web'], function () {
         session()->put('locale', $locale);
         return redirect()->back();
     })->name('lang');
+});
+
+// sitemap
+Route::get('/sitemap.xml', function() {
+    return response()->file(public_path('sitemap.xml'));
 });
 
 // frontend
@@ -79,6 +85,14 @@ Route::prefix('admin')
     ->name('admin.')
     ->middleware('checkAuth')
     ->group(function () {
+
+        // Sitemap
+        Route::controller(SitemapController::class)
+            ->prefix('sitemap')
+            ->name('sitemap.')
+            ->group(function () {
+                Route::post('/create-sitemap', 'generate')->name('generate');
+            });
         // Analytics
         Route::controller(AnalyticController::class)
             ->prefix('analytics')

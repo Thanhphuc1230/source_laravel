@@ -128,7 +128,9 @@
             </div>
 
             <div class="d-flex align-items-center">
-
+                <div class="ms-1 header-item d-none d-sm-flex">
+                    <button id="create-sitemap-btn" class="btn btn-sm btn-success edit-item-btn">Tạo Sitemap</button>
+                </div>
                 <div class="dropdown ms-sm-3 header-item topbar-user">
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
