@@ -10,10 +10,11 @@ use App\Services\ImageService;
 use App\Services\DataRemovalService;
 use App\Services\StatusManagementService;
 use App\Traits\ImageHandlerTrait;
+use App\Traits\DataRemovalTrait;
 
 class BaseController extends Controller
 {
-    use ImageHandlerTrait;
+    use ImageHandlerTrait, DataRemovalTrait;
 
     protected $website = 'admin';
     protected $view = null;

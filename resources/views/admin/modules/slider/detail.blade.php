@@ -61,24 +61,6 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="choices-publish-status-input" class="form-label">Vị trí</label>
-
-                                                <select class="form-select" name="position">
-                                                    <option value="slider"
-                                                        {{ (old('position') ?: $page->position ?? '') == 'slider' ? 'selected' : '' }}>
-                                                        Slider</option>
-                                                    <option value="photo"
-                                                        {{ (old('position') ?: $page->position ?? '') == 'photo' ? 'selected' : '' }}>
-                                                        Photo(1300x1730px)</option>
-                                                    <option value="banner"
-                                                        {{ (old('position') ?: $page->position ?? '') == 'banner' ? 'selected' : '' }}>
-                                                        Banner</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Hình ảnh</label>
                                                 <input type="file" name="image"
                                                     class="form-control @error('image') is-invalid @enderror">

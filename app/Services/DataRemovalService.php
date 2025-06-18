@@ -9,77 +9,104 @@ use Exception;
 
 class DataRemovalService
 {   
+    // Danh sách các field ảnh có thể có
+    private $imageFields = ['image', 'avatar', 'logo', 'favicon'];
+    
     public function destroyAllByUUIDs($model, $uuids, $imageFolder)
     {
-        // Kiểm tra nếu không có UUID nào được gửi lên
         if (empty($uuids)) {
             toast('Không có mục nào được chọn để xóa.', 'error');
             return redirect()->back();
         }
 
         // Lấy các bản ghi cần xóa
-        $models = $model::whereIn('uuid', $uuids)->get();
+        $items = $model::whereIn('uuid', $uuids)->get();
 
-        foreach ($models as $model) {
-            // Xóa ảnh đại diện nếu tồn tại
-            $avatarPath = public_path('images/' . $imageFolder . '/' . $model->avatar);
-            if (File::exists($avatarPath)) {
-                File::delete($avatarPath);
-            }
-
-            if($model->image_detail){
-                $imageDetail = json_decode($model->image_detail, true);
-                foreach ($imageDetail as $image) {
-                    $imagePath = public_path('images/' . $imageFolder . '/' . $image);
-                    if (File::exists($imagePath)) {
-                        File::delete($imagePath);
-                    }
-                }
-            }
+        // Xóa ảnh trước khi xóa records
+        foreach ($items as $item) {
+            $this->deleteAllImages($item, $imageFolder);
         }
 
-        // Xóa tất cả các mục có UUID nằm trong danh sách
+        // Xóa tất cả records
         $deletedCount = $model::whereIn('uuid', $uuids)->delete();
 
-        // Kiểm tra xem có mục nào được xóa thành công không
         if ($deletedCount > 0) {
             toast('Xóa ' . $deletedCount . ' mục thành công.', 'success');
         } else {
             toast('Không có mục nào được xóa.', 'error');
         }
+        
         return redirect()->back();
     }
 
     public function destroyData($model, $uuid, $imageFolder)
     {
-        // Tìm bản ghi cần xóa
-        $page = $model::where('uuid', $uuid)->first();
-        if (!$page) {
-            toast('Không tìm thấy sản phẩm để xóa.', 'error');
+        $item = $model::where('uuid', $uuid)->first();
+        
+        if (!$item) {
+            toast('Không tìm thấy mục để xóa.', 'error');
             return back();
         }
 
-        // Xóa ảnh đại diện nếu tồn tại
-        $avatarPath = public_path('images/' . $imageFolder . '/' . $page->avatar);
-        if (File::exists($avatarPath)) {
-            File::delete($avatarPath);
+        // Xóa ảnh trước khi xóa record
+        $this->deleteAllImages($item, $imageFolder);
+
+        // Xóa record
+        $item->delete();
+
+        toast('Xóa mục thành công.', 'success');
+        return back();
+    }
+
+    /**
+     * Xóa tất cả ảnh liên quan đến một item
+     */
+    private function deleteAllImages($item, $imageFolder)
+    {
+        // Xóa các ảnh đơn (image, avatar, logo, favicon)
+        foreach ($this->imageFields as $field) {
+            $this->deleteSingleImage($item, $field, $imageFolder);
         }
 
-        // Xóa ảnh chi tiết nếu tồn tại
-        if($page->image_detail){
-            $imageDetail = json_decode($page->image_detail, true);
-            foreach ($imageDetail as $image) {
-            $imagePath = public_path('images/' . $imageFolder . '/' . $image);
+        // Xóa ảnh chi tiết (JSON array)
+        $this->deleteDetailImages($item, $imageFolder);
+    }
+
+    /**
+     * Xóa một ảnh đơn
+     */
+    private function deleteSingleImage($item, $field, $imageFolder)
+    {
+        if (isset($item->$field) && $item->$field) {
+            $imagePath = public_path("images/{$imageFolder}/{$item->$field}");
             if (File::exists($imagePath)) {
                 File::delete($imagePath);
+            }
+        }
+    }
+
+    /**
+     * Xóa ảnh chi tiết (image_detail field)
+     */
+    private function deleteDetailImages($item, $imageFolder)
+    {
+        if (!isset($item->image_detail) || !$item->image_detail) {
+            return;
+        }
+
+        $imageDetail = json_decode($item->image_detail, true);
+        
+        if (!is_array($imageDetail)) {
+            return;
+        }
+
+        foreach ($imageDetail as $imageName) {
+            if ($imageName) {
+                $imagePath = public_path("images/{$imageFolder}/{$imageName}");
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
                 }
             }
         }
-
-        // Tiếp tục xóa bản ghi trong CSDL
-        $page->delete();
-
-        toast('Xóa sản phẩm thành công.', 'success');
-        return back();
     }
 }
