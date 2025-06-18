@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Admin\ProfileRequest;
+
 class ProfileController extends BaseController
 {
     protected $model,$nameItem,$imageFolder;
@@ -32,12 +33,8 @@ class ProfileController extends BaseController
         $data['updated_at'] = new \DateTime();
         $admin = User::where('uuid',Auth::user()->uuid)->first();
 
-        //avatar
-        $data['avatar'] = $this->imageService->updateImage($request, $admin, $this->imageFolder, 'avatar', [
-            'convertToWebp' => true,
-            'quality' => 80,
-            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-        ]);
+        // Handle avatar
+        $data['avatar'] = $this->handleSingleImage($request, $admin, null, 'avatar');
 
         if ($admin) {
             $admin->update($data);

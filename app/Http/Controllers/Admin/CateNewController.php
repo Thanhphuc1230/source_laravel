@@ -73,14 +73,8 @@ class CateNewController extends BaseController
         $data['created_at'] = new \DateTime();
         $data['status'] = 1;
 
-        // handle image
-        if ($request->hasFile('image')) {
-            $data['image'] = $this->imageService->saveImage($request, $this->imageFolder, 'image', [
-                'convertToWebp' => true,
-                'quality' => 80,
-                'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-            ]);
-        }
+        // Handle image
+        $data['image'] = $this->handleSingleImage($request);
 
         $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
@@ -114,12 +108,9 @@ class CateNewController extends BaseController
         $current = $this->model::where('uuid', $uuid)->first();
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['updated_at'] = new \DateTime();
+        
         // Handle image
-        $data['image'] = $this->imageService->updateImage($request, $current, $this->imageFolder, 'image', [
-            'convertToWebp' => true,
-            'quality' => 80,
-            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-        ]);
+        $data['image'] = $this->handleSingleImage($request, $current);
 
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');

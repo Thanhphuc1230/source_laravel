@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\ProductRequest;
 use Illuminate\Support\Facades\View;
+
 class ProductController extends BaseController
 {
     protected $model,$nameItem,$imageFolder;
@@ -72,23 +73,11 @@ class ProductController extends BaseController
         $data['created_at'] = new \DateTime();
         $data['status'] = 1;
 
-        // handle image
-        if ($request->hasFile('image')) {
-            $data['image'] = $this->imageService->saveImage($request, $this->imageFolder, 'image', [
-                'convertToWebp' => true,
-                'quality' => 80,
-                'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-            ]);
-        }
+        // Handle single image
+        $data['image'] = $this->handleSingleImage($request);
 
-        // handle image detail
-        if ($request->hasFile('image_detail')) {
-            $data['image_detail'] = $this->imageService->handleDetailImages($request, $this->imageFolder, [
-                'convertToWebp' => true,
-                'quality' => 80,
-                'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-            ]);
-        }
+        // Handle multiple images
+        $data['image_detail'] = $this->handleMultipleImages($request);
 
         $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
@@ -122,20 +111,13 @@ class ProductController extends BaseController
         $current = $this->model::where('uuid', $uuid)->first();
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['slug'] = empty($data['slug']) ? Str::slug($data['name_vn']) : $data['slug'];
-
         $data['updated_at'] = new \DateTime();
-        // Handle image
-        $data['image'] = $this->imageService->updateImage($request, $current, $this->imageFolder, 'image', [
-            'convertToWebp' => true,
-            'quality' => 80,
-            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-        ]);
 
-        $data['image_detail'] = $this->imageService->updateDetailImages($request, $current, $this->imageFolder, 'image_detail', [
-            'convertToWebp' => true,
-            'quality' => 80,
-            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-        ]);
+        // Handle single image
+        $data['image'] = $this->handleSingleImage($request, $current);
+
+        // Handle multiple images
+        $data['image_detail'] = $this->handleMultipleImages($request, $current);
 
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');

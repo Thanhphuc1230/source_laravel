@@ -84,14 +84,9 @@ class CateProductController extends BaseController
         }
         $data['created_at'] = new \DateTime();
         $data['status'] = 1;
-        // handle image
-        if ($request->hasFile('avatar')) {
-            $data['avatar'] = $this->imageService->saveImage($request, $this->imageFolder, 'avatar', [
-                'convertToWebp' => true,
-                'quality' => 80,
-                'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-            ]);
-        }
+        
+        // Handle avatar
+        $data['avatar'] = $this->handleSingleImage($request, null, null, 'avatar');
 
         $this->model::create($data);
 
@@ -145,11 +140,8 @@ class CateProductController extends BaseController
         $data = $request->except('_token','return_back','return_list','currentPage');
         $data['updated_at'] = new \DateTime();
 
-        $data['avatar'] = $this->imageService->updateImage($request, $current, $this->imageFolder, 'avatar', [
-            'convertToWebp' => true,
-            'quality' => 80,
-            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-        ]);
+        // Handle avatar
+        $data['avatar'] = $this->handleSingleImage($request, $current, null, 'avatar');
 
         $this->model::where('uuid', $uuid)->update($data);
 

@@ -9,14 +9,16 @@ use Intervention\Image\Facades\Image;
 use App\Services\ImageService;
 use App\Services\DataRemovalService;
 use App\Services\StatusManagementService;
+use App\Traits\ImageHandlerTrait;
+
 class BaseController extends Controller
 {
+    use ImageHandlerTrait;
+
     protected $website = 'admin';
     protected $view = null;
     protected $module = null;
     public $db;
-
-
 
     public function __construct($module){
         $this->module = $module;
@@ -27,6 +29,7 @@ class BaseController extends Controller
         $this->dataRemovalService = app(DataRemovalService::class);
         $this->statusManagementService = app(StatusManagementService::class);
     }
+
     public function view_admin (string $page, array $data = []) {
         return view($this->view . "." . $page, $data);
     }
@@ -43,5 +46,4 @@ class BaseController extends Controller
         }
         return redirect()->route($this->website . "." . $this->module . "." . $page, $params)->with($flash);
     }
-
 }

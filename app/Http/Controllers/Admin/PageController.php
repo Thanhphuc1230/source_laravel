@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\PageRequest;
+
 class PageController extends BaseController
 {
     protected $model,$nameItem,$imageFolder;
@@ -55,14 +56,8 @@ class PageController extends BaseController
         $data['slug'] = empty($data['slug']) ? Str::slug($data['name_vn']) : $data['slug'];
         $data['created_at'] = new \DateTime();
 
-        // handle image
-        if ($request->hasFile('image')) {
-            $data['image'] = $this->imageService->saveImage($request, $this->imageFolder, 'image', [
-                'convertToWebp' => true,
-                'quality' => 80,
-                'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-            ]);
-        }
+        // Handle image
+        $data['image'] = $this->handleSingleImage($request);
 
         $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
@@ -95,12 +90,9 @@ class PageController extends BaseController
         $current = $this->model::where('uuid', $uuid)->first();
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['updated_at'] = new \DateTime();
-        // update image
-        $data['image'] = $this->imageService->updateImage($request, $current, $this->imageFolder, 'image', [
-            'convertToWebp' => true,
-            'quality' => 80,
-            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-        ]);
+        
+        // Handle image
+        $data['image'] = $this->handleSingleImage($request, $current);
 
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');

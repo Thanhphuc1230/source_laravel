@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\System;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+
 class SystemController extends BaseController
 {   
     protected $model,$nameItem,$imageFolder;
@@ -32,18 +33,12 @@ class SystemController extends BaseController
         $data['created_at'] = new \DateTime();
         $system = System::find($id);
 
-        //Logo
-        $data['logo'] = $this->imageService->updateImage($request, $system,'logo', 'logo', [
-            'convertToWebp' => true,
-            'quality' => 80,
-            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-        ]);
-        //Favicon
-        $data['favicon'] = $this->imageService->updateImage($request, $system, 'logo', 'favicon', [
-            'convertToWebp' => true,
-            'quality' => 80,
-            'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
-        ]);
+        // Handle logo
+        $data['logo'] = $this->handleSingleImage($request, $system, 'logo', 'logo');
+
+        // Handle favicon
+        $data['favicon'] = $this->handleSingleImage($request, $system, 'logo', 'favicon');
+
         if ($system) {
             $system->update($data);
             toast('Cập nhật hệ thống thành công', 'success');
