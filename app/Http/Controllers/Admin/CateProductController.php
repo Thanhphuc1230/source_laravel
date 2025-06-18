@@ -74,9 +74,7 @@ class CateProductController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list');
         $data['uuid'] = Str::uuid();
         // Tạo slug từ name_vn nếu không có
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['name_vn']);
-        }
+        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
         $data['created_at'] = new \DateTime();
         $data['status'] = 1;
         
@@ -133,6 +131,7 @@ class CateProductController extends BaseController
         $current = $this->model::where('uuid', $uuid)->first();
 
         $data = $request->except('_token','return_back','return_list','currentPage');
+        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
         $data['updated_at'] = new \DateTime();
 
         // Handle avatar

@@ -53,7 +53,7 @@ class PageController extends BaseController
     {
         $data = $request->except('_token', 'return_back', 'return_list');
         $data['uuid'] = Str::uuid();
-        $data['slug'] = empty($data['slug']) ? Str::slug($data['name_vn']) : $data['slug'];
+        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
         $data['created_at'] = new \DateTime();
 
         // Handle image
@@ -89,6 +89,7 @@ class PageController extends BaseController
     {
         $current = $this->model::where('uuid', $uuid)->first();
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
+        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
         $data['updated_at'] = new \DateTime();
         
         // Handle image

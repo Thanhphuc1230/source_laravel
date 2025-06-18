@@ -11,17 +11,23 @@ use App\Services\DataRemovalService;
 use App\Services\StatusManagementService;
 use App\Traits\ImageHandlerTrait;
 use App\Traits\DataRemovalTrait;
+use App\Traits\SlugHandlerTrait;
 
 class BaseController extends Controller
 {
-    use ImageHandlerTrait, DataRemovalTrait;
+    use ImageHandlerTrait, DataRemovalTrait, SlugHandlerTrait;
 
     protected $website = 'admin';
     protected $view = null;
     protected $module = null;
     public $db;
+    protected $imageService;
+    protected $dataRemovalService;
+    protected $statusManagementService;
+    protected $imageFolder;
 
-    public function __construct($module){
+    public function __construct($module, $imageFolder = null)
+    {
         $this->module = $module;
         $this->view = $this->website . ".modules." . $module;
         $this->db = DB::table($module);
@@ -29,6 +35,7 @@ class BaseController extends Controller
         $this->imageService = app(ImageService::class);
         $this->dataRemovalService = app(DataRemovalService::class);
         $this->statusManagementService = app(StatusManagementService::class);
+        $this->imageFolder = $imageFolder;
     }
 
     public function view_admin (string $page, array $data = []) {
@@ -46,5 +53,15 @@ class BaseController extends Controller
             return redirect()->route($this->website . "." . $this->module . "." . $page, $params);
         }
         return redirect()->route($this->website . "." . $this->module . "." . $page, $params)->with($flash);
+    }
+
+    public function destroy(string $uuid)
+    {
+        return $this->destroyData($uuid);
+    }
+
+    public function destroyAll(Request $request)
+    {
+        return $this->destroyAllData($request);
     }
 }
