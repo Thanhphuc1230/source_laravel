@@ -118,18 +118,6 @@ class CateNewController extends BaseController
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
 
-    public function destroy(string $uuid)
-    {
-        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
-    }
-
-    public function destroyAll(Request $request)
-    {
-        $uuids = $request->input('uuids');
-  
-        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
-    }
-
     public function status($uuid, $status, $name)
     {
         return $this->statusManagementService->updateStatus($uuid, $status, $name,$this->model::class);

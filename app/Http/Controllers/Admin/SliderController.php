@@ -54,6 +54,7 @@ class SliderController extends BaseController
     {
         $data = $request->except('_token', 'return_back', 'return_list');
         $data['uuid'] = Str::uuid();
+        $data['slug'] = empty($data['slug']) ? Str::slug($data['name_vn']) : $data['slug'];
         $data['created_at'] = new \DateTime();
 
         // Handle image

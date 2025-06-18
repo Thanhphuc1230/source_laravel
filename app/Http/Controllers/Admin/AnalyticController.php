@@ -14,13 +14,14 @@ class AnalyticController extends BaseController
 
     public function __construct()
     {
-        parent::__construct('analytics');
-        // Set your model class here
         $this->model = new Analytic();
         $this->nameItem = 'Biểu đồ';
         
+        parent::__construct('analytics');
+        
         View::share('nameClass', 'chart');
     }
+    
     public function index(Request $request){
         // Get the current month
         $currentMonth = Carbon::now()->format('m');

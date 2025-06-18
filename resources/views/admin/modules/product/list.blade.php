@@ -63,7 +63,7 @@
                                     <table class="table align-middle table-nowrap" id="customerTable">
                                         <thead class="table-light">
                                             <tr>
-                                                <th><input type="checkbox" id="masterCheckbox"></th>
+                                                <th><input type="checkbox" id="checkAll"></th>
                                                 <th class="sort">ID</th>
                                                 <th class="sort">Tiêu đề</th>
                                                 <th class="sort">Hiển thị</th>
@@ -81,8 +81,7 @@
                                                     @csrf
                                                     @foreach ($list as $item)
                                                         <tr>
-                                                            <td><input class="form-check-input" id="checkbox-data"
-                                                                    type="checkbox" name="uuids[]"
+                                                            <td><input class="form-check-input" type="checkbox" name="uuids[]"
                                                                     value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
                                                             <td>{{ $item->name_vn }}</td>
@@ -137,7 +136,7 @@
                                                 </form>
                                             @else
                                                 <tr>
-                                                    <td colspan="7" style="text-align:center">Chưa có dữ liệu</td>
+                                                    <td colspan="8" style="text-align:center">Chưa có dữ liệu</td>
                                                 </tr>
                                             @endif
                                         </tbody>
@@ -157,4 +156,6 @@
             </div>
             <!-- container-fluid -->
         </div>
+        @include('admin.ajax.status')
+        @include('admin.ajax.update-stt')
     @endsection

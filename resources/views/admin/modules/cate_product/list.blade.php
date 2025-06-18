@@ -36,12 +36,12 @@
                                                     <select class="form-select mb-3" name="category">
                                                         <option value="0" selected>Chọn chủ đề </option>
                                                         @foreach ($category as $item)
-                                                            <option value="{{ $item->id_category_new }}">
+                                                            <option value="{{ $item->id_cate_product }}">
                                                                 {{ $item->name_vn }}
                                                             </option>
                                                             @if ($item->children)
                                                                 @foreach ($item->children as $child)
-                                                                    <option value="{{ $child->id_category_new }}">
+                                                                    <option value="{{ $child->id_cate_product }}">
                                                                         |---{{ $child->name_vn }}
                                                                     </option>
                                                                 @endforeach
@@ -63,9 +63,8 @@
                                     <table class="table align-middle table-nowrap" id="customerTable">
                                         <thead class="table-light">
                                             <tr>
-                                                <th><input type="checkbox" id="masterCheckbox"></th>
+                                                <th><input type="checkbox" id="checkAll"></th>
                                                 <th class="sort">ID</th>
-                                                <th class="sort">Ảnh</th>
                                                 <th class="sort">Tiêu đề</th>
                                                 <th class="sort">Hiển thị</th>
                                                 <th class="sort">Trang chủ</th>
@@ -82,13 +81,9 @@
                                                     @csrf
                                                     @foreach ($list as $item)
                                                         <tr>
-                                                            <td><input class="form-check-input" id="checkbox-data"
-                                                                    type="checkbox" name="uuids[]"
+                                                            <td><input class="form-check-input" type="checkbox" name="uuids[]"
                                                                     value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}"
-                                                                    alt="" style="width: 100px; height: 100px;">
-                                                            </td>
                                                             <td>{{ $item->name_vn }}</td>
                                                             <td class="status">
                                                                 <div
@@ -141,7 +136,7 @@
                                                 </form>
                                             @else
                                                 <tr>
-                                                    <td colspan="7" style="text-align:center">Chưa có dữ liệu</td>
+                                                    <td colspan="8" style="text-align:center">Chưa có dữ liệu</td>
                                                 </tr>
                                             @endif
                                         </tbody>

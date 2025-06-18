@@ -13,18 +13,13 @@ use App\Services\DataRemovalService;
 
 class CateProductController extends BaseController
 {   
-    protected $imageService, $dataRemovalService;
-
-    public function __construct(ImageService $imageService, DataRemovalService $dataRemovalService)
+    public function __construct()
     {
         $this->model = new CateProduct();
         $this->nameItem = 'danh mục sản phẩm';
         $this->imageFolder = 'cate_product';
 
         parent::__construct($this->imageFolder);
-
-        $this->imageService = $imageService;
-        $this->dataRemovalService = $dataRemovalService;
 
         View::share('nameClass', $this->imageFolder);
     }
@@ -149,29 +144,6 @@ class CateProductController extends BaseController
 
         $currentPage = $request->input('currentPage');
         return $this->route_admin('index', [], [], $currentPage);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $uuid)
-    {
-        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
-    }
-
-    /**
-     * Remove multiple resources from storage.
-     */
-    public function destroyAll(Request $request)
-    {
-        $uuids = $request->input('uuids', []);
-        
-        // Sử dụng service với model object
-        return $this->dataRemovalService->destroyAllByUUIDs(
-            $this->model, 
-            $uuids, 
-            $this->imageFolder
-        );
     }
 
     /**

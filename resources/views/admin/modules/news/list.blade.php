@@ -33,6 +33,21 @@
                                                 <form action="{{ route('admin.' . $nameClass . '.index') }}" method="get"
                                                     style="display: flex">
                                                     @csrf
+                                                    <select class="form-select mb-3" name="category">
+                                                        <option value="0" selected>Chọn chủ đề </option>
+                                                        @foreach ($category as $item)
+                                                            <option value="{{ $item->id_category_new }}">
+                                                                {{ $item->name_vn }}
+                                                            </option>
+                                                            @if ($item->children)
+                                                                @foreach ($item->children as $child)
+                                                                    <option value="{{ $child->id_category_new }}">
+                                                                        |---{{ $child->name_vn }}
+                                                                    </option>
+                                                                @endforeach
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
                                                     <input type="text" class="form-control search" name="search"
                                                         placeholder="Search..." style="height: 37.5px">
                                                     <button type="submit"
@@ -48,11 +63,11 @@
                                     <table class="table align-middle table-nowrap" id="customerTable">
                                         <thead class="table-light">
                                             <tr>
-                                                <th><input type="checkbox" id="masterCheckbox"></th>
+                                                <th><input type="checkbox" id="checkAll"></th>
                                                 <th class="sort">ID</th>
-                                                <th class="sort">Ảnh</th>
                                                 <th class="sort">Tiêu đề</th>
                                                 <th class="sort">Hiển thị</th>
+                                                <th class="sort">Trang chủ</th>
                                                 <th class="sort">STT</th>
                                                 <th class="sort">Ngày cập nhật</th>
                                                 <th class="sort">Hành động</th>
@@ -66,13 +81,9 @@
                                                     @csrf
                                                     @foreach ($list as $item)
                                                         <tr>
-                                                            <td><input class="form-check-input" id="checkbox-data"
-                                                                    type="checkbox" name="uuids[]"
+                                                            <td><input class="form-check-input" type="checkbox" name="uuids[]"
                                                                     value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}"
-                                                                    alt="" style="width: 100px; height: 100px;">
-                                                            </td>
                                                             <td>{{ $item->name_vn }}</td>
                                                             <td class="status">
                                                                 <div
@@ -83,6 +94,17 @@
                                                                         data-uuid="{{ $item->uuid }}" data-name="status"
                                                                         data-status="{{ $item->status }}"
                                                                         {{ $item->status == 1 ? 'checked' : '' }}>
+                                                                </div>
+                                                            </td>
+                                                            <td class="home">
+                                                                <div
+                                                                    class="form-check form-switch form-switch-success mb-3">
+                                                                    <input class="form-check-input status-checkbox"
+                                                                        type="checkbox" role="switch"
+                                                                        value="{{ $item->home }}"
+                                                                        data-uuid="{{ $item->uuid }}" data-name="home"
+                                                                        data-status="{{ $item->home }}"
+                                                                        {{ $item->home == 1 ? 'checked' : '' }}>
                                                                 </div>
                                                             </td>
                                                             <td>
@@ -112,7 +134,7 @@
                                                 </form>
                                             @else
                                                 <tr>
-                                                    <td colspan="7" style="text-align:center">Chưa có dữ liệu</td>
+                                                    <td colspan="8" style="text-align:center">Chưa có dữ liệu</td>
                                                 </tr>
                                             @endif
                                         </tbody>
