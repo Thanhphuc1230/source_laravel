@@ -40,7 +40,7 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="mb-3">
+                                {{-- <div class="mb-3">
                                     <label class="form-label" for="product-title-input">Tiêu đề EN</label>
                                     <input type="text" id="name_vn"
                                         class="form-control @error('name_en') is-invalid @enderror" name="name_en"
@@ -49,7 +49,7 @@
                                     @error('name_en')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>
+                                </div> --}}
                        
                                 <div class="col-md-12">
                                     <div class="mb-3">
@@ -61,7 +61,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                {{-- <div class="col-md-12">
                                     <div class="mb-3">
                                         <label for="content-en" class="form-label">Nội dung EN</label>
                                         <textarea id="content-en" class="form-control @error('content_en') is-invalid @enderror" name="content_en"
@@ -70,19 +70,16 @@
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                         <!-- end card -->
                        
                         <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Hình ảnh sản phẩm</h5>
-                            </div>
                             <div class="card-body">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="firstNameinput" class="form-label">Hình ảnh(400x600)</label>
+                                        <label for="firstNameinput" class="form-label">Hình ảnh</label>
                                         <input type="file" id="fileInput" name="image"
                                             class="form-control @error('image') is-invalid @enderror">
                                         <div id="imageContainer"></div>
@@ -133,6 +130,9 @@
                                         <option value="0"
                                             {{ (old('status') ?: $page->status ?? '') == 0 ? 'selected' : '' }}>Ẩn</option>
                                     </select>
+                                    @error('status')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                                 <div>

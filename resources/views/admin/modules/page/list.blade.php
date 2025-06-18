@@ -48,9 +48,8 @@
                                     <table class="table align-middle table-nowrap" id="customerTable">
                                         <thead class="table-light">
                                             <tr>
-                                                <th><input type="checkbox" id="masterCheckbox"></th>
+                                                <th><input type="checkbox" id="checkAll"></th>
                                                 <th class="sort">ID</th>
-                                                <th class="sort">Ảnh</th>
                                                 <th class="sort">Tiêu đề</th>
                                                 <th class="sort">Hiển thị</th>
                                                 <th class="sort">STT</th>
@@ -66,13 +65,9 @@
                                                     @csrf
                                                     @foreach ($list as $item)
                                                         <tr>
-                                                            <td><input class="form-check-input" id="checkbox-data"
-                                                                    type="checkbox" name="uuids[]"
-                                                                    value="{{ $item->uuid }}"></td>
+                                                            <td><input class="form-check-input" type="checkbox"
+                                                                    name="uuids[]" value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}"
-                                                                    alt="" style="width: 100px; height: 100px;">
-                                                            </td>
                                                             <td>{{ $item->name_vn }}</td>
                                                             <td class="status">
                                                                 <div
@@ -136,4 +131,5 @@
         </div>
         @include('admin.ajax.status')
         @include('admin.ajax.update-stt')
+
     @endsection

@@ -12,6 +12,9 @@
 <!-- App js -->
 <script src="{{ asset('admin/js/app.js')}}"></script>
 
+<!-- Checkbox Handler -->
+<script src="{{ asset('admin/js/checkbox-handler.js')}}"></script>
+
 <!-- Thêm hàm preview image -->
 <script>
     // Hàm xử lý preview image khi chọn file
