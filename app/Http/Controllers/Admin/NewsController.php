@@ -12,14 +12,15 @@ use Illuminate\Support\Facades\View;
 
 class NewsController extends BaseController
 {
-    protected $model,$nameItem,$imageFolder;
+    protected $module,$model,$nameItem,$imageFolder;
     public function __construct($imageFolder = 'news')
     {
+        $this->module = 'news';
         $this->model = new News();
         $this->nameItem = 'bài viết';
         $this->imageFolder = $imageFolder;
 
-        parent::__construct($imageFolder);
+        parent::__construct($this->module, $imageFolder);
 
         View::share('nameClass', $imageFolder);
     }

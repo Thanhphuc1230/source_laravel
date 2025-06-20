@@ -11,14 +11,15 @@ use App\Http\Requests\Admin\CateNewRequest;
 
 class CateNewController extends BaseController
 {
-    protected $model,$nameItem,$imageFolder;
+    protected $module,$model,$nameItem,$imageFolder;
     public function __construct($imageFolder = 'cate_new')
     {
+        $this->module = 'cate_new';
         $this->model = new CateNew();
         $this->nameItem = 'danh mục tin tức';
         $this->imageFolder = $imageFolder;
 
-        parent::__construct($imageFolder);
+        parent::__construct($this->module, $imageFolder);
 
         View::share('nameClass', $imageFolder);
     }

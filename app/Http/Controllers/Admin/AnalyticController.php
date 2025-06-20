@@ -10,14 +10,15 @@ use Illuminate\Support\Facades\View;
 
 class AnalyticController extends BaseController
 {
-    protected $model,$nameItem;
+    protected $module, $model, $nameItem;
 
     public function __construct()
     {
+        $this->module = 'analytics';
         $this->model = new Analytic();
         $this->nameItem = 'Biểu đồ';
         
-        parent::__construct('analytics');
+        parent::__construct($this->module);
         
         View::share('nameClass', 'chart');
     }

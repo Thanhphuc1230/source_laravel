@@ -144,7 +144,7 @@ class ImageService
     }
 
     /**
-     * Chuyển đổi ảnh sang định dạng WebP
+     * Chuyển đổi ảnh sang định dạng WebP với queue processing
      * 
      * @param string $sourcePath Đường dẫn file nguồn
      * @param string $targetPath Đường dẫn file đích (webp)
@@ -159,6 +159,22 @@ class ImageService
                 throw new Exception("File nguồn không tồn tại: {$sourcePath}");
             }
 
+            // Kiểm tra file size - skip nếu quá lớn
+            $fileSize = filesize($sourcePath);
+            if ($fileSize > 10 * 1024 * 1024) { // 10MB
+                \Log::warning("File quá lớn để convert WebP: {$sourcePath}", ['size' => $fileSize]);
+                return $this->fallbackToOriginal($sourcePath, $targetPath);
+            }
+
+            // Kiểm tra memory available
+            $memoryLimit = $this->getMemoryLimit();
+            $estimatedMemory = $fileSize * 4; // Rough estimate
+            
+            if ($estimatedMemory > $memoryLimit * 0.8) {
+                \Log::warning("Không đủ memory để convert WebP: {$sourcePath}");
+                return $this->fallbackToOriginal($sourcePath, $targetPath);
+            }
+
             // Kiểm tra và tạo thư mục đích
             $targetDir = dirname($targetPath);
             if (!File::exists($targetDir)) {
@@ -170,7 +186,7 @@ class ImageService
                 throw new Exception("Không có quyền ghi vào thư mục: {$targetDir}");
             }
 
-            // Tải và xử lý ảnh
+            // Tải và xử lý ảnh với memory optimization
             $image = Image::make($sourcePath);
             
             // Kiểm tra xem ảnh có được tải thành công không
@@ -178,31 +194,99 @@ class ImageService
                 throw new Exception("Không thể tải ảnh từ nguồn");
             }
 
-            // Encode sang WebP
+            // Resize nếu ảnh quá lớn
+            if ($image->width() > 2048 || $image->height() > 2048) {
+                $image->resize(2048, 2048, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+            }
+
+            // Encode sang WebP với quality optimization
             $result = $image->encode('webp', $quality);
             
             // Lưu file
             $result->save($targetPath);
+
+            // Destroy image object để free memory
+            $image->destroy();
 
             // Kiểm tra file đã được tạo
             if (!file_exists($targetPath)) {
                 throw new Exception("File WebP không được tạo thành công");
             }
 
+            // Log success
+            \Log::info("WebP conversion successful", [
+                'source' => $sourcePath,
+                'target' => $targetPath,
+                'original_size' => $fileSize,
+                'webp_size' => filesize($targetPath),
+                'compression_ratio' => round((1 - filesize($targetPath) / $fileSize) * 100, 2) . '%'
+            ]);
+
             return true;
 
         } catch (Exception $e) {
-            // Thử lưu file gốc nếu không chuyển được WebP
-            try {
-                if (copy($sourcePath, str_replace('.webp', '.jpg', $targetPath))) {
-                    return true;
-                }
-            } catch (Exception $copyError) {
-                return false;
-            }
+            // Log error
+            \Log::error("WebP conversion failed: " . $e->getMessage(), [
+                'source' => $sourcePath,
+                'target' => $targetPath,
+                'trace' => $e->getTraceAsString()
+            ]);
             
-            return false;
+            // Fallback to original format
+            return $this->fallbackToOriginal($sourcePath, $targetPath);
         }
+    }
+
+    /**
+     * Fallback to original image format
+     */
+    private function fallbackToOriginal(string $sourcePath, string $targetPath): bool
+    {
+        try {
+            $originalExt = pathinfo($sourcePath, PATHINFO_EXTENSION);
+            $fallbackPath = str_replace('.webp', '.' . $originalExt, $targetPath);
+            
+            if (copy($sourcePath, $fallbackPath)) {
+                \Log::info("Fallback to original format successful", [
+                    'source' => $sourcePath,
+                    'fallback' => $fallbackPath
+                ]);
+                return true;
+            }
+        } catch (Exception $copyError) {
+            \Log::error("Fallback copy failed: " . $copyError->getMessage());
+        }
+        
+        return false;
+    }
+
+    /**
+     * Get PHP memory limit in bytes
+     */
+    private function getMemoryLimit(): int
+    {
+        $memoryLimit = ini_get('memory_limit');
+        
+        if ($memoryLimit == -1) {
+            return PHP_INT_MAX;
+        }
+        
+        $unit = strtolower(substr($memoryLimit, -1));
+        $value = (int) $memoryLimit;
+        
+        switch ($unit) {
+            case 'g':
+                $value *= 1024;
+            case 'm':
+                $value *= 1024;
+            case 'k':
+                $value *= 1024;
+        }
+        
+        return $value;
     }
 
     /**

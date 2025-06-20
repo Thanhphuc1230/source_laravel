@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class SliderController extends BaseController
 {
-    protected $model,$nameItem,$imageFolder;
+    protected $module,$model,$nameItem,$imageFolder;
     public function __construct($imageFolder = 'slider')
     {
         $this->module = 'slider';

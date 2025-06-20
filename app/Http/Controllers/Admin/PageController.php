@@ -11,14 +11,15 @@ use App\Http\Requests\Admin\PageRequest;
 
 class PageController extends BaseController
 {
-    protected $model,$nameItem,$imageFolder;
+    protected $module,$model,$nameItem,$imageFolder;
     public function __construct($imageFolder = 'page')
     {
+        $this->module = 'page';
         $this->model = new Page();
         $this->nameItem = 'Trang nội dung';
         $this->imageFolder = $imageFolder;
 
-        parent::__construct($imageFolder);
+        parent::__construct($this->module, $imageFolder);
 
         View::share('nameClass', $imageFolder);
     }

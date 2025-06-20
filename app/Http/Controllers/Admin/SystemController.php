@@ -9,14 +9,15 @@ use Illuminate\Support\Facades\View;
 
 class SystemController extends BaseController
 {   
-    protected $model,$nameItem,$imageFolder;
+    protected $module,$model,$nameItem,$imageFolder;
     public function __construct($imageFolder = 'system')
     {
+        $this->module = 'system';
         $this->model = new System();
         $this->nameItem = 'Hệ thống';
         $this->imageFolder = $imageFolder;
 
-        parent::__construct($imageFolder);
+        parent::__construct($this->module, $imageFolder);
 
         View::share('nameClass', $imageFolder);
     }

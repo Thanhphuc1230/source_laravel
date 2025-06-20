@@ -17,14 +17,15 @@ class MenuController extends BaseController
     const TYPE_CATE_NEW = 'cate_new';
     const TYPE_CATE_PRODUCT = 'cate_product';
     
-    protected $model,$nameItem,$imageFolder;
+    protected $module,$model,$nameItem,$imageFolder;
     public function __construct($imageFolder = 'menu')
     {
+        $this->module = 'menu';
         $this->model = new Menu();
         $this->nameItem = 'Trang Menu';
         $this->imageFolder = $imageFolder;
 
-        parent::__construct($imageFolder);
+        parent::__construct($this->module, $imageFolder);
 
         View::share('nameClass', $imageFolder);
     }

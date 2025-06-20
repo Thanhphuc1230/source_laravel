@@ -8,18 +8,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\CateProductRequest;
-use App\Services\ImageService;
-use App\Services\DataRemovalService;
 
 class CateProductController extends BaseController
 {   
-    public function __construct()
+    protected $module, $model, $nameItem, $imageFolder;
+    
+    public function __construct($imageFolder = 'cate_product')
     {
+        $this->module = 'cate_product';
         $this->model = new CateProduct();
-        $this->nameItem = 'danh mục sản phẩm';
-        $this->imageFolder = 'cate_product';
+        $this->nameItem = 'Danh mục sản phẩm';
+        $this->imageFolder = $imageFolder;
 
-        parent::__construct($this->imageFolder);
+        parent::__construct($this->module, $imageFolder);
 
         View::share('nameClass', $this->imageFolder);
     }

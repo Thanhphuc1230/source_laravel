@@ -81,9 +81,9 @@ class DataRemovalService
             $imagePath = public_path("images/{$imageFolder}/{$item->$field}");
             if (File::exists($imagePath)) {
                 File::delete($imagePath);
+                }
             }
         }
-    }
 
     /**
      * Xóa ảnh chi tiết (image_detail field)
