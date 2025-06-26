@@ -32,7 +32,7 @@ class ProductController extends Controller
             ->select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn', 'category_id', 'status', 'stt')
             ->whereIn('category_id',$id_category_child)
             ->where('status',1)
-            ->orderBy('stt','asc')
+        ->orderBy('stt','asc')
             ->paginate(16)
             ->withQueryString();
         
