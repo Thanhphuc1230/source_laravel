@@ -22,7 +22,7 @@ class ProductSeeder extends Seeder
                 'price_old' => rand(100000, 500000),
                 'content_vn' => 'Nội dung sản phẩm ' . $i,
                 'content_en' => 'Product content ' . $i,
-                'image' => null,
+                'image' => 'product-' . $i . '.jpg',
                 'image_detail' => null,
                 'status' => true,
                 'hot' => false,

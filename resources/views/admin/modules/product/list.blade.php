@@ -65,6 +65,7 @@
                                             <tr>
                                                 <th><input type="checkbox" id="checkAll"></th>
                                                 <th class="sort">ID</th>
+                                                <th class="sort">Hình ảnh</th>
                                                 <th class="sort">Tiêu đề</th>
                                                 <th class="sort">Hiển thị</th>
                                                 <th class="sort">Trang chủ</th>
@@ -84,6 +85,8 @@
                                                             <td><input class="form-check-input" type="checkbox" name="uuids[]"
                                                                     value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
+                                                            <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}" alt=""
+                                                                    style="height: 100px;"></td>
                                                             <td>{{ $item->name_vn }}</td>
                                                             <td class="status">
                                                                 <div
