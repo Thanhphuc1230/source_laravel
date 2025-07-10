@@ -6,18 +6,28 @@ use App\Models\Page;
 
 function urlMenu($item)
 {
+    static $pageSlugs = [];
+    static $cateNewSlugs = [];
+    static $cateProductSlugs = [];
+
     switch ($item->type) {
         case 'page':
-            $slugPage = Page::where('id_page', $item->object_id)->value('slug');
-            return route('web.page', ['slug_page' => $slugPage]);
+            if (!isset($pageSlugs[$item->object_id])) {
+                $pageSlugs[$item->object_id] = Page::where('id_page', $item->object_id)->value('slug');
+            }
+            return route('web.resolve', ['slug' => $pageSlugs[$item->object_id]]);
 
         case 'cate_new':
-            $slugCateNew = CateNew::where('id_cate_new', $item->object_id)->value('slug');
-            return route('web.categoryNews', ['slug_cate_new' => $slugCateNew]);
+            if (!isset($cateNewSlugs[$item->object_id])) {
+                $cateNewSlugs[$item->object_id] = CateNew::where('id_cate_new', $item->object_id)->value('slug');
+            }
+            return route('web.resolve', ['slug' => $cateNewSlugs[$item->object_id]]);
 
         case 'cate_product':
-            $slugCateProduct = CateProduct::where('id_cate_product', $item->object_id)->value('slug');
-            return route('web.categoryProduct', ['slug_cate_product' => $slugCateProduct]);
+            if (!isset($cateProductSlugs[$item->object_id])) {
+                $cateProductSlugs[$item->object_id] = CateProduct::where('id_cate_product', $item->object_id)->value('slug');
+            }
+            return route('web.resolve', ['slug' => $cateProductSlugs[$item->object_id]]);
 
         case 'link':
             return $item->link;
@@ -30,26 +40,26 @@ function isActiveMenu($item)
 {
     $currentUrl = request()->url();
     $menuUrl = urlMenu($item);
-    
-    // Xử lý đặc biệt cho trang chủ
-    if ($menuUrl == '/') {
-        return $currentUrl == route('web.home') ? 'active' : '';
+
+    // Xử lý đặc biệt cho trang chủ: chỉ active khi đúng chính xác route home
+    if ($menuUrl == route('web.home')) {
+        return $currentUrl == $menuUrl ? 'active' : '';
     }
-    
-    // Kiểm tra URL hiện tại có chứa URL của menu không
-    if (strpos($currentUrl, $menuUrl) === 0) {
+
+    // Kiểm tra URL hiện tại có chứa URL của menu không (với các menu khác)
+    if ($menuUrl && $currentUrl == $menuUrl) {
         return 'active';
     }
-    
+
     // Kiểm tra menu con
     if ($item->children->isNotEmpty()) {
         foreach ($item->children as $child) {
             $childUrl = urlMenu($child);
-            if (strpos($currentUrl, $childUrl) === 0) {
+            if ($childUrl && $currentUrl == $childUrl) {
                 return 'active';
             }
         }
     }
-    
+
     return '';
 }
