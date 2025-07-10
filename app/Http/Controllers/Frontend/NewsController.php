@@ -15,7 +15,7 @@ class NewsController extends Controller
         return view('frontend.modules.news.category',$data);
     }
 
-    public function detailNews($slug_cate_new,$slug_news)
+    public function detailNews($slug_news)
     {
         $data['news_detail'] = News::where('slug',$slug_news)->firstOrFail();
         $data['related_news'] = News::where('category_id',$data['news_detail']->category_id)->orderBy('created_at','desc')->limit(8)->get();

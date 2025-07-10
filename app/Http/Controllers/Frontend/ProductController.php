@@ -39,21 +39,21 @@ class ProductController extends Controller
         return view('frontend.modules.product.category',$data);
     }
 
-    public function detailProduct($slug_product,$id_product)
+    public function detailProduct($slug_product)
     {
         // Cache product detail
         $data['product_detail'] = cache()->remember(
-            "product_detail_{$id_product}", 
+            "product_detail_{$slug_product}", 
             3600, 
             fn() => Product::with(['cate:id_cate_product,name_vn,slug'])
-                ->where('id_product',$id_product)
+                ->where('slug',$slug_product)
                 ->firstOrFail()
         );
         
         // Optimized related products query
         $data['related_product'] = Product::select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn')
             ->where('category_id',$data['product_detail']->category_id)
-            ->where('id_product','!=',$id_product)
+            ->where('id_product','!=',$data['product_detail']->id_product)
             ->where('status', 1)
             ->orderBy('created_at','desc')
             ->limit(8)
