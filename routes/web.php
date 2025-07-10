@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SitemapController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\RouteController;
 
 // auth
 use App\Http\Controllers\Auth\LoginController;
@@ -64,21 +65,11 @@ Route::name('web.')
         Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
         Route::post('/checkout-store', [CheckoutController::class, 'checkoutStore'])->name('checkoutStore');
         route::get('/order-success', [CheckoutController::class, 'orderSuccess'])->name('orderSuccess');
-        // page
-        Route::get('/page/{slug_page}.html', [Page::class, 'page'])->name('page');
-        //Category Product
-        Route::get('category/{slug_cate_product}.html', [Product::class, 'categoryProduct'])->name('categoryProduct');
 
-        //Category News
-        Route::get('news/{slug_cate_new}.html', [News::class, 'categoryNews'])->name('categoryNews');
-        // detail news
-        Route::get('news/{slug_cate_new}/{slug_news}.html', [News::class, 'detailNews'])->name('detailNews');
-        // product
-        Route::get('{slug_product}-{id_product}.html', function ($slug_product, $id_product) {
-            return app(Product::class)->detailProduct($slug_product, $id_product);
-        })
-            ->where('slug_product', '.*')
-            ->name('detailProduct');
+        // handle all route
+        Route::get('{slug}.html', [RouteController::class, 'resolve'])
+            ->where('slug', '[a-zA-Z0-9\-]+')
+            ->name('resolve');
     });
 
 Route::prefix('admin')
