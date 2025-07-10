@@ -282,6 +282,18 @@
                                     @enderror
                                 </div>
 
+                                <!-- Preview Link Section -->
+                                @if(isset($page) && $page->slug && $page->status && $page->id_product)
+                                <div class="mt-3">
+                                    <label class="form-label">Xem trang</label>
+                                    <div>
+                                        <a href="{{ route('web.resolve', ['slug' => $page->slug]) }}" target="_blank" class="text-decoration-none">
+                                            <span>{{ request()->getSchemeAndHttpHost() }}/{{ $page->slug }}-{{ $page->id_product }}.html</span>
+                                            <i class="ri-eye-line ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                @endif
 
                             </div>
                             <!-- end card body -->

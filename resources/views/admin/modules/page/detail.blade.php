@@ -147,13 +147,26 @@
 
                                 <div>
                                     <label for="slug" class="form-label">Slug</label>
-                                    <input type="text" name="slug"
+                                    <input type="text" name="slug" id="slug-input"
                                         class="form-control @error('slug') is-invalid @enderror"
                                         placeholder="Enter your slug" value="{{ old('slug', $page->slug ?? '') }}">
                                     @error('slug')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+
+                                <!-- Preview Link Section -->
+                                @if(isset($page) && $page->slug && $page->status)
+                                <div class="mt-3">
+                                    <label class="form-label">Xem trang</label>
+                                    <div>
+                                        <a href="{{ route('web.resolve', ['slug' => $page->slug]) }}" target="_blank" class="text-decoration-none">
+                                            <span>{{ request()->getSchemeAndHttpHost() }}/{{ $page->slug }}.html</span>
+                                            <i class="ri-eye-line ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                @endif
 
 
                             </div>

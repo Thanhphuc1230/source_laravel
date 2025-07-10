@@ -52,6 +52,21 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
+                                        
+                                        <!-- Preview Link Section -->
+                                        @if(isset($page) && $page->slug && $page->status)
+                                        <div class="col-md-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Xem trang</label>
+                                                <div>
+                                                    <a href="{{ route('web.resolve', ['slug' => $page->slug]) }}" target="_blank" class="text-decoration-none">
+                                                        <span>{{ request()->getSchemeAndHttpHost() }}/category/{{ $page->slug }}.html</span>
+                                                        <i class="ri-eye-line ms-1"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endif
                                         <!--end col-->
                                         <div class="col-md-6">
                                             <div class="mb-3">

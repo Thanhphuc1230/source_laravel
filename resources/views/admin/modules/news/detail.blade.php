@@ -169,13 +169,31 @@
 
                                 <div class="mb-3">
                                     <label for="slug" class="form-label">Slug</label>
-                                    <input type="text" name="slug"
+                                    <input type="text" name="slug" id="slug-input"
                                         class="form-control @error('slug') is-invalid @enderror"
                                         placeholder="Enter your slug" value="{{ old('slug', $page->slug ?? '') }}">
                                     @error('slug')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+
+                                <!-- Preview Link Section -->
+                                @if(isset($page) && $page->slug && $page->status && $page->category_id)
+                                    @php
+                                        $categorySlug = \App\Models\CateNew::find($page->category_id)?->slug ?? '';
+                                    @endphp
+                                    @if($categorySlug)
+                                    <div class="mb-3">
+                                        <label class="form-label">Xem trang</label>
+                                        <div>
+                                            <a href="{{ route('web.resolve', ['slug' => $page->slug]) }}" target="_blank" class="text-decoration-none">
+                                                <span>{{ request()->getSchemeAndHttpHost() }}/news/{{ $categorySlug }}/{{ $page->slug }}.html</span>
+                                                <i class="ri-eye-line ms-1"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @endif
+                                @endif
                                 <div class="mb-3">
                                     <label for="category_id" class="form-label">Chủ đề tin tức</label>
                                     <select class="form-select" id="choices-category-input" name="category_id">
