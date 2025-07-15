@@ -16,7 +16,7 @@ class NewsSeeder extends Seeder
                 'name_vn' => 'Tin tức ' . $i,
                 'name_en' => 'News ' . $i,
                 'slug' => Str::slug('tin-tuc-' . $i),
-                'image' => 'product-' . $i . '.jpg',
+                'image' => 'product-' . $i . '.webp',
                 'intro_vn' => 'Giới thiệu tin tức ' . $i,
                 'intro_en' => 'News intro ' . $i,
                 'content_vn' => 'Nội dung tin tức ' . $i,
