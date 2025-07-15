@@ -19,6 +19,7 @@ class CateProduct extends Model
         'image',
         'status',
         'stt',
+        'parent_id',
     ];
 
     public function children()
@@ -29,5 +30,10 @@ class CateProduct extends Model
     public function products()
     {
         return $this->hasMany(Product::class, 'category_id', 'id_cate_product')->where('status', 1)->orderBy('stt', 'asc');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(CateProduct::class, 'parent_id', 'id_cate_product');
     }
 }

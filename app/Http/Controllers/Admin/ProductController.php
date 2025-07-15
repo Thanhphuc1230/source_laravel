@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\ProductRequest;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends BaseController
 {
@@ -134,5 +135,30 @@ class ProductController extends BaseController
     public function numericalOrder(Request $request, $uuid)
     {
         return $this->statusManagementService->updateStt($request, $uuid,$this->model::class);
+    }
+
+    public function deleteImage($uuid, $index)
+    {
+        $product = $this->model::where('uuid', $uuid)->firstOrFail();
+        $images = json_decode($product->image_detail, true);
+
+        if (isset($images[$index])) {
+            $imageToDelete = $images[$index];
+            // Delete the file from storage
+            $oldImagePath = public_path('images/' . $this->imageFolder . '/' . $imageToDelete);
+            if (File::exists($oldImagePath)) {
+                File::delete($oldImagePath); // Xóa hình ảnh cũ
+            }
+
+            // Remove the image from the array
+            unset($images[$index]);
+            // Re-index the array and save
+            $product->image_detail = json_encode(array_values($images));
+            $product->save();
+
+            return response()->json(['message' => 'Hình ảnh đã được xóa thành công.'], 200); // Updated response
+        }
+
+        return response()->json(['message' => 'Không tìm thấy hình ảnh để xóa.'], 404); // Updated response
     }
 }
