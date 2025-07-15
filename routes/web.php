@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\SystemController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SitemapController;
+use App\Http\Controllers\Admin\OrderController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\RouteController;
@@ -214,15 +215,14 @@ Route::prefix('admin')
                 Route::post('/store', 'store')->name('store');
                 Route::post('/update/{id}', 'update')->name('update');
             });
-    });
-
-Route::get('/test-hello', function () {
-    return '<h1>Hello Test</h1>';
-});
-
-// frontend
-Route::name('web.')
-    ->middleware(['web', 'visit'])
-    ->group(function () {
-        Route::get('/', [HomeController::class, 'home'])->name('home');
+        //Order manage
+        Route::controller(OrderController::class)
+            ->prefix('order')
+            ->name('order.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/status/{uuid}/{status}/{name}', 'status')->name('status');
+                Route::get('/edit/{uuid}', 'edit')->name('edit');
+                Route::get('/destroy-order/{uuid}', 'destroy_order')->name('destroy_order');
+            });
     });
