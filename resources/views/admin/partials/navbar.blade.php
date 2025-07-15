@@ -32,6 +32,11 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('web.home') }}">
+                        <i class="ri-home-line"></i> <span data-key="t-widgets">Trang chủ</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.analytics.index') }}">
                         <i class="ri-bar-chart-line"></i> <span data-key="t-widgets">Thống kê</span>
                     </a>
@@ -73,6 +78,9 @@
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('admin.product.index') }}" class="nav-link" data-key="t-grid-js">Bài viết</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.order.index') }}" class="nav-link" data-key="t-grid-js">Đơn hàng</a>
                             </li>
                         </ul>
                     </div>

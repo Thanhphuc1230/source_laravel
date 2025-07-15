@@ -23,7 +23,7 @@
                                     @endif
                                     <div class="row">
                                         <div class="mb-3">
-                                            <label class="form-label" for="product-title-input">Tiêu đề VN
+                                            <label class="form-label" for="product-title-input">Tiêu đề
                                             </label>
                                             <input type="text" id="name_vn" class="form-control @error('name_vn') is-invalid @enderror" name="name_vn"
                                                 value="{{ old('name_vn', $page->name_vn ?? '') }}"
@@ -32,17 +32,7 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
-                                        <div class="mb-3">
-                                            <label class="form-label" for="product-title-input">Tiêu đề EN
-                                            </label>
-                                            <input type="text" class="form-control @error('name_en') is-invalid @enderror" name="name_en"
-                                                value="{{ old('name_en', $page->name_en ?? '') }}"
-                                                placeholder="Enter your title page ">
-                                            @error('name_en')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="slug" class="form-label">Slug</label>
                                                 <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
@@ -52,6 +42,25 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="phone-field" class="form-label">Danh mục</label>
+                                                <select class="form-select mb-3" aria-label="Default select example"
+                                                    name="parent_id">
+                                                    <option value="0"
+                                                        {{ (old('parent_id') ?: $page->parent_id ?? '') == 0 ? 'selected' : '' }}>
+                                                        Trang chính</option>
+                                                    @php
+                                                        renderCategoryOptions(
+                                                            $category,
+                                                            0,
+                                                            old('parent_id') ?: $page->parent_id ?? null,
+                                                            'id_cate_product',
+                                                        );
+                                                    @endphp
+                                                </select>
+                                            </div>
+                                        </div>
                                         
                                         <!-- Preview Link Section -->
                                         @if(isset($page) && $page->slug && $page->status)
@@ -60,7 +69,7 @@
                                                 <label class="form-label">Xem trang</label>
                                                 <div>
                                                     <a href="{{ route('web.resolve', ['slug' => $page->slug]) }}" target="_blank" class="text-decoration-none">
-                                                        <span>{{ request()->getSchemeAndHttpHost() }}/category/{{ $page->slug }}.html</span>
+                                                        <span>{{ request()->getSchemeAndHttpHost() }}/{{ $page->slug }}.html</span>
                                                         <i class="ri-eye-line ms-1"></i>
                                                     </a>
                                                 </div>

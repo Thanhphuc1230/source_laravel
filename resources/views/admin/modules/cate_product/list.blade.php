@@ -84,7 +84,7 @@
                                                             <td><input class="form-check-input" type="checkbox" name="uuids[]"
                                                                     value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td>{{ $item->name_vn }}</td>
+                                                            <td>{{ $item->name_vn }} @if($item->parent_id != 0)<br> <span class="text-muted">Danh mục cha: {{ $item->parent->name_vn }}</span> @endif</td>
                                                             <td class="status">
                                                                 <div
                                                                     class="form-check form-switch form-switch-success mb-3">
@@ -120,6 +120,10 @@
                                                             </td>
                                                             <td>
                                                                 <div class="d-flex gap-2">
+                                                                    <div class="watch">
+                                                                        <a href="{{ route('web.resolve',['slug' => $item->slug]) }}" target="_blank"
+                                                                            class="btn btn-sm btn-primary watch-item-btn">Xem</a>
+                                                                    </div>
                                                                     <div class="edit">
                                                                         <a href="{{ route('admin.' . $nameClass . '.edit', ['uuid' => $item->uuid, 'page' => $list->currentPage()]) }}"
                                                                             class="btn btn-sm btn-success edit-item-btn">Sửa</a>
