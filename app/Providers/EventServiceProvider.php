@@ -8,6 +8,8 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Events\Menu\MenuChanged;
 use App\Listeners\Menu\ClearMenuCache;
+use App\Events\Feedback\FeedbackChanged;
+use App\Listeners\Feedback\ClearFeedbackCache;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,11 @@ class EventServiceProvider extends ServiceProvider
         // Menu Events
         MenuChanged::class => [
             ClearMenuCache::class,
+        ],
+        
+        // Feedback Events
+        FeedbackChanged::class => [
+            ClearFeedbackCache::class,
         ],
     ];
 
