@@ -4,7 +4,7 @@ use App\Models\CateNew;
 use App\Models\CateProduct;
 use App\Models\Page;
 
-function urlMenu($item)
+function getUrlMenu($item)
 {
     static $pageSlugs = [];
     static $cateNewSlugs = [];
@@ -39,7 +39,7 @@ function urlMenu($item)
 function isActiveMenu($item)
 {
     $currentUrl = request()->url();
-    $menuUrl = urlMenu($item);
+    $menuUrl = getUrlMenu($item);
 
     // Xử lý đặc biệt cho trang chủ: chỉ active khi đúng chính xác route home
     if ($menuUrl == route('web.home')) {
@@ -54,7 +54,7 @@ function isActiveMenu($item)
     // Kiểm tra menu con
     if ($item->children->isNotEmpty()) {
         foreach ($item->children as $child) {
-            $childUrl = urlMenu($child);
+            $childUrl = getUrlMenu($child);
             if ($childUrl && $currentUrl == $childUrl) {
                 return 'active';
             }
