@@ -11,6 +11,7 @@ use App\Models\CateNew;
 use App\Models\CateProduct;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\MenuRequest;
+use App\Events\Menu\MenuChanged;
 class MenuController extends BaseController
 {
     const TYPE_PAGE = 'page';
@@ -106,7 +107,10 @@ class MenuController extends BaseController
                     'type' => $request->type,
                 ];
 
-                $this->model::create($data);
+                $menu = $this->model::create($data);
+                
+                // Dispatch event sau khi tạo menu
+                MenuChanged::dispatch($menu, 'created');
             }
 
             toast('Thêm ' . $this->nameItem . ' thành công', 'success');
@@ -149,10 +153,17 @@ class MenuController extends BaseController
                 ['updated_at' => now()]
             );
             
-            $updated = $this->model::where('uuid', $uuid)->update($data);
+            $menu = $this->model::where('uuid', $uuid)->first();
             
-            if (!$updated) {
+            if (!$menu) {
                 throw new \Exception('Không tìm thấy menu để cập nhật');
+            }
+            
+            $updated = $menu->update($data);
+            
+            if ($updated) {
+                // Dispatch event sau khi cập nhật menu
+                MenuChanged::dispatch($menu, 'updated');
             }
             
             toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
@@ -165,6 +176,13 @@ class MenuController extends BaseController
 
     public function destroy(string $uuid)
     {
-         return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        $menu = $this->model::where('uuid', $uuid)->first();
+        
+        if ($menu) {
+            // Dispatch event trước khi xóa menu
+            MenuChanged::dispatch($menu, 'deleted');
+        }
+        
+        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
     }
 }
