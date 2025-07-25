@@ -28,7 +28,7 @@ class News extends Model
         'updated_at',
     ];
 
-    public function category()
+    public function cate()
     {
         return $this->belongsTo(CateNew::class, 'category_id', 'id_cate_new');
     }
