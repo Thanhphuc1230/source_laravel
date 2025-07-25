@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CateNewController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\AnalyticController;
+use App\Http\Controllers\Admin\FeedBackController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\SystemController;
@@ -44,7 +45,7 @@ Route::group(['middleware' => 'web'], function () {
 });
 
 // sitemap
-Route::get('/sitemap.xml', function() {
+Route::get('/sitemap.xml', function () {
     return response()->file(public_path('sitemap.xml'));
 });
 
@@ -77,7 +78,6 @@ Route::prefix('admin')
     ->name('admin.')
     ->middleware('checkAuth')
     ->group(function () {
-
         // Sitemap
         Route::controller(SitemapController::class)
             ->prefix('sitemap')
@@ -182,6 +182,21 @@ Route::prefix('admin')
         Route::controller(SliderController::class)
             ->prefix('slider')
             ->name('slider.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/create', 'create')->name('create');
+                Route::post('/status/{uuid}/{status}/{field}', 'status')->name('status');
+                Route::post('/store', 'store')->name('store');
+                Route::get('/edit/{uuid}/{page}', 'edit')->name('edit');
+                Route::post('/update/{uuid}', 'update')->name('update');
+                Route::get('/destroy/{uuid}', 'destroy')->name('destroy');
+                Route::post('/destroyAll', 'destroyAll')->name('destroyAll');
+                Route::post('/update-stt/{uuid}', 'numericalOrder')->name('numericalOrder');
+            });
+        //Feedback
+        Route::controller(FeedBackController::class)
+            ->prefix('feedback')
+            ->name('feedback.')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/create', 'create')->name('create');

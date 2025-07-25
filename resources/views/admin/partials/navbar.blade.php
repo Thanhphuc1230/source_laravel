@@ -101,6 +101,11 @@
                         </ul>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.feedback.index') }}">
+                        <i class="ri-feedback-line"></i> <span data-key="t-widgets">Đánh giá khách hàng</span>
+                    </a>
+                </li>
                 {{-- system --}}
                 @if (Auth::user()->level == 1)
                     <li class="nav-item">
