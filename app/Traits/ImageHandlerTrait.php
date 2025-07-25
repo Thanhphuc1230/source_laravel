@@ -9,7 +9,7 @@ trait ImageHandlerTrait
     protected $defaultImageConfig = [
         'convertToWebp' => true,
         'quality' => 80,
-        'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif']
+        'mimeTypes' => ['image/jpeg', 'image/png','image/jpg', 'image/gif','image/webp']
     ];
 
     protected function handleSingleImage(Request $request, $model = null, $folder = null, $field = 'image')
