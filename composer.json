@@ -38,7 +38,8 @@
         },
         "files": [
             "app/Helpers/CateHelper.php",
-            "app/Helpers/MenuHelper.php"
+            "app/Helpers/MenuHelper.php",
+            "app/Helpers/CartHelper.php"
         ]
     },
     "scripts": {
