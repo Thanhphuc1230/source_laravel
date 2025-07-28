@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Exception;
 
 class DataRemovalService
@@ -54,6 +55,9 @@ class DataRemovalService
         // Xóa record
         $item->delete();
 
+        // Dispatch event nếu có thể
+        $this->dispatchModelEvent($model, $item, 'deleted');
+
         toast('Xóa mục thành công.', 'success');
         return back();
     }
@@ -81,9 +85,9 @@ class DataRemovalService
             $imagePath = public_path("images/{$imageFolder}/{$item->$field}");
             if (File::exists($imagePath)) {
                 File::delete($imagePath);
-                }
             }
         }
+    }
 
     /**
      * Xóa ảnh chi tiết (image_detail field)
@@ -107,6 +111,25 @@ class DataRemovalService
                     File::delete($imagePath);
                 }
             }
+        }
+    }
+
+    /**
+     * Dispatch event cho model
+     */
+    private function dispatchModelEvent($model, $item, $action)
+    {
+        try {
+            // Xác định event class dựa trên model
+            $modelName = class_basename($model);
+            $eventClass = "App\\Events\\{$modelName}\\{$modelName}Changed";
+            
+            if (class_exists($eventClass)) {
+                $eventClass::dispatch($item, $action);
+            }
+        } catch (\Exception $e) {
+            // Log error nhưng không làm crash
+            Log::error("Failed to dispatch event for {$modelName}: " . $e->getMessage());
         }
     }
 }
