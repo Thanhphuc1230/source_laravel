@@ -10,6 +10,8 @@ use App\Events\Menu\MenuChanged;
 use App\Listeners\Menu\ClearMenuCache;
 use App\Events\Feedback\FeedbackChanged;
 use App\Listeners\Feedback\ClearFeedbackCache;
+use App\Events\Slider\SliderChanged;
+use App\Listeners\Slider\ClearSliderCache;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -31,6 +33,11 @@ class EventServiceProvider extends ServiceProvider
         // Feedback Events
         FeedbackChanged::class => [
             ClearFeedbackCache::class,
+        ],
+        
+        // Slider Events
+        SliderChanged::class => [
+            ClearSliderCache::class,
         ],
     ];
 

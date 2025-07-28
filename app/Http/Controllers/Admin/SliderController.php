@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Http\Requests\Admin\SliderRequest;
 use Illuminate\Support\Str;
-
+use App\Events\Slider\SliderChanged;
 class SliderController extends BaseController
 {
     protected $module,$model,$nameItem,$imageFolder;
@@ -54,14 +54,15 @@ class SliderController extends BaseController
     {
         $data = $request->except('_token', 'return_back', 'return_list');
         $data['uuid'] = Str::uuid();
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
         $data['created_at'] = new \DateTime();
 
         // Handle image
         $data['image'] = $this->handleSingleImage($request);
 
-        $this->model::create($data);
+        $slider = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+
+        SliderChanged::dispatch($slider, 'created');
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -90,7 +91,6 @@ class SliderController extends BaseController
     {
         $current = $this->model::where('uuid', $uuid)->first();
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
         $data['updated_at'] = new \DateTime();
         
         // Handle image
@@ -99,16 +99,60 @@ class SliderController extends BaseController
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
+        SliderChanged::dispatch($current, 'updated');
+
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
 
     public function status($uuid, $status, $name)
     {
-        return $this->statusManagementService->updateStatus($uuid, $status, $name,$this->model::class);
+        $slider = $this->model::where('uuid', $uuid)->first();
+        $result = $this->statusManagementService->updateStatus($uuid, $status, $name, $this->model::class);
+        
+        SliderChanged::dispatch($slider, 'status_updated');
+        
+        return $result;
+    }
+
+    public function destroy(string $uuid)
+    {
+        $slider = $this->model::where('uuid', $uuid)->first();
+        
+        if (!$slider) {
+            toast('Không tìm thấy ' . $this->nameItem, 'error');
+            return back();
+        }
+
+        // Dispatch event trước khi xóa
+        SliderChanged::dispatch($slider, 'deleted');
+
+        // Gọi destroyData để xóa cả hình ảnh
+        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+    }
+
+    public function destroyAll(Request $request)
+    {
+        $uuids = $request->input('uuids', []);
+        
+        if (empty($uuids)) {
+            toast('Không có mục nào được chọn để xóa.', 'error');
+            return redirect()->back();
+        }
+
+        $sliders = $this->model::whereIn('uuid', $uuids)->get();
+        
+        SliderChanged::dispatch($sliders, 'deleted');
+        // Gọi destroyAllByUUIDs để xóa cả hình ảnh
+        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
     }
 
     public function numericalOrder(Request $request, $uuid)
     {
-        return $this->statusManagementService->updateStt($request, $uuid,$this->model::class);
+        $slider = $this->model::where('uuid', $uuid)->first();
+        $result = $this->statusManagementService->updateStt($request, $uuid, $this->model::class);
+        
+        SliderChanged::dispatch($slider, 'order_updated');
+        
+        return $result;
     }
 }
