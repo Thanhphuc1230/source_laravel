@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\CateNewRequest;
 use App\Events\CateNew\CateNewChanged;
+use App\Events\Content\ContentChanged;
 
 class CateNewController extends BaseController
 {
@@ -81,7 +82,8 @@ class CateNewController extends BaseController
         $cateNew = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
 
-        CateNewChanged::dispatch($cateNew, 'created');
+        // Remove related cache
+        CateNewChanged::dispatch($cateNew, 'created', $data['slug']);
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -120,7 +122,8 @@ class CateNewController extends BaseController
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
-        CateNewChanged::dispatch($current, 'updated');
+        // Remove related cache
+        CateNewChanged::dispatch($current, 'updated', $data['slug']);
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
@@ -130,6 +133,7 @@ class CateNewController extends BaseController
         $cateNew = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
         
+        // Remove related cache
         CateNewChanged::dispatch($cateNew, 'status_updated');
         
         return $result;
@@ -145,6 +149,7 @@ class CateNewController extends BaseController
         $cateNew = $this->model::where('uuid', $uuid)->first();
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
         
+        // Remove related cache
         CateNewChanged::dispatch($cateNew, 'deleted');
         
         return $result;
@@ -157,6 +162,7 @@ class CateNewController extends BaseController
         
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
         
+        // Remove related cache for each item
         foreach ($cateNewItems as $cateNew) {
             CateNewChanged::dispatch($cateNew, 'deleted');
         }

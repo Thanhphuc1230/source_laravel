@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Http\Requests\Admin\NewsRequest;
 use Illuminate\Support\Facades\View;
 use App\Events\News\NewsChanged;
+use App\Events\Content\ContentChanged;
 
 class NewsController extends BaseController
 {
@@ -81,7 +82,8 @@ class NewsController extends BaseController
         $news = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
 
-        NewsChanged::dispatch($news, 'created');
+        // Remove related cache
+        NewsChanged::dispatch($news, 'created', $data['slug']);
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -120,7 +122,8 @@ class NewsController extends BaseController
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
-        NewsChanged::dispatch($current, 'updated');
+        // Remove related cache
+        NewsChanged::dispatch($current, 'updated', $data['slug']);
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
@@ -130,6 +133,7 @@ class NewsController extends BaseController
         $news = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
         
+        // Remove related cache
         NewsChanged::dispatch($news, 'status_updated');
         
         return $result;
@@ -145,6 +149,7 @@ class NewsController extends BaseController
         $news = $this->model::where('uuid', $uuid)->first();
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
         
+        // Remove related cache
         NewsChanged::dispatch($news, 'deleted');
         
         return $result;
@@ -157,6 +162,7 @@ class NewsController extends BaseController
         
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
         
+        // Remove related cache for each item
         foreach ($newsItems as $news) {
             NewsChanged::dispatch($news, 'deleted');
         }

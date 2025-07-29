@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\PageRequest;
 use App\Events\Page\PageChanged;
+use App\Events\Content\ContentChanged;
 
 class PageController extends BaseController
 {
@@ -64,7 +65,8 @@ class PageController extends BaseController
         $page = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
 
-        PageChanged::dispatch($page, 'created');
+        // Remove related cache
+        PageChanged::dispatch($page, 'created', $data['slug']);
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -102,7 +104,8 @@ class PageController extends BaseController
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
-        PageChanged::dispatch($current, 'updated');
+        // Remove related cache
+        PageChanged::dispatch($current, 'updated', $data['slug']);
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
@@ -112,6 +115,7 @@ class PageController extends BaseController
         $page = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
         
+        // Remove related cache
         PageChanged::dispatch($page, 'status_updated');
         
         return $result;
@@ -127,6 +131,7 @@ class PageController extends BaseController
         $page = $this->model::where('uuid', $uuid)->first();
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
         
+        // Remove related cache
         PageChanged::dispatch($page, 'deleted');
         
         return $result;
@@ -139,6 +144,7 @@ class PageController extends BaseController
         
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
         
+        // Remove related cache for each item
         foreach ($pageItems as $page) {
             PageChanged::dispatch($page, 'deleted');
         }

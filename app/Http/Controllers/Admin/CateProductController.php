@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\CateProductRequest;
 use App\Events\CateProduct\CateProductChanged;
+use App\Events\Content\ContentChanged;
 
 class CateProductController extends BaseController
 {   
@@ -86,8 +87,9 @@ class CateProductController extends BaseController
         $cateProduct = $this->model::create($data);
 
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
-
-        CateProductChanged::dispatch($cateProduct, 'created');
+        
+        // Remove related cache
+        CateProductChanged::dispatch($cateProduct, 'created', $data['slug']);
 
         // Xử lý redirect
         if ($request->has('return_back')) {
@@ -145,7 +147,8 @@ class CateProductController extends BaseController
 
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
-        CateProductChanged::dispatch($current, 'updated');
+        // Remove related cache
+        CateProductChanged::dispatch($current, 'updated', $data['slug']);
 
         $currentPage = $request->input('currentPage');
         return $this->route_admin('index', [], [], $currentPage);
@@ -164,6 +167,7 @@ class CateProductController extends BaseController
         $cateProduct = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
         
+        // Remove related cache
         CateProductChanged::dispatch($cateProduct, 'status_updated');
         
         return $result;
@@ -174,6 +178,7 @@ class CateProductController extends BaseController
         $cateProduct = $this->model::where('uuid', $uuid)->first();
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
         
+        // Remove related cache
         CateProductChanged::dispatch($cateProduct, 'deleted');
         
         return $result;
@@ -186,6 +191,7 @@ class CateProductController extends BaseController
         
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
         
+        // Remove related cache for each item
         foreach ($cateProductItems as $cateProduct) {
             CateProductChanged::dispatch($cateProduct, 'deleted');
         }

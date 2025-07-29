@@ -11,6 +11,7 @@ use App\Http\Requests\Admin\ProductRequest;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\File;
 use App\Events\Product\ProductChanged;
+use App\Events\Content\ContentChanged;
 
 class ProductController extends BaseController
 {
@@ -85,7 +86,8 @@ class ProductController extends BaseController
         $product = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
 
-        ProductChanged::dispatch($product, 'created');
+        // Remove related cache
+        ProductChanged::dispatch($product, 'created', $data['slug']);
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -127,7 +129,8 @@ class ProductController extends BaseController
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
-        ProductChanged::dispatch($current, 'updated');
+        // Remove related cache
+        ProductChanged::dispatch($current, 'updated', $data['slug']);
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
@@ -137,6 +140,7 @@ class ProductController extends BaseController
         $product = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
         
+        // Remove related cache
         ProductChanged::dispatch($product, 'status_updated');
         
         return $result;
@@ -177,6 +181,7 @@ class ProductController extends BaseController
         $product = $this->model::where('uuid', $uuid)->first();
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
         
+        // Remove related cache
         ProductChanged::dispatch($product, 'deleted');
         
         return $result;
@@ -189,6 +194,7 @@ class ProductController extends BaseController
         
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
         
+        // Remove related cache for each item
         foreach ($productItems as $product) {
             ProductChanged::dispatch($product, 'deleted');
         }
