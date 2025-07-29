@@ -21,10 +21,27 @@ class ClearCateProductCache implements ShouldQueue
             // Xóa cache cate_product
             Cache::forget('cate_product_cache');
             
+            // Xóa cache slug resolution nếu có slug
+            if ($event->slug) {
+                $slugCacheKey = "slug_resolution_{$event->slug}";
+                Cache::forget($slugCacheKey);
+                
+                Log::info('Cleared slug resolution cache', [
+                    'slug' => $event->slug,
+                    'action' => $event->action
+                ]);
+            }
+            
+            Log::info('Cleared cate_product cache', [
+                'action' => $event->action,
+                'cate_product_id' => $event->cateProduct?->id_cate_product
+            ]);
+            
         } catch (\Exception $e) {
             Log::error('Failed to clear cate_product cache', [
                 'error' => $e->getMessage(),
-                'action' => $event->action
+                'action' => $event->action,
+                'slug' => $event->slug
             ]);
         }
     }

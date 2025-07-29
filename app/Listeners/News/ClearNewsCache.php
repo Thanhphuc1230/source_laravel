@@ -21,10 +21,27 @@ class ClearNewsCache implements ShouldQueue
             // Xóa cache news
             Cache::forget('news_cache');
             
+            // Xóa cache slug resolution nếu có slug
+            if ($event->slug) {
+                $slugCacheKey = "slug_resolution_{$event->slug}";
+                Cache::forget($slugCacheKey);
+                
+                Log::info('Cleared slug resolution cache', [
+                    'slug' => $event->slug,
+                    'action' => $event->action
+                ]);
+            }
+            
+            Log::info('Cleared news cache', [
+                'action' => $event->action,
+                'news_id' => $event->news?->id_new
+            ]);
+            
         } catch (\Exception $e) {
             Log::error('Failed to clear news cache', [
                 'error' => $e->getMessage(),
-                'action' => $event->action
+                'action' => $event->action,
+                'slug' => $event->slug
             ]);
         }
     }

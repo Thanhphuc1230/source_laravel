@@ -21,10 +21,27 @@ class ClearProductCache implements ShouldQueue
             // Xóa cache product
             Cache::forget('product_cache');
             
+            // Xóa cache slug resolution nếu có slug
+            if ($event->slug) {
+                $slugCacheKey = "slug_resolution_{$event->slug}";
+                Cache::forget($slugCacheKey);
+                
+                Log::info('Cleared slug resolution cache', [
+                    'slug' => $event->slug,
+                    'action' => $event->action
+                ]);
+            }
+            
+            Log::info('Cleared product cache', [
+                'action' => $event->action,
+                'product_id' => $event->product?->id_product
+            ]);
+            
         } catch (\Exception $e) {
             Log::error('Failed to clear product cache', [
                 'error' => $e->getMessage(),
-                'action' => $event->action
+                'action' => $event->action,
+                'slug' => $event->slug
             ]);
         }
     }
