@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\CateProductRequest;
+use App\Events\CateProduct\CateProductChanged;
 
 class CateProductController extends BaseController
 {   
@@ -82,9 +83,11 @@ class CateProductController extends BaseController
         // Handle image
         $data['image'] = $this->handleSingleImage($request, null, null, 'image');
 
-        $this->model::create($data);
+        $cateProduct = $this->model::create($data);
 
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+
+        CateProductChanged::dispatch($cateProduct, 'created');
 
         // Xử lý redirect
         if ($request->has('return_back')) {
@@ -142,6 +145,8 @@ class CateProductController extends BaseController
 
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
+        CateProductChanged::dispatch($current, 'updated');
+
         $currentPage = $request->input('currentPage');
         return $this->route_admin('index', [], [], $currentPage);
     }
@@ -154,13 +159,37 @@ class CateProductController extends BaseController
         return $this->updateStt($request, $uuid);
     }
 
+    public function status($uuid, $status, $name)
+    {
+        $cateProduct = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        
+        CateProductChanged::dispatch($cateProduct, 'status_updated');
+        
+        return $result;
+    }
+
     public function destroy(string $uuid)
     {
-        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        $cateProduct = $this->model::where('uuid', $uuid)->first();
+        $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        
+        CateProductChanged::dispatch($cateProduct, 'deleted');
+        
+        return $result;
     }
 
     public function destroyAll(Request $request)
     {
-        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $request->input('uuids', []), $this->imageFolder);
+        $uuids = $request->input('uuids', []);
+        $cateProductItems = $this->model::whereIn('uuid', $uuids)->get();
+        
+        $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
+        
+        foreach ($cateProductItems as $cateProduct) {
+            CateProductChanged::dispatch($cateProduct, 'deleted');
+        }
+        
+        return $result;
     }
 }

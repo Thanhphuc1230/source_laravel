@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\CateNewRequest;
+use App\Events\CateNew\CateNewChanged;
 
 class CateNewController extends BaseController
 {
@@ -16,7 +17,7 @@ class CateNewController extends BaseController
     {
         $this->module = 'cate_new';
         $this->model = new CateNew();
-        $this->nameItem = 'danh mục tin tức';
+        $this->nameItem = 'Danh mục tin tức';
         $this->imageFolder = $imageFolder;
 
         parent::__construct($this->module, $imageFolder);
@@ -77,8 +78,10 @@ class CateNewController extends BaseController
         // Handle image
         $data['image'] = $this->handleSingleImage($request);
 
-        $this->model::create($data);
+        $cateNew = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+
+        CateNewChanged::dispatch($cateNew, 'created');
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -117,12 +120,19 @@ class CateNewController extends BaseController
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
+        CateNewChanged::dispatch($current, 'updated');
+
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
 
     public function status($uuid, $status, $name)
     {
-        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $cateNew = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        
+        CateNewChanged::dispatch($cateNew, 'status_updated');
+        
+        return $result;
     }
 
     public function numericalOrder(Request $request, $uuid)
@@ -132,11 +142,25 @@ class CateNewController extends BaseController
 
     public function destroy(string $uuid)
     {
-        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        $cateNew = $this->model::where('uuid', $uuid)->first();
+        $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        
+        CateNewChanged::dispatch($cateNew, 'deleted');
+        
+        return $result;
     }
 
     public function destroyAll(Request $request)
     {
-        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $request->input('uuids', []), $this->imageFolder);
+        $uuids = $request->input('uuids', []);
+        $cateNewItems = $this->model::whereIn('uuid', $uuids)->get();
+        
+        $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
+        
+        foreach ($cateNewItems as $cateNew) {
+            CateNewChanged::dispatch($cateNew, 'deleted');
+        }
+        
+        return $result;
     }
 }

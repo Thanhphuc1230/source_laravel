@@ -16,6 +16,12 @@ use App\Events\News\NewsChanged;
 use App\Listeners\News\ClearNewsCache;
 use App\Events\Page\PageChanged;
 use App\Listeners\Page\ClearPageCache;
+use App\Events\CateProduct\CateProductChanged;
+use App\Listeners\CateProduct\ClearCateProductCache;
+use App\Events\CateNew\CateNewChanged;
+use App\Listeners\CateNew\ClearCateNewCache;
+use App\Events\Product\ProductChanged;
+use App\Listeners\Product\ClearProductCache;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -52,6 +58,21 @@ class EventServiceProvider extends ServiceProvider
         // Page Events
         PageChanged::class => [
             ClearPageCache::class,
+        ],
+        
+        // CateProduct Events
+        CateProductChanged::class => [
+            ClearCateProductCache::class,
+        ],
+        
+        // CateNew Events
+        CateNewChanged::class => [
+            ClearCateNewCache::class,
+        ],
+        
+        // Product Events
+        ProductChanged::class => [
+            ClearProductCache::class,
         ],
     ];
 

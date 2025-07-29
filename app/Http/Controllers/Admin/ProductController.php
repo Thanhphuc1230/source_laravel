@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Http\Requests\Admin\ProductRequest;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\File;
+use App\Events\Product\ProductChanged;
 
 class ProductController extends BaseController
 {
@@ -81,8 +82,10 @@ class ProductController extends BaseController
         // Handle multiple images
         $data['image_detail'] = $this->handleMultipleImages($request);
 
-        $this->model::create($data);
+        $product = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+
+        ProductChanged::dispatch($product, 'created');
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -124,12 +127,19 @@ class ProductController extends BaseController
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
+        ProductChanged::dispatch($current, 'updated');
+
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
 
     public function status($uuid, $status, $name)
     {
-        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $product = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        
+        ProductChanged::dispatch($product, 'status_updated');
+        
+        return $result;
     }
 
     public function numericalOrder(Request $request, $uuid)
@@ -164,11 +174,25 @@ class ProductController extends BaseController
 
     public function destroy(string $uuid)
     {
-        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        $product = $this->model::where('uuid', $uuid)->first();
+        $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        
+        ProductChanged::dispatch($product, 'deleted');
+        
+        return $result;
     }
 
     public function destroyAll(Request $request)
     {
-        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $request->input('uuids', []), $this->imageFolder);
+        $uuids = $request->input('uuids', []);
+        $productItems = $this->model::whereIn('uuid', $uuids)->get();
+        
+        $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
+        
+        foreach ($productItems as $product) {
+            ProductChanged::dispatch($product, 'deleted');
+        }
+        
+        return $result;
     }
 }
