@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\NewsRequest;
 use Illuminate\Support\Facades\View;
+use App\Events\News\NewsChanged;
 
 class NewsController extends BaseController
 {
@@ -77,8 +78,10 @@ class NewsController extends BaseController
         // Handle image
         $data['image'] = $this->handleSingleImage($request);
 
-        $this->model::create($data);
+        $news = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+
+        NewsChanged::dispatch($news, 'created');
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -117,12 +120,19 @@ class NewsController extends BaseController
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
+        NewsChanged::dispatch($current, 'updated');
+
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
 
     public function status($uuid, $status, $name)
     {
-        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $news = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        
+        NewsChanged::dispatch($news, 'status_updated');
+        
+        return $result;
     }
 
     public function numericalOrder(Request $request, $uuid)
@@ -132,11 +142,25 @@ class NewsController extends BaseController
 
     public function destroy(string $uuid)
     {
-        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        $news = $this->model::where('uuid', $uuid)->first();
+        $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        
+        NewsChanged::dispatch($news, 'deleted');
+        
+        return $result;
     }
 
     public function destroyAll(Request $request)
     {
-        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $request->input('uuids', []), $this->imageFolder);
+        $uuids = $request->input('uuids', []);
+        $newsItems = $this->model::whereIn('uuid', $uuids)->get();
+        
+        $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
+        
+        foreach ($newsItems as $news) {
+            NewsChanged::dispatch($news, 'deleted');
+        }
+        
+        return $result;
     }
 }

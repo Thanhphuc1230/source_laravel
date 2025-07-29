@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\PageRequest;
+use App\Events\Page\PageChanged;
 
 class PageController extends BaseController
 {
@@ -60,8 +61,10 @@ class PageController extends BaseController
         // Handle image
         $data['image'] = $this->handleSingleImage($request);
 
-        $this->model::create($data);
+        $page = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+
+        PageChanged::dispatch($page, 'created');
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -99,12 +102,19 @@ class PageController extends BaseController
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
+        PageChanged::dispatch($current, 'updated');
+
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
 
     public function status($uuid, $status, $name)
     {
-        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $page = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        
+        PageChanged::dispatch($page, 'status_updated');
+        
+        return $result;
     }
 
     public function numericalOrder(Request $request, $uuid)
@@ -114,11 +124,25 @@ class PageController extends BaseController
 
     public function destroy(string $uuid)
     {
-        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        $page = $this->model::where('uuid', $uuid)->first();
+        $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        
+        PageChanged::dispatch($page, 'deleted');
+        
+        return $result;
     }
 
     public function destroyAll(Request $request)
     {
-        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $request->input('uuids', []), $this->imageFolder);
+        $uuids = $request->input('uuids', []);
+        $pageItems = $this->model::whereIn('uuid', $uuids)->get();
+        
+        $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
+        
+        foreach ($pageItems as $page) {
+            PageChanged::dispatch($page, 'deleted');
+        }
+        
+        return $result;
     }
 }
