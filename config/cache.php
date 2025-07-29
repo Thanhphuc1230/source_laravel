@@ -108,4 +108,25 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Cache TTL Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the TTL (Time To Live) for various cache keys
+    | used throughout the application.
+    |
+    */
+    'ttl' => [
+        'slug_resolution' => env('SLUG_RESOLUTION_CACHE_TTL', 3600), // 1 hour
+        'menu_cache' => env('MENU_CACHE_TTL', 3600), // 1 hour
+        'news_cache' => env('NEWS_CACHE_TTL', 1800), // 30 minutes
+        'page_cache' => env('PAGE_CACHE_TTL', 3600), // 1 hour
+        'product_cache' => env('PRODUCT_CACHE_TTL', 1800), // 30 minutes
+        'cate_product_cache' => env('CATE_PRODUCT_CACHE_TTL', 3600), // 1 hour
+        'cate_news_cache' => env('CATE_NEWS_CACHE_TTL', 3600), // 1 hour
+        'slider_cache' => env('SLIDER_CACHE_TTL', 3600), // 1 hour
+        'feedback_cache' => env('FEEDBACK_CACHE_TTL', 3600), // 1 hour
+    ],
+
 ];
