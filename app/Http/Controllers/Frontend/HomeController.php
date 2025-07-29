@@ -14,46 +14,16 @@ class HomeController extends Controller
 {
     public function home()
     {   
-        // Cache all sliders
-        $allSliders = Cache::remember('all_sliders', 60*60, function() {
+
+        $data['sliders'] = Cache::remember('slider_cache', config('cache.ttl.slider_cache', 3600), function() {
             return Slider::where('status', 1)->orderBy('stt', 'asc')->get();
         });
 
-        // Cache sliders for slider position
-        $data['sliders'] = $allSliders->where('position', 1)->values();
-
-        // Cache ads for ads position
-        $data['ads'] = $allSliders->where('position', 3)->values();
-
-        $data['cate_product'] = CateProduct::where('status', 1)->where('home', 1)->orderBy('stt', 'asc')->get();
-
-        // Eager load cate
-        $products = Product::with('cate')
-            ->where('home', 1)
-            ->where('status', 1)
-            ->orderBy('stt', 'asc')
-            ->get()
-            ->groupBy('category_id');
-        $data['products_by_category'] = $products;
-
-        $data['products_hot'] = Product::with('cate')
-            ->where('status', 1)
-            ->where('hot', 1)
-            ->orderBy('created_at', 'desc')
-            ->limit(8)
-            ->get();
-
-        $data['products_sale'] = Product::with('cate')
-            ->where('status', 1)
-            ->where('sale', 1)
-            ->orderBy('created_at', 'desc')
-            ->limit(8)
-            ->get();
-
-        // lastest news
-        $data['latest_news'] = News::with('cate')->where('status', 1)->orderBy('stt', 'asc')->get();
-        // feedback
-        $data['feedback'] = Cache::remember('feedback_cache', 60*60, function() {
+        $data['latest_news'] = Cache::remember('news_cache', config('cache.ttl.news_cache', 3600), function() {
+            return News::where('status', 1)->orderBy('stt', 'asc')->get();
+        });
+        // Cache feedback using config-based TTL
+        $data['feedback'] = Cache::remember('feedback_cache', config('cache.ttl.feedback_cache', 3600), function() {
             return FeedBack::where('status', 1)->orderBy('stt', 'asc')->get();
         });
 
