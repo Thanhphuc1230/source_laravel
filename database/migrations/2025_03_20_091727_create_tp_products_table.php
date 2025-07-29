@@ -27,6 +27,8 @@ return new class extends Migration
             $table->longText('image_detail')->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('hot')->default(false);
+            $table->boolean('home')->default(false);
+            $table->boolean('sale')->default(false);
             $table->unsignedInteger('stt')->default(1);
             $table->string('keywords')->nullable();
             $table->text('description')->nullable();
