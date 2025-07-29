@@ -129,12 +129,12 @@ class ProductController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        return $this->statusManagementService->updateStatus($uuid, $status, $name,$this->model::class);
+        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
     }
 
     public function numericalOrder(Request $request, $uuid)
     {
-        return $this->statusManagementService->updateStt($request, $uuid,$this->model::class);
+        return $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
     }
 
     public function deleteImage($uuid, $index)

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 use App\Services\ImageService;
 use App\Services\DataRemovalService;
-use App\Services\StatusManagementService;
+use App\Services\ModelToggleService;
 use App\Traits\ImageHandlerTrait;
 use App\Traits\DataRemovalTrait;
 use App\Traits\SlugHandlerTrait;
@@ -23,7 +23,7 @@ class BaseController extends Controller
     public $db;
     protected $imageService;
     protected $dataRemovalService;
-    protected $statusManagementService;
+    protected $toggleService;
     protected $imageFolder;
 
     public function __construct($module, $imageFolder = null)
@@ -34,7 +34,7 @@ class BaseController extends Controller
         // Inject services
         $this->imageService = app(ImageService::class);
         $this->dataRemovalService = app(DataRemovalService::class);
-        $this->statusManagementService = app(StatusManagementService::class);
+        $this->toggleService = app(ModelToggleService::class);
         $this->imageFolder = $imageFolder;
     }
 

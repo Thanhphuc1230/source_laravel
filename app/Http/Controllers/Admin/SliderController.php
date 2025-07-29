@@ -106,12 +106,7 @@ class SliderController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        $slider = $this->model::where('uuid', $uuid)->first();
-        $result = $this->statusManagementService->updateStatus($uuid, $status, $name, $this->model::class);
-        
-        SliderChanged::dispatch($slider, 'status_updated');
-        
-        return $result;
+        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
     }
 
     public function destroy(string $uuid)
@@ -123,10 +118,7 @@ class SliderController extends BaseController
             return back();
         }
 
-        // Dispatch event trước khi xóa
-        SliderChanged::dispatch($slider, 'deleted');
-
-        // Gọi destroyData để xóa cả hình ảnh
+        // Gọi destroyData để xóa cả hình ảnh (event sẽ được dispatch tự động)
         return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
     }
 
@@ -139,20 +131,13 @@ class SliderController extends BaseController
             return redirect()->back();
         }
 
-        $sliders = $this->model::whereIn('uuid', $uuids)->get();
-        
-        SliderChanged::dispatch($sliders, 'deleted');
-        // Gọi destroyAllByUUIDs để xóa cả hình ảnh
+        // Gọi destroyAllByUUIDs để xóa cả hình ảnh (event sẽ được dispatch tự động)
         return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
     }
 
     public function numericalOrder(Request $request, $uuid)
     {
-        $slider = $this->model::where('uuid', $uuid)->first();
-        $result = $this->statusManagementService->updateStt($request, $uuid, $this->model::class);
-        
-        SliderChanged::dispatch($slider, 'order_updated');
-        
-        return $result;
+        return $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+
     }
 }

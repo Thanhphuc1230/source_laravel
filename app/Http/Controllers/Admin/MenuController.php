@@ -33,7 +33,7 @@ class MenuController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        return $this->statusManagementService->updateStatus($uuid, $status, $name,$this->model::class);
+        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
     }
 
     public function index()
