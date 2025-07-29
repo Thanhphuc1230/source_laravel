@@ -111,4 +111,14 @@ class PageController extends BaseController
     {
         return $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
     }
+
+    public function destroy(string $uuid)
+    {
+        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+    }
+
+    public function destroyAll(Request $request)
+    {
+        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $request->input('uuids', []), $this->imageFolder);
+    }
 }

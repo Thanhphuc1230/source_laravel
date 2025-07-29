@@ -185,4 +185,9 @@ class MenuController extends BaseController
         
         return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
     }
+
+    public function destroyAll(Request $request)
+    {
+        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $request->input('uuids', []), $this->imageFolder);
+    }
 }

@@ -161,4 +161,14 @@ class ProductController extends BaseController
 
         return response()->json(['message' => 'Không tìm thấy hình ảnh để xóa.'], 404); // Updated response
     }
+
+    public function destroy(string $uuid)
+    {
+        return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+    }
+
+    public function destroyAll(Request $request)
+    {
+        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $request->input('uuids', []), $this->imageFolder);
+    }
 }

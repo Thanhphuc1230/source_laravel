@@ -54,14 +54,4 @@ class BaseController extends Controller
         }
         return redirect()->route($this->website . "." . $this->module . "." . $page, $params)->with($flash);
     }
-
-    public function destroy(string $uuid)
-    {
-        return $this->destroyData($uuid);
-    }
-
-    public function destroyAll(Request $request)
-    {
-        return $this->destroyAllData($request);
-    }
 }
