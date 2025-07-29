@@ -20,15 +20,6 @@ class ClearFeedbackCache implements ShouldQueue
         try {
             // Xóa cache feedback
             Cache::forget('feedback_cache');
-            
-            // Log activity
-            Log::info('Feedback cache cleared', [
-                'action' => $event->action,
-                'feedback_id' => $event->feedback?->id,
-                'user_id' => auth()->id(),
-                'timestamp' => now()
-            ]);
-            
         } catch (\Exception $e) {
             Log::error('Failed to clear feedback cache', [
                 'error' => $e->getMessage(),

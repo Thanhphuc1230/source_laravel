@@ -20,15 +20,6 @@ class ClearMenuCache implements ShouldQueue
         try {
             // Xóa cache menu header
             Cache::forget('menu_header');
-            
-            // Log activity
-            Log::info('Menu cache cleared', [
-                'action' => $event->action,
-                'menu_id' => $event->menu?->id,
-                'user_id' => auth()->id(),
-                'timestamp' => now()
-            ]);
-            
         } catch (\Exception $e) {
             Log::error('Failed to clear menu cache', [
                 'error' => $e->getMessage(),
