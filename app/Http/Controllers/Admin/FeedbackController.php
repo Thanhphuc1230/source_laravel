@@ -62,10 +62,10 @@ class FeedBackController extends BaseController
         }
 
         $feedback = $this->model::create($data);
-        
+
         // Dispatch event sau khi tạo feedback
         FeedbackChanged::dispatch($feedback, 'created');
-        
+
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
@@ -96,15 +96,15 @@ class FeedBackController extends BaseController
         $current = $this->model::where('uuid', $uuid)->first();
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['updated_at'] = new \DateTime();
-        
+
         // update image
         $data['image'] = $this->handleSingleImage($request, $current);
-        
+
         $current->update($data);
-        
+
         // Dispatch event sau khi cập nhật feedback
         FeedbackChanged::dispatch($current, 'updated');
-        
+
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
@@ -113,33 +113,45 @@ class FeedBackController extends BaseController
     public function destroy(string $uuid)
     {
         $feedback = $this->model::where('uuid', $uuid)->first();
-        
+
         // Dispatch event trước khi xóa feedback
         FeedbackChanged::dispatch($feedback, 'deleted');
-        
+
         return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
     }
 
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids');
-        
+
         // Dispatch event cho bulk delete
         $feedbacks = $this->model::whereIn('uuid', $uuids)->get();
         foreach ($feedbacks as $feedback) {
             FeedbackChanged::dispatch($feedback, 'deleted');
         }
-  
+
         return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
     }
 
     public function status($uuid, $status, $name)
     {
-        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $feedback = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+
+        // Remove related cache
+        FeedbackChanged::dispatch($feedback, 'status_updated');
+
+        return $result;
     }
 
     public function numericalOrder(Request $request, $uuid)
     {
-        return $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+        $feedback = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+
+        // Remove related cache
+        FeedbackChanged::dispatch($feedback, 'order_updated');
+
+        return $result;
     }
 }

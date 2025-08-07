@@ -92,7 +92,7 @@ class SliderController extends BaseController
         $current = $this->model::where('uuid', $uuid)->first();
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['updated_at'] = new \DateTime();
-        
+
         // Handle image
         $data['image'] = $this->handleSingleImage($request, $current);
 
@@ -106,13 +106,19 @@ class SliderController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $slider = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+
+        // Remove related cache
+        SliderChanged::dispatch($slider, 'status_updated');
+
+        return $result;
     }
 
     public function destroy(string $uuid)
     {
         $slider = $this->model::where('uuid', $uuid)->first();
-        
+
         if (!$slider) {
             toast('Không tìm thấy ' . $this->nameItem, 'error');
             return back();
@@ -125,7 +131,7 @@ class SliderController extends BaseController
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-        
+
         if (empty($uuids)) {
             toast('Không có mục nào được chọn để xóa.', 'error');
             return redirect()->back();
@@ -137,7 +143,12 @@ class SliderController extends BaseController
 
     public function numericalOrder(Request $request, $uuid)
     {
-        return $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+        $slider = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
 
+        // Remove related cache
+        SliderChanged::dispatch($slider, 'order_updated');
+
+        return $result;
     }
 }

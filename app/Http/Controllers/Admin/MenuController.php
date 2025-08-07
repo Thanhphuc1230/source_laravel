@@ -17,7 +17,7 @@ class MenuController extends BaseController
     const TYPE_PAGE = 'page';
     const TYPE_CATE_NEW = 'cate_new';
     const TYPE_CATE_PRODUCT = 'cate_product';
-    
+
     protected $module,$model,$nameItem,$imageFolder;
     public function __construct($imageFolder = 'menu')
     {
@@ -33,7 +33,13 @@ class MenuController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $menu = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+
+        // Remove related cache
+        MenuChanged::dispatch($menu, 'status_updated');
+
+        return $result;
     }
 
     public function index()
@@ -108,7 +114,7 @@ class MenuController extends BaseController
                 ];
 
                 $menu = $this->model::create($data);
-                
+
                 // Dispatch event sau khi tạo menu
                 MenuChanged::dispatch($menu, 'created');
             }
@@ -152,42 +158,53 @@ class MenuController extends BaseController
                 $request->except('_token'),
                 ['updated_at' => now()]
             );
-            
+
             $menu = $this->model::where('uuid', $uuid)->first();
-            
+
             if (!$menu) {
                 throw new \Exception('Không tìm thấy menu để cập nhật');
             }
-            
+
             $updated = $menu->update($data);
-            
+
             if ($updated) {
                 // Dispatch event sau khi cập nhật menu
                 MenuChanged::dispatch($menu, 'updated');
             }
-            
+
             toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
         } catch (\Exception $e) {
             toast($e->getMessage(), 'error');
         }
-        
+
         return $this->route_admin('index');
     }
 
     public function destroy(string $uuid)
     {
         $menu = $this->model::where('uuid', $uuid)->first();
-        
+
         if ($menu) {
             // Dispatch event trước khi xóa menu
             MenuChanged::dispatch($menu, 'deleted');
         }
-        
+
         return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
     }
 
     public function destroyAll(Request $request)
     {
         return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $request->input('uuids', []), $this->imageFolder);
+    }
+
+    public function numericalOrder(Request $request, $uuid)
+    {
+        $menu = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+
+        // Remove related cache
+        MenuChanged::dispatch($menu, 'order_updated');
+
+        return $result;
     }
 }

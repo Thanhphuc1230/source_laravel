@@ -141,7 +141,13 @@ class NewsController extends BaseController
 
     public function numericalOrder(Request $request, $uuid)
     {
-        return $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+        $news = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+        
+        // Remove related cache
+        NewsChanged::dispatch($news, 'order_updated');
+        
+        return $result;
     }
 
     public function destroy(string $uuid)

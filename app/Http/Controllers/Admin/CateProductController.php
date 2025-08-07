@@ -12,9 +12,9 @@ use App\Events\CateProduct\CateProductChanged;
 use App\Events\Content\ContentChanged;
 
 class CateProductController extends BaseController
-{   
+{
     protected $module, $model, $nameItem, $imageFolder;
-    
+
     public function __construct($imageFolder = 'cate_product')
     {
         $this->module = 'cate_product';
@@ -65,7 +65,7 @@ class CateProductController extends BaseController
         $data['category'] = $this->model::where('status', 1)->where('parent_id', 0)->with('children.children')->orderBy('name_vn', 'asc')->get(); //Lấy chủ đề cha
         $data['action'] = 'create';
         $data['nameItem'] = $this->nameItem;
-        
+
         return $this->view_admin('detail', $data);
     }
 
@@ -80,14 +80,14 @@ class CateProductController extends BaseController
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
         $data['created_at'] = new \DateTime();
         $data['status'] = 1;
-        
+
         // Handle image
         $data['image'] = $this->handleSingleImage($request, null, null, 'image');
 
         $cateProduct = $this->model::create($data);
 
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
-        
+
         // Remove related cache
         CateProductChanged::dispatch($cateProduct, 'created', $data['slug']);
 
@@ -159,17 +159,23 @@ class CateProductController extends BaseController
      */
     public function numericalOrder(Request $request, $uuid)
     {
-        return $this->updateStt($request, $uuid);
+        $cateProduct = $this->model::where('uuid', $uuid)->first();
+        $result = $this->updateStt($request, $uuid);
+
+        // Remove related cache
+        CateProductChanged::dispatch($cateProduct, 'order_updated');
+
+        return $result;
     }
 
     public function status($uuid, $status, $name)
     {
         $cateProduct = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
-        
+
         // Remove related cache
         CateProductChanged::dispatch($cateProduct, 'status_updated');
-        
+
         return $result;
     }
 
@@ -177,10 +183,10 @@ class CateProductController extends BaseController
     {
         $cateProduct = $this->model::where('uuid', $uuid)->first();
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
-        
+
         // Remove related cache
         CateProductChanged::dispatch($cateProduct, 'deleted');
-        
+
         return $result;
     }
 
@@ -188,14 +194,14 @@ class CateProductController extends BaseController
     {
         $uuids = $request->input('uuids', []);
         $cateProductItems = $this->model::whereIn('uuid', $uuids)->get();
-        
+
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
-        
+
         // Remove related cache for each item
         foreach ($cateProductItems as $cateProduct) {
             CateProductChanged::dispatch($cateProduct, 'deleted');
         }
-        
+
         return $result;
     }
 }

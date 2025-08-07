@@ -139,16 +139,22 @@ class ProductController extends BaseController
     {
         $product = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
-        
+
         // Remove related cache
         ProductChanged::dispatch($product, 'status_updated');
-        
+
         return $result;
     }
 
     public function numericalOrder(Request $request, $uuid)
     {
-        return $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+        $product = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+
+        // Remove related cache
+        ProductChanged::dispatch($product, 'order_updated');
+
+        return $result;
     }
 
     public function deleteImage($uuid, $index)
@@ -180,10 +186,10 @@ class ProductController extends BaseController
     {
         $product = $this->model::where('uuid', $uuid)->first();
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
-        
+
         // Remove related cache
         ProductChanged::dispatch($product, 'deleted');
-        
+
         return $result;
     }
 
@@ -191,14 +197,14 @@ class ProductController extends BaseController
     {
         $uuids = $request->input('uuids', []);
         $productItems = $this->model::whereIn('uuid', $uuids)->get();
-        
+
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
-        
+
         // Remove related cache for each item
         foreach ($productItems as $product) {
             ProductChanged::dispatch($product, 'deleted');
         }
-        
+
         return $result;
     }
 }

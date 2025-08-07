@@ -97,7 +97,7 @@ class PageController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
         $data['updated_at'] = new \DateTime();
-        
+
         // Handle image
         $data['image'] = $this->handleSingleImage($request, $current);
 
@@ -114,26 +114,32 @@ class PageController extends BaseController
     {
         $page = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
-        
+
         // Remove related cache
         PageChanged::dispatch($page, 'status_updated');
-        
+
         return $result;
     }
 
     public function numericalOrder(Request $request, $uuid)
     {
-        return $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+        $page = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+
+        // Remove related cache
+        PageChanged::dispatch($page, 'order_updated');
+
+        return $result;
     }
 
     public function destroy(string $uuid)
     {
         $page = $this->model::where('uuid', $uuid)->first();
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
-        
+
         // Remove related cache
         PageChanged::dispatch($page, 'deleted');
-        
+
         return $result;
     }
 
@@ -141,14 +147,14 @@ class PageController extends BaseController
     {
         $uuids = $request->input('uuids', []);
         $pageItems = $this->model::whereIn('uuid', $uuids)->get();
-        
+
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
-        
+
         // Remove related cache for each item
         foreach ($pageItems as $page) {
             PageChanged::dispatch($page, 'deleted');
         }
-        
+
         return $result;
     }
 }

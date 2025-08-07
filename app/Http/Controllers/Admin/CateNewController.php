@@ -115,7 +115,7 @@ class CateNewController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
         $data['updated_at'] = new \DateTime();
-        
+
         // Handle image
         $data['image'] = $this->handleSingleImage($request, $current);
 
@@ -132,26 +132,32 @@ class CateNewController extends BaseController
     {
         $cateNew = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
-        
+
         // Remove related cache
         CateNewChanged::dispatch($cateNew, 'status_updated');
-        
+
         return $result;
     }
 
     public function numericalOrder(Request $request, $uuid)
     {
-        return $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+        $cateNew = $this->model::where('uuid', $uuid)->first();
+        $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+
+        // Remove related cache
+        CateNewChanged::dispatch($cateNew, 'order_updated');
+
+        return $result;
     }
 
     public function destroy(string $uuid)
     {
         $cateNew = $this->model::where('uuid', $uuid)->first();
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
-        
+
         // Remove related cache
         CateNewChanged::dispatch($cateNew, 'deleted');
-        
+
         return $result;
     }
 
@@ -159,14 +165,14 @@ class CateNewController extends BaseController
     {
         $uuids = $request->input('uuids', []);
         $cateNewItems = $this->model::whereIn('uuid', $uuids)->get();
-        
+
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
-        
+
         // Remove related cache for each item
         foreach ($cateNewItems as $cateNew) {
             CateNewChanged::dispatch($cateNew, 'deleted');
         }
-        
+
         return $result;
     }
 }
