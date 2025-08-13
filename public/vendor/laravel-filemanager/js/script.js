@@ -1,7 +1,8 @@
 var lfm_route = location.origin + location.pathname;
 var show_list;
-var sort_type = 'alphabetic';
-var multi_selection_enabled = false;
+var sort_type = 'time';
+// Luôn bật multi-selection, không bao giờ tắt
+var multi_selection_enabled = true;
 var selected = [];
 var items = [];
 
@@ -88,7 +89,8 @@ $(document).ready(function () {
   });
 
   if (usingWysiwygEditor()) {
-    $('#multi_selection_toggle').hide();
+      $('#multi_selection_toggle').show().click(); // Luôn bật multi-select khi mở từ CKEditor
+      // multi_selection_enabled = true; // This line is now handled at the top
   }
 });
 
@@ -97,15 +99,13 @@ $(document).ready(function () {
 // ======================
 
 $('#multi_selection_toggle').click(function () {
-  multi_selection_enabled = !multi_selection_enabled;
+  // Không tắt multi_selection_enabled nữa
+  multi_selection_enabled = true;
 
   $('#multi_selection_toggle i')
     .toggleClass('fa-times', multi_selection_enabled)
     .toggleClass('fa-check-double', !multi_selection_enabled);
-
-  if (!multi_selection_enabled) {
-    clearSelected();
-  }
+  // Không clearSelected();
 });
 
 $('#to-previous').click(function () {
@@ -153,26 +153,23 @@ $(document).on('click', '[data-action]', function() {
 // ==========================
 
 function toggleSelected (e) {
-  if (!multi_selection_enabled) {
-    selected = [];
-  }
-
+  // Luôn cho phép chọn nhiều ảnh
   var sequence = $(e.target).closest('a').data('id');
   var element_index = selected.indexOf(sequence);
   if (element_index === -1) {
     selected.push(sequence);
+    console.log('Chọn thêm:', sequence, '-> selected:', selected);
   } else {
     selected.splice(element_index, 1);
+    console.log('Bỏ chọn:', sequence, '-> selected:', selected);
   }
-
+  console.log('multi_selection_enabled:', multi_selection_enabled);
   updateSelectedStyle();
 }
 
 function clearSelected () {
   selected = [];
-
-  multi_selection_enabled = false;
-
+  // Không tắt multi_selection_enabled nữa
   updateSelectedStyle();
 }
 
@@ -818,3 +815,16 @@ function dialog(title, value, callback) {
   });
   $('#dialog').modal('show').find('.modal-title').text(title);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    multi_selection_enabled = true;
+    window.selected = selected;
+});
+
+// Đảm bảo Confirm luôn trả về mảng nhiều ảnh
+$(document).on('click', '#confirm', function() {
+    if (typeof window.SetUrl === 'function') {
+        window.SetUrl(getSelectedItems());
+    }
+});
+

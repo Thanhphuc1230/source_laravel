@@ -56,6 +56,7 @@ return [
                 'image/pjpeg',
                 'image/png',
                 'image/gif',
+                'image/webp',
                 'application/pdf',
                 'text/plain',
                 'audio/mpeg',
@@ -73,6 +74,7 @@ return [
                 'image/pjpeg',
                 'image/png',
                 'image/gif',
+                'image/webp',
             ],
         ],
         'audio' => [
@@ -108,7 +110,7 @@ return [
 
     'rename_file'              => false,
 
-    'rename_duplicates'        => false,
+    'rename_duplicates'        => true,
 
     'alphanumeric_filename'    => false,
 
@@ -134,6 +136,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Sort Settings
+    |--------------------------------------------------------------------------
+    */
+    'sort_type' => 'time',
+    'sort_order' => 'desc',
+
+    /*
+    |--------------------------------------------------------------------------
     | Thumbnail
     |--------------------------------------------------------------------------
      */
@@ -148,6 +158,7 @@ return [
         'image/jpeg',
         'image/pjpeg',
         'image/png',
+        'image/webp',
     ],
 
     'thumb_img_width'          => 200, // px
@@ -171,6 +182,7 @@ return [
         'jpg'  => 'JPEG Image',
         'jpeg' => 'JPEG Image',
         'png'  => 'PNG Image',
+        'webp' => 'WebP Image',
         'ppt'  => 'Microsoft PowerPoint',
         'pptx' => 'Microsoft PowerPoint',
     ],

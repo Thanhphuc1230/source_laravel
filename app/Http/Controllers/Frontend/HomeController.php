@@ -13,7 +13,7 @@ use App\Models\FeedBack;
 class HomeController extends Controller
 {
     public function home()
-    {   
+    {
 
         $data['sliders'] = Cache::remember('slider_cache', config('cache.ttl.slider_cache', 3600), function() {
             return Slider::where('status', 1)->orderBy('stt', 'asc')->get();
