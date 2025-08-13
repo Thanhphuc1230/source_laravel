@@ -42,8 +42,11 @@ Laravel Admin System được xây dựng theo kiến trúc **trait-based** nh�
 └─────────────────────────────────────────────────────┘
                             │
 ┌─────────────────────────────────────────────────────┐
-│                  Database                           │
-│              MySQL/PostgreSQL                      │
+│                Cache & Database                     │
+│  ┌─────────────┐                ┌─────────────────┐  │
+│  │    Redis    │                │      MySQL      │  │
+│  │(Cache/Queue)│                │   (Database)    │  │
+│  └─────────────┘                └─────────────────┘  │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -124,14 +127,14 @@ class DataRemovalService
 }
 ```
 
-### 3. **StatusManagementService**
-Business logic cho status management:
+### 3. **ModelToggleService**
+Business logic cho status và order management:
 
 ```php
-class StatusManagementService
+class ModelToggleService
 {
-    public function updateStatus(string $uuid, int $status, string $name, string $modelClass);
-    public function updateStt(Request $request, string $uuid, string $modelClass);
+    public function toggleModelStatus($uuid, $status, $fieldName, $model);
+    public function updateModelOrder($request, $uuid, $model);
 }
 ```
 
@@ -195,10 +198,35 @@ app/
 - **Debugging**: Multiple layers can complicate debugging
 - **Over-engineering**: May be complex for simple requirements
 
+## 🗄️ Cache System
+
+### Redis Configuration
+```php
+// Current setup với Predis client
+'client' => env('REDIS_CLIENT', 'predis'),
+
+// Cache drivers
+CACHE_DRIVER=redis
+SESSION_DRIVER=redis  
+QUEUE_CONNECTION=redis
+```
+
+### Cache Implementation
+- **Frontend Cache**: Sliders, News, Feedback với TTL config-based
+- **Event-based Cache Clearing**: Auto clear khi data thay đổi
+- **Performance**: Cached queries cho homepage content
+
+### Cache Optimization Recommendations
+- **Consider PhpRedis**: 2-5x faster than Predis cho production
+- **Cache Strategies**: Config-based TTL, event-driven invalidation
+- **Monitoring**: Cache hit rates và performance metrics
+
 ## 🔮 Future Enhancements
 
 1. **Repository Pattern**: For better data access abstraction
-2. **Event System**: For decoupled notifications
-3. **Cache Layer**: For improved performance
-4. **API Versioning**: For API evolution
-5. **Queue System**: For background processing 
+2. ✅ **Event System**: Implemented for cache clearing
+3. ✅ **Cache Layer**: Redis implemented với event-based clearing
+4. **API Versioning**: For API evolution  
+5. ✅ **Queue System**: Redis queue implemented
+6. **PhpRedis Migration**: Upgrade from Predis to PhpRedis
+7. **Cache Monitoring**: Performance tracking và analytics 
