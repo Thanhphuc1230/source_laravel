@@ -2,16 +2,19 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class MenuRequest extends FormRequest
+class MenuRequest extends BaseAdminRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Only Super Admin (level = 1) can manage menu structure
      */
     public function authorize(): bool
     {
-        return true;
+        if (!parent::authorize()) {
+            return false;
+        }
+
+        // Menu management requires highest privilege
+        return auth()->user()->level == 1;
     }
 
     /**

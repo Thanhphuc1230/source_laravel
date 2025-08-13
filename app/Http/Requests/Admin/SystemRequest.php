@@ -2,16 +2,19 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class SystemRequest extends FormRequest
+class SystemRequest extends BaseAdminRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Only Super Admin (level = 1) can access system settings
      */
     public function authorize(): bool
     {
-        return false;
+        if (!parent::authorize()) {
+            return false;
+        }
+
+        // System settings require highest privilege
+        return auth()->user()->level == 1;
     }
 
     /**

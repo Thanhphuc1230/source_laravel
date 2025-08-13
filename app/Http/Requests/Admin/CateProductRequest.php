@@ -2,18 +2,11 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CateProductRequest extends FormRequest
+class CateProductRequest extends BaseAdminRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
+    // Authorization is handled by BaseAdminRequest
 
     /**
      * Get the validation rules that apply to the request.

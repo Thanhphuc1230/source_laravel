@@ -2,17 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class PageRequest extends FormRequest
+class PageRequest extends BaseAdminRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
+    // Authorization is handled by BaseAdminRequest
 
     /**
      * Get the validation rules that apply to the request.
