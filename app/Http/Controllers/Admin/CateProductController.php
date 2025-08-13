@@ -193,11 +193,15 @@ class CateProductController extends BaseController
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-        $cateProductItems = $this->model::whereIn('uuid', $uuids)->get();
+        
+        // Optimize: only select fields needed for events
+        $cateProductItems = $this->model::whereIn('uuid', $uuids)
+            ->select('uuid', 'slug', 'name_vn', 'parent_id')
+            ->get();
 
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
 
-        // Remove related cache for each item
+        // Optimized event dispatch with minimal data
         foreach ($cateProductItems as $cateProduct) {
             CateProductChanged::dispatch($cateProduct, 'deleted');
         }

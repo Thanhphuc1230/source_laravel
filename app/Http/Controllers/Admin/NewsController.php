@@ -164,11 +164,15 @@ class NewsController extends BaseController
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-        $newsItems = $this->model::whereIn('uuid', $uuids)->get();
+        
+        // Optimize: only select fields needed for events
+        $newsItems = $this->model::whereIn('uuid', $uuids)
+            ->select('uuid', 'slug', 'name_vn', 'category_id')
+            ->get();
         
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
         
-        // Remove related cache for each item
+        // Optimized event dispatch with minimal data
         foreach ($newsItems as $news) {
             NewsChanged::dispatch($news, 'deleted');
         }

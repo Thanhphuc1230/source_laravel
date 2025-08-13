@@ -125,7 +125,11 @@ class FeedBackController extends BaseController
         $uuids = $request->input('uuids');
 
         // Dispatch event cho bulk delete
-        $feedbacks = $this->model::whereIn('uuid', $uuids)->get();
+        // Optimize: only select fields needed for events
+        $feedbacks = $this->model::whereIn('uuid', $uuids)
+            ->select('uuid', 'name')
+            ->get();
+            
         foreach ($feedbacks as $feedback) {
             FeedbackChanged::dispatch($feedback, 'deleted');
         }
