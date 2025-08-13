@@ -229,32 +229,6 @@
                                                 <textarea class="form-control" name="map" rows="3" placeholder="Enter your message">{{ old('map', $system->map) }}</textarea>
                                             </div>
                                         </div>
-
-                                        <!--end col-->
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label for="phonenumberInput" class="form-label">Script Header()</label>
-                                                <textarea class="form-control" name="header_js" rows="2" placeholder="Enter your message">{{ old('header_js', $system->header_js) }}</textarea>
-                                                <label for="phonenumberInput" class="form-label">Insert script into header
-                                                    (google analytics code, google main code..)</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label for="phonenumberInput" class="form-label">Script Body</label>
-                                                <textarea class="form-control" name="body_js" rows="2" placeholder="Enter your message">{{ old('body_js', $system->body_js) }}</textarea>
-                                                <label for="phonenumberInput" class="form-label">Insert the script right
-                                                    after the body tag</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label for="phonenumberInput" class="form-label">Script Footer</label>
-                                                <textarea class="form-control" name="footer_js" rows="2" placeholder="Enter your message">{{ old('footer_js', $system->footer_js) }}</textarea>
-                                                <label for="phonenumberInput" class="form-label">Insert script into footer
-                                                    (chat code, statistics code...)</label>
-                                            </div>
-                                        </div>
                                         <!--end col-->
                                         <div class="col-lg-12">
                                             <div class="text-end">

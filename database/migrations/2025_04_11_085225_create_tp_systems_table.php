@@ -34,10 +34,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('keyword')->nullable();
 
-            // script cho google anlyst
-            $table->text('header_js')->nullable();
-            $table->text('body_js')->nullable();
-            $table->text('footer_js')->nullable();
             $table->text('map')->nullable();
             $table->timestamps();
         });
