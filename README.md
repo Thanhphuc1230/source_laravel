@@ -4,12 +4,15 @@
 
 ## 🚀 Tính năng chính
 
-- **Quản lý Content**: Sản phẩm, tin tức, trang nội dung, slider
+- **Quản lý Content**: Sản phẩm, tin tức, trang nội dung, slider với UX được cải thiện
 - **Phân loại linh hoạt**: Danh mục sản phẩm, danh mục tin tức với cấu trúc cây
-- **Xử lý Media**: Upload, resize, convert WebP tự động
-- **SEO Friendly**: Slug tự động, meta tags, sitemap
+- **Xử lý Media**: Upload, resize, convert WebP tự động với ImageService
+- **SEO Friendly**: Slug tự động, meta tags, sitemap generator
 - **Responsive Design**: Giao diện responsive trên mọi thiết bị
 - **Analytics**: Thống kê truy cập và báo cáo
+- **Cache System**: Redis/File cache với performance tối ưu
+- **Bulk Operations**: Xóa nhiều records với cleanup tự động
+- **Admin Tools**: Custom Artisan commands cho development
 
 ## 🏗️ Kiến trúc
 
@@ -17,7 +20,9 @@
 - **Laravel 10**: Framework PHP hiện đại
 - **PHP 8.3+**: Sử dụng các tính năng mới nhất
 - **MySQL**: Cơ sở dữ liệu quan hệ
-- **Trait-based Architecture**: Code tái sử dụng cao
+- **Redis**: Cache, Session, Queue với Predis client
+- **Trait-based Architecture**: Code tái sử dụng cao với 3 traits chính
+- **Service Layer**: ImageService, DataRemovalService, ModelToggleService
 
 ### Frontend Admin
 - **Bootstrap 5**: UI Framework
@@ -98,6 +103,43 @@ return $this->destroyAllData($request);
 - **Input Validation**: Form requests
 - **CSRF Protection**: Built-in Laravel protection
 - **File Upload**: Secure image handling
+
+## ⚡ Artisan Commands
+
+### Custom Commands
+```bash
+# Tạo admin account
+php artisan admin:create
+
+# Tạo full CRUD cho feature mới  
+php artisan make:featured {name}
+
+# Generate sitemap
+php artisan sitemap:generate
+```
+
+## 🏗️ Services & Traits
+
+### Services
+- **ImageService**: Xử lý upload, resize, WebP conversion
+- **DataRemovalService**: Xóa data với cleanup ảnh tự động
+- **ModelToggleService**: Toggle status và update order
+
+### Traits  
+- **ImageHandlerTrait**: Centralized image processing
+- **DataRemovalTrait**: Standardized data removal
+- **SlugHandlerTrait**: Auto slug generation với unique check
+
+## 📝 Recent Updates
+
+### Latest Features (2024)
+- ✅ **UX Improvements**: Show category name in news list
+- ✅ **Performance**: Add select optimization in admin controllers
+- ✅ **Dependencies**: Added Redis (Predis) support
+- ✅ **Admin Panel**: Watch functionality in admin lists
+- ✅ **File Manager**: Order images by time (desc)
+- ✅ **SEO**: Keywords and description fields in models
+- ✅ **Cache**: Event-based cache clearing system
 
 ## 📄 License
 
