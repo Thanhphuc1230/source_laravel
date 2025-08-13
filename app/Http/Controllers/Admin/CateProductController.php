@@ -49,7 +49,7 @@ class CateProductController extends BaseController
             });
         }
 
-        $data['list'] = $query->paginate(10);
+        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status','home', 'stt', 'updated_at')->orderBy('created_at','desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
         // category product
         $data['category'] = $this->model::with('children')->where('status', 1)->where('parent_id', 0)->get();

@@ -38,7 +38,7 @@ class PageController extends BaseController
             });
         }
 
-        $data['list'] = $query->paginate(10);
+        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'stt', 'updated_at')->orderBy('created_at','desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
 
         return $this->view_admin('list', $data);
