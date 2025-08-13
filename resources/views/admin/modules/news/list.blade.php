@@ -87,7 +87,7 @@
                                                             <td>{{ $loop->iteration }}</td>
                                                             <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}" alt=""
                                                                     style="height: 100px;"></td>
-                                                            <td>{{ $item->name_vn }}</td>
+                                                            <td>{{ $item->name_vn }}<br>Chủ đề: {{$item->cate->name_vn}}</td>
                                                             <td class="status">
                                                                 <div
                                                                     class="form-check form-switch form-switch-success mb-3">
