@@ -36,8 +36,16 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('category_id')->references('id_cate_product')->on('tp_cate_products')->onDelete('cascade');
-            $table->index('slug');
-            $table->index('id_product');
+            
+            // Essential indexes only
+            $table->index('slug');              // Required for route resolution
+            $table->index('uuid');              // Required for lookups
+            
+            // Composite indexes (cover single column usage too)
+            $table->index(['status', 'stt']);       // Covers: status filtering + ordering
+            $table->index(['status', 'home']);      // Covers: status + homepage products
+            $table->index(['status', 'category_id']); // Covers: status + category filtering
+            $table->index(['created_at', 'status']); // Covers: date ordering + status
         });
     }
 

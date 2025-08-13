@@ -28,8 +28,9 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->default(0);
             $table->timestamps();
 
-            // Add indexes
-            $table->index('slug');
+            // Essential indexes only
+            $table->index('slug');              // Required for route resolution  
+            $table->index(['status', 'stt']);   // Covers: status filtering + ordering
         });
     }
 

@@ -103,7 +103,7 @@ class ProductController extends BaseController
 
         $data = [
             'page' => $page->first(),
-            'category' => CateProduct::where('status', 1)->where('parent_id', 0)->orderBy('name_vn', 'asc')->get(),
+            'category' => CateProduct::where('status', 1)->where('parent_id', 0)->with('children.children')->orderBy('name_vn', 'asc')->get(),
             'action' => 'edit',
             'nameItem' => $this->nameItem,
             'currentPage' => $currentPage,

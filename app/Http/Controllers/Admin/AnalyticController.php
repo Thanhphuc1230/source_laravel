@@ -27,8 +27,11 @@ class AnalyticController extends BaseController
         // Get the current month
         $currentMonth = Carbon::now()->format('m');
 
-        // Retrieve visits for the current month
-        $visits = $this->model::whereMonth('visit_date', $currentMonth)->get();
+        // Retrieve visits for the current month (optimized with ordering and limit)
+        $visits = $this->model::whereMonth('visit_date', $currentMonth)
+            ->orderBy('visit_date', 'asc')
+            ->limit(31) // Max 31 days in a month
+            ->get();
         $chartData = []; // Initialize an array to store data for the chart
 
         foreach ($visits as $visit) {

@@ -16,6 +16,9 @@ return new class extends Migration
             $table->date('visit_date');
             $table->integer('visit_count')->default(0);
             $table->timestamps();
+            
+            // Essential index for analytics queries
+            $table->index(['visit_date', 'visit_count']); // Covers: date filtering + count ordering
         });
     }
 

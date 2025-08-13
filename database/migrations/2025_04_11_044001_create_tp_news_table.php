@@ -34,9 +34,15 @@ return new class extends Migration
             // Foreign key constraint
             $table->foreign('category_id')->references('id_cate_new')->on('tp_cate_news')->onDelete('cascade');
 
-            // Add indexes
-            $table->index('slug');
-            $table->index('category_id');
+            // Essential indexes only  
+            $table->index('slug');              // Required for route resolution
+            $table->index('uuid');              // Required for lookups
+            
+            // Composite indexes (cover single column usage too)
+            $table->index(['status', 'stt']);       // Covers: status filtering + ordering
+            $table->index(['status', 'category_id']); // Covers: status + category filtering  
+            $table->index(['views', 'status']);     // Covers: popular content + status
+            $table->index(['created_at', 'status']); // Covers: latest news + status
         });
     }
 

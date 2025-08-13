@@ -26,9 +26,13 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->default(0);
             $table->timestamps();
 
-            // Add indexes
-            $table->index('slug');
-            $table->index('parent_id');
+            // Essential indexes for hierarchy
+            $table->index('slug');              // Required for route resolution
+            $table->index('uuid');              // Required for lookups
+            
+            // Composite indexes for hierarchical queries
+            $table->index(['status', 'parent_id', 'stt']); // Covers: status + hierarchy + ordering
+            $table->index(['parent_id', 'stt']);          // Covers: hierarchy navigation
         });
     }
 

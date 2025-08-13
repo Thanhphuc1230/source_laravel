@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->unsignedInteger('stt')->default(0)->nullable();
             $table->timestamps();
+            
+            // Essential index for main query pattern
+            $table->index(['status', 'stt']);   // Covers: status filtering + ordering
         });
     }
 

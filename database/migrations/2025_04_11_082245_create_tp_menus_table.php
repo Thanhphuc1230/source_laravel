@@ -24,6 +24,11 @@ return new class extends Migration
             $table->unsignedBigInteger('stt')->default(1);
             $table->boolean('status')->default(true);
             $table->timestamps();
+            
+            // Essential indexes for menu hierarchy
+            $table->index('slug');                       // Required for route resolution
+            $table->index(['status', 'parent_id', 'stt']); // Covers: active menus + hierarchy + ordering
+            $table->index(['type', 'object_id']);       // Covers: menu type lookups
         });
     }
 
