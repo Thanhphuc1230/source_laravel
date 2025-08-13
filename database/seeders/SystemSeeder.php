@@ -30,9 +30,6 @@ class SystemSeeder extends Seeder
             'name_vn' => 'Công ty TNHH Thương mại và Dịch vụ ',
             'description' => 'Công ty TNHH Thương mại và Dịch vụ ',
             'keyword' => 'Công ty TNHH Thương mại và Dịch vụ ',
-            'header_js' => '',
-            'body_js' => '',
-            'footer_js' => '',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
