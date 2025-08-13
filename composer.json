@@ -11,6 +11,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "predis/predis": "^3.2",
         "realrashid/sweet-alert": "^7.3",
         "spatie/laravel-sitemap": "^7.3",
         "unisharp/laravel-filemanager": "^2.10"
