@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\System;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\SystemRequest;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 
@@ -29,7 +29,7 @@ class SystemController extends BaseController
         return $this->view_admin('index', $data);
     }
 
-    public function update($id, Request $request)
+    public function update($id, SystemRequest $request)
     {
         $data = $request->except('_token');
         $data['created_at'] = new \DateTime();

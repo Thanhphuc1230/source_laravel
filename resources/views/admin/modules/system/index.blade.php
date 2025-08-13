@@ -68,6 +68,9 @@
                                                 <input type="text" name="email_alert" class="form-control"
                                                     placeholder="Enter your title page"
                                                     value="{{ old('email_alert', $system->email_alert) }}">
+                                                @error('email_alert')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
 
@@ -75,10 +78,22 @@
                                         <div class="col-md-6">
                                         </div>
 
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="phonenumberInput" class="form-label">Footer VN</label>
                                                 <textarea class="form-control" name="footer_vn" id="content-vn" rows="6" placeholder="Enter your message">{{ old('footer_vn', $system->footer_vn) }}</textarea>
+                                                @error('footer_vn')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="phonenumberInput" class="form-label">Footer EN</label>
+                                                <textarea class="form-control" name="footer_en" id="content-en" rows="6" placeholder="Enter your message">{{ old('footer_en', $system->footer_en) }}</textarea>
+                                                @error('footer_en')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <!--end col-->
@@ -104,14 +119,20 @@
                                                 <input type="text" name="facebook" class="form-control"
                                                     placeholder="Link to Facebook"
                                                     value="{{ old('facebook', $system->facebook) }}">
+                                                @error('facebook')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label for="firstNameinput" class="form-label">Twtter</label>
+                                                <label for="firstNameinput" class="form-label">Twitter</label>
                                                 <input type="text" name="twitter" class="form-control"
-                                                    placeholder="Link to Twtter"
+                                                    placeholder="Link to Twitter"
                                                     value="{{ old('twitter', $system->twitter) }}">
+                                                @error('twitter')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -120,6 +141,9 @@
                                                 <input type="text" name="youtube" class="form-control"
                                                     placeholder="Link to Youtube"
                                                     value="{{ old('youtube', $system->youtube) }}">
+                                                @error('youtube')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -128,6 +152,9 @@
                                                 <input type="text" name="instagram" class="form-control"
                                                     placeholder="Link to Instagram"
                                                     value="{{ old('instagram', $system->instagram) }}">
+                                                @error('instagram')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
 
@@ -136,6 +163,9 @@
                                                 <label for="firstNameinput" class="form-label">Zalo</label>
                                                 <input type="text" name="zalo" class="form-control"
                                                     placeholder="Link to Zalo" value="{{ old('zalo', $system->zalo) }}">
+                                                @error('zalo')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -227,6 +257,9 @@
                                             <div class="mb-3">
                                                 <label for="compnayNameinput" class="form-label">Iframe Map</label>
                                                 <textarea class="form-control" name="map" rows="3" placeholder="Enter your message">{{ old('map', $system->map) }}</textarea>
+                                                @error('map')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
                                         <!--end col-->
