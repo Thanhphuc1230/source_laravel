@@ -14,11 +14,11 @@ class FeedBackRequest extends BaseAdminRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:255',
-            'message' => 'required|max:65535',
+            'name' => 'required|string|max:255|regex:/^[a-zA-Z0-9\s\p{L}]+$/u',
+            'message' => 'required|string|max:2000', // Reduced from 65535 for security
             'image' => request()->route('uuid')
-            ? 'nullable|:tp_products,image,' . request()->route('uuid') . ',uuid|image|mimes:jpeg,png,jpg,gif,webp'
-            : 'required|:tp_products,image|image|mimes:jpeg,png,jpg,gif,webp',
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+            : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ];
     }
 
@@ -27,8 +27,9 @@ class FeedBackRequest extends BaseAdminRequest
         return [
             'name.required' => 'Tên không được để trống',
             'name.max' => 'Tên không được quá 255 ký tự',
+            'name.regex' => 'Tên chỉ được chứa chữ cái, số và khoảng trắng',
             'message.required' => 'Nội dung không được để trống',
-            'message.max' => 'Nội dung không được quá 65535 ký tự',
+            'message.max' => 'Nội dung không được quá 2000 ký tự',
             'image.required' => 'Hình ảnh không được để trống',
             'image.image' => 'Hình ảnh không đúng định dạng',
             'image.mimes' => 'Hình ảnh không đúng định dạng',

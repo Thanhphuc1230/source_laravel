@@ -24,7 +24,7 @@ class PageRequest extends BaseAdminRequest
             'content_en' => 'nullable|max:65535',
             'keywords' => 'required',
             'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ];
     }
 

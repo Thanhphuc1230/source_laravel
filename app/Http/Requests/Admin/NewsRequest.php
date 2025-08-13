@@ -18,8 +18,8 @@ class NewsRequest extends BaseAdminRequest
             'name_en' => 'nullable|string|max:255',
             'intro_vn' => 'required|string|max:255',
             'intro_en' => 'nullable|string|max:255',
-            'content_vn' => 'required|string|max:5000000',
-            'content_en' => 'nullable|string|max:5000000',
+            'content_vn' => 'required|string|max:100000', // Reduced from 5MB to 100KB for security
+            'content_en' => 'nullable|string|max:100000',
             'category_id' => 'required|exists:tp_cate_news,id_cate_new',
             'slug' => 'nullable|string|max:255',
             'status' => 'required|in:0,1',
