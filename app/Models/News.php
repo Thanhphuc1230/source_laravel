@@ -24,6 +24,8 @@ class News extends Model
         'stt',
         'slug',
         'image',
+        'keywords',
+        'description',
         'created_at',
         'updated_at',
     ];
