@@ -196,7 +196,7 @@ class ProductController extends BaseController
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-        
+
         // Get items before deletion for event dispatch (optimize: only get necessary fields)
         $productItems = $this->model::whereIn('uuid', $uuids)
             ->select('uuid', 'slug', 'name_vn', 'category_id') // Only fields needed for events
@@ -205,9 +205,7 @@ class ProductController extends BaseController
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
 
         // Optimized event dispatch - individual events but with minimal data
-        foreach ($productItems as $product) {
-            ProductChanged::dispatch($product, 'deleted');
-        }
+        ProductChanged::dispatch(null, 'deleted');
 
         return $result;
     }

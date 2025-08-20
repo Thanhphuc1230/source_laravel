@@ -123,7 +123,7 @@ class SliderController extends BaseController
             toast('Không tìm thấy ' . $this->nameItem, 'error');
             return back();
         }
-
+        SliderChanged::dispatch($slider, 'destroy');
         // Gọi destroyData để xóa cả hình ảnh (event sẽ được dispatch tự động)
         return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
     }
@@ -136,7 +136,7 @@ class SliderController extends BaseController
             toast('Không có mục nào được chọn để xóa.', 'error');
             return redirect()->back();
         }
-
+        SliderChanged::dispatch(null, 'deleted');
         // Gọi destroyAllByUUIDs để xóa cả hình ảnh (event sẽ được dispatch tự động)
         return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
     }

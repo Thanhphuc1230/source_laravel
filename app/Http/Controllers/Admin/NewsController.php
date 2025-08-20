@@ -42,10 +42,7 @@ class NewsController extends BaseController
         // Kiểm tra nếu đã chọn chủ đề
         if ($request->has('category') && $request->input('category') != 0) {
             $categoryId = $request->input('category');
-            $query->where(function ($q) use ($categoryId) {
-                $q->where('parent_id', $categoryId)
-                  ->orWhere('id_cate_new', $categoryId);
-            });
+            $query->where('category_id', $categoryId);
         }
 
         $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status','home', 'stt', 'updated_at','category_id','image')->orderBy('created_at','desc')->paginate(10);
@@ -115,7 +112,7 @@ class NewsController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
         $data['updated_at'] = new \DateTime();
-        
+
         // Handle image
         $data['image'] = $this->handleSingleImage($request, $current);
 
@@ -132,10 +129,10 @@ class NewsController extends BaseController
     {
         $news = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
-        
+
         // Remove related cache
         NewsChanged::dispatch($news, 'status_updated');
-        
+
         return $result;
     }
 
@@ -143,10 +140,10 @@ class NewsController extends BaseController
     {
         $news = $this->model::where('uuid', $uuid)->first();
         $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
-        
+
         // Remove related cache
         NewsChanged::dispatch($news, 'order_updated');
-        
+
         return $result;
     }
 
@@ -154,29 +151,22 @@ class NewsController extends BaseController
     {
         $news = $this->model::where('uuid', $uuid)->first();
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
-        
+
         // Remove related cache
         NewsChanged::dispatch($news, 'deleted');
-        
+
         return $result;
     }
 
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-        
-        // Optimize: only select fields needed for events
-        $newsItems = $this->model::whereIn('uuid', $uuids)
-            ->select('uuid', 'slug', 'name_vn', 'category_id')
-            ->get();
-        
+
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
-        
-        // Optimized event dispatch with minimal data
-        foreach ($newsItems as $news) {
-            NewsChanged::dispatch($news, 'deleted');
-        }
-        
+
+        // Chỉ cần xóa cache toàn bộ news
+        NewsChanged::dispatch(null, 'deleted');
+
         return $result;
     }
 }

@@ -164,7 +164,7 @@ class CateNewController extends BaseController
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-        
+
         // Optimize: only select fields needed for events
         $cateNewItems = $this->model::whereIn('uuid', $uuids)
             ->select('uuid', 'slug', 'name_vn', 'parent_id')
@@ -173,9 +173,7 @@ class CateNewController extends BaseController
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
 
         // Optimized event dispatch with minimal data
-        foreach ($cateNewItems as $cateNew) {
-            CateNewChanged::dispatch($cateNew, 'deleted');
-        }
+        CateNewChanged::dispatch(null, 'deleted');
 
         return $result;
     }

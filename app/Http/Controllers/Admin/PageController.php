@@ -146,7 +146,7 @@ class PageController extends BaseController
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-        
+
         // Optimize: only select fields needed for events
         $pageItems = $this->model::whereIn('uuid', $uuids)
             ->select('uuid', 'slug', 'name_vn')
@@ -154,10 +154,7 @@ class PageController extends BaseController
 
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
 
-        // Optimized event dispatch with minimal data
-        foreach ($pageItems as $page) {
-            PageChanged::dispatch($page, 'deleted');
-        }
+        PageChanged::dispatch(null, 'deleted');
 
         return $result;
     }
