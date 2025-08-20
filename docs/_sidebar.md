@@ -21,6 +21,7 @@
   * [Services](services.md)
   * [Database Schema](database.md)
   * [Coding Standards](coding-standards.md)
+  * [Testing Guide](testing.md)
 
 * **Tính năng nâng cao**
   * [Image Processing](image-processing.md)

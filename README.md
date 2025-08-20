@@ -124,11 +124,22 @@ php artisan sitemap:generate
 - **ImageService**: Xử lý upload, resize, WebP conversion
 - **DataRemovalService**: Xóa data với cleanup ảnh tự động
 - **ModelToggleService**: Toggle status và update order
+- **RateLimitService**: IP-based rate limiting cho login và contact
 
 ### Traits  
 - **ImageHandlerTrait**: Centralized image processing
 - **DataRemovalTrait**: Standardized data removal
 - **SlugHandlerTrait**: Auto slug generation với unique check
+
+## 🧪 Testing
+
+- **Unit Tests**: PHPUnit với comprehensive test coverage
+- **Test Factories**: Model factories cho test data generation
+- **Test Coverage**: 
+  - ✅ CateNewController (8 tests passing)
+  - ✅ RateLimitService (comprehensive service testing)
+  - ✅ Database testing với RefreshDatabase trait
+- **Test Environment**: Dedicated `.env.testing` configuration
 
 ## 📝 Recent Updates
 
@@ -140,6 +151,8 @@ php artisan sitemap:generate
 - ✅ **File Manager**: Order images by time (desc)
 - ✅ **SEO**: Keywords and description fields in models
 - ✅ **Cache**: Event-based cache clearing system
+- ✅ **Testing**: Unit tests for CateNewController and RateLimitService
+- ✅ **Security**: IP-based rate limiting, enhanced form validation
 
 ## 📄 License
 
