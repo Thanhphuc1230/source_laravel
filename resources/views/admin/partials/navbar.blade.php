@@ -106,6 +106,11 @@
                         <i class="ri-feedback-line"></i> <span data-key="t-widgets">Đánh giá khách hàng</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.contact.index') }}">
+                        <i class="ri-message-line"></i> <span data-key="t-widgets">Liên hệ</span>
+                    </a>
+                </li>
                 {{-- system --}}
                 @if (Auth::user()->level == 1)
                     <li class="nav-item">

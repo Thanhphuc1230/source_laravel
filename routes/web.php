@@ -15,10 +15,11 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SitemapController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\ContactController;
 // frontend
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\RouteController;
-
+use App\Http\Controllers\Frontend\ContactController as Contact;
 // auth
 use App\Http\Controllers\Auth\LoginController;
 
@@ -239,5 +240,16 @@ Route::prefix('admin')
                 Route::get('/status/{uuid}/{status}/{name}', 'status')->name('status');
                 Route::get('/edit/{uuid}', 'edit')->name('edit');
                 Route::get('/destroy-order/{uuid}', 'destroy_order')->name('destroy_order');
+            });
+        // Manage contact
+        Route::controller(ContactController::class)
+            ->prefix('contact')
+            ->name('contact.')
+            ->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/status/{uuid}/{status}/{name}', 'status')->name('status');
+                Route::get('/edit/{uuid}', 'edit')->name('edit');
+                Route::get('/destroy/{uuid}', 'destroy')->name('destroy');
+                Route::post('/destroyAll', 'destroyAll')->name('destroyAll');
             });
     });
