@@ -15,7 +15,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register LoginRateLimitService as singleton
+        $this->app->singleton(\App\Services\LoginRateLimitService::class, function ($app) {
+            return new \App\Services\LoginRateLimitService(
+                maxAttempts: config('auth.rate_limit.max_attempts', 5),
+                decayMinutes: config('auth.rate_limit.decay_minutes', 15)
+            );
+        });
     }
 
     /**

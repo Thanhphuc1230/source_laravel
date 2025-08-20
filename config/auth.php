@@ -112,4 +112,20 @@ return [
 
     'password_timeout' => 10800,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Login Rate Limiting
+    |--------------------------------------------------------------------------
+    |
+    | Configure rate limiting for login attempts to prevent brute force attacks.
+    | These settings control how many failed attempts are allowed before
+    | blocking an IP address and for how long.
+    |
+    */
+
+    'rate_limit' => [
+        'max_attempts' => env('LOGIN_MAX_ATTEMPTS', 5),
+        'decay_minutes' => env('LOGIN_DECAY_MINUTES', 15),
+    ],
+
 ];

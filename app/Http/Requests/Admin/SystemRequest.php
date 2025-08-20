@@ -10,7 +10,7 @@ class SystemRequest extends BaseAdminRequest
     public function authorize(): bool
     {
         if (!parent::authorize()) {
-            return false;
+        return false;
         }
 
         // System settings require highest privilege

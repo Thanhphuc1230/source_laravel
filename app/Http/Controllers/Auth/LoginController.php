@@ -6,9 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Login\LoginRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Services\LoginRateLimitService;
 use App\Models\User;
 class LoginController extends Controller
-{   
+{
+    private LoginRateLimitService $rateLimitService;
+
+    public function __construct(LoginRateLimitService $rateLimitService)
+    {
+        $this->rateLimitService = $rateLimitService;
+    }
 
     public function getLogin()
     {
@@ -21,31 +28,91 @@ class LoginController extends Controller
 
     public function postLogin(LoginRequest $request)
     {
-        $user = User::where('email', $request->username)->orWhere('username', $request->username)->first();
+        $ip = $request->ip();
 
+        // Check rate limiting
+        if ($this->rateLimitService->isBlocked($ip)) {
+            return back()->with(['error' => $this->rateLimitService->getErrorMessage()]);
+        }
+
+        // Validate user exists and verified
+        $user = $this->findUser($request->username);
         if (!$user) {
-            return back()->with(['error' => 'This account does not exist']);
+            return $this->handleFailedLogin($ip, 'Tài khoản này không tồn tại');
         }
-    
-        if ($user->email_verified_at === null) {
-            return back()->with(['error' => 'Please confirm your email']);
+
+        if (!$this->isUserVerified($user)) {
+            return $this->handleFailedLogin($ip, 'Vui lòng xác thực email');
         }
-    
-        $login = [
-            'email'    => $request->username,
+
+        // Attempt authentication
+        if ($this->attemptLogin($request)) {
+            return $this->handleSuccessfulLogin($request, $ip);
+        }
+
+        return $this->handleFailedLogin($ip, 'Email hoặc mật khẩu không đúng. Vui lòng nhập lại');
+    }
+
+    /**
+     * Find user by email or username
+     */
+    private function findUser(string $identifier): ?User
+    {
+        return User::where('email', $identifier)
+                  ->orWhere('username', $identifier)
+                  ->first();
+    }
+
+    /**
+     * Check if user is verified
+     */
+    private function isUserVerified(User $user): bool
+    {
+        return $user->email_verified_at !== null;
+    }
+
+    /**
+     * Attempt user login
+     */
+    private function attemptLogin(LoginRequest $request): bool
+    {
+        return Auth::attempt([
+            'email' => $request->username,
             'password' => $request->password,
-        ];
+        ]);
+    }
+
+    /**
+     * Handle successful login
+     */
+    private function handleSuccessfulLogin(LoginRequest $request, string $ip)
+    {
+        $this->rateLimitService->clearAttempts($ip);
         
-        if (Auth::attempt($login)) {
-            $redirectRoute = Auth::user()->level == 1 || Auth::user()->level == 2
-                ? 'admin.analytics.index'
-                : 'website.home';
-    
-            $request->session()->regenerate();
-            return redirect()->route($redirectRoute)->with('success', 'Login success.');
-        }
-    
-        return back()->with(['error' => 'Email or password wrong. Please enter again']);
+        $redirectRoute = $this->getRedirectRoute();
+        $request->session()->regenerate();
+        
+        return redirect()->route($redirectRoute)->with('success', 'Đăng nhập thành công.');
+    }
+
+    /**
+     * Handle failed login attempt
+     */
+    private function handleFailedLogin(string $ip, string $errorMessage)
+    {
+        $this->rateLimitService->incrementAttempts($ip);
+        return back()->with(['error' => $errorMessage]);
+    }
+
+    /**
+     * Get redirect route based on user level
+     */
+    private function getRedirectRoute(): string
+    {
+        $user = Auth::user();
+        return ($user->level == 1 || $user->level == 2) 
+            ? 'admin.analytics.index'
+            : 'website.home';
     }
 
     public function logout(Request $request)
