@@ -43,7 +43,7 @@ class CateNewController extends BaseController
             $categoryId = $request->input('category');
             $query->where(function ($q) use ($categoryId) {
                 $q->where('parent_id', $categoryId)
-                  ->orWhere('id_category_product', $categoryId);
+                  ->orWhere('id_cate_new', $categoryId);
             });
         }
 
