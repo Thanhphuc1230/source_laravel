@@ -6,15 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Login\LoginRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Services\LoginRateLimitService;
+use App\Services\RateLimitService;
 use App\Models\User;
 class LoginController extends Controller
 {
-    private LoginRateLimitService $rateLimitService;
+    private RateLimitService $rateLimitService;
 
-    public function __construct(LoginRateLimitService $rateLimitService)
+    public function __construct()
     {
-        $this->rateLimitService = $rateLimitService;
+        // Use factory method for login-specific rate limiting
+        $this->rateLimitService = RateLimitService::forLogin(
+            maxAttempts: config('auth.rate_limit.max_attempts', 5),
+            decayMinutes: config('auth.rate_limit.decay_minutes', 15)
+        );
     }
 
     public function getLogin()

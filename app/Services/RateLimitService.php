@@ -4,13 +4,15 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Cache;
 
-class LoginRateLimitService
+class RateLimitService
 {
     private int $maxAttempts;
     private int $decayMinutes;
+    private string $prefix;
 
-    public function __construct(int $maxAttempts = 5, int $decayMinutes = 15)
+    public function __construct(string $prefix, int $maxAttempts = 5, int $decayMinutes = 15)
     {
+        $this->prefix = $prefix;
         $this->maxAttempts = $maxAttempts;
         $this->decayMinutes = $decayMinutes;
     }
@@ -25,7 +27,7 @@ class LoginRateLimitService
     }
 
     /**
-     * Increment failed attempts for IP
+     * Increment attempts for IP
      */
     public function incrementAttempts(string $ip): void
     {
@@ -36,7 +38,7 @@ class LoginRateLimitService
     }
 
     /**
-     * Clear attempts on successful login
+     * Clear attempts on success
      */
     public function clearAttempts(string $ip): void
     {
@@ -56,7 +58,15 @@ class LoginRateLimitService
      */
     public function getErrorMessage(): string
     {
-        return "Quá nhiều lần đăng nhập. Vui lòng thử lại trong {$this->decayMinutes} phút.";
+        return "Bạn đã thực hiện quá nhiều lần trong vòng {$this->decayMinutes} phút. Vui lòng thử lại sau.";
+    }
+
+    /**
+     * Get remaining attempts
+     */
+    public function getRemainingAttempts(string $ip): int
+    {
+        return max(0, $this->maxAttempts - $this->getAttempts($ip));
     }
 
     /**
@@ -79,6 +89,30 @@ class LoginRateLimitService
      */
     private function getRateLimitKey(string $ip): string
     {
-        return "login_attempts_{$ip}";
+        return "{$this->prefix}_attempts_{$ip}";
+    }
+
+    /**
+     * Factory method for login rate limiting
+     */
+    public static function forLogin(int $maxAttempts = 5, int $decayMinutes = 15): self
+    {
+        return new self('login', $maxAttempts, $decayMinutes);
+    }
+
+    /**
+     * Factory method for contact form rate limiting
+     */
+    public static function forContact(int $maxAttempts = 3, int $decayMinutes = 5): self
+    {
+        return new self('contact', $maxAttempts, $decayMinutes);
+    }
+
+    /**
+     * Factory method for custom rate limiting
+     */
+    public static function for(string $prefix, int $maxAttempts = 5, int $decayMinutes = 15): self
+    {
+        return new self($prefix, $maxAttempts, $decayMinutes);
     }
 }

@@ -128,4 +128,20 @@ return [
         'decay_minutes' => env('LOGIN_DECAY_MINUTES', 15),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contact Form Rate Limiting
+    |--------------------------------------------------------------------------
+    |
+    | Configure rate limiting for contact form submissions to prevent spam.
+    | These settings control how many contact forms can be submitted
+    | from the same IP within the specified time window.
+    |
+    */
+
+    'contact_rate_limit' => [
+        'max_attempts' => env('CONTACT_MAX_ATTEMPTS', 3),
+        'decay_minutes' => env('CONTACT_DECAY_MINUTES', 5),
+    ],
+
 ];
