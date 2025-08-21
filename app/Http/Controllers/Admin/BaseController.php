@@ -54,4 +54,15 @@ class BaseController extends Controller
         }
         return redirect()->route($this->website . "." . $this->module . "." . $page, $params)->with($flash);
     }
+
+    public function resolveCreatedAt($inputDate, $oldDate = null)
+    {
+        if (!empty($inputDate)) {
+            return \Carbon\Carbon::parse($inputDate);
+        }
+        if ($oldDate) {
+            return $oldDate;
+        }
+        return now();
+    }
 }

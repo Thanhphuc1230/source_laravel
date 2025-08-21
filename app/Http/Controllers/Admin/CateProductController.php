@@ -49,7 +49,7 @@ class CateProductController extends BaseController
             });
         }
 
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status','home', 'stt', 'updated_at')->orderBy('created_at','desc')->paginate(10);
+        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status','home', 'stt', 'created_at')->orderBy('created_at','desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
         // category product
         $data['category'] = $this->model::with('children')->where('status', 1)->where('parent_id', 0)->get();
@@ -78,7 +78,7 @@ class CateProductController extends BaseController
         $data['uuid'] = Str::uuid();
         // Tạo slug từ name_vn nếu không có
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
-        $data['created_at'] = new \DateTime();
+        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
         $data['status'] = 1;
 
         // Handle image
@@ -138,7 +138,7 @@ class CateProductController extends BaseController
 
         $data = $request->except('_token','return_back','return_list','currentPage');
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
-        $data['updated_at'] = new \DateTime();
+        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
         // Handle image
         $data['image'] = $this->handleSingleImage($request, $current, null, 'image');

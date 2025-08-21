@@ -36,7 +36,7 @@ class FeedBackController extends BaseController
             });
         }
 
-        $data['list'] = $query->paginate(10);
+        $data['list'] = $query->orderBy('created_at','desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
 
         return $this->view_admin('list', $data);
@@ -54,7 +54,7 @@ class FeedBackController extends BaseController
     {
         $data = $request->except('_token', 'return_back', 'return_list');
         $data['uuid'] = Str::uuid();
-        $data['created_at'] = new \DateTime();
+        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
 
         // handle image
         if ($request->hasFile('image')) {
@@ -95,7 +95,7 @@ class FeedBackController extends BaseController
     {
         $current = $this->model::where('uuid', $uuid)->first();
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
-        $data['updated_at'] = new \DateTime();
+        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
         // update image
         $data['image'] = $this->handleSingleImage($request, $current);

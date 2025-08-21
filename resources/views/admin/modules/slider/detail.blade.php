@@ -59,6 +59,15 @@
                                                 @enderror
                                             </div>
                                         </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="created_at" class="form-label">Ngày đăng</label>
+                                                <input type="datetime-local" id="created_at" name="created_at"
+                                                    class="form-control @error('created_at') is-invalid @enderror"
+                                                    value="{{ old('created_at', isset($page->created_at) ? \Carbon\Carbon::parse($page->created_at)->format('Y-m-d\TH:i') : '') }}">
+                                            </div>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Hình ảnh</label>

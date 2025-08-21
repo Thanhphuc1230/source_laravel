@@ -49,7 +49,7 @@ class ProductController extends BaseController
             });
         }
 
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status','home', 'stt', 'updated_at','category_id','image')->orderBy('created_at','desc')->paginate(10);
+        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status','home', 'stt', 'created_at','category_id','image')->orderBy('created_at','desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
 
         $data['category'] = CateProduct::with('children')
@@ -74,7 +74,7 @@ class ProductController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list');
         $data['uuid'] = Str::uuid();
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
-        $data['created_at'] = new \DateTime();
+        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
         $data['status'] = 1;
 
         // Handle single image
@@ -118,7 +118,7 @@ class ProductController extends BaseController
         $current = $this->model::where('uuid', $uuid)->first();
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
-        $data['updated_at'] = new \DateTime();
+        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
         // Handle single image
         $data['image'] = $this->handleSingleImage($request, $current);

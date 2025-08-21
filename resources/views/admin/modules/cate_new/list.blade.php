@@ -69,7 +69,7 @@
                                                 <th class="sort">Hiển thị</th>
                                                 <th class="sort">Trang chủ</th>
                                                 <th class="sort">STT</th>
-                                                <th class="sort">Ngày cập nhật</th>
+                                                <th class="sort">Ngày đăng</th>
                                                 <th class="sort">Hành động</th>
                                             </tr>
                                         </thead>
@@ -114,7 +114,7 @@
                                                                     onchange="updateStt(this)" style="max-width: 45px;">
                                                             </td>
                                                             <td class="date">
-                                                                {{ $item->updated_at ? $item->updated_at->format('d-m-Y') : $item->created_at->format('d-m-Y') }}
+                                                                {{ $item->created_at->format('d-m-Y') }}
                                                             </td>
 
                                                             </td>

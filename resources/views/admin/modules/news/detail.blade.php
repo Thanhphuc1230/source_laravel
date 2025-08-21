@@ -54,8 +54,8 @@
                                 <div class="col-md-12">
                                     <div class="mb-3">
                                         <label for="intro-vn" class="form-label">Giới thiệu VN</label>
-                                        <textarea  class="form-control @error('intro_vn') is-invalid @enderror" name="intro_vn"
-                                            rows="6" placeholder="Enter your message">{{ old('intro_vn', $page->intro_vn ?? '') }}</textarea>
+                                        <textarea class="form-control @error('intro_vn') is-invalid @enderror" name="intro_vn" rows="6"
+                                            placeholder="Enter your message">{{ old('intro_vn', $page->intro_vn ?? '') }}</textarea>
                                         @error('intro_vn')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -65,14 +65,14 @@
                                 <div class="col-md-12">
                                     <div class="mb-3">
                                         <label for="intro-en" class="form-label">Giới thiệu EN</label>
-                                        <textarea  class="form-control @error('intro_en') is-invalid @enderror" name="intro_en"
-                                            rows="6" placeholder="Enter your message">{{ old('intro_en', $page->intro_en ?? '') }}</textarea>
+                                        <textarea class="form-control @error('intro_en') is-invalid @enderror" name="intro_en" rows="6"
+                                            placeholder="Enter your message">{{ old('intro_en', $page->intro_en ?? '') }}</textarea>
                                         @error('intro_en')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
-                       
+
                                 <div class="col-md-12">
                                     <div class="mb-3">
                                         <label for="content-vn" class="form-label">Nội dung VN</label>
@@ -96,7 +96,7 @@
                             </div>
                         </div>
                         <!-- end card -->
-                       
+
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title mb-0">Hình ảnh sản phẩm</h5>
@@ -158,6 +158,14 @@
                                 </div>
 
                                 <div class="mb-3">
+                                    <label for="created_at" class="form-label">Ngày đăng</label>
+                                    <input type="datetime-local" id="created_at" name="created_at"
+                                        class="form-control @error('created_at') is-invalid @enderror"
+                                        value="{{ old('created_at', isset($page->created_at) ? \Carbon\Carbon::parse($page->created_at)->format('Y-m-d\TH:i') : '') }}">
+
+                                </div>
+
+                                <div class="mb-3">
                                     <label for="choices-publish-visibility-input" class="form-label">STT</label>
                                     <input type="number" name="stt"
                                         class="form-control @error('stt') is-invalid @enderror"
@@ -178,20 +186,21 @@
                                 </div>
 
                                 <!-- Preview Link Section -->
-                                @if(isset($page) && $page->slug && $page->status && $page->category_id)
+                                @if (isset($page) && $page->slug && $page->status && $page->category_id)
                                     @php
                                         $categorySlug = \App\Models\CateNew::find($page->category_id)?->slug ?? '';
                                     @endphp
-                                    @if($categorySlug)
-                                    <div class="mb-3">
-                                        <label class="form-label">Xem trang</label>
-                                        <div>
-                                            <a href="{{ route('web.resolve', ['slug' => $page->slug]) }}" target="_blank" class="text-decoration-none">
-                                                <span>{{ request()->getSchemeAndHttpHost() }}/news/{{ $categorySlug }}/{{ $page->slug }}.html</span>
-                                                <i class="ri-eye-line ms-1"></i>
-                                            </a>
+                                    @if ($categorySlug)
+                                        <div class="mb-3">
+                                            <label class="form-label">Xem trang</label>
+                                            <div>
+                                                <a href="{{ route('web.resolve', ['slug' => $page->slug]) }}"
+                                                    target="_blank" class="text-decoration-none">
+                                                    <span>{{ request()->getSchemeAndHttpHost() }}/news/{{ $categorySlug }}/{{ $page->slug }}.html</span>
+                                                    <i class="ri-eye-line ms-1"></i>
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
                                     @endif
                                 @endif
                                 <div class="mb-3">

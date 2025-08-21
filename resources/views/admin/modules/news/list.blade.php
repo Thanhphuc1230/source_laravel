@@ -117,7 +117,7 @@
                                                                     onchange="updateStt(this)" style="max-width: 45px;">
                                                             </td>
                                                             <td class="date">
-                                                                {{ $item->updated_at ? $item->updated_at->format('d-m-Y') : $item->created_at->format('d-m-Y') }}
+                                                                {{ $item->created_at->format('d-m-Y') }}
                                                             </td>
                                                             <td>
                                                                 <div class="d-flex gap-2">

@@ -232,7 +232,14 @@
                                     </select>
                                 </div>
 
-                                <div>
+                                <div class="mb-3">
+                                    <label for="created_at" class="form-label">Ngày đăng</label>
+                                    <input type="datetime-local" id="created_at" name="created_at"
+                                        class="form-control @error('created_at') is-invalid @enderror"
+                                        value="{{ old('created_at', isset($page->created_at) ? \Carbon\Carbon::parse($page->created_at)->format('Y-m-d\TH:i') : '') }}">
+                                </div>
+
+                                <div class="mb-3">
                                     <label for="choices-publish-visibility-input" class="form-label">STT</label>
                                     <input type="number" name="stt"
                                         class="form-control @error('stt') is-invalid @enderror"
