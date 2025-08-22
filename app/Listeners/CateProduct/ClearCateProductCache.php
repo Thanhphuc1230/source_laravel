@@ -3,15 +3,11 @@
 namespace App\Listeners\CateProduct;
 
 use App\Events\CateProduct\CateProductChanged;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class ClearCateProductCache implements ShouldQueue
+class ClearCateProductCache
 {
-    use InteractsWithQueue;
-
     /**
      * Handle the event.
      */

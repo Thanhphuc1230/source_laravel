@@ -3,18 +3,11 @@
 namespace App\Listeners\Feedback;
 
 use App\Events\Feedback\FeedbackChanged;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class ClearFeedbackCache implements ShouldQueue
+class ClearFeedbackCache
 {
-    use InteractsWithQueue;
-
-    /**
-     * Handle the event.
-     */
     public function handle(FeedbackChanged $event): void
     {
         try {

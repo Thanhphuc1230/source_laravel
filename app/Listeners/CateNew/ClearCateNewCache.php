@@ -3,18 +3,11 @@
 namespace App\Listeners\CateNew;
 
 use App\Events\CateNew\CateNewChanged;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class ClearCateNewCache implements ShouldQueue
+class ClearCateNewCache
 {
-    use InteractsWithQueue;
-
-    /**
-     * Handle the event.
-     */
     public function handle(CateNewChanged $event): void
     {
         try {

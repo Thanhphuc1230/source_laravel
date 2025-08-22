@@ -3,18 +3,11 @@
 namespace App\Listeners\News;
 
 use App\Events\News\NewsChanged;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class ClearNewsCache implements ShouldQueue
+class ClearNewsCache
 {
-    use InteractsWithQueue;
-
-    /**
-     * Handle the event.
-     */
     public function handle(NewsChanged $event): void
     {
         try {
@@ -25,13 +18,7 @@ class ClearNewsCache implements ShouldQueue
             if ($event->slug) {
                 $slugCacheKey = "slug_resolution_{$event->slug}";
                 Cache::forget($slugCacheKey);
-
-                Log::info('Cleared slug resolution cache', [
-                    'slug' => $event->slug,
-                    'action' => $event->action
-                ]);
             }
-
         } catch (\Exception $e) {
             Log::error('Failed to clear news cache', [
                 'error' => $e->getMessage(),
