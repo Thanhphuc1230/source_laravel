@@ -82,6 +82,9 @@
                             <li class="nav-item">
                                 <a href="{{ route('admin.order.index') }}" class="nav-link" data-key="t-grid-js">Đơn hàng</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.product-setting.index') }}" class="nav-link" data-key="t-grid-js">Cài đặt</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
