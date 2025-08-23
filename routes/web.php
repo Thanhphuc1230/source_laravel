@@ -223,10 +223,11 @@ Route::prefix('admin')
                 Route::post('/update/{uuid}', 'update')->name('update');
                 Route::get('/destroy/{uuid}', 'destroy')->name('destroy');
             });
-        // Quản lý hệ thống
+        // Quản lý hệ thống - Chỉ Admin (Level 1)
         Route::controller(SystemController::class)
             ->prefix('system')
             ->name('system.')
+            ->middleware('admin.level:1')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::post('/store', 'store')->name('store');
@@ -253,10 +254,11 @@ Route::prefix('admin')
                 Route::get('/destroy/{uuid}', 'destroy')->name('destroy');
                 Route::post('/destroyAll', 'destroyAll')->name('destroyAll');
             });
-        // Product Settings
+        // Product Settings - Chỉ Admin (Level 1)
         Route::controller(ProductSettingController::class)
             ->prefix('product-setting')
             ->name('product-setting.')
+            ->middleware('admin.level:1')
             ->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/create', 'create')->name('create');

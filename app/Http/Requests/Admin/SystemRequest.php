@@ -6,15 +6,13 @@ class SystemRequest extends BaseAdminRequest
 {
     /**
      * Only Super Admin (level = 1) can access system settings
+     * Authorization is handled by BaseAdminRequest (level >= 1)
+     * Admin and Staff can access system settings
      */
     public function authorize(): bool
     {
-        if (!parent::authorize()) {
-        return false;
-        }
-
-        // System settings require highest privilege
-        return auth()->user()->level == 1;
+        // Use BaseAdminRequest authorization (level >= 1)
+        return parent::authorize();
     }
 
     /**

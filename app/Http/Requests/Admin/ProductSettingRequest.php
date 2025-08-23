@@ -5,14 +5,18 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProductSettingRequest extends FormRequest
+class ProductSettingRequest extends BaseAdminRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     * 
+     * Authorization is handled by BaseAdminRequest (level >= 1)
+     * Admin and Staff can access product settings
      */
     public function authorize(): bool
     {
-        return true;
+        // Use BaseAdminRequest authorization (level >= 1)
+        return parent::authorize();
     }
 
     /**
