@@ -98,6 +98,8 @@ php artisan serve
 - **Recent Optimizations**:
   - ✅ Query optimization với select fields
   - ✅ Cache implementation cho frontend
+  - ✅ Role-based authorization system
+  - ✅ Product settings management
   - ✅ File manager ordering optimization
   - ✅ Bulk operations với cleanup tự động
 

@@ -19,6 +19,7 @@
   * [Architecture Overview](architecture.md)
   * [Traits System](traits.md)
   * [Services](services.md)
+  * [Authorization System](authorization.md)
   * [Database Schema](database.md)
   * [Coding Standards](coding-standards.md)
   * [Testing Guide](testing.md)
