@@ -25,6 +25,7 @@
   * [Testing Guide](testing.md)
 
 * **Tính năng nâng cao**
+  * [Image Handling](image-handling.md)
   * [Image Processing](image-processing.md)
   * [SEO & Slug](seo-slug.md)
   * [Analytics](analytics.md)
