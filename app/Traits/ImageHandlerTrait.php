@@ -58,6 +58,18 @@ trait ImageHandlerTrait
         return $this->imageService->updateDetailImages($request, $model, $folder, $field, $this->defaultImageConfig);
     }
 
+    /**
+     * Helper method để loại bỏ kept_images khỏi request data
+     * Sử dụng trong controllers để tránh lỗi "Column not found"
+     */
+    protected function cleanRequestData($request, $excludeFields = [])
+    {
+        $defaultExclude = ['_token', 'return_back', 'return_list', 'currentPage', 'kept_images'];
+        $excludeFields = array_merge($defaultExclude, $excludeFields);
+        
+        return $request->except($excludeFields);
+    }
+
     // ===== BACKWARD COMPATIBILITY METHODS =====
     
     /**

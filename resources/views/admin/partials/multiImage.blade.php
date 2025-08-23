@@ -195,7 +195,10 @@
     }
 
     function handleFiles(files) {
-      // Không xóa hình ảnh cũ
+      // Xóa preview cũ trước khi thêm mới
+      document.getElementById('preview-container').innerHTML = '';
+      
+      // Thêm hình ảnh mới
       files = [...files];
       files.forEach(previewFile);
     }
@@ -224,6 +227,71 @@
       }
     }
 
+    // ===== XỬ LÝ HÌNH ẢNH CHI TIẾT HIỆN TẠI =====
+    
+    // Xử lý xóa hình ảnh hiện tại (chỉ ẩn, không xóa thật)
+    function initializeExistingImageHandling() {
+      // Xử lý xóa hình ảnh hiện tại
+      document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-existing-image')) {
+          const button = e.target.closest('.remove-existing-image');
+          const imageItem = button.closest('.existing-image-item');
+          const imageName = imageItem.getAttribute('data-image');
+          
+          if (confirm('Bạn có chắc chắn muốn xóa hình ảnh này?')) {
+            // Ẩn hình ảnh
+            imageItem.style.display = 'none';
+            
+            // Cập nhật danh sách hình ảnh được giữ lại
+            updateKeptImages();
+          }
+        }
+      });
+      
+      // Xử lý xóa hình ảnh preview mới
+      document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-btn')) {
+          const button = e.target.closest('.remove-btn');
+          const previewItem = button.closest('.preview-item');
+          
+          if (confirm('Bạn có chắc chắn muốn xóa hình ảnh này?')) {
+            previewItem.remove();
+          }
+        }
+      });
+    }
+    
+    // Cập nhật danh sách hình ảnh được giữ lại
+    function updateKeptImages() {
+      const keptImagesInput = document.getElementById('kept-images-input');
+      if (!keptImagesInput) return;
+      
+      const visibleImages = [];
+      
+      document.querySelectorAll('.existing-image-item:not([style*="display: none"])').forEach(item => {
+        const imageName = item.getAttribute('data-image');
+        visibleImages.push(imageName);
+      });
+      
+      keptImagesInput.value = JSON.stringify(visibleImages);
+    }
+    
+    // Cập nhật khi form submit
+    function initializeFormSubmitHandling() {
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', function() {
+          updateKeptImages();
+        });
+      }
+    }
+    
+    // Khởi tạo khi DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeExistingImageHandling();
+      initializeFormSubmitHandling();
+    });
+
     // Hàm hiển thị hình ảnh cũ
     function displayExistingImages(existingImages) {
       existingImages.forEach(image => {
@@ -246,8 +314,6 @@
         document.getElementById('preview-container').appendChild(container);
       });
     }
-
-
   </script>
 
      {{-- upload file images --}}

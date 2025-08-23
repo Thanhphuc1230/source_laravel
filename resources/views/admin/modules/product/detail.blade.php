@@ -159,29 +159,27 @@
                                             <div class="mt-3">
                                                 <label class="form-label">Hình ảnh chi tiết hiện tại:</label>
 
-                                                <div class="row">
+                                                <div class="row" id="existing-images-container">
                                                     @foreach (json_decode($page->image_detail) as $index => $img_detail)
-                                                        <div class="col-md-3 mb-2">
+                                                        <div class="col-md-3 mb-2 existing-image-item" data-image="{{ $img_detail }}">
                                                             <div class="position-relative">
                                                                 <img src="{{ asset('images/' . $imageFolder . '/' . $img_detail) }}"
                                                                     alt="Product detail"
                                                                     style="width: 200px; height: 200px;object-fit: contain"
                                                                     class="img-fluid rounded">
-                                                                <form class="position-absolute"
-                                                                    style="top: 5px; right: 5px;"
-                                                                    data-uuid="{{ $page->uuid }}"
-                                                                    data-index="{{ $index }}">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="button"
-                                                                        class="btn btn-danger btn-sm delete-image">
-                                                                        <i class="ri-delete-bin-line"></i>
-                                                                    </button>
-                                                                </form>
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-sm remove-existing-image"
+                                                                    style="position: absolute; top: 5px; right: 5px;">
+                                                                    <i class="ri-delete-bin-line"></i>
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     @endforeach
                                                 </div>
+                                                
+                                                <!-- Hidden input để lưu danh sách hình ảnh được giữ lại -->
+                                                <input type="hidden" name="kept_images" id="kept-images-input" 
+                                                       value="{{ json_encode(json_decode($page->image_detail)) }}">
                                             </div>
                                         @endif
                                     </div>
@@ -334,33 +332,6 @@
         <!-- container-fluid -->
     </div>
 
-    {{-- deleta image detail --}}
-    <script>
-        document.querySelectorAll('.delete-image').forEach(button => {
-            button.addEventListener('click', function() {
-            const form = this.closest('form');
-                const uuid = form.getAttribute('data-uuid');
-                const index = form.getAttribute('data-index');
-
-                if (confirm('Bạn có chắc chắn muốn xóa hình ảnh này?')) {
-                    fetch(`/admin/product/${uuid}/delete-image/${index}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json'
-                            },
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                // Remove the image from the DOM or refresh the image list
-                                form.closest('.col-md-3').remove();
-                            } else {
-                                alert('Error deleting image.');
-                            }
-                        });
-                }
-            });
-        });
-    </script>
+    {{-- Logic xử lý hình ảnh chi tiết đã được di chuyển vào multiImage.blade.php --}}
     @include('admin.partials.ckeditor')
 @endsection

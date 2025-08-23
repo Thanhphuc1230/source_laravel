@@ -133,7 +133,7 @@ Route::prefix('admin')
                 Route::get('/destroy/{uuid}', 'destroy')->name('destroy');
                 Route::post('/destroyAll', 'destroyAll')->name('destroyAll');
                 Route::post('/update-stt/{uuid}', 'numericalOrder')->name('numericalOrder');
-                Route::delete('/{uuid}/delete-image/{index}', 'deleteImage')->name('deleteImage');
+                // Route delete-image đã được thay thế bằng logic xử lý trong updateMultipleImages
             });
         //Category News
         Route::controller(CateNewController::class)

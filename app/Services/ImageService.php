@@ -162,7 +162,6 @@ class ImageService
             // Kiểm tra file size - skip nếu quá lớn
             $fileSize = filesize($sourcePath);
             if ($fileSize > 10 * 1024 * 1024) { // 10MB
-                Log::warning("File quá lớn để convert WebP: {$sourcePath}", ['size' => $fileSize]);
                 return $this->fallbackToOriginal($sourcePath, $targetPath);
             }
 
@@ -171,7 +170,6 @@ class ImageService
             $estimatedMemory = $fileSize * 4; // Rough estimate
             
             if ($estimatedMemory > $memoryLimit * 0.8) {
-                Log::warning("Không đủ memory để convert WebP: {$sourcePath}");
                 return $this->fallbackToOriginal($sourcePath, $targetPath);
             }
 
@@ -216,26 +214,12 @@ class ImageService
                 throw new Exception("File WebP không được tạo thành công");
             }
 
-            // Log success
-            Log::info("WebP conversion successful", [
-                'source' => $sourcePath,
-                'target' => $targetPath,
-                'original_size' => $fileSize,
-                'webp_size' => filesize($targetPath),
-                'compression_ratio' => round((1 - filesize($targetPath) / $fileSize) * 100, 2) . '%'
-            ]);
+            // WebP conversion successful - no logging needed for production
 
             return true;
 
         } catch (Exception $e) {
-            // Log error
-            Log::error("WebP conversion failed: " . $e->getMessage(), [
-                'source' => $sourcePath,
-                'target' => $targetPath,
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            // Fallback to original format
+            // WebP conversion failed - fallback to original format
             return $this->fallbackToOriginal($sourcePath, $targetPath);
         }
     }
@@ -250,14 +234,10 @@ class ImageService
             $fallbackPath = str_replace('.webp', '.' . $originalExt, $targetPath);
             
             if (copy($sourcePath, $fallbackPath)) {
-                Log::info("Fallback to original format successful", [
-                    'source' => $sourcePath,
-                    'fallback' => $fallbackPath
-                ]);
                 return true;
             }
         } catch (Exception $copyError) {
-            Log::error("Fallback copy failed: " . $copyError->getMessage());
+            // Fallback copy failed - return false
         }
         
         return false;
@@ -344,13 +324,34 @@ class ImageService
         return json_encode($files);
     }
 
-    // xử lý hình ảnh chi tiết lúc update
+    /**
+     * Xử lý hình ảnh chi tiết lúc update với logic xóa và thêm mới
+     */
     public function updateDetailImages($request, $current, $imageFolder, $fieldName = 'image_detail', array $options = [])
     {
+        // Lấy danh sách hình ảnh hiện tại từ model
         $existingImages = json_decode($current->image_detail, true) ?: [];
+        
+        // Lấy danh sách hình ảnh được giữ lại từ request (nếu có)
+        $keptImages = $request->input('kept_images', '[]');
+        
+        // Chuyển đổi string JSON thành array
+        if (is_string($keptImages)) {
+            $keptImages = json_decode($keptImages, true) ?: [];
+        }
+        
+        // Lọc ra những hình ảnh được giữ lại
+        $filteredExistingImages = [];
+        if (!empty($keptImages) && is_array($keptImages)) {
+            foreach ($keptImages as $keptImage) {
+                if (in_array($keptImage, $existingImages)) {
+                    $filteredExistingImages[] = $keptImage;
+                }
+            }
+        }
+        
+        // Xử lý hình ảnh mới được upload
         $newImages = [];
-
-        // Handle new uploaded images
         if ($request->hasFile($fieldName)) {
             foreach ($request->file($fieldName) as $file) {
                 try {
@@ -373,12 +374,26 @@ class ImageService
                 }
             }
         }
-
-        // Kết hợp hình ảnh cũ và hình ảnh mới
-        $allImages = array_merge($existingImages, $newImages);
-
-        // Trả về tất cả hình ảnh đã giữ lại và hình ảnh mới
+        
+        // Kết hợp hình ảnh được giữ lại và hình ảnh mới
+        $allImages = array_merge($filteredExistingImages, $newImages);
+        
+        // Xóa những hình ảnh cũ không được giữ lại
+        $this->cleanupUnusedImages($existingImages, $filteredExistingImages, $imageFolder);
+        
         return json_encode($allImages);
+    }
+    
+    /**
+     * Xóa những hình ảnh không được sử dụng
+     */
+    private function cleanupUnusedImages($existingImages, $keptImages, $imageFolder)
+    {
+        $imagesToDelete = array_diff($existingImages, $keptImages);
+        
+        foreach ($imagesToDelete as $imageToDelete) {
+            $this->deleteImage($imageToDelete, $imageFolder);
+        }
     }
 
     /**
