@@ -34,8 +34,8 @@ class ProfileController extends BaseController
         $data['updated_at'] = new \DateTime();
         $admin = User::where('uuid',Auth::user()->uuid)->first();
 
-        // Handle avatar
-        $data['avatar'] = $this->handleSingleImage($request, $admin, null, 'avatar');
+        // Handle avatar - Update existing avatar
+        $data['avatar'] = $this->updateImage($request, $admin, null, 'avatar');
 
         if ($admin) {
             $admin->update($data);

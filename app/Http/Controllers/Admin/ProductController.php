@@ -77,11 +77,11 @@ class ProductController extends BaseController
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
         $data['status'] = 1;
 
-        // Handle single image
-        $data['image'] = $this->handleSingleImage($request);
+        // Handle single image - Save new image
+        $data['image'] = $this->saveImage($request);
 
-        // Handle multiple images
-        $data['image_detail'] = $this->handleMultipleImages($request);
+        // Handle multiple images - Save new images
+        $data['image_detail'] = $this->saveMultipleImages($request);
 
         $product = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
@@ -120,11 +120,11 @@ class ProductController extends BaseController
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
-        // Handle single image
-        $data['image'] = $this->handleSingleImage($request, $current);
+        // Handle single image - Update existing image
+        $data['image'] = $this->updateImage($request, $current);
 
-        // Handle multiple images
-        $data['image_detail'] = $this->handleMultipleImages($request, $current);
+        // Handle multiple images - Update existing images
+        $data['image_detail'] = $this->updateMultipleImages($request, $current);
 
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');

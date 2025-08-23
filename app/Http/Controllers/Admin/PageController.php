@@ -60,7 +60,8 @@ class PageController extends BaseController
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
 
         // Handle image
-        $data['image'] = $this->handleSingleImage($request);
+        // Handle single image - Save new image
+        $data['image'] = $this->saveImage($request);
 
         $page = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
@@ -99,7 +100,8 @@ class PageController extends BaseController
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
         // Handle image
-        $data['image'] = $this->handleSingleImage($request, $current);
+        // Handle single image - Update existing image
+        $data['image'] = $this->updateImage($request, $current);
 
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');

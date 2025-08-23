@@ -35,11 +35,11 @@ class SystemController extends BaseController
         $data['created_at'] = new \DateTime();
         $system = $this->model::find($id);
 
-        // Handle logo
-        $data['logo'] = $this->handleSingleImage($request, $system, 'logo', 'logo');
+        // Handle logo - Update existing logo
+        $data['logo'] = $this->updateImage($request, $system, 'logo', 'logo');
 
-        // Handle favicon
-        $data['favicon'] = $this->handleSingleImage($request, $system, 'logo', 'favicon');
+        // Handle favicon - Update existing favicon
+        $data['favicon'] = $this->updateImage($request, $system, 'logo', 'favicon');
 
         Cache::forget('website_data');
         if ($system) {

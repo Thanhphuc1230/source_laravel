@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Exception;
 use Intervention\Image\Facades\Image;
-
+use Illuminate\Support\Facades\Log;
 class ImageService
 {
     /**
@@ -162,7 +162,7 @@ class ImageService
             // Kiểm tra file size - skip nếu quá lớn
             $fileSize = filesize($sourcePath);
             if ($fileSize > 10 * 1024 * 1024) { // 10MB
-                \Log::warning("File quá lớn để convert WebP: {$sourcePath}", ['size' => $fileSize]);
+                Log::warning("File quá lớn để convert WebP: {$sourcePath}", ['size' => $fileSize]);
                 return $this->fallbackToOriginal($sourcePath, $targetPath);
             }
 
@@ -171,7 +171,7 @@ class ImageService
             $estimatedMemory = $fileSize * 4; // Rough estimate
             
             if ($estimatedMemory > $memoryLimit * 0.8) {
-                \Log::warning("Không đủ memory để convert WebP: {$sourcePath}");
+                Log::warning("Không đủ memory để convert WebP: {$sourcePath}");
                 return $this->fallbackToOriginal($sourcePath, $targetPath);
             }
 
@@ -217,7 +217,7 @@ class ImageService
             }
 
             // Log success
-            \Log::info("WebP conversion successful", [
+            Log::info("WebP conversion successful", [
                 'source' => $sourcePath,
                 'target' => $targetPath,
                 'original_size' => $fileSize,
@@ -229,7 +229,7 @@ class ImageService
 
         } catch (Exception $e) {
             // Log error
-            \Log::error("WebP conversion failed: " . $e->getMessage(), [
+            Log::error("WebP conversion failed: " . $e->getMessage(), [
                 'source' => $sourcePath,
                 'target' => $targetPath,
                 'trace' => $e->getTraceAsString()
@@ -250,14 +250,14 @@ class ImageService
             $fallbackPath = str_replace('.webp', '.' . $originalExt, $targetPath);
             
             if (copy($sourcePath, $fallbackPath)) {
-                \Log::info("Fallback to original format successful", [
+                Log::info("Fallback to original format successful", [
                     'source' => $sourcePath,
                     'fallback' => $fallbackPath
                 ]);
                 return true;
             }
         } catch (Exception $copyError) {
-            \Log::error("Fallback copy failed: " . $copyError->getMessage());
+            Log::error("Fallback copy failed: " . $copyError->getMessage());
         }
         
         return false;

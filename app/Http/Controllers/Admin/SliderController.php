@@ -56,8 +56,8 @@ class SliderController extends BaseController
         $data['uuid'] = Str::uuid();
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
 
-        // Handle image
-        $data['image'] = $this->handleSingleImage($request);
+        // Handle image - Save new image
+        $data['image'] = $this->saveImage($request);
 
         $slider = $this->model::create($data);
         toast('Thêm ' . $this->nameItem . ' thành công', 'success');
@@ -93,8 +93,8 @@ class SliderController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
-        // Handle image
-        $data['image'] = $this->handleSingleImage($request, $current);
+        // Handle image - Update existing image
+        $data['image'] = $this->updateImage($request, $current);
 
         $this->model::where('uuid', $uuid)->update($data);
         toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');

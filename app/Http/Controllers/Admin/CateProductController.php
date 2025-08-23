@@ -81,8 +81,8 @@ class CateProductController extends BaseController
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
         $data['status'] = 1;
 
-        // Handle image
-        $data['image'] = $this->handleSingleImage($request, null, null, 'image');
+        // Handle image - Save new image
+        $data['image'] = $this->saveImage($request, null, 'image');
 
         $cateProduct = $this->model::create($data);
 
@@ -140,8 +140,8 @@ class CateProductController extends BaseController
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
-        // Handle image
-        $data['image'] = $this->handleSingleImage($request, $current, null, 'image');
+        // Handle image - Update existing image
+        $data['image'] = $this->updateImage($request, $current, null, 'image');
 
         $this->model::where('uuid', $uuid)->update($data);
 

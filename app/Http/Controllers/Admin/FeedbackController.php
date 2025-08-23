@@ -58,7 +58,8 @@ class FeedBackController extends BaseController
 
         // handle image
         if ($request->hasFile('image')) {
-            $data['image'] = $this->handleSingleImage($request);
+            // Handle image - Save new image
+        $data['image'] = $this->saveImage($request);
         }
 
         $feedback = $this->model::create($data);
@@ -98,7 +99,8 @@ class FeedBackController extends BaseController
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
         // update image
-        $data['image'] = $this->handleSingleImage($request, $current);
+        // Handle image - Update existing image
+        $data['image'] = $this->updateImage($request, $current);
 
         $current->update($data);
 
