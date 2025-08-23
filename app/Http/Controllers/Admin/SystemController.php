@@ -33,7 +33,7 @@ class SystemController extends BaseController
     {
         $data = $request->except('_token');
         $data['created_at'] = new \DateTime();
-        $system = System::find($id);
+        $system = $this->model::find($id);
 
         // Handle logo
         $data['logo'] = $this->handleSingleImage($request, $system, 'logo', 'logo');
