@@ -15,4 +15,9 @@ Route::name('web.')
 
         // Subscribe
         Route::post('/subscribe', [Contact::class, 'postSubscribe'])->name('postSubscribe');
+        
+        // 404 error page
+        Route::get('/404', function() {
+            return view('errors.404');
+        })->name('404');
     });

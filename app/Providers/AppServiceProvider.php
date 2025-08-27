@@ -35,11 +35,13 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrapFive();
 
         View::composer('frontend.*', function ($view) {
-            $data['website'] = Cache::remember('website_data', 60 * 6, function () {  // 6 giờ
+            // 6 giờ (360 phút)
+            $data['website'] = Cache::remember('website_data', 360, function () {
                 return System::first();
             });
 
-            $data['menu'] = Cache::remember('menu_header', 60 * 6, function () {      // 2 giờ
+            // 6 giờ (360 phút) - đảm bảo nhất quán với cache trong MenuHelper
+            $data['menu'] = Cache::remember('menu_header', 360, function () {
                 return Menu::with('children')
                     ->where('parent_id', 0)
                     ->orderBy('stt', 'asc')
