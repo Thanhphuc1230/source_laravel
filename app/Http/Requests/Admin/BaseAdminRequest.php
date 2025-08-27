@@ -8,24 +8,24 @@ abstract class BaseAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     * 
+     *
      * Authorization levels:
      * - Level 1 (Admin): Full access to all admin functions
      * - Level 2 (Staff): Access to most admin functions (products, categories, orders, etc.)
      * - Level 3 (Users): No access to admin functions
-     * 
+     *
      * Only authenticated admin users (level >= 1) can access admin functions
      */
     public function authorize(): bool
     {
         // Check if user is authenticated
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return false;
         }
 
         // Check if user has admin level (level >= 1) and is active
         $user = auth()->user();
-        
+
         return $user->level >= 1 && $user->status == 1;
     }
 

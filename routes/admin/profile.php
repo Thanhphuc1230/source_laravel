@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProfileController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(ProfileController::class)
     ->prefix('profile')

@@ -16,16 +16,17 @@ class CheckAdminLevel
     public function handle(Request $request, Closure $next, $minLevel = 1): Response
     {
         // Kiểm tra user đã đăng nhập
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return redirect()->route('getLogin');
         }
 
         $user = auth()->user();
-        
+
         // Kiểm tra level của user
         if ($user->level < $minLevel) {
             // Nếu không đủ quyền, redirect về trang chủ admin với thông báo
             toast('Bạn không có quyền truy cập tính năng này', 'error');
+
             return redirect()->route('admin.analytics.index')->with('error', 'Không có quyền truy cập');
         }
 

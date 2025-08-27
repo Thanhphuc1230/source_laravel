@@ -29,7 +29,7 @@ return new class extends Migration
             // Essential indexes for hierarchy
             $table->index('slug');              // Required for route resolution
             $table->index('uuid');              // Required for lookups
-            
+
             // Composite indexes for hierarchical queries
             $table->index(['status', 'parent_id', 'stt']); // Covers: status + hierarchy + ordering
             $table->index(['parent_id', 'stt']);          // Covers: hierarchy navigation

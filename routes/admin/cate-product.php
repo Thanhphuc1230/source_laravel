@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CateProductController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(CateProductController::class)
     ->prefix('cate_product')

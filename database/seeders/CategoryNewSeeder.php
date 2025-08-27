@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+
 class CategoryNewSeeder extends Seeder
 {
     /**
@@ -16,9 +17,9 @@ class CategoryNewSeeder extends Seeder
     {
         DB::table('tp_cate_news')->insert([
             'uuid' => Str::uuid(),
-            'name_vn' => 'Tin tức', 
-            'name_en' => 'News', 
-            'slug' => 'tin-tuc', 
+            'name_vn' => 'Tin tức',
+            'name_en' => 'News',
+            'slug' => 'tin-tuc',
             'keywords' => null,
             'description' => null,
             'status' => true,

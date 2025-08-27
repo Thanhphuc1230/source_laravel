@@ -23,7 +23,7 @@ class ClearNewsCache
             Log::error('Failed to clear news cache', [
                 'error' => $e->getMessage(),
                 'action' => $event->action,
-                'slug' => $event->slug
+                'slug' => $event->slug,
             ]);
         }
     }

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+
 class CategoryProductSeeder extends Seeder
 {
     /**
@@ -15,10 +16,10 @@ class CategoryProductSeeder extends Seeder
     public function run()
     {
         DB::table('tp_cate_products')->insert([
-            'uuid' => Str::uuid(), 
-            'name_vn' => 'Sản phẩm', 
-            'name_en' => 'Product', 
-            'slug' => 'san-pham', 
+            'uuid' => Str::uuid(),
+            'name_vn' => 'Sản phẩm',
+            'name_en' => 'Product',
+            'slug' => 'san-pham',
             'keywords' => null,
             'description' => null,
             'status' => true,

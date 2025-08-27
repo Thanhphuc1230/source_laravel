@@ -2,14 +2,13 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class ProductSettingRequest extends BaseAdminRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     * 
+     *
      * Authorization is handled by BaseAdminRequest (level >= 1)
      * Admin and Staff can access product settings
      */
@@ -34,7 +33,7 @@ class ProductSettingRequest extends BaseAdminRequest
                 'string',
                 'max:255',
                 'regex:/^[a-z0-9_]+$/', // Only lowercase, numbers, underscores
-                Rule::unique('product_settings', 'key')->ignore($settingId)
+                Rule::unique('product_settings', 'key')->ignore($settingId),
             ],
             'value' => [
                 'required',
@@ -43,17 +42,17 @@ class ProductSettingRequest extends BaseAdminRequest
 
                     switch ($type) {
                         case 'number':
-                            if (!is_numeric($value)) {
+                            if (! is_numeric($value)) {
                                 $fail('Value must be a valid number for number type.');
                             }
                             break;
                         case 'json':
-                            if (!$this->isValidJson($value)) {
+                            if (! $this->isValidJson($value)) {
                                 $fail('Value must be valid JSON for json type.');
                             }
                             break;
                         case 'boolean':
-                            if (!in_array($value, ['true', 'false'])) {
+                            if (! in_array($value, ['true', 'false'])) {
                                 $fail('Value must be true or false for boolean type.');
                             }
                             break;
@@ -64,33 +63,33 @@ class ProductSettingRequest extends BaseAdminRequest
                             }
                             break;
                     }
-                }
+                },
             ],
             'type' => [
                 'required',
                 'string',
-                Rule::in(['text', 'number', 'json', 'html', 'boolean'])
+                Rule::in(['text', 'number', 'json', 'html', 'boolean']),
             ],
             'group' => [
                 'required',
                 'string',
-                'max:100'
+                'max:100',
             ],
             'description' => [
                 'nullable',
                 'string',
-                'max:500'
+                'max:500',
             ],
             'sort_order' => [
                 'nullable',
                 'integer',
                 'min:0',
-                'max:9999'
+                'max:9999',
             ],
             'is_active' => [
                 'nullable',
-                'boolean'
-            ]
+                'boolean',
+            ],
         ];
     }
 
@@ -125,7 +124,7 @@ class ProductSettingRequest extends BaseAdminRequest
             'group' => 'Nhóm',
             'description' => 'Mô tả',
             'sort_order' => 'Thứ tự sắp xếp',
-            'is_active' => 'Trạng thái kích hoạt'
+            'is_active' => 'Trạng thái kích hoạt',
         ];
     }
 
@@ -137,18 +136,18 @@ class ProductSettingRequest extends BaseAdminRequest
         // Convert checkbox value to boolean
         if ($this->has('is_active')) {
             $this->merge([
-                'is_active' => $this->boolean('is_active')
+                'is_active' => $this->boolean('is_active'),
             ]);
         } else {
             $this->merge([
-                'is_active' => false
+                'is_active' => false,
             ]);
         }
 
         // Clean and normalize key
         if ($this->has('key')) {
             $this->merge([
-                'key' => strtolower(trim($this->input('key')))
+                'key' => strtolower(trim($this->input('key'))),
             ]);
         }
     }
@@ -159,6 +158,7 @@ class ProductSettingRequest extends BaseAdminRequest
     private function isValidJson(string $string): bool
     {
         json_decode($string);
+
         return json_last_error() === JSON_ERROR_NONE;
     }
 }

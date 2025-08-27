@@ -171,6 +171,36 @@ Contributions are welcome! Please read the [contributing guide](https://thanhphu
 
 ## 📞 Support
 
-- **Documentation**: [Online Docs](https://thanhphuc1230.github.io/source_laravel)
-- **Issues**: [GitHub Issues](https://github.com/Thanhphuc1230/source_laravel/issues)
+
+
+## 🧑‍💻 Coding Convention & Code Style
+
+### 1. EditorConfig
+Đã thiết lập file `.editorconfig` ở gốc dự án để chuẩn hóa indent, encoding, newline cho tất cả thành viên.
+
+### 2. PHP Coding Style
+Áp dụng chuẩn PSR-12 cho toàn bộ code PHP. Khuyến nghị sử dụng [Laravel Pint](https://laravel.com/docs/10.x/pint) để tự động format code.
+
+#### Cài đặt Laravel Pint
+```bash
+composer require laravel/pint --dev
+```
+
+#### Format toàn bộ code
+```bash
+./vendor/bin/pint
+```
+
+#### Tích hợp vào quy trình làm việc
+- Chạy Pint trước khi commit code.
+- Có thể cấu hình thêm file `pint.json` nếu muốn tùy chỉnh rule.
+
+### 3. Quy tắc chung
+- Sử dụng indent 4 spaces cho PHP, 2 spaces cho JS/CSS.
+- Đặt tên biến, hàm rõ nghĩa, tiếng Anh.
+- Comment rõ ràng cho các logic phức tạp.
+- Không để code thừa, code chết.
+- Đảm bảo mỗi file chỉ có một trách nhiệm chính (Single Responsibility Principle).
+
+> Tham khảo thêm: [PSR-12 Standard](https://www.php-fig.org/psr/psr-12/)
 

@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\ProductSetting;
+use Illuminate\Database\Seeder;
 
 class ProductSettingSeeder extends Seeder
 {
@@ -21,7 +20,7 @@ class ProductSettingSeeder extends Seeder
                 'group' => 'Display',
                 'description' => 'Maximum number of products to display per page',
                 'sort_order' => 1,
-                'is_active' => true
+                'is_active' => true,
             ],
             [
                 'key' => 'enable_product_reviews',
@@ -30,7 +29,7 @@ class ProductSettingSeeder extends Seeder
                 'group' => 'Features',
                 'description' => 'Enable or disable product reviews',
                 'sort_order' => 2,
-                'is_active' => true
+                'is_active' => true,
             ],
             [
                 'key' => 'product_image_sizes',
@@ -39,7 +38,7 @@ class ProductSettingSeeder extends Seeder
                 'group' => 'Images',
                 'description' => 'Product image sizes configuration',
                 'sort_order' => 3,
-                'is_active' => true
+                'is_active' => true,
             ],
             [
                 'key' => 'product_description_template',
@@ -48,7 +47,7 @@ class ProductSettingSeeder extends Seeder
                 'group' => 'Templates',
                 'description' => 'HTML template for product descriptions',
                 'sort_order' => 4,
-                'is_active' => true
+                'is_active' => true,
             ],
             [
                 'key' => 'default_product_category',
@@ -57,8 +56,8 @@ class ProductSettingSeeder extends Seeder
                 'group' => 'Defaults',
                 'description' => 'Default category for new products',
                 'sort_order' => 5,
-                'is_active' => true
-            ]
+                'is_active' => true,
+            ],
         ];
 
         foreach ($settings as $setting) {

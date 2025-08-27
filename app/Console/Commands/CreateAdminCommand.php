@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class CreateAdminCommand extends Command
 {
     protected $signature = 'admin:create';
+
     protected $description = 'Create new admin account';
 
     public function handle()
@@ -19,9 +20,9 @@ class CreateAdminCommand extends Command
         do {
             $username = $this->ask('username:');
             $validator = Validator::make(['username' => $username], [
-                'username' => 'required|unique:users,username'
+                'username' => 'required|unique:users,username',
             ]);
-            
+
             if ($validator->fails()) {
                 $this->error('Username already exists or invalid!');
             }
@@ -30,9 +31,9 @@ class CreateAdminCommand extends Command
         do {
             $email = $this->ask('email:');
             $validator = Validator::make(['email' => $email], [
-                'email' => 'required|email|unique:users,email'
+                'email' => 'required|email|unique:users,email',
             ]);
-            
+
             if ($validator->fails()) {
                 $this->error('Email already exists or invalid!');
             }
@@ -41,9 +42,9 @@ class CreateAdminCommand extends Command
         do {
             $fullname = $this->ask('fullname:');
             $validator = Validator::make(['fullname' => $fullname], [
-                'fullname' => 'required|min:3'
+                'fullname' => 'required|min:3',
             ]);
-            
+
             if ($validator->fails()) {
                 $this->error('Fullname must be at least 3 characters!');
             }
@@ -52,9 +53,9 @@ class CreateAdminCommand extends Command
         do {
             $password = $this->secret('password:');
             $validator = Validator::make(['password' => $password], [
-                'password' => 'required|min:6'
+                'password' => 'required|min:6',
             ]);
-            
+
             if ($validator->fails()) {
                 $this->error('Password must be at least 6 characters!');
             }
@@ -68,9 +69,9 @@ class CreateAdminCommand extends Command
             'level' => 1,
             'email_verified_at' => now(),
             'status' => true,
-            'uuid' => \Str::uuid()
+            'uuid' => \Str::uuid(),
         ]);
 
         $this->info('Create account admin success!');
     }
-} 
+}

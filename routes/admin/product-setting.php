@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductSettingController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(ProductSettingController::class)
     ->prefix('product-setting')

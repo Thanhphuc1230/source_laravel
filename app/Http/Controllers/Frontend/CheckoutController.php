@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Frontend\OrderRequest;
+use App\Mail\AlertOrder;
+use App\Models\OrderProduct;
 use App\Models\OrderShipping;
 use App\Models\OrderStatus;
-use App\Models\OrderProduct;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use App\Mail\AlertOrder;
-use App\Http\Requests\Frontend\OrderRequest;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class CheckoutController extends Controller
@@ -20,10 +19,13 @@ class CheckoutController extends Controller
     {
         if (getCart() == 0) {
             Alert::error(app()->getLocale() == 'en' ? 'Empty Cart' : 'Giỏ hàng đang trống', app()->getLocale() == 'en' ? 'No product in cart' : 'Chưa có sản phẩm nào trong giỏ hàng');
+
             return redirect()->route('web.cart');
         }
+
         return view('frontend.modules.checkout.index');
     }
+
     public function checkoutStore(OrderRequest $request)
     {
         $shipping = new OrderShipping([
@@ -54,7 +56,7 @@ class CheckoutController extends Controller
             $v_data['product_id'] = $product_content['id_product'];
             $v_data['quantity'] = $product_content['qty'];
             $v_data['price'] = $product_content['price'];
-            $v_data['created_at'] = new \DateTime();
+            $v_data['created_at'] = new \DateTime;
             OrderProduct::create($v_data);
         }
 
@@ -71,9 +73,10 @@ class CheckoutController extends Controller
     }
 
     public function orderSuccess()
-    {   
+    {
         // clear cart
         session()->forget('cart');
+
         return view('frontend.modules.checkout.order_success');
     }
 }

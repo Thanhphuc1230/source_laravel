@@ -16,8 +16,8 @@ class ClearMenuCache
         } catch (\Exception $e) {
             Log::error('Failed to clear menu cache', [
                 'error' => $e->getMessage(),
-                'action' => $event->action
+                'action' => $event->action,
             ]);
         }
     }
-} 
+}

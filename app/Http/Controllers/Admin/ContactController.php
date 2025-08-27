@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class ContactController extends BaseController
 {
-    protected $model,$nameItem,$imageFolder;
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
+
     public function __construct($imageFolder = 'contact')
     {
-        $this->model = new Contact();
+        $this->model = new Contact;
         $this->nameItem = 'Liên hệ';
         $this->imageFolder = $imageFolder;
 
@@ -34,6 +38,7 @@ class ContactController extends BaseController
 
         $data['list'] = $query->paginate(10);
         $data['nameItem'] = $this->nameItem;
+
         return $this->view_admin('list', $data);
     }
 
@@ -41,6 +46,7 @@ class ContactController extends BaseController
     {
         return $this->updateStatus($uuid, $status, $name);
     }
+
     public function edit($uuid)
     {
         $page = $this->model::where('uuid', $uuid);
@@ -49,9 +55,11 @@ class ContactController extends BaseController
             $data['page'] = $page->first();
             $data['action'] = 'edit';
             $data['nameItem'] = $this->nameItem;
+
             return $this->view_admin('detail', $data);
         } else {
-            toast('Không tìm thấy ' . $this->nameItem, 'error');
+            toast('Không tìm thấy '.$this->nameItem, 'error');
+
             return back();
         }
     }
@@ -64,6 +72,7 @@ class ContactController extends BaseController
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
+
         return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
     }
 }

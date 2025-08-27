@@ -2,22 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Events\CateNew\CateNewChanged;
+use App\Http\Requests\Admin\CateNewRequest;
 use App\Models\CateNew;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use App\Http\Requests\Admin\CateNewRequest;
-use App\Events\CateNew\CateNewChanged;
-use App\Events\Content\ContentChanged;
 
 class CateNewController extends BaseController
 {
-    protected $module,$model,$nameItem,$imageFolder;
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
+
     public function __construct($imageFolder = 'cate_new')
     {
         $this->module = 'cate_new';
-        $this->model = new CateNew();
+        $this->model = new CateNew;
         $this->nameItem = 'Danh mục tin tức';
         $this->imageFolder = $imageFolder;
 
@@ -34,7 +39,7 @@ class CateNewController extends BaseController
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name_vn', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
+                    ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
             });
         }
 
@@ -43,15 +48,14 @@ class CateNewController extends BaseController
             $categoryId = $request->input('category');
             $query->where(function ($q) use ($categoryId) {
                 $q->where('parent_id', $categoryId)
-                  ->orWhere('id_cate_new', $categoryId);
+                    ->orWhere('id_cate_new', $categoryId);
             });
         }
 
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status','home', 'stt', 'created_at')->orderBy('created_at','desc')->paginate(10);
+        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'home', 'stt', 'created_at')->orderBy('created_at', 'desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
 
-        $data['category'] = $this->model
-            ::with('children')
+        $data['category'] = $this->model::with('children')
             ->where('status', 1)
             ->where('parent_id', 0)
             ->get();
@@ -80,7 +84,7 @@ class CateNewController extends BaseController
         $data['image'] = $this->saveImage($request);
 
         $cateNew = $this->model::create($data);
-        toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+        toast('Thêm '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
         CateNewChanged::dispatch($cateNew, 'created', $data['slug']);
@@ -92,8 +96,9 @@ class CateNewController extends BaseController
     {
         $page = $this->model::where('uuid', $uuid);
 
-        if (!$page->exists()) {
-            toast('Không tìm thấy ' . $this->nameItem, 'error');
+        if (! $page->exists()) {
+            toast('Không tìm thấy '.$this->nameItem, 'error');
+
             return back();
         }
 
@@ -120,7 +125,7 @@ class CateNewController extends BaseController
         $data['image'] = $this->updateImage($request, $current);
 
         $this->model::where('uuid', $uuid)->update($data);
-        toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
+        toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
         CateNewChanged::dispatch($current, 'updated', $data['slug']);

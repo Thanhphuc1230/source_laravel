@@ -10,7 +10,9 @@ class System extends Model
     use HasFactory;
 
     protected $table = 'tp_systems';
+
     protected $primaryKey = 'id_system';
+
     protected $fillable = [
         'email',
         'email_alert',

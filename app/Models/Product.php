@@ -10,7 +10,9 @@ class Product extends Model
     use HasFactory;
 
     protected $table = 'tp_products';
+
     protected $primaryKey = 'id_product';
+
     protected $fillable = [
         'uuid',
         'name_vn',

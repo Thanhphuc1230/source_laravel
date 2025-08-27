@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PageController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(PageController::class)
     ->prefix('page')

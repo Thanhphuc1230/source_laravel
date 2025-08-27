@@ -15,7 +15,7 @@ class CateNewRequest extends BaseAdminRequest
     {
         return [
             'name_vn' => [
-                'required','max:255',
+                'required', 'max:255',
             ],
             'keywords' => 'required',
             'description' => 'required',

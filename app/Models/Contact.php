@@ -10,6 +10,7 @@ class Contact extends Model
     use HasFactory;
 
     protected $table = 'tp_contacts';
+
     protected $fillable = [
         'uuid',
         'fullname',

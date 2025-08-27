@@ -10,5 +10,6 @@ class FeedBack extends Model
     use HasFactory;
 
     protected $table = 'tp_feedback';
+
     protected $fillable = ['uuid', 'name', 'message', 'status', 'stt', 'image'];
 }

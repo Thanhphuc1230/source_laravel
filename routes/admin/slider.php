@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SliderController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(SliderController::class)
     ->prefix('slider')

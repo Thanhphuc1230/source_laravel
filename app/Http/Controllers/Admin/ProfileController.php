@@ -2,21 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\ProfileRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\Admin\ProfileRequest;
+use Illuminate\Support\Facades\View;
 
 class ProfileController extends BaseController
 {
-    protected $module,$model,$nameItem,$imageFolder;
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
+
     public function __construct($imageFolder = 'users')
     {
         $this->module = 'profile';
-        $this->model = new User();
+        $this->model = new User;
         $this->nameItem = 'Trang thông tin cá nhân';
         $this->imageFolder = $imageFolder;
 
@@ -25,14 +31,16 @@ class ProfileController extends BaseController
         View::share('nameClass', $imageFolder);
     }
 
-    public function index(){
+    public function index()
+    {
         return view('admin.modules.profile.index');
     }
 
-    public function update($uuid,ProfileRequest $request){
+    public function update($uuid, ProfileRequest $request)
+    {
         $data = $request->except('_token');
-        $data['updated_at'] = new \DateTime();
-        $admin = User::where('uuid',Auth::user()->uuid)->first();
+        $data['updated_at'] = new \DateTime;
+        $admin = User::where('uuid', Auth::user()->uuid)->first();
 
         // Handle avatar - Update existing avatar
         $data['avatar'] = $this->updateImage($request, $admin, null, 'avatar');
@@ -43,6 +51,7 @@ class ProfileController extends BaseController
         } else {
             toast('admin not found', 'error');
         }
+
         return back();
     }
 
@@ -50,10 +59,10 @@ class ProfileController extends BaseController
     {
         $user = Auth::user();
         // Kiểm tra mật khẩu cũ
-        if (!Hash::check($request->old_password, $user->password)) {
+        if (! Hash::check($request->old_password, $user->password)) {
             return back()->with('error', 'Mật khẩu cũ không đúng');
         }
-   
+
         // Kiểm tra mật khẩu mới và mật khẩu xác nhận
         if ($request->new_password !== $request->confirm_password) {
             return back()->with('error', 'Mật khẩu mới và xác thực mật khẩu không giống nhau');
@@ -67,6 +76,7 @@ class ProfileController extends BaseController
         } else {
             toast('Đổi mật khẩu không thành công', 'error');
         }
+
         return back();
     }
 }

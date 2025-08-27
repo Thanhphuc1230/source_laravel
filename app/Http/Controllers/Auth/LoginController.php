@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\Login\LoginRequest;
-use Illuminate\Support\Facades\Auth;
-use App\Services\RateLimitService;
 use App\Models\User;
+use App\Services\RateLimitService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 class LoginController extends Controller
 {
     private RateLimitService $rateLimitService;
@@ -41,11 +42,11 @@ class LoginController extends Controller
 
         // Validate user exists and verified
         $user = $this->findUser($request->username);
-        if (!$user) {
+        if (! $user) {
             return $this->handleFailedLogin($ip, 'Tài khoản này không tồn tại');
         }
 
-        if (!$this->isUserVerified($user)) {
+        if (! $this->isUserVerified($user)) {
             return $this->handleFailedLogin($ip, 'Vui lòng xác thực email');
         }
 
@@ -63,8 +64,8 @@ class LoginController extends Controller
     private function findUser(string $identifier): ?User
     {
         return User::where('email', $identifier)
-                  ->orWhere('username', $identifier)
-                  ->first();
+            ->orWhere('username', $identifier)
+            ->first();
     }
 
     /**
@@ -92,10 +93,10 @@ class LoginController extends Controller
     private function handleSuccessfulLogin(LoginRequest $request, string $ip)
     {
         $this->rateLimitService->clearAttempts($ip);
-        
+
         $redirectRoute = $this->getRedirectRoute();
         $request->session()->regenerate();
-        
+
         return redirect()->route($redirectRoute)->with('success', 'Đăng nhập thành công.');
     }
 
@@ -105,6 +106,7 @@ class LoginController extends Controller
     private function handleFailedLogin(string $ip, string $errorMessage)
     {
         $this->rateLimitService->incrementAttempts($ip);
+
         return back()->with(['error' => $errorMessage]);
     }
 
@@ -114,7 +116,8 @@ class LoginController extends Controller
     private function getRedirectRoute(): string
     {
         $user = Auth::user();
-        return ($user->level == 1 || $user->level == 2) 
+
+        return ($user->level == 1 || $user->level == 2)
             ? 'admin.analytics.index'
             : 'website.home';
     }

@@ -25,7 +25,7 @@ class NewsRequest extends BaseAdminRequest
             'status' => 'required|in:0,1',
             'stt' => 'required|integer|min:0',
             'image' => request()->route('uuid')
-            ? 'nullable|:tp_news,image,' . request()->route('uuid') . ',uuid|image|mimes:jpeg,png,jpg,gif,webp'
+            ? 'nullable|:tp_news,image,'.request()->route('uuid').',uuid|image|mimes:jpeg,png,jpg,gif,webp'
             : 'required|:tp_news,image|image|mimes:jpeg,png,jpg,gif,webp',
             'keywords' => 'required|string|max:255',
             'description' => 'required|string|max:255',

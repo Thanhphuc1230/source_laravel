@@ -28,25 +28,25 @@ class SystemRequest extends BaseAdminRequest
             'email_alert' => 'nullable|email|max:50',
             'address' => 'nullable|string|max:1000',
             'phone' => 'nullable|string|max:20',
-            
+
             // Footer content
             'footer_vn' => 'nullable|string|max:2000',
             'footer_en' => 'nullable|string|max:2000',
-            
+
             // Social Media Links
             'facebook' => 'nullable|url|max:255',
             'youtube' => 'nullable|url|max:255',
             'twitter' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
             'zalo' => 'nullable|string|max:255',
-            
+
             // SEO & Branding
             'favicon' => 'nullable|image|mimes:ico,png,jpg,jpeg|max:512',
             'logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
             'name_vn' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:500',
             'keyword' => 'nullable|string|max:1000',
-            
+
             // Map embed
             'map' => 'nullable|string|max:2000',
         ];
@@ -64,22 +64,22 @@ class SystemRequest extends BaseAdminRequest
             'email.max' => 'Email hệ thống không được quá 50 ký tự',
             'email_alert.email' => 'Email cảnh báo không đúng định dạng',
             'email_alert.max' => 'Email cảnh báo không được quá 50 ký tự',
-            
+
             // Contact info
             'address.max' => 'Địa chỉ không được quá 1000 ký tự',
             'phone.max' => 'Số điện thoại không được quá 20 ký tự',
-            
+
             // Footer
             'footer_vn.max' => 'Footer tiếng Việt không được quá 2000 ký tự',
             'footer_en.max' => 'Footer tiếng Anh không được quá 2000 ký tự',
-            
+
             // Social Media
             'facebook.url' => 'Link Facebook không đúng định dạng',
             'youtube.url' => 'Link YouTube không đúng định dạng',
             'twitter.url' => 'Link Twitter không đúng định dạng',
             'instagram.url' => 'Link Instagram không đúng định dạng',
             'zalo.max' => 'Link Zalo không được quá 255 ký tự',
-            
+
             // Files
             'favicon.image' => 'Favicon phải là file hình ảnh',
             'favicon.mimes' => 'Favicon phải có định dạng: ico, png, jpg, jpeg',
@@ -87,12 +87,12 @@ class SystemRequest extends BaseAdminRequest
             'logo.image' => 'Logo phải là file hình ảnh',
             'logo.mimes' => 'Logo phải có định dạng: png, jpg, jpeg, svg',
             'logo.max' => 'Logo không được quá 2MB',
-            
+
             // SEO
             'name_vn.max' => 'Tên website không được quá 255 ký tự',
             'description.max' => 'Mô tả không được quá 500 ký tự',
             'keyword.max' => 'Từ khóa không được quá 1000 ký tự',
-            
+
             // Map
             'map.max' => 'Mã nhúng bản đồ không được quá 2000 ký tự',
         ];

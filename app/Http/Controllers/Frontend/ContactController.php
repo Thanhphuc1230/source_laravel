@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Frontend\ContactRequest;
 use App\Models\Contact;
-
 use App\Services\RateLimitService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Str;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ContactController extends Controller
 {
@@ -37,6 +35,7 @@ class ContactController extends Controller
         // Check rate limiting
         if ($this->rateLimitService->isBlocked($ip)) {
             Alert::error('Quá số lượng yêu cầu', $this->rateLimitService->getErrorMessage());
+
             return back();
         }
 
@@ -47,6 +46,7 @@ class ContactController extends Controller
         $this->rateLimitService->incrementAttempts($ip);
 
         Alert::success('Đã gửi yêu cầu thành công', 'Chúng tôi sẽ liên hệ sớm nhất có thể');
+
         return redirect()->route('web.contact');
     }
 
@@ -57,7 +57,7 @@ class ContactController extends Controller
     {
         $data = $request->except('_token');
         $data['uuid'] = Str::uuid();
-        $data['created_at'] = new \DateTime();
+        $data['created_at'] = new \DateTime;
         $data['status'] = 0;
 
         return Contact::create($data);

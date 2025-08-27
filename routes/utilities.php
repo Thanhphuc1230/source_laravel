@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'web'], function () {
     Route::get('lang/{locale}', function ($locale = 'vn') {
         // Set default to 'vn'
-        if (!in_array($locale, ['en', 'vn'])) {
+        if (! in_array($locale, ['en', 'vn'])) {
             abort(404);
         }
         session()->put('locale', $locale);
+
         return redirect()->back();
     })->name('lang');
 });

@@ -12,14 +12,15 @@ class MenuChanged
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $menu;
+
     public $action; // 'created', 'updated', 'deleted'
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Menu $menu = null, string $action = 'changed')
+    public function __construct(?Menu $menu = null, string $action = 'changed')
     {
         $this->menu = $menu;
         $this->action = $action;
     }
-} 
+}

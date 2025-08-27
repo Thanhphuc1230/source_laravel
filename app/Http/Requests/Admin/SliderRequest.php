@@ -16,8 +16,8 @@ class SliderRequest extends BaseAdminRequest
         return [
             'name_vn' => 'required|max:255',
             'stt' => 'required|integer',
-            'image' => request()->route('uuid') 
-                ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048' 
+            'image' => request()->route('uuid')
+                ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
                 : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ];
     }

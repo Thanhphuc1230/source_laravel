@@ -1,11 +1,12 @@
 <?php
+
 return [
-    'base_route'      => 'admin/filemanager',
+    'base_route' => 'admin/filemanager',
     'middleware' => ['auth'],
-    'allow_format'    => 'jpeg,jpg,png,gif,webp',
-    'max_size'        => 500,
+    'allow_format' => 'jpeg,jpg,png,gif,webp',
+    'max_size' => 500,
     'max_image_width' => 1024,
-    'image_quality'   => 80,
+    'image_quality' => 80,
 
     'dir' => [
         'images' => [
@@ -15,5 +16,5 @@ return [
             'shared' => true,
         ],
     ],
-    'user_folder' => false, 
+    'user_folder' => false,
 ];

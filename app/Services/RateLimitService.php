@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Cache;
 class RateLimitService
 {
     private int $maxAttempts;
+
     private int $decayMinutes;
+
     private string $prefix;
 
     public function __construct(string $prefix, int $maxAttempts = 5, int $decayMinutes = 15)
@@ -23,6 +25,7 @@ class RateLimitService
     public function isBlocked(string $ip): bool
     {
         $attempts = $this->getAttempts($ip);
+
         return $attempts >= $this->maxAttempts;
     }
 
@@ -33,7 +36,7 @@ class RateLimitService
     {
         $key = $this->getRateLimitKey($ip);
         $attempts = $this->getAttempts($ip);
-        
+
         Cache::put($key, $attempts + 1, now()->addMinutes($this->decayMinutes));
     }
 
@@ -75,12 +78,12 @@ class RateLimitService
     public function getRemainingTime(string $ip): int
     {
         $key = $this->getRateLimitKey($ip);
-        $expiresAt = Cache::get($key . '_expires');
-        
-        if (!$expiresAt) {
+        $expiresAt = Cache::get($key.'_expires');
+
+        if (! $expiresAt) {
             return 0;
         }
-        
+
         return max(0, $expiresAt - now()->timestamp);
     }
 

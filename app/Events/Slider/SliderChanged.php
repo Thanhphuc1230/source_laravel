@@ -2,7 +2,6 @@
 
 namespace App\Events\Slider;
 
-use App\Models\Slider;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -12,6 +11,7 @@ class SliderChanged
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $slider;
+
     public $action; // 'created', 'updated', 'deleted'
 
     /**
@@ -22,4 +22,4 @@ class SliderChanged
         $this->slider = $slider;
         $this->action = $action;
     }
-} 
+}

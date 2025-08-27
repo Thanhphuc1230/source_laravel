@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\CateProduct;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Http\Requests\Admin\ProductRequest;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\File;
 use App\Events\Product\ProductChanged;
-use App\Events\Content\ContentChanged;
+use App\Http\Requests\Admin\ProductRequest;
+use App\Models\CateProduct;
+use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
 class ProductController extends BaseController
 {
-    protected $module,$model,$nameItem,$imageFolder;
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
+
     public function __construct($imageFolder = 'product')
     {
         $this->module = 'product';
-        $this->model = new Product();
+        $this->model = new Product;
         $this->nameItem = 'sản phẩm';
         $this->imageFolder = $imageFolder;
 
@@ -36,7 +40,7 @@ class ProductController extends BaseController
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name_vn', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
+                    ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
             });
         }
 
@@ -45,11 +49,11 @@ class ProductController extends BaseController
             $categoryId = $request->input('category');
             $query->where(function ($q) use ($categoryId) {
                 $q->where('parent_id', $categoryId)
-                  ->orWhere('id_category_product', $categoryId);
+                    ->orWhere('id_category_product', $categoryId);
             });
         }
 
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status','home', 'stt', 'created_at','category_id','image')->orderBy('created_at','desc')->paginate(10);
+        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'home', 'stt', 'created_at', 'category_id', 'image')->orderBy('created_at', 'desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
 
         $data['category'] = CateProduct::with('children')
@@ -84,7 +88,7 @@ class ProductController extends BaseController
         $data['image_detail'] = $this->saveMultipleImages($request);
 
         $product = $this->model::create($data);
-        toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+        toast('Thêm '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
         ProductChanged::dispatch($product, 'created', $data['slug']);
@@ -96,8 +100,9 @@ class ProductController extends BaseController
     {
         $page = $this->model::where('uuid', $uuid);
 
-        if (!$page->exists()) {
-            toast('Không tìm thấy ' . $this->nameItem, 'error');
+        if (! $page->exists()) {
+            toast('Không tìm thấy '.$this->nameItem, 'error');
+
             return back();
         }
 
@@ -127,7 +132,7 @@ class ProductController extends BaseController
         $data['image_detail'] = $this->updateMultipleImages($request, $current);
 
         $this->model::where('uuid', $uuid)->update($data);
-        toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
+        toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
         ProductChanged::dispatch($current, 'updated', $data['slug']);

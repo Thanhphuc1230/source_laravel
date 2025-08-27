@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SystemController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(SystemController::class)
     ->prefix('system')

@@ -171,6 +171,21 @@ Contributions are welcome! Please read [CONTRIBUTING.md](contributing.md) for de
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/Thanhphuc1230/source_laravel/issues)
-- **Email**: thanhphuc1230@example.com
-- **Documentation**: [Online Docs](https://thanhphuc1230.github.io/source_laravel) 
+
+## 🧑‍💻 Coding Convention & Code Style
+
+### Sử dụng Laravel Pint để format code
+Để đảm bảo code luôn sạch và đồng nhất, hãy chạy lệnh sau trước khi commit:
+
+```bash
+php vendor\bin\pint
+```
+
+Hoặc trên Linux/macOS:
+```bash
+./vendor/bin/pint
+```
+
+Laravel Pint sẽ tự động format toàn bộ mã nguồn PHP theo chuẩn PSR-12.
+
+> Khuyến nghị: Luôn chạy Pint trước khi commit để giữ codebase chuyên nghiệp.

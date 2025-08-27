@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OrderController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(OrderController::class)
     ->prefix('order')

@@ -2,22 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Events\Page\PageChanged;
+use App\Http\Requests\Admin\PageRequest;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use App\Http\Requests\Admin\PageRequest;
-use App\Events\Page\PageChanged;
-use App\Events\Content\ContentChanged;
 
 class PageController extends BaseController
 {
-    protected $module,$model,$nameItem,$imageFolder;
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
+
     public function __construct($imageFolder = 'page')
     {
         $this->module = 'page';
-        $this->model = new Page();
+        $this->model = new Page;
         $this->nameItem = 'Trang nội dung';
         $this->imageFolder = $imageFolder;
 
@@ -34,11 +39,11 @@ class PageController extends BaseController
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name_vn', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
+                    ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
             });
         }
 
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'stt', 'created_at')->orderBy('created_at','desc')->paginate(10);
+        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'stt', 'created_at')->orderBy('created_at', 'desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
 
         return $this->view_admin('list', $data);
@@ -64,7 +69,7 @@ class PageController extends BaseController
         $data['image'] = $this->saveImage($request);
 
         $page = $this->model::create($data);
-        toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+        toast('Thêm '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
         PageChanged::dispatch($page, 'created', $data['slug']);
@@ -76,8 +81,9 @@ class PageController extends BaseController
     {
         $page = $this->model::where('uuid', $uuid);
 
-        if (!$page->exists()) {
-            toast('Không tìm thấy ' . $this->nameItem, 'error');
+        if (! $page->exists()) {
+            toast('Không tìm thấy '.$this->nameItem, 'error');
+
             return back();
         }
 
@@ -104,7 +110,7 @@ class PageController extends BaseController
         $data['image'] = $this->updateImage($request, $current);
 
         $this->model::where('uuid', $uuid)->update($data);
-        toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
+        toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
         PageChanged::dispatch($current, 'updated', $data['slug']);

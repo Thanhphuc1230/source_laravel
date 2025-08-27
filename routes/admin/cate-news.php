@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CateNewController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(CateNewController::class)
     ->prefix('cate_new')

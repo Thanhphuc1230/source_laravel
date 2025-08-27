@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(ProductController::class)
     ->prefix('product')

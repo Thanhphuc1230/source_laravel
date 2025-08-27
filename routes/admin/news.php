@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\NewsController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(NewsController::class)
     ->prefix('news')

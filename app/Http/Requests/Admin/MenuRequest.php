@@ -9,7 +9,7 @@ class MenuRequest extends BaseAdminRequest
      */
     public function authorize(): bool
     {
-        if (!parent::authorize()) {
+        if (! parent::authorize()) {
             return false;
         }
 

@@ -23,7 +23,7 @@ class ClearProductCache
             Log::error('Failed to clear product cache', [
                 'error' => $e->getMessage(),
                 'action' => $event->action,
-                'slug' => $event->slug
+                'slug' => $event->slug,
             ]);
         }
     }

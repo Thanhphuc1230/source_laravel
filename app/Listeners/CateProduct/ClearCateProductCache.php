@@ -26,7 +26,7 @@ class ClearCateProductCache
             Log::error('Failed to clear cate_product cache', [
                 'error' => $e->getMessage(),
                 'action' => $event->action,
-                'slug' => $event->slug
+                'slug' => $event->slug,
             ]);
         }
     }

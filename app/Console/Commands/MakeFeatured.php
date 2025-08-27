@@ -3,9 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class MakeFeatured extends Command
 {
@@ -31,17 +31,18 @@ class MakeFeatured extends Command
     public function handle()
     {
         $name = $this->argument('name');
-        
+
         // Kiểm tra và chuẩn hóa tên
         if (empty($name)) {
             $this->error('Name argument is required!');
+
             return 1;
         }
-        
+
         $singular = Str::singular($name);
         $plural = Str::plural(Str::snake($singular));
-        $table = 'tp_' . Str::snake($plural);
-        
+        $table = 'tp_'.Str::snake($plural);
+
         // Tạo migration
         $this->info('Creating migration...');
         Artisan::call('make:migration', [
@@ -49,24 +50,24 @@ class MakeFeatured extends Command
             '--create' => $table,
         ]);
         $this->info(Artisan::output());
-        
+
         // Tạo model
         $this->info('Creating model...');
         Artisan::call('make:model', [
             'name' => $singular,
         ]);
         $this->info(Artisan::output());
-        
+
         // Chỉnh sửa model để thêm table name
         $modelPath = app_path("Models/{$singular}.php");
         if (File::exists($modelPath)) {
             $content = File::get($modelPath);
-            
+
             // Tìm vị trí của use HasFactory;
             if (strpos($content, 'use HasFactory;') !== false) {
                 // Thay thế class declaration
                 $content = preg_replace(
-                    '/class ' . $singular . ' extends Model\s*\{(\s*use HasFactory;\s*)/m',
+                    '/class '.$singular.' extends Model\s*\{(\s*use HasFactory;\s*)/m',
                     "class {$singular} extends Model\n{\n    use HasFactory;\n\n    protected \$table = '{$table}';\n    protected \$fillable = [];\n",
                     $content
                 );
@@ -78,35 +79,35 @@ class MakeFeatured extends Command
                     $content
                 );
             }
-            
+
             File::put($modelPath, $content);
             $this->info("Model updated with table name: {$table}");
         }
-        
+
         // Tạo controller
         $this->info('Creating controller...');
-        $controllerNamespace = "Admin";
+        $controllerNamespace = 'Admin';
         $controllerName = "{$controllerNamespace}\\{$singular}Controller";
-        
+
         Artisan::call('make:controller', [
             'name' => $controllerName,
             '--resource' => true,
             '--model' => $singular,
         ]);
         $this->info(Artisan::output());
-        
+
         // Tạo request
         $this->info('Creating request...');
         $requestName = "{$controllerNamespace}\\{$singular}Request";
-        
+
         Artisan::call('make:request', [
             'name' => $requestName,
         ]);
         $this->info(Artisan::output());
-        
+
         $this->info('All done!');
         $this->info("Created: Migration, Model {$singular}, Controller Admin/{$singular}Controller, Request Admin/{$singular}Request");
-        
+
         return 0;
     }
 }

@@ -3,33 +3,38 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Intervention\Image\Facades\Image;
-use App\Services\ImageService;
 use App\Services\DataRemovalService;
+use App\Services\ImageService;
 use App\Services\ModelToggleService;
-use App\Traits\ImageHandlerTrait;
 use App\Traits\DataRemovalTrait;
+use App\Traits\ImageHandlerTrait;
 use App\Traits\SlugHandlerTrait;
+use Illuminate\Support\Facades\DB;
 
 class BaseController extends Controller
 {
-    use ImageHandlerTrait, DataRemovalTrait, SlugHandlerTrait;
+    use DataRemovalTrait, ImageHandlerTrait, SlugHandlerTrait;
 
     protected $website = 'admin';
+
     protected $view = null;
+
     protected $module = null;
+
     public $db;
+
     protected $imageService;
+
     protected $dataRemovalService;
+
     protected $toggleService;
+
     protected $imageFolder;
 
     public function __construct($module, $imageFolder = null)
     {
         $this->module = $module;
-        $this->view = $this->website . ".modules." . $module;
+        $this->view = $this->website.'.modules.'.$module;
         $this->db = DB::table($module);
         // Inject services
         $this->imageService = app(ImageService::class);
@@ -38,8 +43,9 @@ class BaseController extends Controller
         $this->imageFolder = $imageFolder;
     }
 
-    public function view_admin (string $page, array $data = []) {
-        return view($this->view . "." . $page, $data);
+    public function view_admin(string $page, array $data = [])
+    {
+        return view($this->view.'.'.$page, $data);
     }
 
     public function route_admin(string $page, array $params = [], array $flash = [], $pageParam = null)
@@ -50,19 +56,21 @@ class BaseController extends Controller
         }
 
         if (empty($flash)) {
-            return redirect()->route($this->website . "." . $this->module . "." . $page, $params);
+            return redirect()->route($this->website.'.'.$this->module.'.'.$page, $params);
         }
-        return redirect()->route($this->website . "." . $this->module . "." . $page, $params)->with($flash);
+
+        return redirect()->route($this->website.'.'.$this->module.'.'.$page, $params)->with($flash);
     }
 
     public function resolveCreatedAt($inputDate, $oldDate = null)
     {
-        if (!empty($inputDate)) {
+        if (! empty($inputDate)) {
             return \Carbon\Carbon::parse($inputDate);
         }
         if ($oldDate) {
             return $oldDate;
         }
+
         return now();
     }
 }

@@ -16,8 +16,8 @@ class ClearSliderCache
         } catch (\Exception $e) {
             Log::error('Failed to clear slider cache', [
                 'error' => $e->getMessage(),
-                'action' => $event->action
+                'action' => $event->action,
             ]);
         }
     }
-} 
+}

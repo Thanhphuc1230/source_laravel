@@ -15,10 +15,10 @@ class PageRequest extends BaseAdminRequest
     {
         return [
             'name_vn' => [
-                'required','max:255',
+                'required', 'max:255',
             ],
             'name_en' => [
-                'nullable','max:255',
+                'nullable', 'max:255',
             ],
             'content_vn' => 'required|max:65535',
             'content_en' => 'nullable|max:65535',

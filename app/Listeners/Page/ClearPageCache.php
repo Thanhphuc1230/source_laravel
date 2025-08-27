@@ -23,7 +23,7 @@ class ClearPageCache
             Log::error('Failed to clear page cache', [
                 'error' => $e->getMessage(),
                 'action' => $event->action,
-                'slug' => $event->slug
+                'slug' => $event->slug,
             ]);
         }
     }

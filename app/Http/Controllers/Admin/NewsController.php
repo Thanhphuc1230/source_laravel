@@ -2,23 +2,28 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\News;
-use App\Models\CateNew;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Http\Requests\Admin\NewsRequest;
-use Illuminate\Support\Facades\View;
 use App\Events\News\NewsChanged;
-use App\Events\Content\ContentChanged;
+use App\Http\Requests\Admin\NewsRequest;
+use App\Models\CateNew;
+use App\Models\News;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
 class NewsController extends BaseController
 {
-    protected $module,$model,$nameItem,$imageFolder;
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
+
     public function __construct($imageFolder = 'news')
     {
         $this->module = 'news';
-        $this->model = new News();
+        $this->model = new News;
         $this->nameItem = 'bài viết';
         $this->imageFolder = $imageFolder;
 
@@ -35,7 +40,7 @@ class NewsController extends BaseController
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name_vn', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
+                    ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
             });
         }
 
@@ -45,7 +50,7 @@ class NewsController extends BaseController
             $query->where('category_id', $categoryId);
         }
 
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status','home', 'stt', 'created_at','category_id','image')->orderBy('created_at','desc')->paginate(10);
+        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'home', 'stt', 'created_at', 'category_id', 'image')->orderBy('created_at', 'desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
 
         $data['category'] = CateNew::with('children')
@@ -78,7 +83,7 @@ class NewsController extends BaseController
         $data['image'] = $this->saveImage($request);
 
         $news = $this->model::create($data);
-        toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+        toast('Thêm '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
         NewsChanged::dispatch($news, 'created', $data['slug']);
@@ -90,8 +95,9 @@ class NewsController extends BaseController
     {
         $page = $this->model::where('uuid', $uuid);
 
-        if (!$page->exists()) {
-            toast('Không tìm thấy ' . $this->nameItem, 'error');
+        if (! $page->exists()) {
+            toast('Không tìm thấy '.$this->nameItem, 'error');
+
             return back();
         }
 
@@ -112,14 +118,14 @@ class NewsController extends BaseController
         $current = $this->model::where('uuid', $uuid)->first();
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
-        $data['updated_at'] = new \DateTime();
+        $data['updated_at'] = new \DateTime;
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
         // Handle image
         // Handle single image - Update existing image
         $data['image'] = $this->updateImage($request, $current);
 
         $this->model::where('uuid', $uuid)->update($data);
-        toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
+        toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
         NewsChanged::dispatch($current, 'updated', $data['slug']);

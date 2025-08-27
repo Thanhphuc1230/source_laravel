@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\RouteController;
+use Illuminate\Support\Facades\Route;
 
 Route::name('web.')
     ->middleware(['web', 'visit'])

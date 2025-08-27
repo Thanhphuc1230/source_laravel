@@ -27,10 +27,12 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
     public function render($request, Throwable $exception)
     {
         if (strpos($exception->getMessage(), 'setCookie() on null') !== false) {
             auth()->logout();
+
             return redirect()->route('getLogin')->with(['error' => 'Phiên làm việc đã hết hạn, vui lòng đăng nhập lại.']);
         }
 

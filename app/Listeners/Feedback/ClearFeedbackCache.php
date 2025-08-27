@@ -16,8 +16,8 @@ class ClearFeedbackCache
         } catch (\Exception $e) {
             Log::error('Failed to clear feedback cache', [
                 'error' => $e->getMessage(),
-                'action' => $event->action
+                'action' => $event->action,
             ]);
         }
     }
-} 
+}

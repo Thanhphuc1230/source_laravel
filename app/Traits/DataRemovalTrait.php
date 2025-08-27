@@ -20,6 +20,7 @@ trait DataRemovalTrait
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
+
         return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
     }
-} 
+}

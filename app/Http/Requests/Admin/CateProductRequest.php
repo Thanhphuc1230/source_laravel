@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests\Admin;
 
-use Illuminate\Validation\Rule;
-
 class CateProductRequest extends BaseAdminRequest
 {
     // Authorization is handled by BaseAdminRequest
@@ -17,7 +15,7 @@ class CateProductRequest extends BaseAdminRequest
     {
         return [
             'name_vn' => [
-                'required','max:255',
+                'required', 'max:255',
             ],
             'keywords' => 'required',
             'description' => 'required',

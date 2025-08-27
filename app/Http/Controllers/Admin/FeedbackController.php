@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Events\Feedback\FeedbackChanged;
+use App\Http\Requests\Admin\FeedBackRequest;
 use App\Models\FeedBack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
-use App\Http\Requests\Admin\FeedBackRequest;
 use Illuminate\Support\Str;
-use App\Events\Feedback\FeedbackChanged;
+
 class FeedBackController extends BaseController
 {
-    protected $module,$model,$nameItem,$imageFolder;
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
+
     public function __construct($imageFolder = 'feedback')
     {
         $this->module = 'feedback';
-        $this->model = new FeedBack();
+        $this->model = new FeedBack;
         $this->nameItem = 'Phản hồi';
         $this->imageFolder = $imageFolder;
 
@@ -32,11 +39,11 @@ class FeedBackController extends BaseController
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('name_vn', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
+                    ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
             });
         }
 
-        $data['list'] = $query->orderBy('created_at','desc')->paginate(10);
+        $data['list'] = $query->orderBy('created_at', 'desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
 
         return $this->view_admin('list', $data);
@@ -59,7 +66,7 @@ class FeedBackController extends BaseController
         // handle image
         if ($request->hasFile('image')) {
             // Handle image - Save new image
-        $data['image'] = $this->saveImage($request);
+            $data['image'] = $this->saveImage($request);
         }
 
         $feedback = $this->model::create($data);
@@ -67,7 +74,7 @@ class FeedBackController extends BaseController
         // Dispatch event sau khi tạo feedback
         FeedbackChanged::dispatch($feedback, 'created');
 
-        toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+        toast('Thêm '.$this->nameItem.' thành công', 'success');
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -76,8 +83,9 @@ class FeedBackController extends BaseController
     {
         $page = $this->model::where('uuid', $uuid);
 
-        if (!$page->exists()) {
-            toast('Không tìm thấy ' . $this->nameItem, 'error');
+        if (! $page->exists()) {
+            toast('Không tìm thấy '.$this->nameItem, 'error');
+
             return back();
         }
 
@@ -107,7 +115,7 @@ class FeedBackController extends BaseController
         // Dispatch event sau khi cập nhật feedback
         FeedbackChanged::dispatch($current, 'updated');
 
-        toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
+        toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }

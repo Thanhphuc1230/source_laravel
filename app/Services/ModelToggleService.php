@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Response;
-
 class ModelToggleService
 {
     public function toggleModelStatus($uuid, $status, $fieldName, $model)
     {
         $updated = $model::where('uuid', $uuid)->update([$fieldName => $status]);
-        
+
         if ($updated) {
             $mess = $status == 1 ? 'Kích hoạt' : 'Tắt';
-            toast($mess . ' thành công');
-            return response()->json(['message' => $mess . ' ' . $fieldName . ' thành công']);
+            toast($mess.' thành công');
+
+            return response()->json(['message' => $mess.' '.$fieldName.' thành công']);
         }
-        
-        toast('Không tìm thấy ' . $fieldName, 'error');
+
+        toast('Không tìm thấy '.$fieldName, 'error');
+
         return response()->json(['message' => 'Không có bản ghi nào được cập nhật'], 400);
     }
 

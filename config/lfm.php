@@ -15,8 +15,8 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'use_package_routes'       => false,
-    'use_absolute_path'       => false,
+    'use_package_routes' => false,
+    'use_absolute_path' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -27,18 +27,18 @@ return [
     |
      */
 
-    'allow_private_folder'     => false,
+    'allow_private_folder' => false,
 
     // Flexible way to customize client folders accessibility
     // If you want to customize client folders, publish tag="lfm_handler"
     // Then you can rewrite userField function in App\Handler\ConfigHandler class
     // And set 'user_field' to App\Handler\ConfigHandler::class
     // Ex: The private folder of user will be named as the user id.
-    'private_folder_name'      => '',
+    'private_folder_name' => '',
 
-    'allow_shared_folder'      => true,
+    'allow_shared_folder' => true,
 
-    'shared_folder_name'       => '',
+    'shared_folder_name' => '',
 
     /*
     |--------------------------------------------------------------------------
@@ -46,12 +46,12 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'folder_categories'        => [
-        'file'  => [
-            'folder_name'  => 'photos',
+    'folder_categories' => [
+        'file' => [
+            'folder_name' => 'photos',
             'startup_view' => 'list',
-            'max_size'     => 50000,
-            'valid_mime'   => [
+            'max_size' => 50000,
+            'valid_mime' => [
                 'image/jpeg',
                 'image/pjpeg',
                 'image/png',
@@ -62,14 +62,14 @@ return [
                 'audio/mpeg',
                 'audio/mp3',
                 'audio/wav',
-                'audio/ogg'
+                'audio/ogg',
             ],
         ],
         'image' => [
-            'folder_name'  => 'photos',
+            'folder_name' => 'photos',
             'startup_view' => 'grid',
-            'max_size'     => 50000,
-            'valid_mime'   => [
+            'max_size' => 50000,
+            'valid_mime' => [
                 'image/jpeg',
                 'image/pjpeg',
                 'image/png',
@@ -85,7 +85,7 @@ return [
                 'audio/mpeg',
                 'audio/mp3',
                 'audio/wav',
-                'audio/ogg'
+                'audio/ogg',
             ],
         ],
     ],
@@ -106,24 +106,24 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'disk'                     => 'images',
+    'disk' => 'images',
 
-    'rename_file'              => false,
+    'rename_file' => false,
 
-    'rename_duplicates'        => true,
+    'rename_duplicates' => true,
 
-    'alphanumeric_filename'    => false,
+    'alphanumeric_filename' => false,
 
-    'alphanumeric_directory'   => false,
+    'alphanumeric_directory' => false,
 
-    'should_validate_size'     => true,
+    'should_validate_size' => true,
 
-    'should_validate_mime'     => true,
+    'should_validate_mime' => true,
 
     // behavior on files with identical name
     // setting it to true cause old file replace with new one
     // setting it to false show `error-file-exist` error and stop upload
-    'over_write_on_duplicate'  => false,
+    'over_write_on_duplicate' => false,
 
     // mimetypes of executables to prevent from uploading
     'disallowed_mimetypes' => ['text/x-php', 'text/html', 'text/plain'],
@@ -151,19 +151,19 @@ return [
     // If true, image thumbnails would be created during upload
     'should_create_thumbnails' => true,
 
-    'thumb_folder_name'        => 'thumbs',
+    'thumb_folder_name' => 'thumbs',
 
     // Create thumbnails automatically only for listed types.
-    'raster_mimetypes'         => [
+    'raster_mimetypes' => [
         'image/jpeg',
         'image/pjpeg',
         'image/png',
         'image/webp',
     ],
 
-    'thumb_img_width'          => 200, // px
+    'thumb_img_width' => 200, // px
 
-    'thumb_img_height'         => 200, // px
+    'thumb_img_height' => 200, // px
 
     /*
     |--------------------------------------------------------------------------
@@ -171,19 +171,19 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'file_type_array'          => [
-        'pdf'  => 'Adobe Acrobat',
-        'doc'  => 'Microsoft Word',
+    'file_type_array' => [
+        'pdf' => 'Adobe Acrobat',
+        'doc' => 'Microsoft Word',
         'docx' => 'Microsoft Word',
-        'xls'  => 'Microsoft Excel',
+        'xls' => 'Microsoft Excel',
         'xlsx' => 'Microsoft Excel',
-        'zip'  => 'Archive',
-        'gif'  => 'GIF Image',
-        'jpg'  => 'JPEG Image',
+        'zip' => 'Archive',
+        'gif' => 'GIF Image',
+        'jpg' => 'JPEG Image',
         'jpeg' => 'JPEG Image',
-        'png'  => 'PNG Image',
+        'png' => 'PNG Image',
         'webp' => 'WebP Image',
-        'ppt'  => 'Microsoft PowerPoint',
+        'ppt' => 'Microsoft PowerPoint',
         'pptx' => 'Microsoft PowerPoint',
     ],
 
@@ -198,12 +198,12 @@ return [
     | Please note that the 'upload_max_filesize' & 'post_max_size'
     | directives are not supported.
      */
-    'php_ini_overrides'        => [
+    'php_ini_overrides' => [
         'memory_limit' => '256M',
     ],
 
     // Cấu hình thư mục gốc
-    'base_directory'           => 'images',
+    'base_directory' => 'images',
 
     'valid_file_mimetypes' => [
         // ... các mime types khác

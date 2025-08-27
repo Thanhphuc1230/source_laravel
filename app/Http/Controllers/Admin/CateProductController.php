@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Events\CateProduct\CateProductChanged;
+use App\Http\Requests\Admin\CateProductRequest;
 use App\Models\CateProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use App\Http\Requests\Admin\CateProductRequest;
-use App\Events\CateProduct\CateProductChanged;
-use App\Events\Content\ContentChanged;
 
 class CateProductController extends BaseController
 {
-    protected $module, $model, $nameItem, $imageFolder;
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
 
     public function __construct($imageFolder = 'cate_product')
     {
         $this->module = 'cate_product';
-        $this->model = new CateProduct();
+        $this->model = new CateProduct;
         $this->nameItem = 'Danh mục sản phẩm';
         $this->imageFolder = $imageFolder;
 
@@ -49,7 +53,7 @@ class CateProductController extends BaseController
             });
         }
 
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status','home', 'stt', 'created_at')->orderBy('created_at','desc')->paginate(10);
+        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'home', 'stt', 'created_at')->orderBy('created_at', 'desc')->paginate(10);
         $data['nameItem'] = $this->nameItem;
         // category product
         $data['category'] = $this->model::with('children')->where('status', 1)->where('parent_id', 0)->get();
@@ -62,7 +66,7 @@ class CateProductController extends BaseController
      */
     public function create()
     {
-        $data['category'] = $this->model::where('status', 1)->where('parent_id', 0)->with('children.children')->orderBy('name_vn', 'asc')->get(); //Lấy chủ đề cha
+        $data['category'] = $this->model::where('status', 1)->where('parent_id', 0)->with('children.children')->orderBy('name_vn', 'asc')->get(); // Lấy chủ đề cha
         $data['action'] = 'create';
         $data['nameItem'] = $this->nameItem;
 
@@ -86,7 +90,7 @@ class CateProductController extends BaseController
 
         $cateProduct = $this->model::create($data);
 
-        toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+        toast('Thêm '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
         CateProductChanged::dispatch($cateProduct, 'created', $data['slug']);
@@ -102,7 +106,7 @@ class CateProductController extends BaseController
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($uuid,$currentPage)
+    public function edit($uuid, $currentPage)
     {
         $page = $this->model::where('uuid', $uuid);
 
@@ -110,8 +114,7 @@ class CateProductController extends BaseController
             $data['page'] = $page->first();
 
             // get category
-            $data['category'] = $this->model
-                ::where('status', 1)
+            $data['category'] = $this->model::where('status', 1)
                 ->where('parent_id', 0)
                 ->orderBy('name_vn', 'asc')
                 ->get();
@@ -119,12 +122,14 @@ class CateProductController extends BaseController
             $data['nameItem'] = $this->nameItem;
 
             // save current page
-            $data['currentPage'] = $currentPage ;
+            $data['currentPage'] = $currentPage;
             // folder image
             $data['imageFolder'] = $this->imageFolder;
+
             return $this->view_admin('detail', $data);
         } else {
-            toast('Không tìm thấy ' . $this->nameItem, 'error');
+            toast('Không tìm thấy '.$this->nameItem, 'error');
+
             return back();
         }
     }
@@ -136,7 +141,7 @@ class CateProductController extends BaseController
     {
         $current = $this->model::where('uuid', $uuid)->first();
 
-        $data = $request->except('_token','return_back','return_list','currentPage');
+        $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
         $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
@@ -145,12 +150,13 @@ class CateProductController extends BaseController
 
         $this->model::where('uuid', $uuid)->update($data);
 
-        toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
+        toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
         CateProductChanged::dispatch($current, 'updated', $data['slug']);
 
         $currentPage = $request->input('currentPage');
+
         return $this->route_admin('index', [], [], $currentPage);
     }
 

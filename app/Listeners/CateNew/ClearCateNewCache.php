@@ -24,7 +24,7 @@ class ClearCateNewCache
             Log::error('Failed to clear cate_news cache', [
                 'error' => $e->getMessage(),
                 'action' => $event->action,
-                'slug' => $event->slug
+                'slug' => $event->slug,
             ]);
         }
     }

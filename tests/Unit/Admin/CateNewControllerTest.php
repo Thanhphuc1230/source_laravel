@@ -2,33 +2,34 @@
 
 namespace Tests\Unit\Admin;
 
-use Tests\TestCase;
 use App\Http\Controllers\Admin\CateNewController;
 use App\Models\CateNew;
-use Illuminate\Http\Request;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
+use Tests\TestCase;
 
 class CateNewControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     private CateNewController $controller;
+
     private CateNew $cateNew;
 
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create controller instance
-        $this->controller = new CateNewController();
-        
+        $this->controller = new CateNewController;
+
         // Create test data
         $this->cateNew = CateNew::factory()->create([
             'uuid' => 'test-uuid-123',
             'name_vn' => 'Test Category',
             'slug' => 'test-category',
             'status' => 1,
-            'parent_id' => 0
+            'parent_id' => 0,
         ]);
     }
 
@@ -36,8 +37,8 @@ class CateNewControllerTest extends TestCase
     public function it_can_display_index_page_with_categories()
     {
         // Arrange
-        $request = new Request();
-        
+        $request = new Request;
+
         // Act
         $result = $this->controller->index($request);
 
@@ -50,7 +51,7 @@ class CateNewControllerTest extends TestCase
     {
         // Arrange
         $request = new Request(['search' => 'Test']);
-        
+
         // Act
         $result = $this->controller->index($request);
 
@@ -63,7 +64,7 @@ class CateNewControllerTest extends TestCase
     {
         // Arrange
         $request = new Request(['category' => '0']);
-        
+
         // Act
         $result = $this->controller->index($request);
 
@@ -87,7 +88,7 @@ class CateNewControllerTest extends TestCase
         // Arrange
         $uuid = 'test-uuid-123';
         $currentPage = 1;
-        
+
         // Act
         $result = $this->controller->edit($uuid, $currentPage);
 
@@ -101,7 +102,7 @@ class CateNewControllerTest extends TestCase
         // Arrange
         $uuid = 'nonexistent-uuid';
         $currentPage = 1;
-        
+
         // Act
         $result = $this->controller->edit($uuid, $currentPage);
 
@@ -115,7 +116,7 @@ class CateNewControllerTest extends TestCase
         // Arrange
         $uuid = 'test-uuid-123';
         $request = new Request(['order' => 5]);
-        
+
         // Act
         $result = $this->controller->numericalOrder($request, $uuid);
 
@@ -129,7 +130,7 @@ class CateNewControllerTest extends TestCase
         // Arrange
         $uuids = ['uuid-1', 'uuid-2', 'uuid-3'];
         $request = new Request(['uuids' => $uuids]);
-        
+
         // Act
         $result = $this->controller->destroyAll($request);
 

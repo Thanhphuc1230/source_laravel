@@ -10,7 +10,9 @@ class Page extends Model
     use HasFactory;
 
     protected $table = 'tp_pages';
+
     protected $primaryKey = 'id_page';
+
     protected $fillable = [
         'uuid',
         'name_vn',
@@ -24,6 +26,6 @@ class Page extends Model
         'image',
         'keywords',
         'description',
-        'parent_id'
+        'parent_id',
     ];
 }

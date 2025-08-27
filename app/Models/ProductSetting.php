@@ -18,12 +18,12 @@ class ProductSetting extends Model
         'group',
         'description',
         'is_active',
-        'sort_order'
+        'sort_order',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'sort_order' => 'integer'
+        'sort_order' => 'integer',
     ];
 
     /**
@@ -55,7 +55,7 @@ class ProductSetting extends Model
     {
         $setting = static::where('key', $key)->where('is_active', true)->first();
 
-        if (!$setting) {
+        if (! $setting) {
             return $default;
         }
 
@@ -74,7 +74,7 @@ class ProductSetting extends Model
                 'type' => $type,
                 'group' => $group,
                 'description' => $description,
-                'is_active' => true
+                'is_active' => true,
             ]
         );
     }

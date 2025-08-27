@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('tp_order_status', function (Blueprint $table) {
             $table->id('id_order_status');
             $table->uuid('uuid_order_status');
-            $table->unsignedBigInteger('shipping_id');//connect with order_shipping
+            $table->unsignedBigInteger('shipping_id'); // connect with order_shipping
             $table->string('payment_method');
             $table->string('total');
-            $table->tinyInteger('auth_id')->nullable();;//id of user have auth
+            $table->tinyInteger('auth_id')->nullable(); // id of user have auth
             $table->boolean('status')->default(false);
             $table->timestamps();
 

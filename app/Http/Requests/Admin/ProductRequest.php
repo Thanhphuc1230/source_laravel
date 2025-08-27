@@ -23,7 +23,7 @@ class ProductRequest extends BaseAdminRequest
             'description' => 'required|max:255',
 
             'image' => request()->route('uuid')
-            ? 'nullable|:tp_products,image,' . request()->route('uuid') . ',uuid|image|mimes:jpeg,png,jpg,gif,webp'
+            ? 'nullable|:tp_products,image,'.request()->route('uuid').',uuid|image|mimes:jpeg,png,jpg,gif,webp'
             : 'required|:tp_products,image|image|mimes:jpeg,png,jpg,gif,webp',
 
             'image_detail' => 'nullable|array',
@@ -41,7 +41,7 @@ class ProductRequest extends BaseAdminRequest
             'hot' => 'nullable|boolean',
             'stt' => 'required|integer|min:0',
             'intro_vn' => 'required|max:1000',
-            'intro_en' => 'nullable|max:1000'
+            'intro_en' => 'nullable|max:1000',
         ];
     }
 
@@ -85,7 +85,7 @@ class ProductRequest extends BaseAdminRequest
             'stt.min' => 'Thứ tự sản phẩm không được nhỏ hơn 0.',
             'intro_vn.required' => 'Giới thiệu tiếng Việt là bắt buộc.',
             'intro_vn.max' => 'Giới thiệu tiếng Việt không được vượt quá 1000 ký tự.',
-            'intro_en.max' => 'Giới thiệu tiếng Anh không được vượt quá 1000 ký tự.'
+            'intro_en.max' => 'Giới thiệu tiếng Anh không được vượt quá 1000 ký tự.',
         ];
     }
 }

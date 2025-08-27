@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class CheckAuth
 {
@@ -19,6 +18,7 @@ class CheckAuth
         if (Auth::check() && (Auth::user()->level == 1 || Auth::user()->level == 2)) {
             return $next($request);
         }
+
         return view('errors.404');
     }
 }

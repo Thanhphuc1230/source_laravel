@@ -2,27 +2,36 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Menu;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
-use App\Models\Page;
+use App\Events\Menu\MenuChanged;
+use App\Http\Requests\Admin\MenuRequest;
 use App\Models\CateNew;
 use App\Models\CateProduct;
+use App\Models\Menu;
+use App\Models\Page;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use App\Http\Requests\Admin\MenuRequest;
-use App\Events\Menu\MenuChanged;
+
 class MenuController extends BaseController
 {
     const TYPE_PAGE = 'page';
+
     const TYPE_CATE_NEW = 'cate_new';
+
     const TYPE_CATE_PRODUCT = 'cate_product';
 
-    protected $module,$model,$nameItem,$imageFolder;
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
+
     public function __construct($imageFolder = 'menu')
     {
         $this->module = 'menu';
-        $this->model = new Menu();
+        $this->model = new Menu;
         $this->nameItem = 'Trang Menu';
         $this->imageFolder = $imageFolder;
 
@@ -44,10 +53,10 @@ class MenuController extends BaseController
 
     public function index()
     {
-        //get page content
+        // get page content
         $data['page_content'] = Page::where('status', 1)->orderBy('stt', 'asc')->get();
 
-        //get category new
+        // get category new
         $data['cate_new'] = CateNew::with([
             'children' => function ($query) {
                 $query->select('id_cate_new', 'name_vn', 'parent_id', 'uuid');
@@ -57,7 +66,7 @@ class MenuController extends BaseController
             ->where('parent_id', 0)
             ->orderBy('stt', 'asc')
             ->get();
-        //get category new
+        // get category new
         $data['cate_product'] = CateProduct::with([
             'children' => function ($query) {
                 $query->select('id_cate_product', 'name_vn', 'parent_id', 'uuid');
@@ -67,7 +76,6 @@ class MenuController extends BaseController
             ->where('parent_id', 0)
             ->orderBy('stt', 'asc')
             ->get();
-
 
         $data['menus'] = $this->getActiveMenusWithChildren();
 
@@ -97,7 +105,7 @@ class MenuController extends BaseController
         if ($objectIds) {
             foreach ($objectIds as $objectId) {
                 $nameChild = $this->getNameVn($request->type, $objectId);
-                if ($nameChild == NULL && $request->name_vn == NULL) {
+                if ($nameChild == null && $request->name_vn == null) {
                     return back()->with('error', 'Vui lòng chọn chính xác chủ đề và vị trí');
                 }
                 $data = [
@@ -119,9 +127,9 @@ class MenuController extends BaseController
                 MenuChanged::dispatch($menu, 'created');
             }
 
-            toast('Thêm ' . $this->nameItem . ' thành công', 'success');
+            toast('Thêm '.$this->nameItem.' thành công', 'success');
         } else {
-            toast('Thêm ' . $this->nameItem . ' không thành công', 'error');
+            toast('Thêm '.$this->nameItem.' không thành công', 'error');
         }
 
         return $this->route_admin('index');
@@ -129,22 +137,21 @@ class MenuController extends BaseController
 
     /**
      * Get Vietnamese name and slug based on type and ID
-     *
-     * @param string $type
-     * @param int $id
-     * @return array|null
      */
     private function getNameVn(string $type, int $id): ?array
     {
         switch ($type) {
             case self::TYPE_PAGE:
                 $page = Page::find($id);
+
                 return $page ? ['name_vn' => $page->name_vn, 'slug' => Str::slug($page->name_vn)] : null;
             case self::TYPE_CATE_NEW:
                 $cateNew = CateNew::find($id);
+
                 return $cateNew ? ['name_vn' => $cateNew->name_vn, 'slug' => Str::slug($cateNew->name_vn)] : null;
             case self::TYPE_CATE_PRODUCT:
                 $cateProduct = CateProduct::find($id);
+
                 return $cateProduct ? ['name_vn' => $cateProduct->name_vn, 'slug' => Str::slug($cateProduct->name_vn)] : null;
             default:
                 return null;
@@ -161,7 +168,7 @@ class MenuController extends BaseController
 
             $menu = $this->model::where('uuid', $uuid)->first();
 
-            if (!$menu) {
+            if (! $menu) {
                 throw new \Exception('Không tìm thấy menu để cập nhật');
             }
 
@@ -172,7 +179,7 @@ class MenuController extends BaseController
                 MenuChanged::dispatch($menu, 'updated');
             }
 
-            toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
+            toast('Cập nhật '.$this->nameItem.' thành công', 'success');
         } catch (\Exception $e) {
             toast($e->getMessage(), 'error');
         }

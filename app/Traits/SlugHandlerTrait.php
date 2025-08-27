@@ -16,7 +16,7 @@ trait SlugHandlerTrait
         $counter = 1;
 
         while ($this->slugExists($slug, $modelClass, $currentUuid)) {
-            $slug = $baseSlug . '-' . $counter;
+            $slug = $baseSlug.'-'.$counter;
             $counter++;
         }
 
@@ -29,11 +29,11 @@ trait SlugHandlerTrait
     private function slugExists(string $slug, string $modelClass, ?string $currentUuid = null): bool
     {
         $query = $modelClass::where('slug', $slug);
-        
+
         if ($currentUuid) {
             $query->where('uuid', '!=', $currentUuid);
         }
-        
+
         return $query->exists();
     }
-} 
+}

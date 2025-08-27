@@ -16,15 +16,15 @@ return new class extends Migration
             $table->uuid();
             $table->string('name_vn');
             $table->string('name_en')->nullable();
-            $table->string('link')->nullable();;
+            $table->string('link')->nullable();
             $table->string('slug');
-            $table->string('type',50)->nullable();
-            $table->unsignedBigInteger('parent_id')->nullable();// id parent
-            $table->unsignedBigInteger('object_id')->nullable(); //id của table chính
+            $table->string('type', 50)->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable(); // id parent
+            $table->unsignedBigInteger('object_id')->nullable(); // id của table chính
             $table->unsignedBigInteger('stt')->default(1);
             $table->boolean('status')->default(true);
             $table->timestamps();
-            
+
             // Essential indexes for menu hierarchy
             $table->index('slug');                       // Required for route resolution
             $table->index(['status', 'parent_id', 'stt']); // Covers: active menus + hierarchy + ordering

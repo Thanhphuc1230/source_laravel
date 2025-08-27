@@ -14,16 +14,17 @@ class ProfileRequest extends BaseAdminRequest
     public function rules(): array
     {
         $userId = auth()->id();
-        
+
         return [
             'fullname' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $userId,
+            'email' => 'required|email|unique:users,email,'.$userId,
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'username' => 'required|string|max:255|unique:users,username,' . $userId,
+            'username' => 'required|string|max:255|unique:users,username,'.$userId,
         ];
     }
 
-    public function messages(): array   {
+    public function messages(): array
+    {
         return [
             'fullname.required' => 'Tên không được để trống',
             'fullname.string' => 'Tên không được chứa ký tự đặc biệt',

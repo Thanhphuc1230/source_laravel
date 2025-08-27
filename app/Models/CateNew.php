@@ -10,7 +10,9 @@ class CateNew extends Model
     use HasFactory;
 
     protected $table = 'tp_cate_news';
+
     protected $primaryKey = 'id_cate_new';
+
     protected $fillable = [
         'uuid',
         'name_vn',
@@ -21,7 +23,7 @@ class CateNew extends Model
         'status',
         'stt',
         'home',
-        'parent_id'
+        'parent_id',
     ];
 
     public function children()

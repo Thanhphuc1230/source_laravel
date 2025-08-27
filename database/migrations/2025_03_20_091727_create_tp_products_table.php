@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('intro_vn');
             $table->text('intro_en')->nullable();
-            $table->decimal('price', 15,0); 
-            $table->decimal('price_old', 15,0)->nullable(); 
+            $table->decimal('price', 15, 0);
+            $table->decimal('price_old', 15, 0)->nullable();
             $table->longText('content_vn');
             $table->longText('content_en')->nullable();
             $table->string('image')->nullable();
@@ -36,11 +36,11 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('category_id')->references('id_cate_product')->on('tp_cate_products')->onDelete('cascade');
-            
+
             // Essential indexes only
             $table->index('slug');              // Required for route resolution
             $table->index('uuid');              // Required for lookups
-            
+
             // Composite indexes (cover single column usage too)
             $table->index(['status', 'stt']);       // Covers: status filtering + ordering
             $table->index(['status', 'home']);      // Covers: status + homepage products

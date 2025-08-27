@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AnalyticController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(AnalyticController::class)
     ->prefix('analytics')

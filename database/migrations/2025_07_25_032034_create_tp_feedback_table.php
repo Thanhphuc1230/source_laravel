@@ -20,7 +20,7 @@ return new class extends Migration
             $table->tinyInteger('status')->default(0);
             $table->integer('stt')->default(0);
             $table->timestamps();
-            
+
             // Essential indexes
             $table->index('uuid');              // Required for lookups
             $table->index(['status', 'stt']);   // Covers: status filtering + ordering

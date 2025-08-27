@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Http\Request;
+
 class CartController extends Controller
 {
     public function index()
@@ -12,6 +13,7 @@ class CartController extends Controller
         $data['cart'] = $this->getCartSession();
         if (count($data['cart']) == 0) {
             toast()->error(session('locale') == 'en' ? 'No product in cart' : 'Chưa có sản phẩm nào trong giỏ hàng');
+
             return redirect()->route('web.home');
         }
 
@@ -32,12 +34,13 @@ class CartController extends Controller
         $product = Product::with('category')->where('tp_products.uuid', $uuid)->first();
 
         // Kiểm tra xem sản phẩm có tồn tại không
-        if (!$product) {
+        if (! $product) {
             if (session('locale') == 'en') {
                 toast()->error('Product not found');
             } else {
                 toast()->error('Sản phẩm không tồn tại.');
             }
+
             return back();
         }
 
@@ -48,6 +51,7 @@ class CartController extends Controller
         } else {
             toast()->success('Đã thêm vào giỏ hàng thành công.');
         }
+
         return redirect()->route('web.cart');
     }
 
@@ -68,7 +72,7 @@ class CartController extends Controller
         }
 
         // Nếu chưa tìm thấy sản phẩm, thêm sản phẩm mới vào giỏ hàng
-        if (!$found) {
+        if (! $found) {
             $cart[] = [
                 // Thay đổi từ $cart[$product->id_product] sang $cart[] để thêm sản phẩm mới
                 'stt' => count($cart) + 1,
@@ -131,6 +135,7 @@ class CartController extends Controller
                 } else {
                     toast()->success('Xóa sản phẩm trong giỏ hàng thành công.');
                 }
+
                 return back();
             }
         }

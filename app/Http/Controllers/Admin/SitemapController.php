@@ -12,6 +12,7 @@ class SitemapController extends Controller
     {
         set_time_limit(300); // 300 giây = 5 phút
         Artisan::call('sitemap:generate');
+
         return response()->json(['message' => 'Sitemap đã được tạo thành công!']);
     }
 }

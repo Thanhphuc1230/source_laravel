@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Cart;
-
 function countCart()
 {
     return count(session()->get('cart', [])) ?: 0;
@@ -19,5 +17,6 @@ function getTotalCartSession()
     foreach ($cart as $item) {
         $total += $item['price'] * $item['qty'];
     }
+
     return $total;
 }

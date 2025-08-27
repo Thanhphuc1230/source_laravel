@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProductSettingRequest;
 use App\Models\ProductSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+
 class ProductSettingController extends BaseController
 {
-    protected $module, $model, $nameItem, $imageFolder;
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
 
     public function __construct($imageFolder = null)
     {
         $this->module = 'product-setting';
-        $this->model = new ProductSetting();
+        $this->model = new ProductSetting;
         $this->nameItem = 'Product Setting';
         $this->imageFolder = $imageFolder;
 
@@ -65,6 +71,7 @@ class ProductSettingController extends BaseController
         $this->model::create($request->validated());
 
         toast('Product setting created successfully', 'success');
+
         return $this->route_admin('index');
     }
 
@@ -104,6 +111,7 @@ class ProductSettingController extends BaseController
         $setting->update($request->validated());
 
         toast('Product setting updated successfully', 'success');
+
         return $this->route_admin('index');
     }
 
@@ -116,6 +124,7 @@ class ProductSettingController extends BaseController
         $setting->delete();
 
         toast('Product setting deleted successfully', 'success');
+
         return $this->route_admin('index');
     }
 
@@ -125,20 +134,21 @@ class ProductSettingController extends BaseController
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids');
-        
+
         if ($uuids && count($uuids) > 0) {
             $this->model::whereIn('uuid', $uuids)->delete();
-            toast('Đã xóa ' . count($uuids) . ' setting được chọn', 'success');
+            toast('Đã xóa '.count($uuids).' setting được chọn', 'success');
         } else {
             toast('Vui lòng chọn ít nhất một setting để xóa', 'error');
         }
+
         return $this->route_admin('index');
     }
 
     public function status($uuid, $status, $name)
     {
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+
         return $result;
     }
-
 }

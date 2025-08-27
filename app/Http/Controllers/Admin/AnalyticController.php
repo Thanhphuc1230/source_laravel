@@ -2,28 +2,32 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Analytic;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class AnalyticController extends BaseController
 {
-    protected $module, $model, $nameItem;
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
 
     public function __construct()
     {
         $this->module = 'analytics';
-        $this->model = new Analytic();
+        $this->model = new Analytic;
         $this->nameItem = 'Biểu đồ';
-        
+
         parent::__construct($this->module);
-        
+
         View::share('nameClass', 'chart');
     }
-    
-    public function index(Request $request){
+
+    public function index(Request $request)
+    {
         // Get the current month
         $currentMonth = Carbon::now()->format('m');
 
@@ -36,15 +40,16 @@ class AnalyticController extends BaseController
 
         foreach ($visits as $visit) {
             // Convert access_date to Carbon object
-        $visitDate = Carbon::parse($visit->visit_date);
+            $visitDate = Carbon::parse($visit->visit_date);
             $chartData[] = [
-                'date' => $visitDate->format('d-m-Y') ,
+                'date' => $visitDate->format('d-m-Y'),
                 'count' => $visit->visit_count,
             ];
         }
         $data['chartData'] = json_encode($chartData);
 
         $data['nameItem'] = $this->nameItem;
+
         return $this->view_admin('list', $data);
     }
 }

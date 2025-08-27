@@ -18,7 +18,7 @@ return new class extends Migration
             $table->uuid('uuid_order_shipping');
             $table->string('f_name_order');
             $table->string('l_name_order');
-            $table->string('phone',20);
+            $table->string('phone', 20);
             $table->string('email');
             $table->string('address');
             $table->string('note')->nullable();

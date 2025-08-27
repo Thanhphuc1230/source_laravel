@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\System;
 use App\Http\Requests\Admin\SystemRequest;
+use App\Models\System;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 
 class SystemController extends BaseController
-{   
-    protected $module,$model,$nameItem,$imageFolder;
+{
+    protected $module;
+
+    protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
+
     public function __construct($imageFolder = 'system')
     {
         $this->module = 'system';
-        $this->model = new System();
+        $this->model = new System;
         $this->nameItem = 'Hệ thống';
         $this->imageFolder = $imageFolder;
 
@@ -26,13 +32,14 @@ class SystemController extends BaseController
     public function index()
     {
         $data['system'] = System::first();
+
         return $this->view_admin('index', $data);
     }
 
     public function update($id, SystemRequest $request)
     {
         $data = $request->except('_token');
-        $data['created_at'] = new \DateTime();
+        $data['created_at'] = new \DateTime;
         $system = $this->model::find($id);
 
         // Handle logo - Update existing logo
@@ -48,6 +55,7 @@ class SystemController extends BaseController
         } else {
             toast('System not found', 'error');
         }
+
         return back();
     }
 }

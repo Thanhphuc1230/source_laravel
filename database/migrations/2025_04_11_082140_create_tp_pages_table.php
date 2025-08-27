@@ -29,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Essential indexes only
-            $table->index('slug');              // Required for route resolution  
+            $table->index('slug');              // Required for route resolution
             $table->index(['status', 'stt']);   // Covers: status filtering + ordering
         });
     }

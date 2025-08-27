@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\MenuController;
+use Illuminate\Support\Facades\Route;
 
 Route::controller(MenuController::class)
     ->prefix('menu')
