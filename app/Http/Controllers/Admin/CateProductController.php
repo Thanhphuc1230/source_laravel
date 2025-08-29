@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Events\CateProduct\CateProductChanged;
 use App\Http\Requests\Admin\CateProductRequest;
 use App\Models\CateProduct;
+use App\Repositories\Interfaces\CateProductRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -18,13 +19,16 @@ class CateProductController extends BaseController
     protected $nameItem;
 
     protected $imageFolder;
+    
+    protected $cateProductRepository;
 
-    public function __construct($imageFolder = 'cate_product')
+    public function __construct(CateProductRepositoryInterface $cateProductRepository, $imageFolder = 'cate_product')
     {
         $this->module = 'cate_product';
         $this->model = new CateProduct;
         $this->nameItem = 'Danh mục sản phẩm';
         $this->imageFolder = $imageFolder;
+        $this->cateProductRepository = $cateProductRepository;
 
         parent::__construct($this->module, $imageFolder);
 
@@ -36,27 +40,17 @@ class CateProductController extends BaseController
      */
     public function index(Request $request)
     {
-        $query = $this->model::query();
+        $filters = [
+            'search' => $request->input('search'),
+            'category' => $request->input('category'),
+            'parent_id' => $request->has('category') ? $request->input('category') : null,
+            'sort_field' => 'created_at',
+            'sort_direction' => 'desc'
+        ];
 
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name_vn', 'LIKE', "%{$searchTerm}%")->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
-            });
-        }
-
-        // check if choose category
-        if ($request->has('category') && $request->input('category') != 0) {
-            $categoryId = $request->input('category');
-            $query->where(function ($q) use ($categoryId) {
-                $q->where('parent_id', $categoryId)->orWhere('id_cate_product', $categoryId);
-            });
-        }
-
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'home', 'stt', 'created_at')->orderBy('created_at', 'desc')->paginate(10);
+        $data['list'] = $this->cateProductRepository->getFilteredCategories($filters);
         $data['nameItem'] = $this->nameItem;
-        // category product
-        $data['category'] = $this->model::with('children')->where('status', 1)->where('parent_id', 0)->get();
+        $data['category'] = $this->cateProductRepository->getCategoriesWithChildren();
 
         return $this->view_admin('list', $data);
     }
@@ -66,7 +60,7 @@ class CateProductController extends BaseController
      */
     public function create()
     {
-        $data['category'] = $this->model::where('status', 1)->where('parent_id', 0)->with('children.children')->orderBy('name_vn', 'asc')->get(); // Lấy chủ đề cha
+        $data['category'] = $this->cateProductRepository->getActiveParentCategories();
         $data['action'] = 'create';
         $data['nameItem'] = $this->nameItem;
 
@@ -79,16 +73,15 @@ class CateProductController extends BaseController
     public function store(CateProductRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['uuid'] = Str::uuid();
+        
         // Tạo slug từ name_vn nếu không có
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
         $data['status'] = 1;
 
         // Handle image - Save new image
         $data['image'] = $this->saveImage($request, null, 'image');
 
-        $cateProduct = $this->model::create($data);
+        $cateProduct = $this->cateProductRepository->create($data);
 
         toast('Thêm '.$this->nameItem.' thành công', 'success');
 
@@ -108,16 +101,13 @@ class CateProductController extends BaseController
      */
     public function edit($uuid, $currentPage)
     {
-        $page = $this->model::where('uuid', $uuid);
+        $category = $this->cateProductRepository->findByUuid($uuid);
 
-        if ($page->exists()) {
-            $data['page'] = $page->first();
+        if ($category) {
+            $data['page'] = $category;
 
-            // get category
-            $data['category'] = $this->model::where('status', 1)
-                ->where('parent_id', 0)
-                ->orderBy('name_vn', 'asc')
-                ->get();
+            // get categories
+            $data['category'] = $this->cateProductRepository->getActiveParentCategories();
             $data['action'] = 'edit';
             $data['nameItem'] = $this->nameItem;
 
@@ -139,16 +129,15 @@ class CateProductController extends BaseController
      */
     public function update(CateProductRequest $request, string $uuid)
     {
-        $current = $this->model::where('uuid', $uuid)->first();
+        $current = $this->cateProductRepository->findByUuid($uuid);
 
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
         $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
         // Handle image - Update existing image
         $data['image'] = $this->updateImage($request, $current, null, 'image');
 
-        $this->model::where('uuid', $uuid)->update($data);
+        $this->cateProductRepository->update($data, $uuid);
 
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
@@ -165,7 +154,7 @@ class CateProductController extends BaseController
      */
     public function numericalOrder(Request $request, $uuid)
     {
-        $cateProduct = $this->model::where('uuid', $uuid)->first();
+        $cateProduct = $this->cateProductRepository->findByUuid($uuid);
         $result = $this->updateStt($request, $uuid);
 
         // Remove related cache
@@ -176,7 +165,7 @@ class CateProductController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        $cateProduct = $this->model::where('uuid', $uuid)->first();
+        $cateProduct = $this->cateProductRepository->findByUuid($uuid);
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
 
         // Remove related cache
@@ -187,7 +176,7 @@ class CateProductController extends BaseController
 
     public function destroy(string $uuid)
     {
-        $cateProduct = $this->model::where('uuid', $uuid)->first();
+        $cateProduct = $this->cateProductRepository->findByUuid($uuid);
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
 
         // Remove related cache
@@ -201,9 +190,7 @@ class CateProductController extends BaseController
         $uuids = $request->input('uuids', []);
 
         // Optimize: only select fields needed for events
-        $cateProductItems = $this->model::whereIn('uuid', $uuids)
-            ->select('uuid', 'slug', 'name_vn', 'parent_id')
-            ->get();
+        $cateProductItems = $this->cateProductRepository->findByUuids($uuids, ['uuid', 'slug', 'name_vn', 'parent_id']);
 
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
 
