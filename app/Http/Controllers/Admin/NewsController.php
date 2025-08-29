@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\News\NewsChanged;
 use App\Http\Requests\Admin\NewsRequest;
-use App\Models\CateNew;
 use App\Models\News;
+use App\Repositories\Interfaces\NewsRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -19,13 +19,16 @@ class NewsController extends BaseController
     protected $nameItem;
 
     protected $imageFolder;
+    
+    protected $newsRepository;
 
-    public function __construct($imageFolder = 'news')
+    public function __construct(NewsRepositoryInterface $newsRepository, $imageFolder = 'news')
     {
         $this->module = 'news';
         $this->model = new News;
         $this->nameItem = 'bài viết';
         $this->imageFolder = $imageFolder;
+        $this->newsRepository = $newsRepository;
 
         parent::__construct($this->module, $imageFolder);
 
@@ -34,36 +37,23 @@ class NewsController extends BaseController
 
     public function index(Request $request)
     {
-        $query = $this->model::query();
+        $filters = [
+            'search' => $request->input('search'),
+            'category' => $request->input('category'),
+            'sort_field' => 'created_at',
+            'sort_direction' => 'desc'
+        ];
 
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name_vn', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
-            });
-        }
-
-        // Kiểm tra nếu đã chọn chủ đề
-        if ($request->has('category') && $request->input('category') != 0) {
-            $categoryId = $request->input('category');
-            $query->where('category_id', $categoryId);
-        }
-
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'home', 'stt', 'created_at', 'category_id', 'image')->orderBy('created_at', 'desc')->paginate(10);
+        $data['list'] = $this->newsRepository->getFilteredNews($filters);
         $data['nameItem'] = $this->nameItem;
-
-        $data['category'] = CateNew::with('children')
-            ->where('status', 1)
-            ->where('parent_id', 0)
-            ->get();
+        $data['category'] = $this->newsRepository->getActiveCategories();
 
         return $this->view_admin('list', $data);
     }
 
     public function create()
     {
-        $data['category'] = CateNew::where('status', 1)->where('parent_id', 0)->with('children.children')->orderBy('name_vn', 'asc')->get();
+        $data['category'] = $this->newsRepository->getActiveCategories();
         $data['action'] = 'create';
         $data['nameItem'] = $this->nameItem;
 
@@ -73,16 +63,12 @@ class NewsController extends BaseController
     public function store(NewsRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['uuid'] = Str::uuid();
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
-        $data['status'] = 1;
+        $data['slug'] = empty($data['slug']) ? $this->newsRepository->generateUniqueSlug($data['name_vn']) : $data['slug'];
 
         // Handle image
-        // Handle single image - Save new image
         $data['image'] = $this->saveImage($request);
 
-        $news = $this->model::create($data);
+        $news = $this->newsRepository->create($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
@@ -93,17 +79,16 @@ class NewsController extends BaseController
 
     public function edit($uuid, $currentPage)
     {
-        $page = $this->model::where('uuid', $uuid);
-
-        if (! $page->exists()) {
+        $page = $this->newsRepository->findByUuid($uuid);
+        
+        if (!$page) {
             toast('Không tìm thấy '.$this->nameItem, 'error');
-
             return back();
         }
 
         $data = [
-            'page' => $page->first(),
-            'category' => CateNew::where('status', 1)->where('parent_id', 0)->with('children.children')->orderBy('name_vn', 'asc')->get(),
+            'page' => $page,
+            'category' => $this->newsRepository->getActiveCategories(),
             'action' => 'edit',
             'nameItem' => $this->nameItem,
             'currentPage' => $currentPage,
@@ -115,16 +100,14 @@ class NewsController extends BaseController
 
     public function update(NewsRequest $request, string $uuid)
     {
-        $current = $this->model::where('uuid', $uuid)->first();
+        $current = $this->newsRepository->findByUuid($uuid);
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
-        $data['updated_at'] = new \DateTime;
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
+        $data['slug'] = empty($data['slug']) ? $this->newsRepository->generateUniqueSlug($data['name_vn'], $uuid) : $data['slug'];
+        
         // Handle image
-        // Handle single image - Update existing image
         $data['image'] = $this->updateImage($request, $current);
 
-        $this->model::where('uuid', $uuid)->update($data);
+        $this->newsRepository->update($data, $current->id);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
@@ -135,7 +118,7 @@ class NewsController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        $news = $this->model::where('uuid', $uuid)->first();
+        $news = $this->newsRepository->findByUuid($uuid);
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
 
         // Remove related cache
@@ -146,7 +129,7 @@ class NewsController extends BaseController
 
     public function numericalOrder(Request $request, $uuid)
     {
-        $news = $this->model::where('uuid', $uuid)->first();
+        $news = $this->newsRepository->findByUuid($uuid);
         $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
 
         // Remove related cache
@@ -157,7 +140,7 @@ class NewsController extends BaseController
 
     public function destroy(string $uuid)
     {
-        $news = $this->model::where('uuid', $uuid)->first();
+        $news = $this->newsRepository->findByUuid($uuid);
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
 
         // Remove related cache
@@ -169,6 +152,9 @@ class NewsController extends BaseController
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
+        
+        // Get items before deletion for event dispatch if needed
+        $newsItems = $this->newsRepository->findByUuids($uuids, ['uuid', 'slug', 'name_vn', 'category_id']);
 
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
 
