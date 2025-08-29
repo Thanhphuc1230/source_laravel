@@ -17,6 +17,8 @@
 
 * **Kiến trúc & Phát triển**
   * [Architecture Overview](architecture.md)
+  * [Design Patterns](design-patterns.md)
+  * [Repository Pattern](repository-pattern.md)
   * [Traits System](traits.md)
   * [Services](services.md)
   * [Authorization System](authorization.md)
