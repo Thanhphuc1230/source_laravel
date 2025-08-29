@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Events\Feedback\FeedbackChanged;
 use App\Http\Requests\Admin\FeedBackRequest;
 use App\Models\FeedBack;
+use App\Repositories\Interfaces\FeedbackRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -18,13 +19,16 @@ class FeedBackController extends BaseController
     protected $nameItem;
 
     protected $imageFolder;
+    
+    protected $feedbackRepository;
 
-    public function __construct($imageFolder = 'feedback')
+    public function __construct(FeedbackRepositoryInterface $feedbackRepository, $imageFolder = 'feedback')
     {
         $this->module = 'feedback';
         $this->model = new FeedBack;
         $this->nameItem = 'Phản hồi';
         $this->imageFolder = $imageFolder;
+        $this->feedbackRepository = $feedbackRepository;
 
         parent::__construct($this->module, $imageFolder);
 
@@ -33,17 +37,14 @@ class FeedBackController extends BaseController
 
     public function index(Request $request)
     {
-        $query = $this->model::query();
+        $filters = [
+            'search' => $request->input('search'),
+            'status' => $request->input('status', ''),
+            'sort_field' => 'created_at',
+            'sort_direction' => 'desc'
+        ];
 
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name_vn', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
-            });
-        }
-
-        $data['list'] = $query->orderBy('created_at', 'desc')->paginate(10);
+        $data['list'] = $this->feedbackRepository->getFilteredFeedback($filters);
         $data['nameItem'] = $this->nameItem;
 
         return $this->view_admin('list', $data);
@@ -60,16 +61,14 @@ class FeedBackController extends BaseController
     public function store(FeedBackRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['uuid'] = Str::uuid();
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
-
+        
         // handle image
         if ($request->hasFile('image')) {
             // Handle image - Save new image
             $data['image'] = $this->saveImage($request);
         }
 
-        $feedback = $this->model::create($data);
+        $feedback = $this->feedbackRepository->create($data);
 
         // Dispatch event sau khi tạo feedback
         FeedbackChanged::dispatch($feedback, 'created');
@@ -81,16 +80,16 @@ class FeedBackController extends BaseController
 
     public function edit($uuid, $currentPage)
     {
-        $page = $this->model::where('uuid', $uuid);
+        $feedback = $this->feedbackRepository->findByUuid($uuid);
 
-        if (! $page->exists()) {
+        if (! $feedback) {
             toast('Không tìm thấy '.$this->nameItem, 'error');
 
             return back();
         }
 
         $data = [
-            'page' => $page->first(),
+            'page' => $feedback,
             'action' => 'edit',
             'nameItem' => $this->nameItem,
             'currentPage' => $currentPage,
@@ -102,15 +101,14 @@ class FeedBackController extends BaseController
 
     public function update(FeedBackRequest $request, string $uuid)
     {
-        $current = $this->model::where('uuid', $uuid)->first();
+        $current = $this->feedbackRepository->findByUuid($uuid);
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
         // update image
         // Handle image - Update existing image
         $data['image'] = $this->updateImage($request, $current);
 
-        $current->update($data);
+        $this->feedbackRepository->update($data, $uuid);
 
         // Dispatch event sau khi cập nhật feedback
         FeedbackChanged::dispatch($current, 'updated');
@@ -122,7 +120,7 @@ class FeedBackController extends BaseController
 
     public function destroy(string $uuid)
     {
-        $feedback = $this->model::where('uuid', $uuid)->first();
+        $feedback = $this->feedbackRepository->findByUuid($uuid);
 
         // Dispatch event trước khi xóa feedback
         FeedbackChanged::dispatch($feedback, 'deleted');
@@ -132,12 +130,10 @@ class FeedBackController extends BaseController
 
     public function destroyAll(Request $request)
     {
-        $uuids = $request->input('uuids');
+        $uuids = $request->input('uuids', []);
 
         // Optimize: only select fields needed for events
-        $feedbacks = $this->model::whereIn('uuid', $uuids)
-            ->select('uuid', 'name')
-            ->get();
+        $feedbacks = $this->feedbackRepository->findByUuids($uuids, ['uuid', 'name']);
 
         FeedbackChanged::dispatch(null, 'deleted');
 
@@ -146,7 +142,7 @@ class FeedBackController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        $feedback = $this->model::where('uuid', $uuid)->first();
+        $feedback = $this->feedbackRepository->findByUuid($uuid);
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
 
         // Remove related cache
@@ -157,7 +153,7 @@ class FeedBackController extends BaseController
 
     public function numericalOrder(Request $request, $uuid)
     {
-        $feedback = $this->model::where('uuid', $uuid)->first();
+        $feedback = $this->feedbackRepository->findByUuid($uuid);
         $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
 
         // Remove related cache
