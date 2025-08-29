@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\Product\ProductChanged;
 use App\Http\Requests\Admin\ProductRequest;
-use App\Models\CateProduct;
 use App\Models\Product;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -19,13 +19,16 @@ class ProductController extends BaseController
     protected $nameItem;
 
     protected $imageFolder;
+    
+    protected $productRepository;
 
-    public function __construct($imageFolder = 'product')
+    public function __construct(ProductRepositoryInterface $productRepository, $imageFolder = 'product')
     {
         $this->module = 'product';
         $this->model = new Product;
         $this->nameItem = 'sản phẩm';
         $this->imageFolder = $imageFolder;
+        $this->productRepository = $productRepository;
 
         parent::__construct($this->module, $imageFolder);
 
@@ -34,39 +37,23 @@ class ProductController extends BaseController
 
     public function index(Request $request)
     {
-        $query = $this->model::query();
+        $filters = [
+            'search' => $request->input('search'),
+            'category' => $request->input('category'),
+            'sort_field' => 'created_at',
+            'sort_direction' => 'desc'
+        ];
 
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name_vn', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
-            });
-        }
-
-        // Kiểm tra nếu đã chọn chủ đề
-        if ($request->has('category') && $request->input('category') != 0) {
-            $categoryId = $request->input('category');
-            $query->where(function ($q) use ($categoryId) {
-                $q->where('parent_id', $categoryId)
-                    ->orWhere('id_category_product', $categoryId);
-            });
-        }
-
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'home', 'stt', 'created_at', 'category_id', 'image')->orderBy('created_at', 'desc')->paginate(10);
+        $data['list'] = $this->productRepository->getFilteredProducts($filters);
         $data['nameItem'] = $this->nameItem;
-
-        $data['category'] = CateProduct::with('children')
-            ->where('status', 1)
-            ->where('parent_id', 0)
-            ->get();
+        $data['category'] = $this->productRepository->getActiveCategories();
 
         return $this->view_admin('list', $data);
     }
 
     public function create()
     {
-        $data['category'] = CateProduct::where('status', 1)->where('parent_id', 0)->with('children.children')->orderBy('name_vn', 'asc')->get();
+        $data['category'] = $this->productRepository->getActiveCategories();
         $data['action'] = 'create';
         $data['nameItem'] = $this->nameItem;
 
@@ -76,18 +63,15 @@ class ProductController extends BaseController
     public function store(ProductRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['uuid'] = Str::uuid();
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
-        $data['status'] = 1;
+        $data['slug'] = empty($data['slug']) ? $this->productRepository->generateUniqueSlug($data['name_vn']) : $data['slug'];
 
-        // Handle single image - Save new image
+        // Handle single image
         $data['image'] = $this->saveImage($request);
 
         // Handle multiple images - Save new images
         $data['image_detail'] = $this->saveMultipleImages($request);
 
-        $product = $this->model::create($data);
+        $product = $this->productRepository->create($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
@@ -98,17 +82,16 @@ class ProductController extends BaseController
 
     public function edit($uuid, $currentPage)
     {
-        $page = $this->model::where('uuid', $uuid);
-
-        if (! $page->exists()) {
+        $page = $this->productRepository->findByUuid($uuid);
+        
+        if (!$page) {
             toast('Không tìm thấy '.$this->nameItem, 'error');
-
             return back();
         }
 
         $data = [
-            'page' => $page->first(),
-            'category' => CateProduct::where('status', 1)->where('parent_id', 0)->with('children.children')->orderBy('name_vn', 'asc')->get(),
+            'page' => $page,
+            'category' => $this->productRepository->getActiveCategories(),
             'action' => 'edit',
             'nameItem' => $this->nameItem,
             'currentPage' => $currentPage,
@@ -120,18 +103,17 @@ class ProductController extends BaseController
 
     public function update(ProductRequest $request, string $uuid)
     {
-        $current = $this->model::where('uuid', $uuid)->first();
+        $current = $this->productRepository->findByUuid($uuid);
         $data = $this->cleanRequestData($request);
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
+        $data['slug'] = empty($data['slug']) ? $this->productRepository->generateUniqueSlug($data['name_vn'], $uuid) : $data['slug'];
 
-        // Handle single image - Update existing image
+        // Handle single image
         $data['image'] = $this->updateImage($request, $current);
 
         // Handle multiple images - Update existing images
         $data['image_detail'] = $this->updateMultipleImages($request, $current);
 
-        $this->model::where('uuid', $uuid)->update($data);
+        $this->productRepository->update($data, $current->id);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
@@ -142,7 +124,7 @@ class ProductController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        $product = $this->model::where('uuid', $uuid)->first();
+        $product = $this->productRepository->findByUuid($uuid);
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
 
         // Remove related cache
@@ -153,7 +135,7 @@ class ProductController extends BaseController
 
     public function numericalOrder(Request $request, $uuid)
     {
-        $product = $this->model::where('uuid', $uuid)->first();
+        $product = $this->productRepository->findByUuid($uuid);
         $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
 
         // Remove related cache
@@ -167,7 +149,7 @@ class ProductController extends BaseController
 
     public function destroy(string $uuid)
     {
-        $product = $this->model::where('uuid', $uuid)->first();
+        $product = $this->productRepository->findByUuid($uuid);
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
 
         // Remove related cache
@@ -181,9 +163,7 @@ class ProductController extends BaseController
         $uuids = $request->input('uuids', []);
 
         // Get items before deletion for event dispatch (optimize: only get necessary fields)
-        $productItems = $this->model::whereIn('uuid', $uuids)
-            ->select('uuid', 'slug', 'name_vn', 'category_id') // Only fields needed for events
-            ->get();
+        $productItems = $this->productRepository->findByUuids($uuids, ['uuid', 'slug', 'name_vn', 'category_id']);
 
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
 
