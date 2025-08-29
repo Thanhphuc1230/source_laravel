@@ -15,11 +15,15 @@ app/
       RepositoryInterface.php
       ProductRepositoryInterface.php
       NewsRepositoryInterface.php
+      CateProductRepositoryInterface.php
+      CateNewRepositoryInterface.php
       ...
     Eloquent/
       BaseRepository.php
       ProductRepository.php
       NewsRepository.php
+      CateProductRepository.php
+      CateNewRepository.php
       ...
   Providers/
     RepositoryServiceProvider.php
@@ -164,3 +168,47 @@ protected function prepareDataForCreate(array $data)
 ```
 
 Nhờ các cải tiến này, controller trở nên gọn nhẹ hơn và tập trung vào xử lý business logic thay vì các chi tiết tạo dữ liệu cơ bản.
+
+## Implemented Controllers
+
+Repository Pattern đã được triển khai thành công trong các controller sau:
+
+1. **ProductController**: Sử dụng ProductRepositoryInterface
+2. **NewsController**: Sử dụng NewsRepositoryInterface
+3. **CateProductController**: Sử dụng CateProductRepositoryInterface
+4. **CateNewController**: Sử dụng CateNewRepositoryInterface
+
+### Ví dụ từ CateProductController
+
+```php
+class CateProductController extends BaseController
+{
+    protected $cateProductRepository;
+
+    public function __construct(CateProductRepositoryInterface $cateProductRepository, $imageFolder = 'cate_product')
+    {
+        $this->cateProductRepository = $cateProductRepository;
+        // ...khởi tạo khác
+    }
+
+    public function index(Request $request)
+    {
+        $filters = [
+            'search' => $request->input('search'),
+            'category' => $request->input('category'),
+            'parent_id' => $request->has('category') ? $request->input('category') : null,
+            'sort_field' => 'created_at',
+            'sort_direction' => 'desc'
+        ];
+
+        $data['list'] = $this->cateProductRepository->getFilteredCategories($filters);
+        // ...xử lý khác
+    }
+}
+```
+
+Lợi ích của việc refactor này bao gồm:
+- Giảm thiểu mã trùng lặp giữa các controller
+- Đơn giản hóa logic truy vấn trong controller
+- Tự động hóa xử lý UUID, timestamps trong repository
+- Cải thiện khả năng bảo trì và test
