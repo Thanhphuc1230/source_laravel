@@ -17,4 +17,8 @@ class Analytic extends Model
         'visit_date',
         'visit_count',
     ];
+
+    protected $casts = [
+        'visit_date' => 'date',
+    ];
 }
