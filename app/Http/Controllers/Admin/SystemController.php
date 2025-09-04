@@ -3,36 +3,31 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\SystemRequest;
-use App\Models\System;
+use App\Repositories\Interfaces\SystemRepositoryInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 
 class SystemController extends BaseController
 {
     protected $module;
-
-    protected $model;
-
     protected $nameItem;
-
     protected $imageFolder;
+    protected $systemRepository;
 
-    public function __construct($imageFolder = 'system')
+    public function __construct(SystemRepositoryInterface $systemRepository, $imageFolder = 'system')
     {
         $this->module = 'system';
-        $this->model = new System;
         $this->nameItem = 'Hệ thống';
         $this->imageFolder = $imageFolder;
+        $this->systemRepository = $systemRepository;
 
         parent::__construct($this->module, $imageFolder);
-
         View::share('nameClass', $imageFolder);
     }
 
     public function index()
     {
-        $data['system'] = System::first();
-
+        $data['system'] = $this->systemRepository->all()->first();
         return $this->view_admin('index', $data);
     }
 
@@ -40,7 +35,7 @@ class SystemController extends BaseController
     {
         $data = $request->except('_token');
         $data['created_at'] = new \DateTime;
-        $system = $this->model::find($id);
+        $system = $this->systemRepository->find($id);
 
         // Handle logo - Update existing logo
         $data['logo'] = $this->updateImage($request, $system, 'logo', 'logo');
@@ -50,7 +45,7 @@ class SystemController extends BaseController
 
         Cache::forget('website_data');
         if ($system) {
-            $system->update($data);
+            $this->systemRepository->update($data, $id);
             toast('Cập nhật hệ thống thành công', 'success');
         } else {
             toast('System not found', 'error');

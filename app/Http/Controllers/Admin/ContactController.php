@@ -2,43 +2,36 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Contact;
+use App\Repositories\Interfaces\ContactRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 
 class ContactController extends BaseController
 {
-    protected $model;
-
     protected $nameItem;
-
     protected $imageFolder;
+    protected $contactRepository;
 
-    public function __construct($imageFolder = 'contact')
+    public function __construct(ContactRepositoryInterface $contactRepository, $imageFolder = 'contact')
     {
-        $this->model = new Contact;
         $this->nameItem = 'Liên hệ';
         $this->imageFolder = $imageFolder;
+        $this->contactRepository = $contactRepository;
 
         parent::__construct($imageFolder);
-
         View::share('nameClass', $imageFolder);
     }
 
     public function index(Request $request)
     {
-        $query = $this->model::query();
-
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name_vn', 'LIKE', "%{$searchTerm}%")->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
-            });
-        }
-
-        $data['list'] = $query->paginate(10);
+        $filters = [
+            'search' => $request->input('search'),
+            'status' => $request->input('status'),
+            'sort_field' => 'created_at',
+            'sort_direction' => 'desc'
+        ];
+        $data['list'] = $this->contactRepository->getFilteredContacts($filters);
         $data['nameItem'] = $this->nameItem;
-
         return $this->view_admin('list', $data);
     }
 
@@ -49,30 +42,26 @@ class ContactController extends BaseController
 
     public function edit($uuid)
     {
-        $page = $this->model::where('uuid', $uuid);
-
-        if ($page->exists()) {
-            $data['page'] = $page->first();
+        $contact = $this->contactRepository->findByUuid($uuid);
+        if ($contact) {
+            $data['page'] = $contact;
             $data['action'] = 'edit';
             $data['nameItem'] = $this->nameItem;
-
             return $this->view_admin('detail', $data);
         } else {
             toast('Không tìm thấy '.$this->nameItem, 'error');
-
             return back();
         }
     }
 
     public function destroy(string $uuid)
     {
-        return $this->destroyData($this->model::class, $uuid, $this->imageFolder);
+        return $this->destroyData('App\\Models\\Contact', $uuid, $this->imageFolder);
     }
 
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-
-        return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
+        return $this->dataRemovalService->destroyAllByUUIDs('App\\Models\\Contact', $uuids, $this->imageFolder);
     }
 }

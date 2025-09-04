@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Events\Page\PageChanged;
 use App\Http\Requests\Admin\PageRequest;
 use App\Models\Page;
+use App\Repositories\Interfaces\PageRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -18,13 +19,16 @@ class PageController extends BaseController
     protected $nameItem;
 
     protected $imageFolder;
+    
+    protected $pageRepository;
 
-    public function __construct($imageFolder = 'page')
+    public function __construct(PageRepositoryInterface $pageRepository, $imageFolder = 'page')
     {
         $this->module = 'page';
         $this->model = new Page;
         $this->nameItem = 'Trang nội dung';
         $this->imageFolder = $imageFolder;
+        $this->pageRepository = $pageRepository;
 
         parent::__construct($this->module, $imageFolder);
 
@@ -33,17 +37,15 @@ class PageController extends BaseController
 
     public function index(Request $request)
     {
-        $query = $this->model::query();
+        $filters = [
+            'search' => $request->input('search'),
+            'parent_id' => $request->input('parent_id', ''),
+            'footer' => $request->input('footer', ''),
+            'sort_field' => 'created_at',
+            'sort_direction' => 'desc'
+        ];
 
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name_vn', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
-            });
-        }
-
-        $data['list'] = $query->select('uuid', 'name_vn', 'slug', 'status', 'stt', 'created_at')->orderBy('created_at', 'desc')->paginate(10);
+        $data['list'] = $this->pageRepository->getFilteredPages($filters);
         $data['nameItem'] = $this->nameItem;
 
         return $this->view_admin('list', $data);
@@ -60,15 +62,13 @@ class PageController extends BaseController
     public function store(PageRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['uuid'] = Str::uuid();
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
+        $data['slug'] = empty($data['slug']) ? $this->pageRepository->generateUniqueSlug($data['name_vn']) : $data['slug'];
 
         // Handle image
         // Handle single image - Save new image
         $data['image'] = $this->saveImage($request);
 
-        $page = $this->model::create($data);
+        $page = $this->pageRepository->create($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
@@ -79,16 +79,16 @@ class PageController extends BaseController
 
     public function edit($uuid, $currentPage)
     {
-        $page = $this->model::where('uuid', $uuid);
+        $page = $this->pageRepository->findByUuid($uuid);
 
-        if (! $page->exists()) {
+        if (! $page) {
             toast('Không tìm thấy '.$this->nameItem, 'error');
 
             return back();
         }
 
         $data = [
-            'page' => $page->first(),
+            'page' => $page,
             'action' => 'edit',
             'nameItem' => $this->nameItem,
             'currentPage' => $currentPage,
@@ -100,16 +100,15 @@ class PageController extends BaseController
 
     public function update(PageRequest $request, string $uuid)
     {
-        $current = $this->model::where('uuid', $uuid)->first();
+        $current = $this->pageRepository->findByUuid($uuid);
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
+        $data['slug'] = empty($data['slug']) ? $this->pageRepository->generateUniqueSlug($data['name_vn'], $uuid) : $data['slug'];
 
         // Handle image
         // Handle single image - Update existing image
         $data['image'] = $this->updateImage($request, $current);
 
-        $this->model::where('uuid', $uuid)->update($data);
+        $this->pageRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
@@ -120,7 +119,7 @@ class PageController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        $page = $this->model::where('uuid', $uuid)->first();
+        $page = $this->pageRepository->findByUuid($uuid);
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
 
         // Remove related cache
@@ -131,7 +130,7 @@ class PageController extends BaseController
 
     public function numericalOrder(Request $request, $uuid)
     {
-        $page = $this->model::where('uuid', $uuid)->first();
+        $page = $this->pageRepository->findByUuid($uuid);
         $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
 
         // Remove related cache
@@ -142,7 +141,7 @@ class PageController extends BaseController
 
     public function destroy(string $uuid)
     {
-        $page = $this->model::where('uuid', $uuid)->first();
+        $page = $this->pageRepository->findByUuid($uuid);
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
 
         // Remove related cache
@@ -156,9 +155,7 @@ class PageController extends BaseController
         $uuids = $request->input('uuids', []);
 
         // Optimize: only select fields needed for events
-        $pageItems = $this->model::whereIn('uuid', $uuids)
-            ->select('uuid', 'slug', 'name_vn')
-            ->get();
+        $pageItems = $this->pageRepository->findByUuids($uuids, ['uuid', 'slug', 'name_vn']);
 
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
 

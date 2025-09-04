@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Events\Slider\SliderChanged;
 use App\Http\Requests\Admin\SliderRequest;
 use App\Models\Slider;
+use App\Repositories\Interfaces\SliderRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -18,13 +19,16 @@ class SliderController extends BaseController
     protected $nameItem;
 
     protected $imageFolder;
+    
+    protected $sliderRepository;
 
-    public function __construct($imageFolder = 'slider')
+    public function __construct(SliderRepositoryInterface $sliderRepository, $imageFolder = 'slider')
     {
         $this->module = 'slider';
         $this->model = new Slider;
         $this->nameItem = 'Hình ảnh';
         $this->imageFolder = $imageFolder;
+        $this->sliderRepository = $sliderRepository;
 
         parent::__construct($this->module, $imageFolder);
 
@@ -33,17 +37,14 @@ class SliderController extends BaseController
 
     public function index(Request $request)
     {
-        $query = $this->model::query();
+        $filters = [
+            'search' => $request->input('search'),
+            'type' => $request->input('type', ''),
+            'sort_field' => 'stt',
+            'sort_direction' => 'asc'
+        ];
 
-        if ($request->has('search')) {
-            $searchTerm = $request->input('search');
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('name_vn', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('status', '=', $searchTerm === 'active' ? 1 : 0);
-            });
-        }
-
-        $data['list'] = $query->orderBy('created_at', 'desc')->paginate(10);
+        $data['list'] = $this->sliderRepository->getFilteredSliders($filters);
         $data['nameItem'] = $this->nameItem;
 
         return $this->view_admin('list', $data);
@@ -60,13 +61,11 @@ class SliderController extends BaseController
     public function store(SliderRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['uuid'] = Str::uuid();
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null);
 
         // Handle image - Save new image
         $data['image'] = $this->saveImage($request);
 
-        $slider = $this->model::create($data);
+        $slider = $this->sliderRepository->create($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
 
         SliderChanged::dispatch($slider, 'created');
@@ -76,16 +75,16 @@ class SliderController extends BaseController
 
     public function edit($uuid, $currentPage)
     {
-        $page = $this->model::where('uuid', $uuid);
+        $slider = $this->sliderRepository->findByUuid($uuid);
 
-        if (! $page->exists()) {
+        if (! $slider) {
             toast('Không tìm thấy '.$this->nameItem, 'error');
 
             return back();
         }
 
         $data = [
-            'page' => $page->first(),
+            'page' => $slider,
             'action' => 'edit',
             'nameItem' => $this->nameItem,
             'currentPage' => $currentPage,
@@ -97,14 +96,13 @@ class SliderController extends BaseController
 
     public function update(SliderRequest $request, string $uuid)
     {
-        $current = $this->model::where('uuid', $uuid)->first();
+        $current = $this->sliderRepository->findByUuid($uuid);
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
-        $data['created_at'] = $this->resolveCreatedAt($data['created_at'] ?? null, $current->created_at);
 
         // Handle image - Update existing image
         $data['image'] = $this->updateImage($request, $current);
 
-        $this->model::where('uuid', $uuid)->update($data);
+        $this->sliderRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         SliderChanged::dispatch($current, 'updated');
@@ -114,7 +112,7 @@ class SliderController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        $slider = $this->model::where('uuid', $uuid)->first();
+        $slider = $this->sliderRepository->findByUuid($uuid);
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
 
         // Remove related cache
@@ -125,7 +123,7 @@ class SliderController extends BaseController
 
     public function destroy(string $uuid)
     {
-        $slider = $this->model::where('uuid', $uuid)->first();
+        $slider = $this->sliderRepository->findByUuid($uuid);
 
         if (! $slider) {
             toast('Không tìm thấy '.$this->nameItem, 'error');
@@ -147,6 +145,10 @@ class SliderController extends BaseController
 
             return redirect()->back();
         }
+        
+        // Lấy thông tin sliders trước khi xóa
+        $sliders = $this->sliderRepository->findByUuids($uuids);
+        
         SliderChanged::dispatch(null, 'deleted');
 
         // Gọi destroyAllByUUIDs để xóa cả hình ảnh (event sẽ được dispatch tự động)
@@ -155,7 +157,7 @@ class SliderController extends BaseController
 
     public function numericalOrder(Request $request, $uuid)
     {
-        $slider = $this->model::where('uuid', $uuid)->first();
+        $slider = $this->sliderRepository->findByUuid($uuid);
         $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
 
         // Remove related cache

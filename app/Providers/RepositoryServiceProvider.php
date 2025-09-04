@@ -9,6 +9,9 @@ use App\Repositories\Eloquent\NewsRepository;
 use App\Repositories\Eloquent\PageRepository;
 use App\Repositories\Eloquent\ProductRepository;
 use App\Repositories\Eloquent\SliderRepository;
+use App\Repositories\Eloquent\ContactRepository;
+use App\Repositories\Eloquent\MenuRepository;
+use App\Repositories\Eloquent\SystemRepository;
 use App\Repositories\Interfaces\CateNewRepositoryInterface;
 use App\Repositories\Interfaces\CateProductRepositoryInterface;
 use App\Repositories\Interfaces\FeedbackRepositoryInterface;
@@ -16,6 +19,9 @@ use App\Repositories\Interfaces\NewsRepositoryInterface;
 use App\Repositories\Interfaces\PageRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\Interfaces\SliderRepositoryInterface;
+use App\Repositories\Interfaces\ContactRepositoryInterface;
+use App\Repositories\Interfaces\MenuRepositoryInterface;
+use App\Repositories\Interfaces\SystemRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -33,7 +39,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CateNewRepositoryInterface::class, CateNewRepository::class);
         $this->app->bind(FeedbackRepositoryInterface::class, FeedbackRepository::class);
         $this->app->bind(PageRepositoryInterface::class, PageRepository::class);
-        $this->app->bind(SliderRepositoryInterface::class, SliderRepository::class);
+    $this->app->bind(SliderRepositoryInterface::class, SliderRepository::class);
+    $this->app->bind(ContactRepositoryInterface::class, ContactRepository::class);
+    $this->app->bind(MenuRepositoryInterface::class, MenuRepository::class);
+    $this->app->bind(SystemRepositoryInterface::class, SystemRepository::class);
     }
 
     /**
