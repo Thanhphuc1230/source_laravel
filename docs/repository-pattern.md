@@ -17,6 +17,9 @@ app/
       NewsRepositoryInterface.php
       CateProductRepositoryInterface.php
       CateNewRepositoryInterface.php
+      FeedbackRepositoryInterface.php
+      PageRepositoryInterface.php
+      SliderRepositoryInterface.php
       ...
     Eloquent/
       BaseRepository.php
@@ -24,6 +27,9 @@ app/
       NewsRepository.php
       CateProductRepository.php
       CateNewRepository.php
+      FeedbackRepository.php
+      PageRepository.php
+      SliderRepository.php
       ...
   Providers/
     RepositoryServiceProvider.php
@@ -171,37 +177,45 @@ Nhờ các cải tiến này, controller trở nên gọn nhẹ hơn và tập t
 
 ## Implemented Controllers
 
+
 Repository Pattern đã được triển khai thành công trong các controller sau:
 
 1. **ProductController**: Sử dụng ProductRepositoryInterface
 2. **NewsController**: Sử dụng NewsRepositoryInterface
 3. **CateProductController**: Sử dụng CateProductRepositoryInterface
 4. **CateNewController**: Sử dụng CateNewRepositoryInterface
+5. **MenuController**: Sử dụng MenuRepositoryInterface, PageRepositoryInterface, CateNewRepositoryInterface, CateProductRepositoryInterface
 
-### Ví dụ từ CateProductController
+### Ví dụ từ MenuController
 
 ```php
-class CateProductController extends BaseController
+class MenuController extends BaseController
 {
+    protected $menuRepository;
+    protected $pageRepository;
+    protected $cateNewRepository;
     protected $cateProductRepository;
 
-    public function __construct(CateProductRepositoryInterface $cateProductRepository, $imageFolder = 'cate_product')
-    {
+    public function __construct(
+        MenuRepositoryInterface $menuRepository,
+        PageRepositoryInterface $pageRepository,
+        CateNewRepositoryInterface $cateNewRepository,
+        CateProductRepositoryInterface $cateProductRepository,
+        $imageFolder = 'menu'
+    ) {
+        $this->menuRepository = $menuRepository;
+        $this->pageRepository = $pageRepository;
+        $this->cateNewRepository = $cateNewRepository;
         $this->cateProductRepository = $cateProductRepository;
         // ...khởi tạo khác
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        $filters = [
-            'search' => $request->input('search'),
-            'category' => $request->input('category'),
-            'parent_id' => $request->has('category') ? $request->input('category') : null,
-            'sort_field' => 'created_at',
-            'sort_direction' => 'desc'
-        ];
-
-        $data['list'] = $this->cateProductRepository->getFilteredCategories($filters);
+        $data['page_content'] = $this->pageRepository->getActivePages();
+        $data['cate_new'] = $this->cateNewRepository->getCategoriesWithChildren();
+        $data['cate_product'] = $this->cateProductRepository->getCategoriesWithChildren();
+        $data['menus'] = $this->menuRepository->getMenuTree();
         // ...xử lý khác
     }
 }
