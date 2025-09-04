@@ -176,7 +176,13 @@ class MenuController extends BaseController
         $menu = $this->menuRepository->findByUUID($uuid);
 
         if ($menu) {
-            // Dispatch event trước khi xóa menu
+            // Lấy tất cả menu con (children) của menu này
+            $childrenUuids = $this->menuRepository->getModelInstance()->where('parent_id', $menu->id_menu)->pluck('uuid')->toArray();
+            if (!empty($childrenUuids)) {
+                // Batch delete children (delete files, dispatch events, then delete records)
+                $this->dataRemovalService->destroyAllByUUIDs(get_class($menu), $childrenUuids, $this->imageFolder);
+            }
+            // Dispatch event trước khi xóa menu cha
             MenuChanged::dispatch($menu, 'deleted');
         }
 

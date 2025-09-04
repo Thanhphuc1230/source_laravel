@@ -25,6 +25,8 @@ class DataRemovalService
         // Xóa ảnh trước khi xóa records
         foreach ($items as $item) {
             $this->deleteAllImages($item, $imageFolder);
+            // Dispatch event per item before deletion for cache invalidation
+            $this->dispatchModelEvent($model, $item, 'deleted');
         }
 
         // Xóa tất cả records

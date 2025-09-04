@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Interfaces;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface RepositoryInterface
 {
     /**
@@ -100,4 +102,11 @@ interface RepositoryInterface
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getFilteredPaginate(array $filters, $perPage = 10, $columns = ['*']);
+
+    /**
+     * Get the underlying Eloquent model instance
+     *
+     * @return Model
+     */
+    public function getModelInstance();
 }

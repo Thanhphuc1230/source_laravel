@@ -14,6 +14,16 @@ abstract class BaseRepository implements RepositoryInterface
     protected $model;
 
     /**
+     * Get the underlying Eloquent model instance
+     *
+     * @return Model
+     */
+    public function getModelInstance()
+    {
+        return $this->model;
+    }
+
+    /**
      * BaseRepository constructor.
      *
      * @param Model $model
