@@ -76,6 +76,7 @@ php artisan serve
 - [Cài đặt chi tiết](installation.md)
 - [Cấu hình hệ thống](configuration.md)
 - [Quản lý Content](content-management.md)
+- [Laravel Model Caching](model-caching.md)
 - [Tùy chỉnh giao diện](customization.md)
 - [API Documentation](api.md)
 - [Deployment](deployment.md)
