@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class CateNew extends Model
 {
-    use HasFactory;
+    use Cachable, HasFactory;
 
     protected $table = 'tp_cate_news';
 
