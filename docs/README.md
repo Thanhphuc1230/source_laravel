@@ -2,6 +2,25 @@
 
 > Hệ thống quản trị Laravel hiện đại với architecture tối ưu và UI/UX thân thiện
 
+## 📋 Mục lục
+
+- [🚀 Tính năng chính](#-tính-năng-chính)
+- [🏗️ Kiến trúc](#️-kiến-trúc)
+- [📁 Cấu trúc dự án](#-cấu-trúc-dự-án)
+- [🔧 Cài đặt](#-cài-đặt)
+- [📖 Hướng dẫn](#-hướng-dẫn)
+- [🛠️ Phát triển](#️-phát-triển)
+- [📊 Performance](#-performance)
+- [🔒 Bảo mật](#-bảo-mật)
+- [⚡ Artisan Commands](#-artisan-commands)
+- [🏗️ Services & Traits](#️-services--traits)
+- [🧪 Testing](#-testing)
+- [📝 Recent Updates](#-recent-updates)
+- [📄 License](#-license)
+- [🤝 Contributing](#-contributing)
+- [📞 Support](#-support)
+- [🧑‍💻 Coding Convention](#-coding-convention)
+
 ## 🚀 Tính năng chính
 
 - **Quản lý Content**: Sản phẩm, tin tức, trang nội dung, slider với UX được cải thiện
