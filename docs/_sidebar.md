@@ -31,7 +31,7 @@
   * [Image Processing](image-processing.md)
   * [SEO & Slug](seo-slug.md)
   * [Analytics](analytics.md)
-  * [Caching](caching.md)
+  * [Model Caching](model-caching.md)
 
 * **API**
   * [API Documentation](api.md)

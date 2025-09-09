@@ -151,7 +151,16 @@ php artisan sitemap:generate
 
 ## 📝 Recent Updates
 
-### Latest Features (2024)
+### Latest Features (2025)
+- ✅ **Model Caching**: Thêm package `genealabs/laravel-model-caching` cho cache tự động Eloquent queries
+- ✅ **Cachable Traits**: Áp dụng `Cachable` trait cho tất cả models (Product, News, Category, Feedback, UI/Navigation, Core models)
+- ✅ **Performance Boost**: Cải thiện tốc độ query lên đến 35x với cache tự động
+- ✅ **Repository Pattern**: Cập nhật ví dụ MenuController trong documentation
+- ✅ **Menu Fixes**: Sửa lỗi xóa parent/child menu
+- ✅ **Analytics Update**: Cập nhật view analytics
+- ✅ **Documentation**: Thêm tài liệu chi tiết về Model Caching
+
+### Previous Updates (2024)
 - ✅ **UX Improvements**: Show category name in news list
 - ✅ **Performance**: Add select optimization in admin controllers
 - ✅ **Dependencies**: Added Redis (Predis) support
