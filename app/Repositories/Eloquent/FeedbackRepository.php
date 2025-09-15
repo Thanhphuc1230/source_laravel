@@ -2,17 +2,17 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Models\Feedback;
-use App\Repositories\Interfaces\FeedbackRepositoryInterface;
+use App\Models\FeedBack;
+use App\Repositories\Interfaces\FeedBackRepositoryInterface;
 
-class FeedbackRepository extends BaseRepository implements FeedbackRepositoryInterface
+class FeedBackRepository extends BaseRepository implements FeedBackRepositoryInterface
 {
     /**
-     * FeedbackRepository constructor.
+     * FeedBackRepository constructor.
      *
-     * @param Feedback $model
+     * @param FeedBack $model
      */
-    public function __construct(Feedback $model)
+    public function __construct(FeedBack $model)
     {
         parent::__construct($model);
     }

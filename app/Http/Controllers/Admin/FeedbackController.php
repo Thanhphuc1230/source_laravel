@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Events\Feedback\FeedbackChanged;
+use App\Events\FeedBack\FeedBackChanged;
 use App\Http\Requests\Admin\FeedBackRequest;
 use App\Models\FeedBack;
-use App\Repositories\Interfaces\FeedbackRepositoryInterface;
+use App\Repositories\Interfaces\FeedBackRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -20,15 +20,15 @@ class FeedBackController extends BaseController
 
     protected $imageFolder;
     
-    protected $feedbackRepository;
+    protected $feedBackRepository;
 
-    public function __construct(FeedbackRepositoryInterface $feedbackRepository, $imageFolder = 'feedback')
+    public function __construct(FeedBackRepositoryInterface $feedBackRepository, $imageFolder = 'feedback')
     {
         $this->module = 'feedback';
         $this->model = new FeedBack;
         $this->nameItem = 'Phản hồi';
         $this->imageFolder = $imageFolder;
-        $this->feedbackRepository = $feedbackRepository;
+        $this->feedBackRepository = $feedBackRepository;
 
         parent::__construct($this->module, $imageFolder);
 
@@ -44,7 +44,7 @@ class FeedBackController extends BaseController
             'sort_direction' => 'desc'
         ];
 
-        $data['list'] = $this->feedbackRepository->getFilteredFeedback($filters);
+        $data['list'] = $this->feedBackRepository->getFilteredFeedback($filters);
         $data['nameItem'] = $this->nameItem;
 
         return $this->view_admin('list', $data);
@@ -68,10 +68,10 @@ class FeedBackController extends BaseController
             $data['image'] = $this->saveImage($request);
         }
 
-        $feedback = $this->feedbackRepository->create($data);
+        $feedback = $this->feedBackRepository->create($data);
 
         // Dispatch event sau khi tạo feedback
-        FeedbackChanged::dispatch($feedback, 'created');
+        FeedBackChanged::dispatch($feedback, 'created');
 
         toast('Thêm '.$this->nameItem.' thành công', 'success');
 
@@ -80,7 +80,7 @@ class FeedBackController extends BaseController
 
     public function edit($uuid, $currentPage)
     {
-        $feedback = $this->feedbackRepository->findByUuid($uuid);
+        $feedback = $this->feedBackRepository->findByUuid($uuid);
 
         if (! $feedback) {
             toast('Không tìm thấy '.$this->nameItem, 'error');
@@ -101,17 +101,17 @@ class FeedBackController extends BaseController
 
     public function update(FeedBackRequest $request, string $uuid)
     {
-        $current = $this->feedbackRepository->findByUuid($uuid);
+        $current = $this->feedBackRepository->findByUuid($uuid);
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
 
         // update image
         // Handle image - Update existing image
         $data['image'] = $this->updateImage($request, $current);
 
-        $this->feedbackRepository->update($data, $uuid);
+        $this->feedBackRepository->update($data, $uuid);
 
         // Dispatch event sau khi cập nhật feedback
-        FeedbackChanged::dispatch($current, 'updated');
+        FeedBackChanged::dispatch($current, 'updated');
 
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
@@ -120,10 +120,10 @@ class FeedBackController extends BaseController
 
     public function destroy(string $uuid)
     {
-        $feedback = $this->feedbackRepository->findByUuid($uuid);
+        $feedback = $this->feedBackRepository->findByUuid($uuid);
 
         // Dispatch event trước khi xóa feedback
-        FeedbackChanged::dispatch($feedback, 'deleted');
+        FeedBackChanged::dispatch($feedback, 'deleted');
 
         return $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
     }
@@ -133,7 +133,7 @@ class FeedBackController extends BaseController
         $uuids = $request->input('uuids', []);
 
         // Optimize: only select fields needed for events
-        $feedbacks = $this->feedbackRepository->findByUuids($uuids, ['uuid', 'name']);
+        $feedbacks = $this->feedBackRepository->findByUuids($uuids, ['uuid', 'name']);
 
         FeedbackChanged::dispatch(null, 'deleted');
 
@@ -142,22 +142,22 @@ class FeedBackController extends BaseController
 
     public function status($uuid, $status, $name)
     {
-        $feedback = $this->feedbackRepository->findByUuid($uuid);
+        $feedback = $this->feedBackRepository->findByUuid($uuid);
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
 
         // Remove related cache
-        FeedbackChanged::dispatch($feedback, 'status_updated');
+        FeedBackChanged::dispatch($feedback, 'status_updated');
 
         return $result;
     }
 
     public function numericalOrder(Request $request, $uuid)
     {
-        $feedback = $this->feedbackRepository->findByUuid($uuid);
+        $feedback = $this->feedBackRepository->findByUuid($uuid);
         $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
 
         // Remove related cache
-        FeedbackChanged::dispatch($feedback, 'order_updated');
+        FeedBackChanged::dispatch($feedback, 'order_updated');
 
         return $result;
     }

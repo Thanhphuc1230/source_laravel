@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Events\Feedback;
+namespace App\Events\FeedBack;
 
 use App\Models\FeedBack;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class FeedbackChanged
+class FeedBackChanged
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

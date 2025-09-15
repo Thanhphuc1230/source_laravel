@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
-interface FeedBackRepositoryInterface extends RepositoryInterface
+interface FeedbackRepositoryInterface extends RepositoryInterface
 {
     /**
      * Get filtered feedback with pagination
