@@ -44,7 +44,7 @@ class CateProductRepository extends BaseRepository implements CateProductReposit
         $sortDirection = $filters['sort_direction'] ?? 'asc';
         $query->orderBy($sortField, $sortDirection);
 
-        return $query->select('uuid', 'name_vn', 'slug', 'status', 'parent_id', 'stt', 'image')
+        return $query->select('uuid', 'name_vn', 'slug', 'status', 'parent_id', 'stt', 'image','created_at')->orderBy('created_at', 'desc')
             ->paginate($perPage);
     }
 

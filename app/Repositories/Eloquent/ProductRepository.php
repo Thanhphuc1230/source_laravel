@@ -49,7 +49,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         $sortDirection = $filters['sort_direction'] ?? 'desc';
         $query->orderBy($sortField, $sortDirection);
 
-        return $query->select('uuid', 'name_vn', 'slug', 'status', 'home', 'stt', 'created_at', 'category_id', 'image')
+        return $query->select('uuid', 'name_vn', 'slug', 'status', 'home', 'stt', 'created_at', 'category_id', 'image')->orderBy('created_at', 'desc')
             ->paginate($perPage);
     }
 
