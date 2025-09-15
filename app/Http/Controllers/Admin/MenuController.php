@@ -11,6 +11,7 @@ use App\Repositories\Interfaces\CateProductRepositoryInterface;
 use App\Models\Menu; // Importing Menu model
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class MenuController extends BaseController
@@ -173,20 +174,62 @@ class MenuController extends BaseController
 
     public function destroy(string $uuid)
     {
-        $menu = $this->menuRepository->findByUUID($uuid);
+        try {
+            // Tìm menu theo UUID
+            $menu = $this->menuRepository->findByUuid($uuid);
 
-        if ($menu) {
-            // Lấy tất cả menu con (children) của menu này
-            $childrenUuids = $this->menuRepository->getModelInstance()->where('parent_id', $menu->id_menu)->pluck('uuid')->toArray();
-            if (!empty($childrenUuids)) {
-                // Batch delete children (delete files, dispatch events, then delete records)
-                $this->dataRemovalService->destroyAllByUUIDs(get_class($menu), $childrenUuids, $this->imageFolder);
+            if (!$menu) {
+                toast('Không tìm thấy menu để xóa.', 'error');
+                return back();
             }
-            // Dispatch event trước khi xóa menu cha
+
+            // Lấy tất cả menu con (children) của menu này
+            $children = $this->menuRepository->getModelInstance()->where('parent_id', $menu->id_menu)->get();
+
+            // Xóa menu con trước
+            foreach ($children as $child) {
+                // Xóa ảnh của menu con
+                $this->deleteMenuImages($child, $this->imageFolder);
+                // Dispatch event cho menu con
+                MenuChanged::dispatch($child, 'deleted');
+                // Xóa menu con
+                $child->delete();
+            }
+
+            // Xóa ảnh của menu cha
+            $this->deleteMenuImages($menu, $this->imageFolder);
+
+            // Dispatch event cho menu cha
             MenuChanged::dispatch($menu, 'deleted');
+
+            // Xóa menu cha
+            $menu->delete();
+
+            toast('Xóa menu thành công.', 'success');
+
+        } catch (\Exception $e) {
+            Log::error('Error deleting menu: ' . $e->getMessage());
+            toast('Có lỗi xảy ra khi xóa menu.', 'error');
         }
 
-        return $this->dataRemovalService->destroyData(get_class($menu), $uuid, $this->imageFolder);
+        return back();
+    }
+
+    /**
+     * Xóa tất cả ảnh liên quan đến menu
+     */
+    private function deleteMenuImages($menu, $imageFolder)
+    {
+        $imageFields = ['image'];
+
+        foreach ($imageFields as $field) {
+            if (isset($menu->$field) && $menu->$field) {
+                $imagePath = public_path("images/{$imageFolder}/{$menu->$field}");
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+        }
     }
 
     public function destroyAll(Request $request)
