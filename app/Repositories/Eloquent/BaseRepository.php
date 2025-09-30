@@ -87,7 +87,14 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function update(array $data, $id)
     {
-        $record = $this->find($id);
+        // if $id is a uuid (string format) try to find by uuid, otherwise by primary key
+        $record = $this->isUuid($id) ? $this->findByUuid($id) : $this->find($id);
+
+        if (! $record) {
+            // nothing to update
+            return false;
+        }
+
         $data = $this->prepareDataForUpdate($data, $record);
         return $record->update($data);
     }
@@ -195,6 +202,11 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function delete($id)
     {
+        // support deleting by uuid or by primary id
+        if ($this->isUuid($id)) {
+            return (bool) $this->model->where('uuid', $id)->delete();
+        }
+
         return $this->model->destroy($id);
     }
 
@@ -275,5 +287,21 @@ abstract class BaseRepository implements RepositoryInterface
     public function findByUuids(array $uuids, $columns = ['*'])
     {
         return $this->model->whereIn('uuid', $uuids)->get($columns);
+    }
+
+    /**
+     * Determine if a given value looks like a UUID.
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    protected function isUuid($value)
+    {
+        if (! is_string($value)) {
+            return false;
+        }
+
+        // simple UUID v4 pattern check
+        return (bool) preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $value);
     }
 }
