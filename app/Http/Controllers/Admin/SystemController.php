@@ -34,7 +34,7 @@ class SystemController extends BaseController
     public function update($id, SystemRequest $request)
     {
         $data = $request->except('_token');
-        $data['created_at'] = new \DateTime;
+        $data['created_at'] = now();
         $system = $this->systemRepository->find($id);
 
         // Handle logo - Update existing logo
