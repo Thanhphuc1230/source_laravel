@@ -58,12 +58,11 @@ php artisan serve
 
 ## 📖 Documentation
 
-📚 **[Xem Documentation đầy đủ](https://thanhphuc1230.github.io/source_laravel)**
+Tài liệu (docs) đã được tách sang một repository riêng. Vui lòng xem tài liệu đầy đủ tại:
 
-- [Cài đặt chi tiết](https://thanhphuc1230.github.io/source_laravel/#/installation)
-- [Architecture Overview](https://thanhphuc1230.github.io/source_laravel/#/architecture)
-- [Traits System](https://thanhphuc1230.github.io/source_laravel/#/traits)
-- [Hướng dẫn sử dụng](https://thanhphuc1230.github.io/source_laravel/#/content-management)
+📚 https://github.com/Thanhphuc1230/doc-source-laravel
+
+Nếu bạn muốn duyệt nội dung hướng dẫn từng phần, hãy mở repo docs phía trên — tất cả các trang markdown và tài sản liên quan đã được chuyển vào đó.
 
 ## 🛠️ Development
 
