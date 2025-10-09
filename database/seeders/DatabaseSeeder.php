@@ -12,6 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Chạy permissions và roles trước
+        $this->call([
+            PermissionSeeder::class,
+            RoleSeeder::class,
+        ]);
+
         $this->call(SystemSeeder::class);
         $this->call(PageSeeder::class);
         $this->call(CategoryProductSeeder::class);
