@@ -140,6 +140,11 @@
                                         lý hệ thống
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.user-role.index') }}" class="nav-link"
+                                        data-key="t-user-role">Phân quyền người dùng
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </li>
