@@ -113,7 +113,7 @@ class ProductController extends BaseController
         // Handle multiple images - Update existing images
         $data['image_detail'] = $this->updateMultipleImages($request, $current);
 
-        $this->productRepository->update($data, $current->id);
+        $this->productRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache

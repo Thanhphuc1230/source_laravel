@@ -107,7 +107,7 @@ class NewsController extends BaseController
         // Handle image
         $data['image'] = $this->updateImage($request, $current);
 
-        $this->newsRepository->update($data, $current->id);
+        $this->newsRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
