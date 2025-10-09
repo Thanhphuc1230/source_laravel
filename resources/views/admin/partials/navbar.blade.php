@@ -110,9 +110,20 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.contact.index') }}">
-                        <i class="ri-message-line"></i> <span data-key="t-widgets">Liên hệ</span>
+                    <a class="nav-link menu-link" href="#Contact" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarNews">
+                        <i class="ri-message-line"></i> <span data-key="t-layouts">Liên hệ</span>
                     </a>
+                    <div class="collapse menu-dropdown" id="Contact">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a href="{{ route('admin.contact.index') }}" class="nav-link">Liên hệ</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.comment.index') }}" class="nav-link">Bình luận</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 {{-- system --}}
                 @if (Auth::user()->level == 1)
