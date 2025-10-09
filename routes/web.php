@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 // Include utility routes
 require __DIR__.'/utilities.php';
 
+// Include debug routes (remove in production)
+// require __DIR__.'/debug.php';
+
 // Include auth routes
 require __DIR__.'/auth/login.php';
 
@@ -34,4 +37,5 @@ Route::prefix('admin')
         require __DIR__.'/admin/contact.php';
         require __DIR__.'/admin/product-setting.php';
         require __DIR__.'/admin/comment.php';
+        require __DIR__.'/admin/user-role.php';
     });
