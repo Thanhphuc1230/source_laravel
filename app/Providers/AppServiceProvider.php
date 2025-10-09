@@ -34,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
 
+        // Đăng ký Blade directives cho permission system
+        $this->registerBladeDirectives();
+
         View::composer('frontend.*', function ($view) {
             // 6 giờ (360 phút)
             $data['website'] = Cache::remember('website_data', 360, function () {
@@ -48,6 +51,32 @@ class AppServiceProvider extends ServiceProvider
                     ->get();
             });
             $view->with($data);
+        });
+    }
+
+    /**
+     * Đăng ký Custom Blade Directives
+     */
+    protected function registerBladeDirectives(): void
+    {
+        // @hasRole directive
+        \Illuminate\Support\Facades\Blade::if('hasRole', function ($role) {
+            return auth()->check() && auth()->user()->hasRole($role);
+        });
+
+        // @hasPermission directive
+        \Illuminate\Support\Facades\Blade::if('hasPermission', function ($permission) {
+            return auth()->check() && auth()->user()->hasPermission($permission);
+        });
+
+        // @hasAnyRole directive
+        \Illuminate\Support\Facades\Blade::if('hasAnyRole', function (...$roles) {
+            return auth()->check() && auth()->user()->hasRole($roles);
+        });
+
+        // @hasAnyPermission directive
+        \Illuminate\Support\Facades\Blade::if('hasAnyPermission', function (...$permissions) {
+            return auth()->check() && auth()->user()->hasAnyPermission($permissions);
         });
     }
 }
