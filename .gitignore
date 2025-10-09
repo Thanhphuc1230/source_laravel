@@ -19,5 +19,6 @@ yarn-error.log
 /.vscode
 /.cursor
 /public/images
+docs_backup/
 /public/frontend
 /resources/views/frontend/
