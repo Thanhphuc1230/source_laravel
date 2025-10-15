@@ -89,15 +89,19 @@
                                                             </td>
                                                             <td>
                                                                 <div class="d-flex gap-2">
+                                                                    @hasPermission('comment.moderate')
                                                                     <div class="edit">
                                                                         <a href="{{ route('admin.' . $nameClass . '.edit', ['uuid' => $item->uuid]) }}"
                                                                             class="btn btn-sm btn-success edit-item-btn">Xem</a>
                                                                     </div>
+                                                                    @endhasPermission
+                                                                    @hasPermission('comment.delete')
                                                                     <div class="remove">
                                                                         <a href="{{ route('admin.' . $nameClass . '.destroy', ['uuid' => $item->uuid]) }}"
                                                                             class="btn btn-sm btn-danger remove-item-btn"
                                                                             onclick="return confirm('Xác nhận xóa {{ $nameItem }} ?')">Xóa</a>
                                                                     </div>
+                                                                    @endhasPermission
                                                                 </div>
                                                             </td>
                                                         </tr>

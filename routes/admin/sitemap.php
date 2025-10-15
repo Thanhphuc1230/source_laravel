@@ -7,5 +7,5 @@ Route::controller(SitemapController::class)
     ->prefix('sitemap')
     ->name('sitemap.')
     ->group(function () {
-        Route::post('/create-sitemap', 'generate')->name('generate');
+        Route::post('/create-sitemap', 'generate')->name('generate')->middleware('permission:system.edit');
     });

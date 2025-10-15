@@ -276,10 +276,151 @@ class PermissionSeeder extends Seeder
                 'group_name' => 'analytics',
                 'description' => 'Quyền xem báo cáo thống kê'
             ],
+
+            // Page permissions (Trang nội dung)
+            [
+                'name' => 'page.view',
+                'display_name' => 'Xem trang nội dung',
+                'group_name' => 'page',
+                'description' => 'Quyền xem danh sách trang nội dung'
+            ],
+            [
+                'name' => 'page.create',
+                'display_name' => 'Tạo trang nội dung',
+                'group_name' => 'page',
+                'description' => 'Quyền tạo trang nội dung mới'
+            ],
+            [
+                'name' => 'page.edit',
+                'display_name' => 'Sửa trang nội dung',
+                'group_name' => 'page',
+                'description' => 'Quyền chỉnh sửa trang nội dung'
+            ],
+            [
+                'name' => 'page.delete',
+                'display_name' => 'Xóa trang nội dung',
+                'group_name' => 'page',
+                'description' => 'Quyền xóa trang nội dung'
+            ],
+
+            // Order permissions (Đơn hàng)
+            [
+                'name' => 'order.view',
+                'display_name' => 'Xem đơn hàng',
+                'group_name' => 'order',
+                'description' => 'Quyền xem danh sách đơn hàng'
+            ],
+            [
+                'name' => 'order.edit',
+                'display_name' => 'Sửa đơn hàng',
+                'group_name' => 'order',
+                'description' => 'Quyền chỉnh sửa trạng thái đơn hàng'
+            ],
+            [
+                'name' => 'order.delete',
+                'display_name' => 'Xóa đơn hàng',
+                'group_name' => 'order',
+                'description' => 'Quyền xóa đơn hàng'
+            ],
+
+            // Product Setting permissions (Cấu hình sản phẩm)
+            [
+                'name' => 'product_setting.view',
+                'display_name' => 'Xem cấu hình sản phẩm',
+                'group_name' => 'product_setting',
+                'description' => 'Quyền xem cấu hình sản phẩm'
+            ],
+            [
+                'name' => 'product_setting.create',
+                'display_name' => 'Tạo cấu hình sản phẩm',
+                'group_name' => 'product_setting',
+                'description' => 'Quyền tạo cấu hình sản phẩm mới'
+            ],
+            [
+                'name' => 'product_setting.edit',
+                'display_name' => 'Sửa cấu hình sản phẩm',
+                'group_name' => 'product_setting',
+                'description' => 'Quyền chỉnh sửa cấu hình sản phẩm'
+            ],
+            [
+                'name' => 'product_setting.delete',
+                'display_name' => 'Xóa cấu hình sản phẩm',
+                'group_name' => 'product_setting',
+                'description' => 'Quyền xóa cấu hình sản phẩm'
+            ],
+
+            // Profile permissions (Hồ sơ cá nhân)
+            [
+                'name' => 'profile.view',
+                'display_name' => 'Xem hồ sơ',
+                'group_name' => 'profile',
+                'description' => 'Quyền xem hồ sơ cá nhân'
+            ],
+            [
+                'name' => 'profile.edit',
+                'display_name' => 'Sửa hồ sơ',
+                'group_name' => 'profile',
+                'description' => 'Quyền chỉnh sửa hồ sơ cá nhân'
+            ],
+
+            // Role permissions (Vai trò)
+            [
+                'name' => 'role.view',
+                'display_name' => 'Xem vai trò',
+                'group_name' => 'role',
+                'description' => 'Quyền xem danh sách vai trò'
+            ],
+            [
+                'name' => 'role.create',
+                'display_name' => 'Tạo vai trò',
+                'group_name' => 'role',
+                'description' => 'Quyền tạo vai trò mới'
+            ],
+            [
+                'name' => 'role.edit',
+                'display_name' => 'Sửa vai trò',
+                'group_name' => 'role',
+                'description' => 'Quyền chỉnh sửa vai trò'
+            ],
+            [
+                'name' => 'role.delete',
+                'display_name' => 'Xóa vai trò',
+                'group_name' => 'role',
+                'description' => 'Quyền xóa vai trò'
+            ],
+
+            // Permission permissions (Quyền hạn)
+            [
+                'name' => 'permission.view',
+                'display_name' => 'Xem quyền hạn',
+                'group_name' => 'permission',
+                'description' => 'Quyền xem danh sách quyền hạn'
+            ],
+            [
+                'name' => 'permission.create',
+                'display_name' => 'Tạo quyền hạn',
+                'group_name' => 'permission',
+                'description' => 'Quyền tạo quyền hạn mới'
+            ],
+            [
+                'name' => 'permission.edit',
+                'display_name' => 'Sửa quyền hạn',
+                'group_name' => 'permission',
+                'description' => 'Quyền chỉnh sửa quyền hạn'
+            ],
+            [
+                'name' => 'permission.delete',
+                'display_name' => 'Xóa quyền hạn',
+                'group_name' => 'permission',
+                'description' => 'Quyền xóa quyền hạn'
+            ],
         ];
 
         foreach ($permissions as $permission) {
-            \App\Models\Permission::create($permission);
+            \App\Models\Permission::firstOrCreate(
+                ['name' => $permission['name']], 
+                $permission
+            );
         }
     }
 }

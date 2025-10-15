@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        $adminUser = User::create([
             'uuid' => Str::uuid(),
             'fullname' => 'Admin',
             'username' => 'Admin',
@@ -25,5 +25,11 @@ class UserSeeder extends Seeder
             'avatar' => null,
             'created_at' => now(),
         ]);
+
+        // Gán role admin cho user admin
+        $adminRole = \App\Models\Role::where('name', 'admin')->first();
+        if ($adminRole) {
+            $adminUser->assignRole($adminRole);
+        }
     }
 }

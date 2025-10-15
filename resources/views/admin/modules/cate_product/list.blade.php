@@ -15,6 +15,7 @@
                         <div class="card-body">
                             <div class="listjs-table" id="customerList">
                                 <div class="row g-4 mb-3">
+                                    @hasPermission('cate_product.create')
                                     <div class="col-sm-auto">
                                         <div>
                                             <a type="button" href="{{ route('admin.' . $nameClass . '.create') }}"
@@ -22,11 +23,14 @@
                                                     class="ri-add-line align-bottom me-1"></i> Thêm </a>
                                         </div>
                                     </div>
+                                    @endhasPermission
+                                    @hasPermission('cate_product.delete')
                                     <div class="col-sm-auto">
                                         <a id="deleteSelectedItems" class="btn btn-danger add-btn">
                                             <i class="ri-delete-bin-5-line"></i> Xóa hết
                                         </a>
                                     </div>
+                                    @endhasPermission
                                     <div class="col-sm">
                                         <div class="d-flex justify-content-sm-end">
                                             <div class="search-box ms-2">
@@ -124,15 +128,19 @@
                                                                         <a href="{{ route('web.resolve',['slug' => $item->slug]) }}" target="_blank"
                                                                             class="btn btn-sm btn-primary watch-item-btn">Xem</a>
                                                                     </div>
+                                                                    @hasPermission('cate_product.edit')
                                                                     <div class="edit">
                                                                         <a href="{{ route('admin.' . $nameClass . '.edit', ['uuid' => $item->uuid, 'page' => $list->currentPage()]) }}"
                                                                             class="btn btn-sm btn-success edit-item-btn">Sửa</a>
                                                                     </div>
+                                                                    @endhasPermission
+                                                                    @hasPermission('cate_product.delete')
                                                                     <div class="remove">
                                                                         <a href="{{ route('admin.' . $nameClass . '.destroy', ['uuid' => $item->uuid]) }}"
                                                                             class="btn btn-sm btn-danger remove-item-btn"
                                                                             onclick="return confirm('Xác nhận xóa {{ $nameItem }} ?')">Xóa</a>
                                                                     </div>
+                                                                    @endhasPermission
                                                                 </div>
                                                             </td>
                                                         </tr>

@@ -12,60 +12,81 @@ class UserRoleTestSeeder extends Seeder
      */
     public function run(): void
     {
-        // Tạo test users với roles khác nhau
-        
-        // 1. Tạo Super Admin user
-        $adminUser = \App\Models\User::create([
-            'uuid' => \Illuminate\Support\Str::uuid(),
-            'fullname' => 'Super Admin',
-            'username' => 'superadmin',
-            'email' => 'admin@test.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('123456'),
-            'level' => 2,
-            'status' => 1,
-        ]);
-        $adminUser->assignRole('admin');
+        // Đảm bảo admin@gmail.com có role admin
+        $adminUser = \App\Models\User::where('email', 'admin@gmail.com')->first();
+        if ($adminUser) {
+            $adminRole = \App\Models\Role::where('name', 'admin')->first();
+            if ($adminRole && !$adminUser->hasRole('admin')) {
+                $adminUser->assignRole($adminRole);
+            }
+        }
 
         // 2. Tạo Manager user
-        $managerUser = \App\Models\User::create([
-            'uuid' => \Illuminate\Support\Str::uuid(),
-            'fullname' => 'Manager User',
-            'username' => 'manager',
-            'email' => 'manager@test.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('123456'),
-            'level' => 1,
-            'status' => 1,
-        ]);
-        $managerUser->assignRole('manager');
+        $managerUser = \App\Models\User::firstOrCreate(
+            ['email' => 'manager@gmail.com'],
+            [
+                'uuid' => \Illuminate\Support\Str::uuid(),
+                'fullname' => 'Manager User',
+                'username' => 'manager',
+                'email_verified_at' => now(),
+                'password' => \Illuminate\Support\Facades\Hash::make('@manager123'),
+                'level' => 2,
+                'status' => 1,
+            ]
+        );
+        $managerRole = \App\Models\Role::where('name', 'manager')->first();
+        if ($managerRole && !$managerUser->hasRole('manager')) {
+            $managerUser->assignRole($managerRole);
+        }
 
         // 3. Tạo Staff user
-        $staffUser = \App\Models\User::create([
-            'uuid' => \Illuminate\Support\Str::uuid(),
-            'fullname' => 'Staff User',
-            'username' => 'staff',
-            'email' => 'staff@test.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('123456'),
-            'level' => 0,
-            'status' => 1,
-        ]);
-        $staffUser->assignRole('staff');
+        $staffUser = \App\Models\User::firstOrCreate(
+            ['email' => 'staff@gmail.com'],
+            [
+                'uuid' => \Illuminate\Support\Str::uuid(),
+                'fullname' => 'Staff User',
+                'username' => 'staff',
+                'email_verified_at' => now(),
+                'password' => \Illuminate\Support\Facades\Hash::make('@staff123'),
+                'level' => 3,
+                'status' => 1,
+            ]
+        );
+        $staffRole = \App\Models\Role::where('name', 'staff')->first();
+        if ($staffRole && !$staffUser->hasRole('staff')) {
+            $staffUser->assignRole($staffRole);
+        }
 
-        // 4. Tạo user với multiple roles
-        $multiUser = \App\Models\User::create([
-            'uuid' => \Illuminate\Support\Str::uuid(),
-            'fullname' => 'Multi Role User',
-            'username' => 'multiuser',
-            'email' => 'multi@test.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('123456'),
-            'level' => 1,
-            'status' => 1,
-        ]);
-        $multiUser->assignRole(['manager', 'staff']);
+        // 4. Tạo Editor user (chỉ có quyền content)
+        $editorUser = \App\Models\User::firstOrCreate(
+            ['email' => 'editor@gmail.com'],
+            [
+                'uuid' => \Illuminate\Support\Str::uuid(),
+                'fullname' => 'Content Editor',
+                'username' => 'editor',
+                'email_verified_at' => now(),
+                'password' => \Illuminate\Support\Facades\Hash::make('@editor123'),
+                'level' => 3,
+                'status' => 1,
+            ]
+        );
 
-        $this->command->info('✅ Đã tạo test users với roles:');
-        $this->command->info('- admin@test.com (password: 123456) - Role: admin');
-        $this->command->info('- manager@test.com (password: 123456) - Role: manager');
-        $this->command->info('- staff@test.com (password: 123456) - Role: staff');
-        $this->command->info('- multi@test.com (password: 123456) - Roles: manager, staff');
+        // Gán permissions trực tiếp cho Editor (chỉ content management)
+        $editorPermissions = [
+            'cate_product.view', 'cate_product.create', 'cate_product.edit',
+            'product.view', 'product.create', 'product.edit',
+            'cate_news.view', 'cate_news.create', 'cate_news.edit',
+            'news.view', 'news.create', 'news.edit',
+            'page.view', 'page.create', 'page.edit',
+            'menu.view', 'slider.view'
+        ];
+        
+        $editorUser->syncDirectPermissions($editorPermissions);
+
+        $this->command->info('✅ Đã tạo test users với quyền hạn:');
+        $this->command->info('🔴 ADMIN: admin@gmail.com (password: @admin123) - Toàn quyền (61 permissions)');
+        $this->command->info('🟡 MANAGER: manager@gmail.com (password: @manager123) - Quản lý (40+ permissions)');
+        $this->command->info('🟢 STAFF: staff@gmail.com (password: @staff123) - Nhân viên (15+ permissions)');
+        $this->command->info('🔵 EDITOR: editor@gmail.com (password: @editor123) - Biên tập nội dung (14 permissions)');
     }
 }

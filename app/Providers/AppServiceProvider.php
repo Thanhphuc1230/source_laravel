@@ -75,8 +75,17 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // @hasAnyPermission directive
-        \Illuminate\Support\Facades\Blade::if('hasAnyPermission', function (...$permissions) {
-            return auth()->check() && auth()->user()->hasAnyPermission($permissions);
+        \Illuminate\Support\Facades\Blade::if('hasAnyPermission', function ($permissions) {
+            if (!auth()->check()) {
+                return false;
+            }
+            
+            // Convert single permission to array
+            if (is_string($permissions)) {
+                $permissions = [$permissions];
+            }
+            
+            return auth()->user()->hasAnyPermission($permissions);
         });
     }
 }

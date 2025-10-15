@@ -81,10 +81,20 @@ class LoginController extends Controller
      */
     private function attemptLogin(LoginRequest $request): bool
     {
-        return Auth::attempt([
-            'email' => $request->username,
+        $credentials = [
             'password' => $request->password,
-        ]);
+        ];
+
+        // Try login with email first
+        $credentials['email'] = $request->username;
+        if (Auth::attempt($credentials)) {
+            return true;
+        }
+
+        // If email login failed, try with username
+        unset($credentials['email']);
+        $credentials['username'] = $request->username;
+        return Auth::attempt($credentials);
     }
 
     /**

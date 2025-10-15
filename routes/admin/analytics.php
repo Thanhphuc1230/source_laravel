@@ -7,5 +7,5 @@ Route::controller(AnalyticController::class)
     ->prefix('analytics')
     ->name('analytics.')
     ->group(function () {
-        Route::get('/', 'index')->name('index');
+        Route::get('/', 'index')->name('index')->middleware('permission:analytics.view');
     });
