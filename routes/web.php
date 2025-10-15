@@ -5,11 +5,6 @@ use Illuminate\Support\Facades\Route;
 // Include utility routes
 require __DIR__.'/utilities.php';
 
-// Include debug routes (remove in production)
-// require __DIR__.'/debug.php';
-// require __DIR__.'/debug-permission.php';
-require __DIR__.'/permissions-report.php';
-
 // Include auth routes
 require __DIR__.'/auth/login.php';
 
