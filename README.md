@@ -13,6 +13,7 @@
 - **Cache System**: Redis/File cache với performance tối ưu
 - **Bulk Operations**: Xóa nhiều records với cleanup tự động
 - **Admin Tools**: Custom Artisan commands cho development
+- **RBAC System**: Role-Based Access Control với 61 permissions chi tiết
 
 ## 🏗️ Kiến trúc
 
@@ -98,17 +99,64 @@ return $this->destroyAllData($request);
 - **Bulk Operations**: Efficient mass operations
 - **Code Reuse**: 70% reduction in duplicate code
 
-## 🔒 Bảo mật
+## 🔒 Bảo mật & Phân Quyền
 
-- **Role-based Access Control**: Phân quyền theo level (Admin, Staff, Users)
+### RBAC System (Role-Based Access Control)
+Hệ thống phân quyền toàn diện với 61 permissions cho 13 modules:
+
+#### Test Accounts
+```bash
+# Admin - Toàn quyền (61 permissions)
+Email: admin@gmail.com
+Password: @admin123
+
+# Manager - Quản lý (40+ permissions)  
+Email: manager@gmail.com
+Password: @manager123
+
+# Staff - Nhân viên (15+ permissions)
+Email: staff@gmail.com
+Password: @staff123
+
+# Editor - Biên tập nội dung (14 permissions)
+Email: editor@gmail.com
+Password: @editor123
+```
+
+#### Permissions Structure
+- **Product Management**: cate_product.*, product.*, product_setting.*
+- **Content Management**: cate_news.*, news.*, page.*
+- **Media Management**: slider.*, menu.*
+- **Customer Management**: feedback.*, contact.*, comment.*
+- **System Management**: user.*, role.*, permission.*, system.*
+- **Analytics**: analytics.view
+- **Orders**: order.*
+
+#### Route Protection
+```php
+// Middleware được áp dụng tự động cho tất cả admin routes
+Route::get('/', 'index')->middleware('permission:product.view');
+Route::post('/', 'store')->middleware('permission:product.create');
+Route::put('/{id}', 'update')->middleware('permission:product.edit');
+Route::delete('/{id}', 'destroy')->middleware('permission:product.delete');
+```
+
+#### Blade Directives
+```blade
+@hasPermission('product.create')
+    <button class="btn btn-success">Thêm mới</button>
+@endhasPermission
+
+@hasAnyPermission(['product.view', 'cate_product.view'])
+    <li class="nav-item">Product Menu</li>
+@endhasAnyPermission
+```
+
+### Security Features
+- **Role-based Access Control**: Phân quyền theo level (Admin, Manager, Staff, Editor)
 - **Route-level Protection**: Middleware bảo vệ routes nhạy cảm
-- **Request Authorization**: BaseAdminRequest kiểm tra quyền truy cập
+- **View-level Protection**: Blade directives ẩn/hiện elements theo quyền
 - **Multi-layer Security**: Bảo mật nhiều lớp từ Route → Request → Controller
-
-- **Authentication**: Laravel Sanctum
-- **Input Validation**: Form requests
-- **CSRF Protection**: Built-in Laravel protection
-- **File Upload**: Secure image handling
 
 ## ⚡ Artisan Commands
 
