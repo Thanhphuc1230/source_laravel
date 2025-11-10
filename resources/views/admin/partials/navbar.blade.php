@@ -69,6 +69,10 @@
                                 <a href="{{ route('admin.menu.index') }}" class="nav-link" data-key="t-calendar">Menu
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.fonts.index') }}" class="nav-link" data-key="t-calendar">Font chữ
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

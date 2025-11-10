@@ -35,4 +35,5 @@ Route::prefix('admin')
         require __DIR__.'/admin/product-setting.php';
         require __DIR__.'/admin/comment.php';
         require __DIR__.'/admin/user-role.php';
+        require __DIR__.'/admin/fonts.php';
     });
