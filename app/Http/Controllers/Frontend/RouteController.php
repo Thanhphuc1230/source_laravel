@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use App\Services\CacheService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -22,9 +23,14 @@ class RouteController extends Controller
         $cacheTtl = config('cache.ttl.slug_resolution', 3600);
 
         // Kiểm tra cache trước
-        $result = Cache::remember($cacheKey, $cacheTtl, function () use ($slug) {
-            return $this->findContentBySlug($slug);
-        });
+        $result = CacheService::remember(
+            CacheService::TAGS['frontend'] ?? 'frontend',
+            $cacheKey,
+            $cacheTtl,
+            function () use ($slug) {
+                return $this->findContentBySlug($slug);
+            }
+        );
 
         if (! $result) {
             Log::warning('Slug not found', [

@@ -32,8 +32,8 @@ class ProductRequest extends BaseAdminRequest
             'price' => 'required|numeric|min:0',
             'price_old' => 'nullable|numeric|min:0',
 
-            'content_vn' => 'required|max:10000',
-            'content_en' => 'nullable|max:10000',
+            'content_vn' => 'required|string',
+            'content_en' => 'nullable|string',
 
             'category_id' => 'required|exists:tp_cate_products,id_cate_product',
 
@@ -73,8 +73,8 @@ class ProductRequest extends BaseAdminRequest
             'price_old.numeric' => 'Giá cũ phải là số.',
             'price_old.min' => 'Giá cũ không được nhỏ hơn 0.',
             'content_vn.required' => 'Nội dung sản phẩm tiếng Việt là bắt buộc.',
-            'content_vn.max' => 'Nội dung sản phẩm tiếng Việt không được vượt quá 10000 ký tự.',
-            'content_en.max' => 'Nội dung sản phẩm tiếng Anh không được vượt quá 10000 ký tự.',
+            'content_vn.string' => 'Nội dung sản phẩm tiếng Việt phải là chuỗi.',
+            'content_en.string' => 'Nội dung sản phẩm tiếng Anh phải là chuỗi.',
             'category_id.required' => 'Danh mục sản phẩm là bắt buộc.',
             'category_id.exists' => 'Danh mục sản phẩm không tồn tại.',
             'status.required' => 'Trạng thái sản phẩm là bắt buộc.',

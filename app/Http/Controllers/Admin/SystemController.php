@@ -43,6 +43,7 @@ class SystemController extends BaseController
         // Handle favicon - Update existing favicon
         $data['favicon'] = $this->updateImage($request, $system, 'logo', 'favicon');
 
+        \App\Services\CacheService::forgetTag(\App\Services\CacheService::TAGS['website']);
         Cache::forget('website_data');
         if ($system) {
             $this->systemRepository->update($data, $id);

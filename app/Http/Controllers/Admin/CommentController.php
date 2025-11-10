@@ -8,17 +8,26 @@ use Illuminate\Support\Facades\View;
 
 class CommentController extends BaseController
 {
-    protected $nameItem;
-    protected $imageFolder;
-    protected $commentRepository;
+    protected $module;
+
     protected $model;
+
+    protected $nameItem;
+
+    protected $imageFolder;
+
+    protected $commentRepository;
+
     public function __construct(CommentRepositoryInterface $commentRepository, $imageFolder = 'comment')
     {
+        $this->module = 'comment';
+        $this->model = new \App\Models\Comment();
         $this->nameItem = 'Bình luận';
         $this->imageFolder = $imageFolder;
         $this->commentRepository = $commentRepository;
-        $this->model = new \App\Models\Comment();
-        parent::__construct($this->imageFolder);
+
+        parent::__construct($this->module, $imageFolder);
+
         View::share('nameClass', $imageFolder);
     }
 
@@ -37,7 +46,7 @@ class CommentController extends BaseController
 
     public function status($uuid, $status, $field)
     {
-        return $this->updateStatus($uuid, $status, $field);
+        return $this->toggleService->toggleModelStatus($uuid, $status, $field, $this->model::class);
     }
 
     public function edit($uuid)
@@ -52,6 +61,18 @@ class CommentController extends BaseController
             toast('Không tìm thấy '.$this->nameItem, 'error');
             return back();
         }
+    }
+
+    public function update(Request $request, $uuid)
+    {
+        $comment = $this->commentRepository->findByUuid($uuid);
+        if ($comment) {
+            $comment->update($request->only(['status']));
+            toast('Cập nhật ' . $this->nameItem . ' thành công', 'success');
+        } else {
+            toast('Không tìm thấy ' . $this->nameItem, 'error');
+        }
+        return redirect()->route('admin.comment.index');
     }
 
     public function destroy(string $uuid)
@@ -75,20 +96,6 @@ class CommentController extends BaseController
         } else {
             toast('Không có dữ liệu để xóa', 'error');
         }
-        return redirect()->route('admin.comment.index');
-    }
-
-    public function update(Request $request, $uuid)
-    {
-        // Comment chỉ để xem, không cần update
-        toast('Bình luận chỉ dành để xem, không thể chỉnh sửa', 'info');
-        return redirect()->route('admin.comment.index');
-    }
-
-    public function numericalOrder(Request $request, $uuid)
-    {
-        // Comment không cần sắp xếp thứ tự
-        toast('Bình luận không hỗ trợ sắp xếp thứ tự', 'info');
         return redirect()->route('admin.comment.index');
     }
 }
