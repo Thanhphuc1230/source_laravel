@@ -14,16 +14,19 @@ interface CommentRepositoryInterface extends RepositoryInterface
     public function getFilteredComments(array $filters, $perPage = 10);
 
     /**
-     * Get all active comments
+     * Get approved comments for frontend display
      *
+     * @param string $type
+     * @param int $itemId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getActiveComments();
+    public function getApprovedCommentsForItem($type, $itemId);
 
     /**
-     * Get all pending comments
+     * Create a new comment
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param array $data
+     * @return \App\Models\Comment
      */
-    public function getPendingComments();
+    public function createComment(array $data);
 }

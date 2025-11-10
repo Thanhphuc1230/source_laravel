@@ -38,6 +38,13 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
             $query->where('status', $filters['status']);
         }
 
+        // Type filter
+        if (!empty($filters['type'])) {
+            // Convert type string to type_post number for filtering
+            $typePost = $filters['type'] === 'news' ? 1 : ($filters['type'] === 'product' ? 2 : 3);
+            $query->where('type_post', $typePost);
+        }
+
         // Sorting
         $sortField = $filters['sort_field'] ?? 'created_at';
         $sortDirection = $filters['sort_direction'] ?? 'desc';
@@ -47,26 +54,31 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
     }
 
     /**
-     * Get all active comments
+     * Get approved comments for frontend display
      *
+     * @param string $type
+     * @param int $itemId
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getActiveComments()
+    public function getApprovedCommentsForItem($type, $itemId)
     {
-        return $this->model->active()
+        // Convert type string to type_post number
+        $typePost = $type === 'news' ? 1 : 2;
+
+        return $this->model->approved()
+                          ->byItem($typePost, $itemId)
                           ->orderBy('created_at', 'desc')
                           ->get();
     }
 
     /**
-     * Get all pending comments  
+     * Create a new comment
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param array $data
+     * @return Comment
      */
-    public function getPendingComments()
+    public function createComment(array $data)
     {
-        return $this->model->pending()
-                          ->orderBy('created_at', 'desc')
-                          ->get();
+        return $this->model->create($data);
     }
 }
