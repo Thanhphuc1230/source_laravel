@@ -89,17 +89,27 @@ class ProductService
                 ->firstOrFail()
         );
 
-        // Get related products
-        $data['related_product'] = Product::select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn')
-            ->where('category_id', $data['product_detail']->category_id)
-            ->where('id_product', '!=', $data['product_detail']->id_product)
-            ->where('status', 1)
-            ->orderBy('created_at', 'desc')
-            ->limit(8)
-            ->get();
+        // Cache related products
+        $data['related_product'] = \App\Services\CacheService::remember(
+            \App\Services\CacheService::TAGS['products'] ?? 'products',
+            "related_products_{$data['product_detail']->category_id}_{$data['product_detail']->id_product}",
+            \App\Services\CacheService::getTtl('medium'),
+            fn () => Product::select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn')
+                ->where('category_id', $data['product_detail']->category_id)
+                ->where('id_product', '!=', $data['product_detail']->id_product)
+                ->where('status', 1)
+                ->orderBy('created_at', 'desc')
+                ->limit(8)
+                ->get()
+        );
 
-        // Get approved comments
-        $data['comments'] = $this->commentRepository->getApprovedCommentsForItem('product', $data['product_detail']->id_product);
+        // Cache approved comments
+        $data['comments'] = \App\Services\CacheService::remember(
+            \App\Services\CacheService::TAGS['comments'] ?? 'comments',
+            "product_comments_{$data['product_detail']->id_product}",
+            \App\Services\CacheService::getTtl('medium'),
+            fn () => $this->commentRepository->getApprovedCommentsForItem('product', $data['product_detail']->id_product)
+        );
 
         return $data;
     }

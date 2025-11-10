@@ -25,7 +25,13 @@ class CommentService
      */
     public function getApprovedCommentsForItem($type, $itemId)
     {
-        return $this->commentRepository->getApprovedCommentsForItem($type, $itemId);
+        // Cache approved comments
+        return \App\Services\CacheService::remember(
+            \App\Services\CacheService::TAGS['comments'] ?? 'comments',
+            "approved_comments_{$type}_{$itemId}",
+            \App\Services\CacheService::getTtl('medium'),
+            fn () => $this->commentRepository->getApprovedCommentsForItem($type, $itemId)
+        );
     }
 
     /**

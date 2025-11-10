@@ -26,6 +26,7 @@ class CacheService
         'comments' => 'comments',
         'contacts' => 'contacts',
         'feedback' => 'feedback',
+        'search' => 'search',
     ];
 
     /**
