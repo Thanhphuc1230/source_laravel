@@ -37,6 +37,14 @@ class RoleSeeder extends Seeder
             ]
         );
 
+        $viewerRole = \App\Models\Role::firstOrCreate(
+            ['name' => 'viewer'],
+            [
+                'display_name' => 'Người xem',
+                'description' => 'Quyền chỉ xem các thông tin'
+            ]
+        );
+
         // Lấy tất cả permissions
         $allPermissions = \App\Models\Permission::all()->pluck('id')->toArray();
 
@@ -57,6 +65,10 @@ class RoleSeeder extends Seeder
             'news.view', 'news.create', 'news.edit', 'news.delete',
             // Slider - đầy đủ
             'slider.view', 'slider.create', 'slider.edit', 'slider.delete',
+            // Brand - đầy đủ
+            'brand.view', 'brand.create', 'brand.edit', 'brand.delete',
+            // Feature - đầy đủ
+            'feature.view', 'feature.create', 'feature.edit', 'feature.delete',
             // Menu - đầy đủ
             'menu.view', 'menu.create', 'menu.edit', 'menu.delete',
             // Feedback - xem và sửa
@@ -78,7 +90,9 @@ class RoleSeeder extends Seeder
             // Role - chỉ xem
             'role.view',
             // Permission - chỉ xem
-            'permission.view'
+            'permission.view',
+            // Chat - đầy đủ
+            'chat.view', 'chat.reply', 'chat.manage'
         ])->pluck('id')->toArray();
         
         $managerRole->syncPermissions($managerPermissions);
@@ -97,6 +111,10 @@ class RoleSeeder extends Seeder
             'news.view', 'news.create', 'news.edit',
             // Slider - chỉ xem
             'slider.view',
+            // Brand - chỉ xem
+            'brand.view',
+            // Feature - chỉ xem
+            'feature.view',
             // Menu - chỉ xem
             'menu.view',
             // Feedback - chỉ xem
@@ -110,9 +128,57 @@ class RoleSeeder extends Seeder
             // Order - chỉ xem
             'order.view',
             // Profile - xem và sửa
-            'profile.view', 'profile.edit'
+            'profile.view', 'profile.edit',
+            // Chat - chỉ xem và trả lời (không quản lý)
+            'chat.view', 'chat.reply'
         ])->pluck('id')->toArray();
         
         $staffRole->syncPermissions($staffPermissions);
+
+        // Viewer chỉ có quyền xem
+        $viewerPermissions = \App\Models\Permission::whereIn('name', [
+            // Danh mục sản phẩm - chỉ xem
+            'cate_product.view',
+            // Sản phẩm - chỉ xem
+            'product.view',
+            // Cấu hình sản phẩm - chỉ xem
+            'product_setting.view',
+            // Danh mục tin tức - chỉ xem
+            'cate_news.view',
+            // Tin tức - chỉ xem
+            'news.view',
+            // Slider - chỉ xem
+            'slider.view',
+            // Brand - chỉ xem
+            'brand.view',
+            // Feature - chỉ xem
+            'feature.view',
+            // Menu - chỉ xem
+            'menu.view',
+            // Feedback - chỉ xem
+            'feedback.view',
+            // Contact - chỉ xem
+            'contact.view',
+            // Comment - chỉ xem
+            'comment.view',
+            // User - chỉ xem
+            'user.view',
+            // Analytics - xem thống kê
+            'analytics.view',
+            // Page - chỉ xem
+            'page.view',
+            // Order - chỉ xem
+            'order.view',
+            // Profile - xem và sửa
+            'profile.view', 'profile.edit',
+            // Role - chỉ xem
+            'role.view',
+            // Permission - chỉ xem
+            'permission.view',
+            // Chat - chỉ xem
+            'chat.view'
+        ])->pluck('id')->toArray();
+        
+        $viewerRole->syncPermissions($viewerPermissions);
     }
 }

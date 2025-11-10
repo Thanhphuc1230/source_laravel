@@ -33,7 +33,9 @@ class CateProduct extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class, 'category_id', 'id_cate_product')->where('status', 1)->orderBy('stt', 'asc');
+        return $this->hasMany(Product::class, 'category_id', 'id_cate_product')->where('status', 1)
+        ->select('uuid', 'name_vn', 'slug', 'price','image', 'intro_vn', 'category_id', 'status','hot','stt', 'created_at')
+        ->orderBy('stt', 'asc');
     }
 
     public function parent()

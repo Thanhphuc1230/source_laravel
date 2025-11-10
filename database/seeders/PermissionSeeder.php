@@ -143,6 +143,58 @@ class PermissionSeeder extends Seeder
                 'description' => 'Quyền xóa slider'
             ],
 
+            // Brand permissions (Đối tác)
+            [
+                'name' => 'brand.view',
+                'display_name' => 'Xem đối tác',
+                'group_name' => 'brand',
+                'description' => 'Quyền xem danh sách đối tác'
+            ],
+            [
+                'name' => 'brand.create',
+                'display_name' => 'Tạo đối tác',
+                'group_name' => 'brand',
+                'description' => 'Quyền tạo đối tác mới'
+            ],
+            [
+                'name' => 'brand.edit',
+                'display_name' => 'Sửa đối tác',
+                'group_name' => 'brand',
+                'description' => 'Quyền chỉnh sửa đối tác'
+            ],
+            [
+                'name' => 'brand.delete',
+                'display_name' => 'Xóa đối tác',
+                'group_name' => 'brand',
+                'description' => 'Quyền xóa đối tác'
+            ],
+
+            // Feature permissions (Tính năng)
+            [
+                'name' => 'feature.view',
+                'display_name' => 'Xem tính năng',
+                'group_name' => 'feature',
+                'description' => 'Quyền xem danh sách tính năng'
+            ],
+            [
+                'name' => 'feature.create',
+                'display_name' => 'Tạo tính năng',
+                'group_name' => 'feature',
+                'description' => 'Quyền tạo tính năng mới'
+            ],
+            [
+                'name' => 'feature.edit',
+                'display_name' => 'Sửa tính năng',
+                'group_name' => 'feature',
+                'description' => 'Quyền chỉnh sửa tính năng'
+            ],
+            [
+                'name' => 'feature.delete',
+                'display_name' => 'Xóa tính năng',
+                'group_name' => 'feature',
+                'description' => 'Quyền xóa tính năng'
+            ],
+
             // Menu permissions (Menu)
             [
                 'name' => 'menu.view',
@@ -349,18 +401,24 @@ class PermissionSeeder extends Seeder
                 'description' => 'Quyền xóa cấu hình sản phẩm'
             ],
 
-            // Profile permissions (Hồ sơ cá nhân)
+            // Chat permissions (Chat)
             [
-                'name' => 'profile.view',
-                'display_name' => 'Xem hồ sơ',
-                'group_name' => 'profile',
-                'description' => 'Quyền xem hồ sơ cá nhân'
+                'name' => 'chat.view',
+                'display_name' => 'Xem chat',
+                'group_name' => 'chat',
+                'description' => 'Quyền xem danh sách chat và tin nhắn'
             ],
             [
-                'name' => 'profile.edit',
-                'display_name' => 'Sửa hồ sơ',
-                'group_name' => 'profile',
-                'description' => 'Quyền chỉnh sửa hồ sơ cá nhân'
+                'name' => 'chat.reply',
+                'display_name' => 'Trả lời chat',
+                'group_name' => 'chat',
+                'description' => 'Quyền gửi tin nhắn trả lời'
+            ],
+            [
+                'name' => 'chat.manage',
+                'display_name' => 'Quản lý chat',
+                'group_name' => 'chat',
+                'description' => 'Quyền đóng chat và quản lý phiên chat'
             ],
 
             // Role permissions (Vai trò)

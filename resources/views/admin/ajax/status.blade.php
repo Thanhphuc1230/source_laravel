@@ -1,5 +1,18 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Khởi tạo Toast instance từ SweetAlert2
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
         document.querySelectorAll('.status-checkbox').forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const uuid = this.getAttribute('data-uuid');
@@ -18,16 +31,21 @@
                 })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        throw new Error('Network response was not ok: ' + response.status);
                     }
                     return response.json();
                 })
                 .then(data => {
-                    toast(data.message, 'success');
+                    Toast.fire({
+                        icon: 'success',
+                        title: data.message
+                    });
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    toast('Có lỗi xảy ra', 'error');
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra: ' + error.message
+                    });
                 });
             });
         });

@@ -44,7 +44,7 @@
                                 <div class="col-md-12">
                                     <div class="mb-3">
                                         <label for="intro-vn" class="form-label">Giới thiệu</label>
-                                        <textarea id="intro-vn" class="form-control intro @error('intro_vn') is-invalid @enderror" name="intro_vn"
+                                        <textarea class="form-control intro @error('intro_vn') is-invalid @enderror" name="intro_vn"
                                             rows="6" placeholder="Enter your message">{{ old('intro_vn', $page->intro_vn ?? '') }}</textarea>
                                         @error('intro_vn')
                                             <span class="text-danger">{{ $message }}</span>
@@ -98,7 +98,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-sm-6">
+                                            {{-- <div class="col-lg-6 col-sm-6">
                                                 <div class="mb-3">
                                                     <label class="form-label" for="product-discount-input">Giá cũ</label>
                                                     <div class="input-group mb-3">
@@ -108,7 +108,7 @@
                                                             value="{{ old('price_old', $page->price_old ?? '') }}">
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                             <!-- end col -->
                                         </div>
                                         <!-- end row -->

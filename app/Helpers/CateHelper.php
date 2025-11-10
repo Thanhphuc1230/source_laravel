@@ -8,7 +8,10 @@ if (! function_exists('renderCategoryOptions')) {
         foreach ($categories as $item) {
             $prefix = str_repeat('|---', $level);
             $categoryId = $item->{$idAttribute};  // Access the dynamic ID attribute
-            echo '<option value="'.$categoryId.'"'.(($selectedParentId == $categoryId) ? ' selected' : '').'>'.$prefix.$item->name_vn.'</option>';
+            
+            $style = ($level == 0) ? ' style="font-weight: bold;"' : '';
+            
+            echo '<option value="'.$categoryId.'"'.(($selectedParentId == $categoryId) ? ' selected' : '').$style.'>'.$prefix.$item->name_vn.'</option>';
 
             if (! empty($item->children)) {
                 renderCategoryOptions($item->children, $level + 1, $selectedParentId, $idAttribute);

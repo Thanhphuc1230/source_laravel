@@ -16,20 +16,20 @@
                             <div class="listjs-table" id="customerList">
                                 <div class="row g-4 mb-3">
                                     @hasPermission('product.create')
-                                    <div class="col-sm-auto">
-                                        <div>
-                                            <a type="button" href="{{ route('admin.' . $nameClass . '.create') }}"
-                                                class="btn btn-success add-btn"><i
-                                                    class="ri-add-line align-bottom me-1"></i> Thêm </a>
+                                        <div class="col-sm-auto">
+                                            <div>
+                                                <a type="button" href="{{ route('admin.' . $nameClass . '.create') }}"
+                                                    class="btn btn-success add-btn"><i
+                                                        class="ri-add-line align-bottom me-1"></i> Thêm </a>
+                                            </div>
                                         </div>
-                                    </div>
                                     @endhasPermission
                                     @hasPermission('product.delete')
-                                    <div class="col-sm-auto">
-                                        <a id="deleteSelectedItems" class="btn btn-danger add-btn">
-                                            <i class="ri-delete-bin-5-line"></i> Xóa hết
-                                        </a>
-                                    </div>
+                                        <div class="col-sm-auto">
+                                            <a id="deleteSelectedItems" class="btn btn-danger add-btn">
+                                                <i class="ri-delete-bin-5-line"></i> Xóa hết
+                                            </a>
+                                        </div>
                                     @endhasPermission
                                     <div class="col-sm">
                                         <div class="d-flex justify-content-sm-end">
@@ -72,6 +72,7 @@
                                                 <th class="sort">Hình ảnh</th>
                                                 <th class="sort">Tiêu đề</th>
                                                 <th class="sort">Hiển thị</th>
+                                                <th class="sort">Nổi bật</th>
                                                 <th class="sort">Trang chủ</th>
                                                 <th class="sort">STT</th>
                                                 <th class="sort">Ngày đăng</th>
@@ -86,12 +87,16 @@
                                                     @csrf
                                                     @foreach ($list as $item)
                                                         <tr>
-                                                            <td><input class="form-check-input" type="checkbox" name="uuids[]"
-                                                                    value="{{ $item->uuid }}"></td>
+                                                            <td><input class="form-check-input" type="checkbox"
+                                                                    name="uuids[]" value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}" alt=""
-                                                                    style="height: 100px;"></td>
-                                                            <td>{{ $item->name_vn }} @if($item->category_id != 0)<br> <span class="text-muted">Danh mục: {{ $item->cate->name_vn }}</span> @endif</td>
+                                                            <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}"
+                                                                    alt="" style="height: 100px;"></td>
+                                                            <td>{{ $item->name_vn }} @if ($item->category_id != 0)
+                                                                    <br> <span class="text-muted">Danh mục:
+                                                                        {{ $item->cate->name_vn }}</span>
+                                                                @endif
+                                                            </td>
                                                             <td class="status">
                                                                 <div
                                                                     class="form-check form-switch form-switch-success mb-3">
@@ -101,6 +106,17 @@
                                                                         data-uuid="{{ $item->uuid }}" data-name="status"
                                                                         data-status="{{ $item->status }}"
                                                                         {{ $item->status == 1 ? 'checked' : '' }}>
+                                                                </div>
+                                                            </td>
+                                                            <td class="hot">
+                                                                <div
+                                                                    class="form-check form-switch form-switch-success mb-3">
+                                                                    <input class="form-check-input status-checkbox"
+                                                                        type="checkbox" role="switch"
+                                                                        value="{{ $item->hot }}"
+                                                                        data-uuid="{{ $item->uuid }}" data-name="hot"
+                                                                        data-status="{{ $item->hot }}"
+                                                                        {{ $item->hot == 1 ? 'checked' : '' }}>
                                                                 </div>
                                                             </td>
                                                             <td class="home">
@@ -128,21 +144,22 @@
                                                             <td>
                                                                 <div class="d-flex gap-2">
                                                                     <div class="watch">
-                                                                        <a href="{{ route('web.resolve',['slug' => $item->slug]) }}" target="_blank"
+                                                                        <a href="{{ route('web.resolve', ['slug' => $item->slug]) }}"
+                                                                            target="_blank"
                                                                             class="btn btn-sm btn-primary watch-item-btn">Xem</a>
                                                                     </div>
                                                                     @hasPermission('product.edit')
-                                                                    <div class="edit">
-                                                                        <a href="{{ route('admin.' . $nameClass . '.edit', ['uuid' => $item->uuid, 'page' => $list->currentPage()]) }}"
-                                                                            class="btn btn-sm btn-success edit-item-btn">Sửa</a>
-                                                                    </div>
+                                                                        <div class="edit">
+                                                                            <a href="{{ route('admin.' . $nameClass . '.edit', ['uuid' => $item->uuid, 'page' => $list->currentPage()]) }}"
+                                                                                class="btn btn-sm btn-success edit-item-btn">Sửa</a>
+                                                                        </div>
                                                                     @endhasPermission
                                                                     @hasPermission('product.delete')
-                                                                    <div class="remove">
-                                                                        <a href="{{ route('admin.' . $nameClass . '.destroy', ['uuid' => $item->uuid]) }}"
-                                                                            class="btn btn-sm btn-danger remove-item-btn"
-                                                                            onclick="return confirm('Xác nhận xóa {{ $nameItem }} ?')">Xóa</a>
-                                                                    </div>
+                                                                        <div class="remove">
+                                                                            <a href="{{ route('admin.' . $nameClass . '.destroy', ['uuid' => $item->uuid]) }}"
+                                                                                class="btn btn-sm btn-danger remove-item-btn"
+                                                                                onclick="return confirm('Xác nhận xóa {{ $nameItem }} ?')">Xóa</a>
+                                                                        </div>
                                                                     @endhasPermission
                                                                 </div>
                                                             </td>

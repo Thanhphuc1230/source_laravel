@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Cache;
+use App\Services\CacheService;
 
 trait HasRoles
 {
@@ -52,13 +53,18 @@ trait HasRoles
     }
 
     /**
-     * Cache permissions 24h
+     * Cache permissions 5 minutes (for development)
      */
     public function getPermissionsAttribute()
     {
-        return Cache::remember("user.{$this->id}.permissions", 60 * 24, function () {
-            return $this->permissions()->pluck('name')->toArray();
-        });
+        return CacheService::remember(
+            CacheService::TAGS['users'] ?? 'users',
+            "user.{$this->id}.permissions",
+            5,
+            function () {
+                return $this->permissions()->pluck('name')->toArray();
+            }
+        );
     }
 
     /**
@@ -221,6 +227,7 @@ trait HasRoles
      */
     public function forgetCachedPermissions(): void
     {
+        CacheService::forget(CacheService::TAGS['users'] ?? 'users', "user.{$this->id}.permissions");
         Cache::forget("user.{$this->id}.permissions");
     }
 
@@ -303,9 +310,14 @@ trait HasRoles
      */
     public function getPermissionsAttributeAttribute()
     {
-        return Cache::remember("user.{$this->id}.permissions", 60 * 24, function () {
-            return $this->permissions()->pluck('name')->toArray();
-        });
+        return CacheService::remember(
+            CacheService::TAGS['users'] ?? 'users',
+            "user.{$this->id}.permissions",
+            5,
+            function () {
+                return $this->permissions()->pluck('name')->toArray();
+            }
+        );
     }
 
     /**

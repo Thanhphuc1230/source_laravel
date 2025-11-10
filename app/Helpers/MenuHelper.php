@@ -5,92 +5,249 @@ use App\Models\CateProduct;
 use App\Models\Page;
 use Illuminate\Support\Facades\Cache;
 
-function getUrlMenu($item)
-{
-    if (isset($item->type) && $item->type != 'link' && (empty($item->object_id) || !is_numeric($item->object_id))) {
-        return route('web.404');
-    }
+if (!function_exists('getUrlMenu')) {
+    function getUrlMenu($item)
+    {
+        if (isset($item->type) && $item->type != 'link' && (empty($item->object_id) || !is_numeric($item->object_id))) {
+            return route('web.404');
+        }
 
-    switch ($item->type) {
-        case 'page':
-            $slug = Cache::remember("page_slug_{$item->object_id}", 360, function () use ($item) {
-                return Page::where('id_page', $item->object_id)
-                    ->where('status', 1)
-                    ->value('slug');
-            });
+        switch ($item->type) {
+            case 'page':
+                $slug = \App\Services\CacheService::remember(
+                    \App\Services\CacheService::TAGS['pages'] ?? 'pages',
+                    "page_slug_{$item->object_id}",
+                    \App\Services\CacheService::getTtl('long'),
+                    function () use ($item) {
+                        return Page::where('id_page', $item->object_id)
+                            ->where('status', 1)
+                            ->value('slug');
+                    }
+                );
 
-            if (empty($slug)) {
-                return route('web.404');
-            }
+                if (empty($slug)) {
+                    return route('web.404');
+                }
 
-            return route('web.resolve', ['slug' => $slug]);
+                return route('web.resolve', ['slug' => $slug]);
 
-        case 'cate_new':
-            $slug = Cache::remember("cate_new_slug_{$item->object_id}", 360, function () use ($item) {
-                return CateNew::where('id_cate_new', $item->object_id)
-                    ->where('status', 1)
-                    ->value('slug');
-            });
+            case 'cate_new':
+                $slug = \App\Services\CacheService::remember(
+                    \App\Services\CacheService::TAGS['categories'] ?? 'categories',
+                    "cate_new_slug_{$item->object_id}",
+                    \App\Services\CacheService::getTtl('long'),
+                    function () use ($item) {
+                        return CateNew::where('id_cate_new', $item->object_id)
+                            ->where('status', 1)
+                            ->value('slug');
+                    }
+                );
 
-            if (empty($slug)) {
-                return route('web.404');
-            }
+                if (empty($slug)) {
+                    return route('web.404');
+                }
 
-            return route('web.resolve', ['slug' => $slug]);
+                return route('web.resolve', ['slug' => $slug]);
 
-        case 'cate_product':
-            $slug = Cache::remember("cate_product_slug_{$item->object_id}", 360, function () use ($item) {
-                return CateProduct::where('id_cate_product', $item->object_id)
-                    ->where('status', 1)
-                    ->value('slug');
-            });
+            case 'cate_product':
+                $slug = \App\Services\CacheService::remember(
+                    \App\Services\CacheService::TAGS['categories'] ?? 'categories',
+                    "cate_product_slug_{$item->object_id}",
+                    \App\Services\CacheService::getTtl('long'),
+                    function () use ($item) {
+                        return CateProduct::where('id_cate_product', $item->object_id)
+                            ->where('status', 1)
+                            ->value('slug');
+                    }
+                );
 
-            if (empty($slug)) {
-                return route('web.404');
-            }
+                if (empty($slug)) {
+                    return route('web.404');
+                }
 
-            return route('web.resolve', ['slug' => $slug]);
+                return route('web.resolve', ['slug' => $slug]);
 
-        case 'link':
-            if (empty($item->link) || $item->link === '#') {
-                return '#';
-            }
-            return $item->link;
+            case 'link':
+                if (empty($item->link) || $item->link === '#') {
+                    return '#';
+                }
+                return $item->link;
 
-        default:
-            return route('web.home');
+            default:
+                return route('web.home');
+        }
     }
 }
 
-function isActiveMenu($item)
-{
-    $currentUrl = request()->url();
-    $menuUrl = getUrlMenu($item);
+if (!function_exists('isActiveMenu')) {
+    function isActiveMenu($item)
+    {
+        $currentUrl = request()->url();
+        $menuUrl = getUrlMenu($item);
 
-    if ($menuUrl == route('web.404')) {
-        return '';
-    }
+        if ($menuUrl == route('web.404')) {
+            return '';
+        }
 
-    if ($menuUrl == route('web.home')) {
-        return $currentUrl == $menuUrl ? 'active' : '';
-    }
+        if ($menuUrl == route('web.home')) {
+            return $currentUrl == $menuUrl ? 'active' : '';
+        }
 
-    if ($item->type === 'link' && $menuUrl === '#') {
-        return '';
-    }
+        if ($item->type === 'link' && $menuUrl === '#') {
+            return '';
+        }
 
-    if ($menuUrl && $currentUrl == $menuUrl) {
-        return 'active';
-    }
+        if ($menuUrl && $currentUrl == $menuUrl) {
+            return 'active';
+        }
 
-    if (isset($item->children) && $item->children->isNotEmpty()) {
-        foreach ($item->children as $child) {
-            $childUrl = getUrlMenu($child);
-            if ($childUrl && $childUrl != route('web.404') && $currentUrl == $childUrl) {
-                return 'active';
+        if (isset($item->children) && $item->children->isNotEmpty()) {
+            foreach ($item->children as $child) {
+                $childUrl = getUrlMenu($child);
+                if ($childUrl && $childUrl != route('web.404') && $currentUrl == $childUrl) {
+                    return 'active';
+                }
             }
         }
-    }
 
-    return '';
+        return '';
+    }
+}
+
+if (!function_exists('searchInTree')) {
+    /**
+     * Helper function to search nested category trees for a given id
+     * Tìm kiếm object trong cây phân cấp theo ID
+     */
+    function searchInTree($collection, $id, $idField = 'id_cate_new')
+    {
+        if (empty($collection)) {
+            return null;
+        }
+
+        foreach ($collection as $item) {
+            // Kiểm tra item hiện tại
+            if (isset($item->{$idField}) && $item->{$idField} == $id) {
+                return $item;
+            }
+
+            // Tìm kiếm đệ quy trong children
+            if (!empty($item->children)) {
+                $found = searchInTree($item->children, $id, $idField);
+                if ($found) {
+                    return $found;
+                }
+            }
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists('getMenuBelongName')) {
+    /**
+     * Lấy tên object dựa trên type và object_id
+     * Trả về tên của page/category mà menu đang trỏ tới
+     */
+    function getMenuBelongName($menuItem, $page_content = null, $cate_new = null, $cate_product = null)
+    {
+        if (!$menuItem || !isset($menuItem->type)) {
+            return null;
+        }
+
+        switch ($menuItem->type) {
+            case 'page':
+                if (!$page_content) return null;
+                $obj = searchInTree($page_content, $menuItem->object_id, 'id_page');
+                return $obj->name_vn ?? null;
+
+            case 'cate_new':
+                if (!$cate_new) return null;
+                $obj = searchInTree($cate_new, $menuItem->object_id, 'id_cate_new');
+                return $obj->name_vn ?? null;
+
+            case 'cate_product':
+                if (!$cate_product) return null;
+                $obj = searchInTree($cate_product, $menuItem->object_id, 'id_cate_product');
+                return $obj->name_vn ?? null;
+
+            case 'link':
+                return $menuItem->link ?? null;
+
+            default:
+                return null;
+        }
+    }
+}
+
+if (!function_exists('getMenuTypeLabel')) {
+    /**
+     * Lấy label hiển thị của loại menu
+     */
+    function getMenuTypeLabel($type)
+    {
+        $labels = [
+            'page' => 'Trang nội dung',
+            'cate_new' => 'Danh mục tin tức',
+            'cate_product' => 'Danh mục sản phẩm',
+            'link' => 'Liên kết',
+        ];
+
+        return $labels[$type] ?? ucfirst($type);
+    }
+}
+
+if (!function_exists('renderCategoryCheckbox')) {
+    /**
+     * Render checkbox đệ quy cho categories
+     * @param object $item - Category item
+     * @param string $idField - Tên field ID (id_cate_new, id_cate_product)
+     * @param int $level - Level hiện tại (0 = parent)
+     * @return string HTML
+     */
+    function renderCategoryCheckbox($item, $idField = 'id_cate_new', $level = 0)
+    {
+        $prefix = str_repeat('|--', $level);
+        $html = '<div class="form-check mb-2">';
+        $html .= '<input class="form-check-input" type="checkbox" name="object_ids[]" ';
+        $html .= 'value="' . $item->{$idField} . '" id="formCheck' . $item->uuid . '">';
+        $html .= '<label class="form-check-label" for="formCheck' . $item->uuid . '">';
+        $html .= $prefix . $item->name_vn;
+        $html .= '</label>';
+        $html .= '</div>';
+
+        // Render children recursively
+        if (isset($item->children) && $item->children->isNotEmpty()) {
+            foreach ($item->children as $child) {
+                $html .= renderCategoryCheckbox($child, $idField, $level + 1);
+            }
+        }
+
+        return $html;
+    }
+}
+
+if (!function_exists('renderMenuOptions')) {
+    /**
+     * Render select options đệ quy cho menu
+     * @param object $item - Menu item
+     * @param int $level - Level hiện tại (0 = parent)
+     * @return string HTML
+     */
+    function renderMenuOptions($item, $level = 0)
+    {
+        $prefix = str_repeat('|---', $level);
+        $html = '<option value="' . $item->id_menu . '">';
+        $html .= $prefix . $item->name_vn;
+        $html .= '</option>';
+
+        // Render children recursively
+        if (isset($item->children) && $item->children->isNotEmpty()) {
+            foreach ($item->children as $child) {
+                $html .= renderMenuOptions($child, $level + 1);
+            }
+        }
+
+        return $html;
+    }
 }

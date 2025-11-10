@@ -48,7 +48,7 @@
                                                 <select class="form-select mb-3" aria-label="Default select example"
                                                     name="parent_id">
                                                     <option value="0"
-                                                        {{ (old('parent_id') ?: $page->parent_id ?? '') == 0 ? 'selected' : '' }}>
+                                                        {{ (old('parent_id') ?: $page->parent_id ?? '') == 0 ? 'selected' : '' }} style="font-weight: bold;">
                                                         Trang chính</option>
                                                     @php
                                                         renderCategoryOptions(

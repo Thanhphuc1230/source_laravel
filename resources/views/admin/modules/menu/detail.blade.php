@@ -75,15 +75,7 @@
                                                                     <option value="0" selected="">Chủ đề cha
                                                                     </option>
                                                                     @foreach ($menus as $item)
-                                                                        <option value="{{ $item->id_menu }}">
-                                                                            {{ $item->name_vn }}</option>
-                                                                        @if ($item->children)
-                                                                            @foreach ($item->children as $child)
-                                                                                <option value="{{ $child->id_page }}">
-                                                                                    |---{{ $child->name_vn }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        @endif
+                                                                        {!! renderMenuOptions($item) !!}
                                                                     @endforeach
                                                                 </select>
                                                                 <input type="hidden" name="type" value="page">
@@ -112,49 +104,10 @@
                                                         aria-labelledby="genques-headingThree"
                                                         data-bs-parent="#genques-accordion" style="">
                                                         <div class="accordion-body">
-                                                            <form action="{{ route('admin.menu.store') }}"
-                                                                method="POST">
+                                                            <form action="{{ route('admin.menu.store') }}" method="POST">
                                                                 @csrf
                                                                 @foreach ($cate_product as $item)
-                                                                    <div class="form-check mb-2">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            name="object_ids[]"
-                                                                            value="{{ $item->id_cate_product }}"
-                                                                            id="formCheck{{ $item->uuid }}">
-                                                                        <label class="form-check-label"
-                                                                            for="formCheck{{ $item->uuid }}">
-                                                                            {{ $item->name_vn }}
-                                                                        </label>
-                                                                    </div>
-                                                                    @if ($item->children)
-                                                                        @foreach ($item->children as $child)
-                                                                            <div class="form-check mb-2">
-                                                                                <input class="form-check-input"
-                                                                                    type="checkbox" name="object_ids[]"
-                                                                                    value="{{ $child->id_cate_product }}"
-                                                                                    id="formCheck{{ $child->uuid }}">
-                                                                                <label class="form-check-label"
-                                                                                    for="formCheck{{ $child->uuid }}">
-                                                                                    |--{{ $child->name_vn }}
-                                                                                </label>
-                                                                            </div>
-                                                                            @if ($child->children)
-                                                                                @foreach ($child->children as $subChild)
-                                                                                    <div class="form-check mb-2">
-                                                                                        <input class="form-check-input"
-                                                                                            type="checkbox"
-                                                                                            name="object_ids[]"
-                                                                                            value="{{ $subChild->id_cate_product }}"
-                                                                                            id="formCheck{{ $child->uuid }}">
-                                                                                        <label class="form-check-label"
-                                                                                            for="formCheck{{ $subChild->uuid }}">
-                                                                                            |--|--{{ $subChild->name_vn }}
-                                                                                        </label>
-                                                                                    </div>
-                                                                                @endforeach
-                                                                            @endif
-                                                                        @endforeach
-                                                                    @endif
+                                                                    {!! renderCategoryCheckbox($item, 'id_cate_product') !!}
                                                                 @endforeach
                                                                 <p class="text-muted">Chọn vị trí thêm vào</p>
                                                                 <select class="form-select"
@@ -162,19 +115,10 @@
                                                                     <option value="0" selected="">Chủ đề cha
                                                                     </option>
                                                                     @foreach ($menus as $item)
-                                                                        <option value="{{ $item->id_menu }}">
-                                                                            {{ $item->name_vn }}</option>
-                                                                        @if ($item->children)
-                                                                            @foreach ($item->children as $child)
-                                                                                <option value="{{ $child->id_menu }}">
-                                                                                    |---{{ $child->name_vn }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        @endif
+                                                                        {!! renderMenuOptions($item) !!}
                                                                     @endforeach
                                                                 </select>
-                                                                <input type="hidden" name="type"
-                                                                    value="cate_product">
+                                                                <input type="hidden" name="type" value="cate_product">
                                                                 <div class="col-lg-12" style="padding-top: 1rem">
                                                                     <div class="text-start">
                                                                         <input type="submit"
@@ -189,8 +133,9 @@
                                                 <div class="accordion-item">
                                                     <h2 class="accordion-header" id="genques-headingTwo">
                                                         <button class="accordion-button collapsed" type="button"
-                                                            data-bs-toggle="collapse" data-bs-target="#genques-collapseTwo"
-                                                            aria-expanded="false" aria-controls="genques-collapseTwo">
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#genques-collapseTwo" aria-expanded="false"
+                                                            aria-controls="genques-collapseTwo">
                                                             Danh mục tin tức
                                                         </button>
                                                     </h2>
@@ -201,30 +146,7 @@
                                                             <form action="{{ route('admin.menu.store') }}" method="POST">
                                                                 @csrf
                                                                 @foreach ($cate_new as $item)
-                                                                    <div class="form-check mb-2">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            name="object_ids[]"
-                                                                            value="{{ $item->id_cate_new }}"
-                                                                            id="formCheck{{ $item->uuid }}">
-                                                                        <label class="form-check-label"
-                                                                            for="formCheck{{ $item->uuid }}">
-                                                                            {{ $item->name_vn }}
-                                                                        </label>
-                                                                    </div>
-                                                                    @if ($item->children)
-                                                                        @foreach ($item->children as $child)
-                                                                            <div class="form-check mb-2">
-                                                                                <input class="form-check-input"
-                                                                                    type="checkbox" name="object_ids[]"
-                                                                                    value="{{ $child->id_cate_new }}"
-                                                                                    id="formCheck{{ $child->uuid }}">
-                                                                                <label class="form-check-label"
-                                                                                    for="formCheck{{ $child->uuid }}">
-                                                                                    |--{{ $child->name_vn }}
-                                                                                </label>
-                                                                            </div>
-                                                                        @endforeach
-                                                                    @endif
+                                                                    {!! renderCategoryCheckbox($item, 'id_cate_new') !!}
                                                                 @endforeach
                                                                 <p class="text-muted">Chọn vị trí thêm vào</p>
                                                                 <select class="form-select"
@@ -232,15 +154,7 @@
                                                                     <option value="0" selected="">Chủ đề cha
                                                                     </option>
                                                                     @foreach ($menus as $item)
-                                                                        <option value="{{ $item->id_menu }}">
-                                                                            {{ $item->name_vn }}</option>
-                                                                        @if ($item->children)
-                                                                            @foreach ($item->children as $child)
-                                                                                <option value="{{ $child->id_page }}">
-                                                                                    |---{{ $child->name_vn }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        @endif
+                                                                        {!! renderMenuOptions($item) !!}
                                                                     @endforeach
                                                                 </select>
                                                                 <input type="hidden" name="type" value="cate_new">
@@ -268,8 +182,7 @@
                                                         aria-labelledby="genques-headingFour"
                                                         data-bs-parent="#genques-accordion" style="">
                                                         <div class="accordion-body">
-                                                            <form action="{{ route('admin.menu.store') }}"
-                                                                method="POST">
+                                                            <form action="{{ route('admin.menu.store') }}" method="POST">
                                                                 @csrf
                                                                 <div class="mb-3">
                                                                     <label class="form-label"
@@ -291,15 +204,7 @@
                                                                     <option value="0" selected="">Chủ đề cha
                                                                     </option>
                                                                     @foreach ($menus as $item)
-                                                                        <option value="{{ $item->id_menu }}">
-                                                                            {{ $item->name_vn }}</option>
-                                                                        @if ($item->children)
-                                                                            @foreach ($item->children as $child)
-                                                                                <option value="{{ $child->id_page }}">
-                                                                                    |---{{ $child->name_vn }}
-                                                                                </option>
-                                                                            @endforeach
-                                                                        @endif
+                                                                        {!! renderMenuOptions($item) !!}
                                                                     @endforeach
                                                                 </select>
                                                                 <input type="hidden" name="type" value="link">
@@ -321,33 +226,6 @@
 
                                     <div class="col-lg-6">
                                         <div class="mt-3">
-                                            @php
-                                                // Helper to search nested category trees for a given id
-                                                $searchInTree = function ($collection, $id, $idField = 'id_cate_new') {
-                                                    foreach ($collection as $c) {
-                                                        if (isset($c->{$idField}) && $c->{$idField} == $id) return $c;
-                                                        if (!empty($c->children)) {
-                                                            foreach ($c->children as $ch) {
-                                                                if (isset($ch->{$idField}) && $ch->{$idField} == $id) return $ch;
-                                                                if (!empty($ch->children)) {
-                                                                    foreach ($ch->children as $sc) {
-                                                                        if (isset($sc->{$idField}) && $sc->{$idField} == $id) return $sc;
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-
-                                                    return null;
-                                                };
-
-                                                $typeLabels = [
-                                                    'page' => 'Trang nội dung',
-                                                    'cate_new' => 'Danh mục tin tức',
-                                                    'cate_product' => 'Danh mục sản phẩm',
-                                                    'link' => 'Liên kết',
-                                                ];
-                                            @endphp
                                             <div class="d-flex align-items-center mb-2">
                                                 <div class="flex-shrink-0 me-1">
                                                     <i class="ri-file-list-line fs-24 align-middle text-success me-1"></i>
@@ -358,282 +236,13 @@
                                             </div>
                                             <div class="list-group col nested-list nested-sortable">
                                                 @foreach ($menus as $item)
-                                                    <div class="list-group-item nested-1">
-                                                        <div class="d-flex justify-content-between align-items-start">
-                                                            <div>
-                                                                <h6 class="fs-15 mb-1">{{ $item->name_vn }}</h6>
-                                                                <p class="mb-0 text-muted small">Thuộc: {{ $typeLabels[$item->type] ?? ucfirst($item->type) }}@php $belongName=null; @endphp
-                                                                    @if ($item->type == 'page' && isset($page_content))
-                                                                        @php $b = $searchInTree($page_content, $item->object_id, 'id_page'); $belongName = $b->name_vn ?? null; @endphp
-                                                                    @elseif ($item->type == 'cate_new' && isset($cate_new))
-                                                                        @php $b = $searchInTree($cate_new, $item->object_id, 'id_cate_new'); $belongName = $b->name_vn ?? null; @endphp
-                                                                    @elseif ($item->type == 'cate_product' && isset($cate_product))
-                                                                        @php $b = $searchInTree($cate_product, $item->object_id, 'id_cate_product'); $belongName = $b->name_vn ?? null; @endphp
-                                                                    @elseif ($item->type == 'link')
-                                                                        @php $belongName = $item->link ?? null; @endphp
-                                                                    @endif
-                                                                    @if ($belongName) : {{ $belongName }} @endif
-                                                                </p>
-                                                            </div>
-                                                            <div class="ms-3">
-                                                                @php $viewUrl = getUrlMenu($item); @endphp
-                                                                @if ($viewUrl && $viewUrl !== route('web.404') && $viewUrl !== '#')
-                                                                    <a href="{{ $viewUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm me-1">Xem</a>
-                                                                @endif
-                                                                <button
-                                                                    class="btn btn-secondary btn-sm waves-effect waves-light"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#showModal{{ $item->id_menu }}">Sửa</button>
-                                                                <a href="{{ route('admin.menu.destroy', ['uuid' => $item->uuid]) }}"
-                                                                    onclick="return confirm('Xác nhận xóa menu ?')"
-                                                                    class="btn btn-sm btn-danger remove-item-btn">Xóa</a>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="list-group nested-list nested-sortable">
-                                                            @if ($item->children)
-                                                                @foreach ($item->children as $child)
-                                                                    <div class="list-group-item nested-2" style="padding-right: unset">
-                                                                        <div class="d-flex justify-content-between align-items-start">
-                                                                            <div>
-                                                                                <h6 class="mb-1">{{ $child->name_vn }}</h6>
-                                                                                <p class="mb-0 text-muted small">Thuộc: {{ $typeLabels[$child->type] ?? ucfirst($child->type) }}@php $belongName=null; @endphp
-                                                                                    @if ($child->type == 'page' && isset($page_content))
-                                                                                        @php $b = $searchInTree($page_content, $child->object_id, 'id_page'); $belongName = $b->name_vn ?? null; @endphp
-                                                                                    @elseif ($child->type == 'cate_new' && isset($cate_new))
-                                                                                        @php $b = $searchInTree($cate_new, $child->object_id, 'id_cate_new'); $belongName = $b->name_vn ?? null; @endphp
-                                                                                    @elseif ($child->type == 'cate_product' && isset($cate_product))
-                                                                                        @php $b = $searchInTree($cate_product, $child->object_id, 'id_cate_product'); $belongName = $b->name_vn ?? null; @endphp
-                                                                                    @elseif ($child->type == 'link')
-                                                                                        @php $belongName = $child->link ?? null; @endphp
-                                                                                    @endif
-                                                                                    @if ($belongName) : {{ $belongName }} @endif
-                                                                                </p>
-                                                                            </div>
-                                                                            <div class="ms-3">
-                                                                                @php $viewUrl = getUrlMenu($child); @endphp
-                                                                                @if ($viewUrl && $viewUrl !== route('web.404') && $viewUrl !== '#')
-                                                                                    <a href="{{ $viewUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm me-1">Xem</a>
-                                                                                @endif
-                                                                                <button class="btn btn-secondary btn-sm waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#showModal{{ $child->id_menu }}">Sửa</button>
-                                                                                <a href="{{ route('admin.menu.destroy', ['uuid' => $child->uuid]) }}" onclick="return confirm('Xác nhận xóa menu ?')" class="btn btn-sm btn-danger remove-item-btn">Xóa</a>
-                                                                            </div>
-                                                                        </div>
-                                                                        {{-- subchild --}}
-                                                                        @if ($child->children->isNotEmpty())
-                                                                            <div
-                                                                                class="list-group nested-list nested-sortable">
-                                                                                @foreach ($child->children as $subchild)
-                                                                                    <div class="list-group-item nested-3" style="padding-right: unset">
-                                                                                        <div class="d-flex justify-content-between align-items-start">
-                                                                                            <div>
-                                                                                                <h6 class="mb-1">{{ $subchild->name_vn }}</h6>
-                                                                                                <p class="mb-0 text-muted small">Thuộc: {{ $typeLabels[$subchild->type] ?? ucfirst($subchild->type) }}@php $belongName=null; @endphp
-                                                                                                    @if ($subchild->type == 'page' && isset($page_content))
-                                                                                                        @php $b = $searchInTree($page_content, $subchild->object_id, 'id_page'); $belongName = $b->name_vn ?? null; @endphp
-                                                                                                    @endif
-                                                                                                    @if ($belongName) : {{ $belongName }} @endif
-                                                                                                </p>
-                                                                                            </div>
-                                                                                            <div class="ms-3">
-                                                                                                @php $viewUrl = getUrlMenu($subchild); @endphp
-                                                                                                @if ($viewUrl && $viewUrl !== route('web.404') && $viewUrl !== '#')
-                                                                                                    <a href="{{ $viewUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm me-1">Xem</a>
-                                                                                                @endif
-                                                                                                <button class="btn btn-secondary btn-sm waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#showModal{{ $subchild->id_menu }}">Sửa</button>
-                                                                                                <a href="{{ route('admin.menu.destroy', ['uuid' => $subchild->uuid]) }}" onclick="return confirm('Xác nhận xóa menu ?')" class="btn btn-sm btn-danger remove-item-btn">Xóa</a>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                @endforeach
-                                                                            </div>
-                                                                        @endif
-                                                                    </div>
-                                                                @endforeach
-                                                            @endif
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Modal for parent item -->
-                                                    <div class="modal fade" id="showModal{{ $item->id_menu }}"
-                                                        tabindex="-1" aria-labelledby="exampleModalLabel"
-                                                        style="display: none;" aria-hidden="true">
-                                                        <div class="modal-dialog modal-dialog-centered">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header bg-light p-3">
-                                                                    <h5 class="modal-title" id="exampleModalLabel">Cập
-                                                                        nhật menu</h5>
-                                                                    <p class="mb-0 text-muted small">Thuộc: {{ $typeLabels[$item->type] ?? ucfirst($item->type) }}@php $belongName=null; @endphp
-                                                                        @if ($item->type == 'page' && isset($page_content))
-                                                                            @php $b = $searchInTree($page_content, $item->object_id, 'id_page'); $belongName = $b->name_vn ?? null; @endphp
-                                                                        @endif
-                                                                        @if ($belongName) : {{ $belongName }} @endif
-                                                                    </p>
-                                                                    <button type="button" class="btn-close"
-                                                                        data-bs-dismiss="modal" aria-label="Close"
-                                                                        id="close-modal"></button>
-                                                                </div>
-                                                                <form class="tablelist-form"
-                                                                    action="{{ route('admin.menu.update', ['uuid' => $item->uuid]) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    <div class="modal-body">
-                                                                        <div class="mb-3">
-                                                                            <label for="customername-field"
-                                                                                class="form-label">Tiêu đề VN</label>
-                                                                            <input type="text" name="name_vn"
-                                                                                value="{{ $item->name_vn }}"
-                                                                                class="form-control"
-                                                                                placeholder="Enter Name" required="">
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label for="customername-field"
-                                                                                class="form-label">Tiêu đề EN</label>
-                                                                            <input type="text" name="name_en"
-                                                                                value="{{ $item->name_en }}"
-                                                                                class="form-control"
-                                                                                placeholder="Enter Name" required="">
-                                                                        </div>
-                                                                        @if ($item->type == 'link')
-                                                                            <div class="mb-3">
-                                                                                <label for="customername-field"
-                                                                                    class="form-label">Đường dẫn</label>
-                                                                                <input type="text" name="link"
-                                                                                    value="{{ $item->link }}"
-                                                                                    class="form-control"
-                                                                                    placeholder="Enter Link" required="">
-                                                                            </div>
-                                                                        @endif
-                                                                        <div class="mb-3">
-                                                                            <label for="email-field"
-                                                                                class="form-label">STT</label>
-                                                                            <input type="number"
-                                                                                value="{{ $item->stt }}"
-                                                                                name="stt" class="form-control"
-                                                                                placeholder="Enter STT" required="">
-                                                                        </div>
-
-                                                                        <div>
-                                                                            <label for="status-field"
-                                                                                class="form-label">Tình trạng</label>
-                                                                            <select class="form-control" data-trigger=""
-                                                                                name="status" id="status-field"
-                                                                                required="">
-                                                                                <option value="1"
-                                                                                    {{ $item->status == 1 ? 'selected' : '' }}>
-                                                                                    Bật</option>
-                                                                                <option value="0"
-                                                                                    {{ $item->status == 0 ? 'selected' : '' }}>
-                                                                                    Tắt</option>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer" style="display: block;">
-                                                                        <div class="hstack gap-2 justify-content-end">
-                                                                            <button type="button" class="btn btn-light"
-                                                                                data-bs-dismiss="modal">Close</button>
-                                                                            <button type="submit" class="btn btn-success"
-                                                                                id="add-btn">Update</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Modals for child items -->
-                                                    @foreach ($item->children as $child)
-                                                        <div class="modal fade" id="showModal{{ $child->id_menu }}"
-                                                            tabindex="-1" aria-labelledby="exampleModalLabel"
-                                                            style="display: none;" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header bg-light p-3">
-                                                                        <h5 class="modal-title" id="exampleModalLabel">Cập
-                                                                            nhật menu con</h5>
-                                                                        <p class="mb-0 text-muted small">Thuộc: {{ $typeLabels[$child->type] ?? ucfirst($child->type) }}@php $belongName=null; @endphp
-                                                                            @if ($child->type == 'page' && isset($page_content))
-                                                                                @php $b = $searchInTree($page_content, $child->object_id, 'id_page'); $belongName = $b->name_vn ?? null; @endphp
-                                                                            @endif
-                                                                            @if ($belongName) : {{ $belongName }} @endif
-                                                                        </p>
-                                                                        <button type="button" class="btn-close"
-                                                                            data-bs-dismiss="modal" aria-label="Close"
-                                                                            id="close-modal"></button>
-                                                                    </div>
-                                                                    <form class="tablelist-form"
-                                                                        action="{{ route('admin.menu.update', ['uuid' => $child->uuid]) }}"
-                                                                        method="POST">
-                                                                        @csrf
-                                                                        <div class="modal-body">
-                                                                            <div class="mb-3">
-                                                                                <label for="customername-field"
-                                                                                    class="form-label">Tiêu đề VN</label>
-                                                                                <input type="text" name="name_vn"
-                                                                                    value="{{ $child->name_vn }}"
-                                                                                    class="form-control"
-                                                                                    placeholder="Enter Name"
-                                                                                    required="">
-                                                                            </div>
-                                                                            <div class="mb-3">
-                                                                                <label for="customername-field"
-                                                                                    class="form-label">Tiêu đề EN</label>
-                                                                                <input type="text" name="name_en"
-                                                                                    value="{{ $child->name_en }}"
-                                                                                    class="form-control"
-                                                                                    placeholder="Enter Name"
-                                                                                    required="">
-                                                                            </div>
-                                                                            @if ($child->type == 'link')
-                                                                                <div class="mb-3">
-                                                                                    <label for="customername-field"
-                                                                                        class="form-label">Đường dẫn</label>
-                                                                                    <input type="text" name="link"
-                                                                                        value="{{ $child->link }}"
-                                                                                        class="form-control"
-                                                                                        placeholder="Enter Link" required="">
-                                                                                </div>
-                                                                            @endif
-                                                                            <div class="mb-3">
-                                                                                <label for="email-field"
-                                                                                    class="form-label">STT</label>
-                                                                                <input type="number"
-                                                                                    value="{{ $child->stt }}"
-                                                                                    name="stt" class="form-control"
-                                                                                    placeholder="Enter STT"
-                                                                                    required="">
-                                                                            </div>
-
-                                                                            <div>
-                                                                                <label for="status-field"
-                                                                                    class="form-label">Tình trạng</label>
-                                                                                <select class="form-control"
-                                                                                    data-trigger="" name="status"
-                                                                                    id="status-field" required="">
-                                                                                    <option value="1"
-                                                                                        {{ $child->status == 1 ? 'selected' : '' }}>
-                                                                                        Bật</option>
-                                                                                    <option value="0"
-                                                                                        {{ $child->status == 0 ? 'selected' : '' }}>
-                                                                                        Tắt</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="modal-footer" style="display: block;">
-                                                                            <div class="hstack gap-2 justify-content-end">
-                                                                                <button type="button"
-                                                                                    class="btn btn-light"
-                                                                                    data-bs-dismiss="modal">Close</button>
-                                                                                <button type="submit"
-                                                                                    class="btn btn-success"
-                                                                                    id="add-btn">Update</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
+                                                    @include('admin.modules.menu.menu-item', [
+                                                        'item' => $item,
+                                                        'level' => 1,
+                                                        'pageContent' => $page_content,
+                                                        'cateNew' => $cate_new,
+                                                        'cateProduct' => $cate_product,
+                                                    ])
                                                 @endforeach
                                             </div>
                                             <!--end accordion-->

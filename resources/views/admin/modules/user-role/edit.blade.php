@@ -102,17 +102,24 @@
                                                                 <div class="col-md-4 mb-3">
                                                                     <div class="card border role-card {{ in_array($role->id, $userRoles) ? 'border-primary' : 'border-light' }}">
                                                                         <div class="card-body">
-                                                                            <div class="form-check">
-                                                                                <input class="form-check-input role-checkbox" 
-                                                                                       type="checkbox" 
-                                                                                       name="roles[]" 
-                                                                                       value="{{ $role->id }}" 
-                                                                                       id="role_{{ $role->id }}"
-                                                                                       {{ in_array($role->id, $userRoles) ? 'checked' : '' }}
-                                                                                       onchange="updateRoleCard(this)">
-                                                                                <label class="form-check-label fw-semibold" for="role_{{ $role->id }}">
-                                                                                    {{ $role->display_name }}
-                                                                                </label>
+                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                <div class="form-check flex-grow-1">
+                                                                                    <input class="form-check-input role-checkbox" 
+                                                                                           type="checkbox" 
+                                                                                           name="roles[]" 
+                                                                                           value="{{ $role->id }}" 
+                                                                                           id="role_{{ $role->id }}"
+                                                                                           {{ in_array($role->id, $userRoles) ? 'checked' : '' }}
+                                                                                           onchange="updateRoleCard(this)">
+                                                                                    <label class="form-check-label fw-semibold" for="role_{{ $role->id }}">
+                                                                                        {{ $role->display_name }}
+                                                                                    </label>
+                                                                                </div>
+                                                                                <button type="button" class="btn btn-xs btn-outline-info" 
+                                                                                        onclick="selectRolePermissions({{ $role->id }})"
+                                                                                        title="Chọn tất cả quyền của vai trò này">
+                                                                                    <i class="ri-add-circle-line"></i>
+                                                                                </button>
                                                                             </div>
                                                                             <small class="text-muted">{{ $role->name }}</small>
                                                                             @if ($role->description)
@@ -276,8 +283,32 @@ function selectGroupPermissions(groupName) {
     $('.permission-checkbox[data-group="' + groupName + '"]').prop('checked', true);
 }
 
-function clearGroupPermissions(groupName) {
-    $('.permission-checkbox[data-group="' + groupName + '"]').prop('checked', false);
+function selectRolePermissions(roleId) {
+    // Find the role by ID and get its permissions
+    const roleCard = $(`#role_${roleId}`).closest('.role-card');
+    const permissionIds = [];
+    
+    // Extract permission IDs from the role's permission badges
+    roleCard.find('.role-permissions .badge').each(function() {
+        const permissionName = $(this).text().trim();
+        // Find the corresponding permission checkbox by display name
+        $('.permission-checkbox').each(function() {
+            const checkboxLabel = $(this).next('label').find('small').text().trim();
+            if (checkboxLabel === permissionName) {
+                $(this).prop('checked', true);
+                permissionIds.push($(this).val());
+            }
+        });
+    });
+    
+    if (permissionIds.length > 0) {
+        updateAssignmentType();
+        alert(`Đã chọn ${permissionIds.length} quyền của vai trò này. Chuyển sang tab "Chọn quyền riêng lẻ" để xem.`);
+        // Switch to permissions tab
+        $('#permissionsTab-tab').tab('show');
+    } else {
+        alert('Vai trò này chưa có quyền nào được gán.');
+    }
 }
 
 $(document).ready(function() {
@@ -289,24 +320,20 @@ $(document).ready(function() {
     // Update role cards when changed
     $('.role-checkbox').change(function() {
         updateRoleCard(this);
+        updateAssignmentType();
     });
 
-    // Initialize assignment_type based on active tab
-    if ($('#permissionsTab').hasClass('active')) {
-        $('#assignment_type').val('permissions');
-    } else {
-        $('#assignment_type').val('roles');
-    }
+    // Update assignment type when permissions change
+    $('.permission-checkbox').change(function() {
+        updateAssignmentType();
+    });
 
-    // Handle tab switching
+    // Initialize assignment_type based on current selections
+    updateAssignmentType();
+
+    // Handle tab switching - don't change assignment_type automatically
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-        const target = $(e.target).attr("href");
-        
-        if (target === '#rolesTab') {
-            $('#assignment_type').val('roles');
-        } else if (target === '#permissionsTab') {
-            $('#assignment_type').val('permissions');
-        }
+        // Just switch tab, don't change assignment_type
     });
 
     // Show confirmation before saving
@@ -329,11 +356,32 @@ $(document).ready(function() {
         }
 
         const confirmMessage = assignmentType === 'roles' 
-            ? `Bạn có chắc muốn gán ${selectedRoles} vai trò cho người dùng này?`
-            : `Bạn có chắc muốn gán ${selectedPermissions} quyền riêng lẻ cho người dùng này?`;
+            ? `Bạn có chắc muốn gán ${selectedRoles} vai trò cho người dùng này?\n\nLưu ý: Các quyền riêng lẻ (nếu có) sẽ bị xóa.`
+            : `Bạn có chắc muốn gán ${selectedPermissions} quyền riêng lẻ cho người dùng này?\n\nLưu ý: Các vai trò (nếu có) sẽ bị xóa.`;
         
         return confirm(confirmMessage);
     });
 });
+
+// Function to update assignment type based on user selections
+function updateAssignmentType() {
+    const selectedRoles = $('.role-checkbox:checked').length;
+    const selectedPermissions = $('.permission-checkbox:checked').length;
+    
+    if (selectedRoles > 0) {
+        $('#assignment_type').val('roles');
+        // Switch to roles tab if permissions were selected but now roles are selected
+        if (selectedPermissions > 0) {
+            $('#rolesTab-tab').tab('show');
+        }
+    } else if (selectedPermissions > 0) {
+        $('#assignment_type').val('permissions');
+        // Switch to permissions tab
+        $('#permissionsTab-tab').tab('show');
+    } else {
+        // Default to roles if nothing selected
+        $('#assignment_type').val('roles');
+    }
+}
 </script>
 @endsection

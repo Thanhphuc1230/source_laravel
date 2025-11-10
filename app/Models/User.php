@@ -23,6 +23,8 @@ class User extends Authenticatable
         'uuid',
         'fullname',
         'username',
+        'phone',
+        'address',
         'email',
         'password',
         'level',

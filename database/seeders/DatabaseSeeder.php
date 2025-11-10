@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoryNewSeeder::class);
         $this->call(MenuSeeder::class);
         $this->call(UserSeeder::class);
-        $this->call(UserRoleTestSeeder::class); // Tạo test users
         $this->call(ProductSeeder::class);
         $this->call(ProductSettingSeeder::class);
         $this->call(NewsSeeder::class);

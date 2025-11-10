@@ -57,6 +57,20 @@
                     </a>
                 </li>
                 @endhasPermission
+                @hasPermission('brand.view')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.brand.index') }}">
+                        <i class="ri-building-line"></i> <span data-key="t-widgets">Đối tác</span>
+                    </a>
+                </li>
+                @endhasPermission
+                @hasPermission('feature.view')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.feature.index') }}">
+                        <i class="ri-star-line"></i> <span data-key="t-widgets">Tính năng</span>
+                    </a>
+                </li>
+                @endhasPermission
                 @hasPermission('menu.view')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse" role="button"
@@ -67,10 +81,6 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a href="{{ route('admin.menu.index') }}" class="nav-link" data-key="t-calendar">Menu
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('admin.fonts.index') }}" class="nav-link" data-key="t-calendar">Font chữ
                                 </a>
                             </li>
                         </ul>
@@ -138,7 +148,7 @@
                         <i class="ri-feedback-line"></i> <span data-key="t-widgets">Đánh giá khách hàng</span>
                     </a>
                 </li>
-                @endhasPermission
+                @endhasAnyPermission
                 @hasAnyPermission(['contact.view', 'comment.view'])
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#Contact" data-bs-toggle="collapse" role="button"
@@ -161,6 +171,14 @@
                     </div>
                 </li>
                 @endhasAnyPermission
+                @hasPermission('chat.view')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.chat.index') }}">
+                        <i class="ri-chat-1-line"></i> <span data-key="t-widgets">Chat hỗ trợ</span>
+                        <span class="badge bg-danger ms-2" id="chat-unread-badge" style="display: none;">0</span>
+                    </a>
+                </li>
+                @endhasPermission
                 {{-- system --}}
                 @hasAnyPermission(['system.view', 'user.view', 'role.view'])
                 <li class="nav-item">
@@ -175,6 +193,13 @@
                                 <a href="{{ route('admin.system.index') }}" class="nav-link"
                                     data-key="t-calendar">Quản
                                     lý hệ thống
+                                </a>
+                            </li>
+                            @endhasPermission
+                            @hasPermission('user.view')
+                            <li class="nav-item">
+                                <a href="{{ route('admin.user.index') }}" class="nav-link"
+                                    data-key="t-user-management">Quản lý người dùng
                                 </a>
                             </li>
                             @endhasPermission

@@ -13,7 +13,7 @@ class Comment extends Model
 
     protected $table = 'tp_comments';
     protected $primaryKey = 'id_comment';
-    protected $fillable = ['uuid', 'name', 'email', 'content', 'id_post','type_post','status'];
+    protected $fillable = ['uuid', 'name', 'email', 'content', 'id_post','type_post','status', 'rating'];
 
     protected $casts = [
         'status' => 'boolean',
@@ -33,9 +33,9 @@ class Comment extends Model
     }
 
     /**
-     * Scope for active comments
+     * Scope for approved comments
      */
-    public function scopeActive($query)
+    public function scopeApproved($query)
     {
         return $query->where('status', 1);
     }
@@ -49,7 +49,7 @@ class Comment extends Model
     }
 
     /**
-     * Scope for comments by post type
+     * Scope for comments by type
      */
     public function scopeByType($query, $type)
     {
@@ -57,11 +57,11 @@ class Comment extends Model
     }
 
     /**
-     * Scope for comments by post ID
+     * Scope for comments by item
      */
-    public function scopeByPost($query, $postId)
+    public function scopeByItem($query, $type, $itemId)
     {
-        return $query->where('id_post', $postId);
+        return $query->where('type_post', $type)->where('id_post', $itemId);
     }
 
     /**

@@ -17,6 +17,23 @@
     <link href="{{ asset('admin/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{ asset('admin/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- Remix Icon (used across admin views) -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Remix Icon fallback: ensure class selectors use the remix font (helps if other CSS overrides) -->
+    <style>
+        /* Force remixicon classes to use RemixIcon font-family when available */
+        .ri, [class^="ri-"], [class*=" ri-"] {
+            font-family: 'RemixIcon' !important;
+            speak: none;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
     {{-- ckeditor --}}
     <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
 

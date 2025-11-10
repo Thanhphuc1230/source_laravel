@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\CateNew;
+use App\Models\CateProduct;
 use App\Models\Menu;
 use App\Models\System;
+use App\Services\CacheService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
@@ -38,18 +41,55 @@ class AppServiceProvider extends ServiceProvider
         $this->registerBladeDirectives();
 
         View::composer('frontend.*', function ($view) {
-            // 6 giờ (360 phút)
-            $data['website'] = Cache::remember('website_data', 360, function () {
-                return System::first();
-            });
+            // Website data with tags
+            $data['website'] = CacheService::remember(
+                CacheService::TAGS['website'],
+                'website_data',
+                CacheService::getTtl('long'),
+                function () {
+                    return System::first();
+                }
+            );
 
-            // 6 giờ (360 phút) - đảm bảo nhất quán với cache trong MenuHelper
-            $data['menu'] = Cache::remember('menu_header', 360, function () {
-                return Menu::with('children')
-                    ->where('parent_id', 0)
-                    ->orderBy('stt', 'asc')
-                    ->get();
-            });
+            // Menu data with tags
+            $data['menu'] = CacheService::remember(
+                CacheService::TAGS['menu'],
+                'menu_header',
+                CacheService::getTtl('long'),
+                function () {
+                    return Menu::with('children')
+                        ->where('parent_id', 0)
+                        ->orderBy('stt', 'asc')
+                        ->get();
+                }
+            );
+
+            // Danh mục sản phẩm cho footer
+            $data['category_product_footer'] = CacheService::remember(
+                CacheService::TAGS['categories'],
+                'category_product_footer',
+                CacheService::getTtl('long'),
+                function () {
+                    return CateProduct::where('status', 1)
+                        ->whereIn('parent_id', [0,1])
+                        ->orderBy('stt', 'asc')
+                        ->get();
+                }
+            );
+
+            // Danh mục tin tức cho footer
+            $data['category_news_footer'] = CacheService::remember(
+                CacheService::TAGS['categories'],
+                'category_news_footer',
+                CacheService::getTtl('long'),
+                function () {
+                    return CateNew::where('status', 1)
+                        ->where('parent_id', 0)
+                        ->orderBy('stt', 'asc')
+                        ->get();
+                }
+            );
+
             $view->with($data);
         });
     }

@@ -31,7 +31,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label class="form-label" for="product-title-input">Tiêu đề VN</label>
+                                    <label class="form-label" for="product-title-input">Tiêu đề </label>
                                     <input type="text" id="name_vn"
                                         class="form-control @error('name_vn') is-invalid @enderror" name="name_vn"
                                         value="{{ old('name_vn', $page->name_vn ?? '') }}"
@@ -40,20 +40,10 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label" for="product-title-input">Tiêu đề EN</label>
-                                    <input type="text" id="name_vn"
-                                        class="form-control @error('name_en') is-invalid @enderror" name="name_en"
-                                        value="{{ old('name_en', $page->name_en ?? '') }}"
-                                        placeholder="Enter your title page ">
-                                    @error('name_en')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <label for="intro-vn" class="form-label">Giới thiệu VN</label>
+                                        <label for="intro-vn" class="form-label">Giới thiệu </label>
                                         <textarea class="form-control @error('intro_vn') is-invalid @enderror" name="intro_vn" rows="6"
                                             placeholder="Enter your message">{{ old('intro_vn', $page->intro_vn ?? '') }}</textarea>
                                         @error('intro_vn')
@@ -64,31 +54,10 @@
 
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <label for="intro-en" class="form-label">Giới thiệu EN</label>
-                                        <textarea class="form-control @error('intro_en') is-invalid @enderror" name="intro_en" rows="6"
-                                            placeholder="Enter your message">{{ old('intro_en', $page->intro_en ?? '') }}</textarea>
-                                        @error('intro_en')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label for="content-vn" class="form-label">Nội dung VN</label>
+                                        <label for="content-vn" class="form-label">Nội dung </label>
                                         <textarea id="content-vn" class="form-control @error('content_vn') is-invalid @enderror" name="content_vn"
                                             rows="6" placeholder="Enter your message">{{ old('content_vn', $page->content_vn ?? '') }}</textarea>
                                         @error('content_vn')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label for="content-en" class="form-label">Nội dung EN</label>
-                                        <textarea id="content-en" class="form-control @error('content_en') is-invalid @enderror" name="content_en"
-                                            rows="6" placeholder="Enter your message">{{ old('content_en', $page->content_en ?? '') }}</textarea>
-                                        @error('content_en')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -99,7 +68,7 @@
 
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Hình ảnh sản phẩm</h5>
+                                <h5 class="card-title mb-0">Hình ảnh bài viết</h5>
                             </div>
                             <div class="card-body">
                                 <div class="col-md-6">

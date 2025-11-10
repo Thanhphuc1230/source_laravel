@@ -45,7 +45,6 @@
                                                 <th class="sort">ID</th>
                                                 <th class="sort">Tên</th>
                                                 <th class="sort">Email</th>
-                                                <th class="sort">Nội dung</th>
                                                 <th class="sort">Bài viết ID</th>
                                                 <th class="sort">Loại</th>
                                                 <th class="sort">Hiển thị</th>
@@ -65,22 +64,13 @@
                                                             <td>{{ $item->id_comment }}</td>
                                                             <td>{{ $item->name }}</td>
                                                             <td>{{ $item->email }}</td>
-                                                            <td>{{ Str::limit($item->content, 50) }}</td>
                                                             <td>{{ $item->id_post }}</td>
                                                             <td>{{ $item->type_post_name }}</td>
                                                             <td class="status">
                                                                 @if ($item->status == 1)
-                                                                    <a href="{{ route('admin.' . $nameClass . '.status', ['uuid' => $item->uuid, 'status' => 0, 'field' => 'status']) }}"
-                                                                        onclick="return confirm('Xác nhận tắt kích hoạt {{ $nameItem }} ?')">
-                                                                        <span
-                                                                            class="badge bg-success-subtle text-success text-uppercase">Active</span>
-                                                                    </a>
+                                                                    <span class="badge bg-success-subtle text-success text-uppercase">Đã duyệt</span>
                                                                 @else
-                                                                    <a href="{{ route('admin.' . $nameClass . '.status', ['uuid' => $item->uuid, 'status' => 1, 'field' => 'status']) }}"
-                                                                        onclick="return confirm('Xác nhận kích hoạt {{ $nameItem }} ?')">
-                                                                        <span
-                                                                            class="badge bg-danger-subtle text-danger text-uppercase">Block</span>
-                                                                    </a>
+                                                                    <span class="badge bg-danger-subtle text-danger text-uppercase">Chưa duyệt</span>
                                                                 @endif
                                                             </td>
 
@@ -109,7 +99,7 @@
                                                 </form>
                                             @else
                                                 <tr>
-                                                    <td colspan="10" style="text-align:center">Chưa có dữ liệu</td>
+                                                    <td colspan="9" style="text-align:center">Chưa có dữ liệu</td>
                                                 </tr>
                                             @endif
                                         </tbody>
@@ -133,5 +123,5 @@
         </div>
         <!-- container-fluid -->
     </div>
-
 @endsection
+

@@ -57,7 +57,7 @@
                 .catch(error => alert('Có lỗi xảy ra!'));
         });
     </script>
-
+    @include('sweetalert::alert')
 </body>
 
 </html>

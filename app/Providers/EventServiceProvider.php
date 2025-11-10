@@ -2,16 +2,20 @@
 
 namespace App\Providers;
 
+use App\Events\Brand\BrandChanged;
 use App\Events\CateNew\CateNewChanged;
 use App\Events\CateProduct\CateProductChanged;
+use App\Events\Feature\FeatureChanged;
 use App\Events\Feedback\FeedbackChanged;
 use App\Events\Menu\MenuChanged;
 use App\Events\News\NewsChanged;
 use App\Events\Page\PageChanged;
 use App\Events\Product\ProductChanged;
 use App\Events\Slider\SliderChanged;
+use App\Listeners\Brand\ClearBrandCache;
 use App\Listeners\CateNew\ClearCateNewCache;
 use App\Listeners\CateProduct\ClearCateProductCache;
+use App\Listeners\Feature\ClearFeatureCache;
 use App\Listeners\Feedback\ClearFeedbackCache;
 use App\Listeners\Menu\ClearMenuCache;
 use App\Listeners\News\ClearNewsCache;
@@ -73,6 +77,16 @@ class EventServiceProvider extends ServiceProvider
         // Product Events
         ProductChanged::class => [
             ClearProductCache::class,
+        ],
+
+        // Brand Events
+        BrandChanged::class => [
+            ClearBrandCache::class,
+        ],
+
+        // Feature Events
+        FeatureChanged::class => [
+            ClearFeatureCache::class,
         ],
     ];
 

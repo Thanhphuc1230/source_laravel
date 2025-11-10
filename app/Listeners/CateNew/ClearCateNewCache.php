@@ -3,6 +3,7 @@
 namespace App\Listeners\CateNew;
 
 use App\Events\CateNew\CateNewChanged;
+use App\Services\CacheService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -11,12 +12,14 @@ class ClearCateNewCache
     public function handle(CateNewChanged $event): void
     {
         try {
-            // Xóa cache cate_news
+            // Xóa cache cate_news (tag-based)
+            CacheService::forgetTag(CacheService::TAGS['categories']);
+            // Backward-compat: legacy key
             Cache::forget('cate_news_cache');
 
-            // Xóa cache slug resolution nếu có slug
             if ($event->slug) {
                 $slugCacheKey = "slug_resolution_{$event->slug}";
+                CacheService::forget(CacheService::TAGS['categories'], $slugCacheKey);
                 Cache::forget($slugCacheKey);
             }
 
