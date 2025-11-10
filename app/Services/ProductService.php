@@ -1,0 +1,234 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\CateProduct;
+use App\Models\Product;
+use App\Repositories\Interfaces\CommentRepositoryInterface;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
+use Illuminate\Http\Request;
+
+class ProductService
+{
+    protected $productRepository;
+    protected $commentRepository;
+
+    public function __construct(ProductRepositoryInterface $productRepository, CommentRepositoryInterface $commentRepository)
+    {
+        $this->productRepository = $productRepository;
+        $this->commentRepository = $commentRepository;
+    }
+
+    /**
+     * Get data for product category page
+     *
+     * @param string $slug_cate_product
+     * @param Request $request
+     * @return array
+     */
+    public function getCategoryProductData($slug_cate_product, Request $request)
+    {
+        $data = [];
+
+        // Cache category data
+        $data['category_detail'] = \App\Services\CacheService::remember(
+            \App\Services\CacheService::TAGS['categories'] ?? 'categories',
+            "category_detail_{$slug_cate_product}",
+            \App\Services\CacheService::getTtl('long'),
+            fn () => CateProduct::where('status', 1)->where('slug', $slug_cate_product)->firstOrFail()
+        );
+
+        // Cache category list (sidebar)
+        $data['category_product'] = \App\Services\CacheService::remember(
+            \App\Services\CacheService::TAGS['categories'] ?? 'categories',
+            'category_product_home',
+            \App\Services\CacheService::getTtl('long'),
+            fn () => CateProduct::where('status', 1)->where('home', 1)->orderBy('stt', 'asc')->where('parent_id', 0)->get()
+        );
+
+        // Build category id list (include children recursively)
+        $categoryIds = $this->getAllCategoryIds($data['category_detail']->id_cate_product);
+
+        // Base query
+        $query = Product::with(['cate:id_cate_product,name_vn,slug'])
+            ->select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn', 'category_id', 'status', 'stt', 'created_at')
+            ->whereIn('category_id', $categoryIds)
+            ->where('status', 1);
+
+        // Apply filters
+        $query = $this->applyProductFilters($query, $request);
+
+        // Apply sorting
+        $query = $this->applyProductSorting($query, $request);
+
+        // Get per-page value
+        $perPage = $this->getPerPageValue($request);
+
+        $data['products'] = $query->paginate($perPage)->appends($request->query());
+
+        return $data;
+    }
+
+    /**
+     * Get data for product detail page
+     *
+     * @param string $slug_product
+     * @return array
+     */
+    public function getDetailProductData($slug_product)
+    {
+        $data = [];
+
+        // Cache product detail
+        $data['product_detail'] = \App\Services\CacheService::remember(
+            \App\Services\CacheService::TAGS['products'] ?? 'products',
+            "product_detail_{$slug_product}",
+            \App\Services\CacheService::getTtl('long'),
+            fn () => Product::with(['cate:id_cate_product,name_vn,slug'])
+                ->where('slug', $slug_product)
+                ->firstOrFail()
+        );
+
+        // Get related products
+        $data['related_product'] = Product::select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn')
+            ->where('category_id', $data['product_detail']->category_id)
+            ->where('id_product', '!=', $data['product_detail']->id_product)
+            ->where('status', 1)
+            ->orderBy('created_at', 'desc')
+            ->limit(8)
+            ->get();
+
+        // Get approved comments
+        $data['comments'] = $this->commentRepository->getApprovedCommentsForItem('product', $data['product_detail']->id_product);
+
+        return $data;
+    }
+
+    /**
+     * Apply filters to product query
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private function applyProductFilters($query, Request $request)
+    {
+        // Name search filter
+        if ($request->filled('name')) {
+            $name = $request->get('name');
+            $query->where(function ($q) use ($name) {
+                $q->where('name_vn', 'like', "%{$name}%")
+                  ->orWhere('name_en', 'like', "%{$name}%");
+            });
+        }
+
+        // Price filters
+        if ($request->filled('price_min')) {
+            $priceMin = (float) $request->get('price_min');
+            $query->where('price', '>=', $priceMin);
+        }
+
+        if ($request->filled('price_max')) {
+            $priceMax = (float) $request->get('price_max');
+            $query->where('price', '<=', $priceMax);
+        }
+
+        // Date filters
+        if ($request->filled('date_from')) {
+            $dateFrom = $request->get('date_from');
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+
+        if ($request->filled('date_to')) {
+            $dateTo = $request->get('date_to');
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Apply sorting to product query
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param Request $request
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private function applyProductSorting($query, Request $request)
+    {
+        $sort = $request->get('sort');
+
+        switch ($sort) {
+            case 'name_asc':
+                $query->orderBy('name_vn', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name_vn', 'desc');
+                break;
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'date_asc':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'date_desc':
+                $query->orderBy('created_at', 'desc');
+                break;
+            default:
+                $query->orderBy('stt', 'asc');
+                break;
+        }
+
+        return $query;
+    }
+
+    /**
+     * Get per-page value with validation
+     *
+     * @param Request $request
+     * @return int
+     */
+    private function getPerPageValue(Request $request)
+    {
+        $perPage = (int) $request->get('per_page', 16);
+        if ($perPage <= 0 || $perPage > 100) {
+            $perPage = 16;
+        }
+        return $perPage;
+    }
+
+    /**
+     * Get all category IDs recursively (parent + all children)
+     *
+     * @param int $parentId
+     * @return array
+     */
+    private function getAllCategoryIds($parentId)
+    {
+        $categoryIds = [$parentId];
+
+        $this->getChildCategoryIds($parentId, $categoryIds);
+
+        return $categoryIds;
+    }
+
+    /**
+     * Recursively get all child category IDs
+     *
+     * @param int $parentId
+     * @param array &$categoryIds
+     * @return void
+     */
+    private function getChildCategoryIds($parentId, &$categoryIds)
+    {
+        $children = CateProduct::where('parent_id', $parentId)->pluck('id_cate_product')->toArray();
+
+        foreach ($children as $childId) {
+            $categoryIds[] = $childId;
+            $this->getChildCategoryIds($childId, $categoryIds);
+        }
+    }
+}
