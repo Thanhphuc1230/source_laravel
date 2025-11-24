@@ -4,15 +4,18 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Services\CartService;
+use App\Services\RateLimitService;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
     protected $cartService;
+    protected $rateLimitService;
 
     public function __construct(CartService $cartService)
     {
         $this->cartService = $cartService;
+        $this->rateLimitService = RateLimitService::forCart();
     }
 
     public function index()
@@ -29,6 +32,14 @@ class CartController extends Controller
 
     public function addToCart(Request $request, $uuid, $quantity = 1)
     {
+        $ip = $request->ip();
+
+        // Check rate limit
+        if ($this->rateLimitService->isBlocked($ip)) {
+            toast()->error(session('locale') == 'en' ? 'Too many requests. Please try again later.' : 'Quá nhiều yêu cầu. Vui lòng thử lại sau.');
+            return back();
+        }
+
         if ($request->quantity) {
             $quantity = $request->quantity;
         }
@@ -36,9 +47,13 @@ class CartController extends Controller
         $success = $this->cartService->addProduct($request, $uuid, $quantity);
 
         if (!$success) {
+            $this->rateLimitService->incrementAttempts($ip);
             toast()->error(session('locale') == 'en' ? 'Product not found' : 'Sản phẩm không tồn tại.');
             return back();
         }
+
+        // Clear attempts on success
+        $this->rateLimitService->clearAttempts($ip);
 
         toast()->success(session('locale') == 'en' ? 'Added to cart successfully.' : 'Đã thêm vào giỏ hàng thành công.');
         return redirect()->route('web.cart');

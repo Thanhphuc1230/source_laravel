@@ -112,10 +112,18 @@ class RateLimitService
     }
 
     /**
-     * Factory method for custom rate limiting
+     * Factory method for cart operations rate limiting
      */
-    public static function for(string $prefix, int $maxAttempts = 5, int $decayMinutes = 15): self
+    public static function forCart(int $maxAttempts = 10, int $decayMinutes = 1): self
     {
-        return new self($prefix, $maxAttempts, $decayMinutes);
+        return new self('cart', $maxAttempts, $decayMinutes);
+    }
+
+    /**
+     * Factory method for checkout operations rate limiting
+     */
+    public static function forCheckout(int $maxAttempts = 3, int $decayMinutes = 10): self
+    {
+        return new self('checkout', $maxAttempts, $decayMinutes);
     }
 }

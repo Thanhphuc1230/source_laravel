@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Http\Requests\Frontend\OrderRequest;
+use Illuminate\Http\Request;
 use App\Mail\AlertOrder;
 use App\Models\OrderProduct;
 use App\Models\OrderShipping;
@@ -33,10 +33,10 @@ class CheckoutService
     /**
      * Process checkout order
      *
-     * @param OrderRequest $request
+     * @param Request $request
      * @return int|null Order status ID
      */
-    public function processOrder(OrderRequest $request): ?int
+    public function processOrder(Request $request): ?int
     {
         try {
             DB::beginTransaction();
@@ -66,10 +66,10 @@ class CheckoutService
     /**
      * Create shipping record
      *
-     * @param OrderRequest $request
+     * @param Request $request
      * @return OrderShipping
      */
-    private function createShipping(OrderRequest $request): OrderShipping
+    private function createShipping(Request $request): OrderShipping
     {
         return OrderShipping::create([
             'f_name_order' => $request->f_name_order,
@@ -85,11 +85,11 @@ class CheckoutService
     /**
      * Create order status record
      *
-     * @param OrderRequest $request
+     * @param Request $request
      * @param int $shippingId
      * @return OrderStatus
      */
-    private function createOrderStatus(OrderRequest $request, int $shippingId): OrderStatus
+    private function createOrderStatus(Request $request, int $shippingId): OrderStatus
     {
         return OrderStatus::create([
             'uuid_order_status' => Str::uuid(),
