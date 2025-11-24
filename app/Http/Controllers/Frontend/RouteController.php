@@ -14,10 +14,15 @@ class RouteController extends Controller
      * Universal route handler - xử lý tất cả slug với fallback chain
      * Priority: Product Detail > News Detail > Category Product > Category News > Page
      */
-    public function resolve($slug)
+    public function resolve($id, $slug)
     {
+        // Validate ID is numeric
+        if (!is_numeric($id)) {
+            return view('errors.404');
+        }
+
         // Cache key cho slug resolution
-        $cacheKey = "slug_resolution_{$slug}";
+        $cacheKey = "slug_resolution_{$id}_{$slug}";
 
         // Cache TTL từ config hoặc default 1 giờ
         $cacheTtl = config('cache.ttl.slug_resolution', 3600);
@@ -27,13 +32,14 @@ class RouteController extends Controller
             CacheService::TAGS['frontend'] ?? 'frontend',
             $cacheKey,
             $cacheTtl,
-            function () use ($slug) {
-                return $this->findContentBySlug($slug);
+            function () use ($id, $slug) {
+                return $this->findContentByIdAndSlug($id, $slug);
             }
         );
 
         if (! $result) {
-            Log::warning('Slug not found', [
+            Log::warning('Content not found by ID and slug', [
+                'id' => $id,
                 'slug' => $slug,
                 'user_agent' => request()->userAgent(),
                 'ip' => request()->ip(),
@@ -43,7 +49,8 @@ class RouteController extends Controller
         }
 
         // Log successful resolution
-        Log::info('Slug resolved successfully', [
+        Log::info('Content resolved successfully', [
+            'id' => $id,
             'slug' => $slug,
             'type' => $result['type'],
             'title' => $result['title'],
@@ -54,48 +61,41 @@ class RouteController extends Controller
     }
 
     /**
-     * Tìm content bằng single query với UNION
+     * Tìm content bằng ID và slug với single query
      */
-    private function findContentBySlug(string $slug): ?array
+    private function findContentByIdAndSlug(int $id, string $slug): ?array
     {
         try {
             $query = "
                 SELECT 'product' as type, id_product as id, slug, name_vn as title, status
-                FROM tp_products 
-                WHERE slug = ? AND status = 1
+                FROM tp_products
+                WHERE id_product = ? AND slug = ? AND status = 1
                 UNION ALL
-                SELECT 'news' as type, id_new as id, slug, name_vn as title, status  
-                FROM tp_news 
-                WHERE slug = ? AND status = 1
+                SELECT 'news' as type, id_new as id, slug, name_vn as title, status
+                FROM tp_news
+                WHERE id_new = ? AND slug = ? AND status = 1
                 UNION ALL
                 SELECT 'cate_product' as type, id_cate_product as id, slug, name_vn as title, status
-                FROM tp_cate_products 
-                WHERE slug = ? AND status = 1
+                FROM tp_cate_products
+                WHERE id_cate_product = ? AND slug = ? AND status = 1
                 UNION ALL
                 SELECT 'cate_news' as type, id_cate_new as id, slug, name_vn as title, status
-                FROM tp_cate_news 
-                WHERE slug = ? AND status = 1
+                FROM tp_cate_news
+                WHERE id_cate_new = ? AND slug = ? AND status = 1
                 UNION ALL
                 SELECT 'page' as type, id_page as id, slug, name_vn as title, status
-                FROM tp_pages 
-                WHERE slug = ? AND status = 1
-                ORDER BY 
-                    CASE type 
-                        WHEN 'product' THEN 1
-                        WHEN 'news' THEN 2
-                        WHEN 'cate_product' THEN 3
-                        WHEN 'cate_news' THEN 4
-                        WHEN 'page' THEN 5
-                    END
+                FROM tp_pages
+                WHERE id_page = ? AND slug = ? AND status = 1
                 LIMIT 1
             ";
 
-            $result = DB::select($query, [$slug, $slug, $slug, $slug, $slug]);
+            $result = DB::select($query, [$id, $slug, $id, $slug, $id, $slug, $id, $slug, $id, $slug]);
 
             return $result ? (array) $result[0] : null;
 
         } catch (\Exception $e) {
-            Log::error('Error finding content by slug', [
+            Log::error('Error finding content by ID and slug', [
+                'id' => $id,
                 'slug' => $slug,
                 'error' => $e->getMessage(),
             ]);

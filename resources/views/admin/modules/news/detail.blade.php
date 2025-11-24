@@ -163,9 +163,9 @@
                                         <div class="mb-3">
                                             <label class="form-label">Xem trang</label>
                                             <div>
-                                                <a href="{{ route('web.resolve', ['slug' => $page->slug]) }}"
+                                                <a href="{{ route('web.resolve', ['id' => $page->id_new, 'slug' => $page->slug]) }}"
                                                     target="_blank" class="text-decoration-none">
-                                                    <span>{{ request()->getSchemeAndHttpHost() }}/news/{{ $categorySlug }}/{{ $page->slug }}.html</span>
+                                                    <span>{{ request()->getSchemeAndHttpHost() }}/{{ $page->id_new }}-{{ $page->slug }}.html</span>
                                                     <i class="ri-eye-line ms-1"></i>
                                                 </a>
                                             </div>

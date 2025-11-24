@@ -262,8 +262,8 @@
                                 <div class="mt-3">
                                     <label class="form-label">Xem trang</label>
                                     <div>
-                                        <a href="{{ route('web.resolve', ['slug' => $page->slug]) }}" target="_blank" class="text-decoration-none">
-                                            <span>{{ request()->getSchemeAndHttpHost() }}/{{ $page->slug }}-{{ $page->id_product }}.html</span>
+                                        <a href="{{ route('web.resolve', ['id' => $page->id_product, 'slug' => $page->slug]) }}" target="_blank" class="text-decoration-none">
+                                            <span>{{ request()->getSchemeAndHttpHost() }}/{{ $page->id_product }}-{{ $page->slug }}.html</span>
                                             <i class="ri-eye-line ms-1"></i>
                                         </a>
                                     </div>

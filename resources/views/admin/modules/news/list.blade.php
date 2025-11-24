@@ -126,7 +126,7 @@
                                                             <td>
                                                                 <div class="d-flex gap-2">
                                                                     <div class="watch">
-                                                                        <a href="{{ route('web.resolve',['slug' => $item->slug]) }}" target="_blank"
+                                                                        <a href="{{ route('web.resolve',['id' => $item->id_new, 'slug' => $item->slug]) }}" target="_blank"
                                                                             class="btn btn-sm btn-primary watch-item-btn">Xem</a>
                                                                     </div>
                                                                     @hasPermission('news.edit')
