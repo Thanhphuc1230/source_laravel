@@ -10,6 +10,7 @@ use App\Repositories\Eloquent\CommentRepository;
 use App\Repositories\Eloquent\ContactRepository;
 use App\Repositories\Eloquent\ChatRepository;
 use App\Repositories\Eloquent\FeedBackRepository;
+use App\Repositories\Eloquent\MailConfigRepository;
 use App\Repositories\Eloquent\MenuRepository;
 use App\Repositories\Eloquent\NewsRepository;
 use App\Repositories\Eloquent\PageRepository;
@@ -26,6 +27,7 @@ use App\Repositories\Interfaces\ChatRepositoryInterface;
 use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Repositories\Interfaces\ContactRepositoryInterface;
 use App\Repositories\Interfaces\FeedBackRepositoryInterface;
+use App\Repositories\Interfaces\MailConfigRepositoryInterface;
 use App\Repositories\Interfaces\MenuRepositoryInterface;
 use App\Repositories\Interfaces\NewsRepositoryInterface;
 use App\Repositories\Interfaces\PageRepositoryInterface;
@@ -57,6 +59,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(MenuRepositoryInterface::class, MenuRepository::class);
         $this->app->bind(SystemRepositoryInterface::class, SystemRepository::class);
         $this->app->bind(ChatRepositoryInterface::class, ChatRepository::class);
+        $this->app->bind(MailConfigRepositoryInterface::class, MailConfigRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
 
