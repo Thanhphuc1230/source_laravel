@@ -196,6 +196,13 @@
                                 </a>
                             </li>
                             @endhasPermission
+                            @hasPermission('mail-config.view')
+                            <li class="nav-item">
+                                <a href="{{ route('admin.mail-config.index') }}" class="nav-link"
+                                    data-key="t-mail-config">Cấu hình mail
+                                </a>
+                            </li>
+                            @endhasPermission
                             @hasPermission('user.view')
                             <li class="nav-item">
                                 <a href="{{ route('admin.user.index') }}" class="nav-link"
