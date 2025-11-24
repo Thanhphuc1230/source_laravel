@@ -14,58 +14,61 @@ if (!function_exists('getUrlMenu')) {
 
         switch ($item->type) {
             case 'page':
-                $slug = \App\Services\CacheService::remember(
+                $pageData = \App\Services\CacheService::remember(
                     \App\Services\CacheService::TAGS['pages'] ?? 'pages',
-                    "page_slug_{$item->object_id}",
+                    "page_data_{$item->object_id}",
                     \App\Services\CacheService::getTtl('long'),
                     function () use ($item) {
                         return Page::where('id_page', $item->object_id)
                             ->where('status', 1)
-                            ->value('slug');
+                            ->select('id_page', 'slug')
+                            ->first();
                     }
                 );
 
-                if (empty($slug)) {
+                if (empty($pageData)) {
                     return route('web.404');
                 }
 
-                return route('web.resolve', ['slug' => $slug]);
+                return route('web.resolve', ['id' => $pageData->id_page, 'slug' => $pageData->slug]);
 
             case 'cate_new':
-                $slug = \App\Services\CacheService::remember(
+                $cateData = \App\Services\CacheService::remember(
                     \App\Services\CacheService::TAGS['categories'] ?? 'categories',
-                    "cate_new_slug_{$item->object_id}",
+                    "cate_new_data_{$item->object_id}",
                     \App\Services\CacheService::getTtl('long'),
                     function () use ($item) {
                         return CateNew::where('id_cate_new', $item->object_id)
                             ->where('status', 1)
-                            ->value('slug');
+                            ->select('id_cate_new', 'slug')
+                            ->first();
                     }
                 );
 
-                if (empty($slug)) {
+                if (empty($cateData)) {
                     return route('web.404');
                 }
 
-                return route('web.resolve', ['slug' => $slug]);
+                return route('web.resolve', ['id' => $cateData->id_cate_new, 'slug' => $cateData->slug]);
 
             case 'cate_product':
-                $slug = \App\Services\CacheService::remember(
+                $cateData = \App\Services\CacheService::remember(
                     \App\Services\CacheService::TAGS['categories'] ?? 'categories',
-                    "cate_product_slug_{$item->object_id}",
+                    "cate_product_data_{$item->object_id}",
                     \App\Services\CacheService::getTtl('long'),
                     function () use ($item) {
                         return CateProduct::where('id_cate_product', $item->object_id)
                             ->where('status', 1)
-                            ->value('slug');
+                            ->select('id_cate_product', 'slug')
+                            ->first();
                     }
                 );
 
-                if (empty($slug)) {
+                if (empty($cateData)) {
                     return route('web.404');
                 }
 
-                return route('web.resolve', ['slug' => $slug]);
+                return route('web.resolve', ['id' => $cateData->id_cate_product, 'slug' => $cateData->slug]);
 
             case 'link':
                 if (empty($item->link) || $item->link === '#') {
