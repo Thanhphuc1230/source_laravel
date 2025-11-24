@@ -22,20 +22,20 @@ class ProductService
     /**
      * Get data for product category page
      *
-     * @param string $slug_cate_product
+     * @param int $id_cate_product
      * @param Request $request
      * @return array
      */
-    public function getCategoryProductData($slug_cate_product, Request $request)
+    public function getCategoryProductData($id_cate_product, Request $request)
     {
         $data = [];
 
         // Cache category data
         $data['category_detail'] = \App\Services\CacheService::remember(
             \App\Services\CacheService::TAGS['categories'] ?? 'categories',
-            "category_detail_{$slug_cate_product}",
+            "category_detail_{$id_cate_product}",
             \App\Services\CacheService::getTtl('long'),
-            fn () => CateProduct::where('status', 1)->where('slug', $slug_cate_product)->firstOrFail()
+            fn () => CateProduct::where('status', 1)->where('id_cate_product', $id_cate_product)->firstOrFail()
         );
 
         // Cache category list (sidebar)
@@ -72,20 +72,20 @@ class ProductService
     /**
      * Get data for product detail page
      *
-     * @param string $slug_product
+     * @param int $id_product
      * @return array
      */
-    public function getDetailProductData($slug_product)
+    public function getDetailProductData($id_product)
     {
         $data = [];
 
         // Cache product detail
         $data['product_detail'] = \App\Services\CacheService::remember(
             \App\Services\CacheService::TAGS['products'] ?? 'products',
-            "product_detail_{$slug_product}",
+            "product_detail_{$id_product}",
             \App\Services\CacheService::getTtl('long'),
             fn () => Product::with(['cate:id_cate_product,name_vn,slug'])
-                ->where('slug', $slug_product)
+                ->where('id_product', $id_product)
                 ->firstOrFail()
         );
 

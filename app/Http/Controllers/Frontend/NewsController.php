@@ -14,16 +14,16 @@ class NewsController extends Controller
         $this->newsService = $newsService;
     }
 
-    public function categoryNews($slug_cate_new)
+    public function categoryNews($id_cate_new)
     {
-        $data = $this->newsService->getCategoryNewsData($slug_cate_new);
+        $data = $this->newsService->getCategoryNewsData($id_cate_new);
 
         return view('frontend.modules.news.category', $data);
     }
 
-    public function detailNews($slug_news)
+    public function detailNews($id_news)
     {
-        $data = $this->newsService->getDetailNewsData($slug_news);
+        $data = $this->newsService->getDetailNewsData($id_news);
 
         return view('frontend.modules.news.detail', $data);
     }

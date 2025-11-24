@@ -7,9 +7,9 @@ use App\Models\Page;
 
 class PageController extends Controller
 {
-    public function page($slug_page)
+    public function page($id_page)
     {
-        $data['page_detail'] = Page::where('slug', $slug_page)->firstOrFail();
+        $data['page_detail'] = Page::where('id_page', $id_page)->firstOrFail();
 
         return view('frontend.modules.page.detail', $data);
     }

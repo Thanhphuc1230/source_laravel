@@ -15,16 +15,16 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
-    public function categoryProduct($slug_cate_product)
+    public function categoryProduct($id_cate_product)
     {
-        $data = $this->productService->getCategoryProductData($slug_cate_product, request());
+        $data = $this->productService->getCategoryProductData($id_cate_product, request());
 
         return view('frontend.modules.product.category', $data);
     }
 
-    public function detailProduct($slug_product)
+    public function detailProduct($id_product)
     {
-        $data = $this->productService->getDetailProductData($slug_product);
+        $data = $this->productService->getDetailProductData($id_product);
 
         return view('frontend.modules.product.detail', $data);
     }
