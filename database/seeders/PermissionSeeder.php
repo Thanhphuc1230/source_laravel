@@ -504,6 +504,32 @@ class PermissionSeeder extends Seeder
                 'group_name' => 'mail_config',
                 'description' => 'Quyền xóa cấu hình mail'
             ],
+
+            // Mail Template permissions (Template mail)
+            [
+                'name' => 'mail-template.view',
+                'display_name' => 'Xem template mail',
+                'group_name' => 'mail_template',
+                'description' => 'Quyền xem danh sách template mail'
+            ],
+            [
+                'name' => 'mail-template.create',
+                'display_name' => 'Tạo template mail',
+                'group_name' => 'mail_template',
+                'description' => 'Quyền tạo template mail mới'
+            ],
+            [
+                'name' => 'mail-template.edit',
+                'display_name' => 'Sửa template mail',
+                'group_name' => 'mail_template',
+                'description' => 'Quyền chỉnh sửa template mail'
+            ],
+            [
+                'name' => 'mail-template.delete',
+                'display_name' => 'Xóa template mail',
+                'group_name' => 'mail_template',
+                'description' => 'Quyền xóa template mail'
+            ],
         ];
 
         foreach ($permissions as $permission) {

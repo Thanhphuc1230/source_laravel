@@ -28,6 +28,12 @@ class AppServiceProvider extends ServiceProvider
                 decayMinutes: config('auth.rate_limit.decay_minutes', 15)
             );
         });
+
+        // Register Repositories
+        $this->app->bind(
+            \App\Repositories\MailTemplateRepositoryInterface::class,
+            \App\Repositories\MailTemplateRepository::class
+        );
     }
 
     /**

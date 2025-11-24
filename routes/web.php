@@ -41,4 +41,5 @@ Route::prefix('admin')
         require __DIR__.'/admin/chat.php';
         require __DIR__.'/admin/user.php';
         require __DIR__.'/admin/mail-config.php';
+        require __DIR__.'/admin/mail-template.php';
     });
