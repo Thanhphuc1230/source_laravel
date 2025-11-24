@@ -126,4 +126,12 @@ class RateLimitService
     {
         return new self('checkout', $maxAttempts, $decayMinutes);
     }
+
+    /**
+     * Factory method for content access rate limiting
+     */
+    public static function forContent(int $maxAttempts = 100, int $decayMinutes = 1): self
+    {
+        return new self('content', $maxAttempts, $decayMinutes);
+    }
 }

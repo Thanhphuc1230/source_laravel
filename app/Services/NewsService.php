@@ -23,20 +23,20 @@ class NewsService
     /**
      * Get data for news category page
      *
-     * @param string $slug_cate_new
+     * @param int $id_cate_new
      * @return array
      */
-    public function getCategoryNewsData($slug_cate_new)
+    public function getCategoryNewsData($id_cate_new)
     {
         $data = [];
 
         // Cache category detail
         $data['category_detail'] = \App\Services\CacheService::remember(
             \App\Services\CacheService::TAGS['news'] ?? 'news',
-            "category_news_detail_{$slug_cate_new}",
+            "category_news_detail_{$id_cate_new}",
             \App\Services\CacheService::getTtl('long'),
             fn () => CateNew::where('status', 1)
-                ->where('slug', $slug_cate_new)
+                ->where('id_cate_new', $id_cate_new)
                 ->select('id_cate_new', 'name_vn', 'slug', 'status')
                 ->firstOrFail()
         );
@@ -44,7 +44,7 @@ class NewsService
         // Cache news in category
         $data['news'] = \App\Services\CacheService::remember(
             \App\Services\CacheService::TAGS['news'] ?? 'news',
-            "category_news_list_{$slug_cate_new}",
+            "category_news_list_{$id_cate_new}",
             \App\Services\CacheService::getTtl('medium'),
             fn () => News::where('category_id', $data['category_detail']->id_cate_new)
                 ->where('status', 1)
@@ -62,22 +62,22 @@ class NewsService
     /**
      * Get data for news detail page
      *
-     * @param string $slug_news
+     * @param int $id_news
      * @return array
      */
-    public function getDetailNewsData($slug_news)
+    public function getDetailNewsData($id_news)
     {
         $data = [];
 
         // Cache news detail with category relationship
         $data['news_detail'] = \App\Services\CacheService::remember(
             \App\Services\CacheService::TAGS['news'] ?? 'news',
-            "news_detail_{$slug_news}",
+            "news_detail_{$id_news}",
             \App\Services\CacheService::getTtl('long'),
             fn () => News::with(['cate' => function ($query) {
                 $query->select('id_cate_new', 'name_vn', 'slug');
             }])
-                ->where('slug', $slug_news)
+                ->where('id_new', $id_news)
                 ->select('id_new', 'name_vn', 'slug', 'image', 'content_vn', 'created_at', 'category_id', 'keywords', 'description')
                 ->firstOrFail()
         );
@@ -85,7 +85,7 @@ class NewsService
         // Cache related news
         $data['related_news'] = \App\Services\CacheService::remember(
             \App\Services\CacheService::TAGS['news'] ?? 'news',
-            "related_news_{$slug_news}",
+            "related_news_{$id_news}",
             \App\Services\CacheService::getTtl('medium'),
             fn () => News::where('category_id', $data['news_detail']->category_id)
                 ->where('status', 1)

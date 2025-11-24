@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Services\CacheService;
+use App\Services\RateLimitService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -20,6 +21,28 @@ class RouteController extends Controller
         if (!is_numeric($id)) {
             return view('errors.404');
         }
+
+        // Sanitize slug - remove any potentially harmful characters
+        $slug = preg_replace('/[^a-zA-Z0-9\-]/', '', $slug);
+        if (empty($slug)) {
+            return view('errors.404');
+        }
+
+        // Rate limiting for content access (prevent abuse)
+        $rateLimit = RateLimitService::forContent();
+        if ($rateLimit->isBlocked(request()->ip())) {
+            Log::warning('Rate limit exceeded for content access', [
+                'id' => $id,
+                'slug' => $slug,
+                'ip' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+
+            return response()->view('errors.429', [], 429);
+        }
+
+        // Increment attempts for rate limiting
+        $rateLimit->incrementAttempts(request()->ip());
 
         // Cache key cho slug resolution
         $cacheKey = "slug_resolution_{$id}_{$slug}";
