@@ -27,7 +27,9 @@ Route::prefix('admin')
         require __DIR__.'/admin/news.php';
         require __DIR__.'/admin/page.php';
         require __DIR__.'/admin/slider.php';
+        require __DIR__.'/admin/brand.php';
         require __DIR__.'/admin/feedback.php';
+        require __DIR__.'/admin/feature.php';
         require __DIR__.'/admin/menu.php';
         require __DIR__.'/admin/system.php';
         require __DIR__.'/admin/order.php';
@@ -36,5 +38,6 @@ Route::prefix('admin')
         require __DIR__.'/admin/comment.php';
         require __DIR__.'/admin/user-role.php';
         require __DIR__.'/admin/fonts.php';
+        require __DIR__.'/admin/chat.php';
         require __DIR__.'/admin/mail-config.php';
     });

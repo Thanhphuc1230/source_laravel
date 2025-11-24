@@ -409,16 +409,22 @@ class PermissionSeeder extends Seeder
                 'description' => 'Quyền xem danh sách chat và tin nhắn'
             ],
             [
-                'name' => 'chat.reply',
-                'display_name' => 'Trả lời chat',
+                'name' => 'chat.create',
+                'display_name' => 'Tạo chat',
                 'group_name' => 'chat',
-                'description' => 'Quyền gửi tin nhắn trả lời'
+                'description' => 'Quyền tạo phiên chat mới'
             ],
             [
-                'name' => 'chat.manage',
-                'display_name' => 'Quản lý chat',
+                'name' => 'chat.edit',
+                'display_name' => 'Sửa chat',
                 'group_name' => 'chat',
-                'description' => 'Quyền đóng chat và quản lý phiên chat'
+                'description' => 'Quyền chỉnh sửa thông tin chat'
+            ],
+            [
+                'name' => 'chat.delete',
+                'display_name' => 'Xóa chat',
+                'group_name' => 'chat',
+                'description' => 'Quyền xóa phiên chat'
             ],
 
             // Role permissions (Vai trò)
