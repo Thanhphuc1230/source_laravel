@@ -15,4 +15,5 @@ Route::controller(MailConfigController::class)
         Route::post('/set-active/{id}', 'setActive')->name('set-active')->middleware('permission:mail-config.edit');
         Route::post('/test/{id}', 'testConfig')->name('test')->middleware('permission:mail-config.edit');
         Route::delete('/delete/{id}', 'destroy')->name('delete')->middleware('permission:mail-config.delete');
+        Route::delete('/destroy-all', 'destroyAll')->name('destroyAll')->middleware('permission:mail-config.delete');
     });

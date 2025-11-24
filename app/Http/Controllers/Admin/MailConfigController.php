@@ -26,12 +26,16 @@ class MailConfigController extends BaseController
     public function index()
     {
         $data['configs'] = $this->mailConfigService->getAllConfigs();
-        return $this->view_admin('index', $data);
+        $data['activeConfig'] = $this->mailConfigService->getActiveMailConfig();
+        $data['nameItem'] = $this->nameItem;
+        return $this->view_admin('list', $data);
     }
 
     public function create()
     {
-        return $this->view_admin('create');
+        $data['action'] = 'create';
+        $data['nameItem'] = $this->nameItem;
+        return $this->view_admin('detail', $data);
     }
 
     public function store(MailConfigRequest $request)
@@ -50,13 +54,15 @@ class MailConfigController extends BaseController
     public function edit($id)
     {
         $data['config'] = $this->mailConfigService->getConfigById($id);
+        $data['action'] = 'edit';
+        $data['nameItem'] = $this->nameItem;
 
         if (!$data['config']) {
             toast('Cấu hình mail không tồn tại', 'error');
             return redirect()->route('admin.mail-config.index');
         }
 
-        return $this->view_admin('edit', $data);
+        return $this->view_admin('detail', $data);
     }
 
     public function update($id, MailConfigRequest $request)
@@ -103,6 +109,31 @@ class MailConfigController extends BaseController
     {
         if ($this->mailConfigService->deleteConfig($id)) {
             toast('Xóa cấu hình mail thành công', 'success');
+        } else {
+            toast('Xóa cấu hình mail thất bại', 'error');
+        }
+
+        return redirect()->route('admin.mail-config.index');
+    }
+
+    public function destroyAll(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            toast('Không có mục nào được chọn', 'warning');
+            return redirect()->back();
+        }
+
+        $deleted = 0;
+        foreach ($ids as $id) {
+            if ($this->mailConfigService->deleteConfig($id)) {
+                $deleted++;
+            }
+        }
+
+        if ($deleted > 0) {
+            toast("Đã xóa {$deleted} cấu hình mail thành công", 'success');
         } else {
             toast('Xóa cấu hình mail thất bại', 'error');
         }
