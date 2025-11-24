@@ -472,6 +472,32 @@ class PermissionSeeder extends Seeder
                 'group_name' => 'permission',
                 'description' => 'Quyền xóa quyền hạn'
             ],
+
+            // Mail Config permissions (Cấu hình mail)
+            [
+                'name' => 'mail-config.view',
+                'display_name' => 'Xem cấu hình mail',
+                'group_name' => 'mail_config',
+                'description' => 'Quyền xem danh sách cấu hình mail'
+            ],
+            [
+                'name' => 'mail-config.create',
+                'display_name' => 'Tạo cấu hình mail',
+                'group_name' => 'mail_config',
+                'description' => 'Quyền tạo cấu hình mail mới'
+            ],
+            [
+                'name' => 'mail-config.edit',
+                'display_name' => 'Sửa cấu hình mail',
+                'group_name' => 'mail_config',
+                'description' => 'Quyền chỉnh sửa cấu hình mail'
+            ],
+            [
+                'name' => 'mail-config.delete',
+                'display_name' => 'Xóa cấu hình mail',
+                'group_name' => 'mail_config',
+                'description' => 'Quyền xóa cấu hình mail'
+            ],
         ];
 
         foreach ($permissions as $permission) {
