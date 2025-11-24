@@ -92,7 +92,11 @@ class RoleSeeder extends Seeder
             // Permission - chỉ xem
             'permission.view',
             // Chat - đầy đủ
-            'chat.view', 'chat.reply', 'chat.manage'
+            'chat.view', 'chat.reply', 'chat.manage',
+            // Mail Config - đầy đủ
+            'mail-config.view', 'mail-config.create', 'mail-config.edit', 'mail-config.delete',
+            // Mail Template - đầy đủ
+            'mail-template.view', 'mail-template.create', 'mail-template.edit', 'mail-template.delete'
         ])->pluck('id')->toArray();
         
         $managerRole->syncPermissions($managerPermissions);
