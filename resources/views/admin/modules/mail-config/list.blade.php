@@ -94,9 +94,13 @@
                                                                 @endhasPermission
                                                                 @hasPermission('mail-config.delete')
                                                                     <div class="remove">
-                                                                        <a href="{{ route('admin.mail-config.delete', $config->id) }}"
-                                                                            class="btn btn-sm btn-danger remove-item-btn"
-                                                                            onclick="return confirm('Xác nhận xóa {{ $nameItem }} ?')">Xóa</a>
+                                                                        <form action="{{ route('admin.mail-config.delete', $config->id) }}"
+                                                                              method="POST" style="display: inline;">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit" class="btn btn-sm btn-danger remove-item-btn"
+                                                                                    onclick="return confirm('Xác nhận xóa {{ $nameItem }} ?')">Xóa</button>
+                                                                        </form>
                                                                     </div>
                                                                 @endhasPermission
                                                             </div>

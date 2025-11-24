@@ -179,8 +179,35 @@
                     </a>
                 </li>
                 @endhasPermission
+                {{-- mail --}}
+                @hasAnyPermission(['mail-config.view', 'mail-template.view'])
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="#sidebarMail" data-bs-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="sidebarMail">
+                        <i class="ri-mail-line"></i> <span data-key="t-mail">Mail</span>
+                    </a>
+                    <div class="collapse menu-dropdown" id="sidebarMail">
+                        <ul class="nav nav-sm flex-column">
+                            @hasPermission('mail-config.view')
+                            <li class="nav-item">
+                                <a href="{{ route('admin.mail-config.index') }}" class="nav-link"
+                                    data-key="t-mail-config">Cấu hình mail
+                                </a>
+                            </li>
+                            @endhasPermission
+                            @hasPermission('mail-template.view')
+                            <li class="nav-item">
+                                <a href="{{ route('admin.mail-template.index') }}" class="nav-link"
+                                    data-key="t-mail-template">Template mail
+                                </a>
+                            </li>
+                            @endhasPermission
+                        </ul>
+                    </div>
+                </li>
+                @endhasAnyPermission
                 {{-- system --}}
-                @hasAnyPermission(['system.view', 'user.view', 'role.view'])
+                @hasAnyPermission(['system.view', 'user.view'])
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="sidebarApps">
@@ -193,13 +220,6 @@
                                 <a href="{{ route('admin.system.index') }}" class="nav-link"
                                     data-key="t-calendar">Quản
                                     lý hệ thống
-                                </a>
-                            </li>
-                            @endhasPermission
-                            @hasPermission('mail-config.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.mail-config.index') }}" class="nav-link"
-                                    data-key="t-mail-config">Cấu hình mail
                                 </a>
                             </li>
                             @endhasPermission
