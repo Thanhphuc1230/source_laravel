@@ -19,6 +19,6 @@ class CheckAuth
             return $next($request);
         }
 
-        return view('errors.404');
+        return redirect()->route('getLogin');
     }
 }
