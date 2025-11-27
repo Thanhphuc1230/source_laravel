@@ -17,9 +17,9 @@
             checkbox.addEventListener('change', function() {
                 const uuid = this.getAttribute('data-uuid');
                 const status = this.checked ? 1 : 0;
-                const name = this.getAttribute('data-name');
+                const name = this.getAttribute('data-name') || this.getAttribute('data-field');
 
-                const url = `{{ url('admin/' . $nameClass . '/status') }}/${uuid}/${status}/${name}`;
+                const url = `{{ route('admin.' . $nameClass . '.status', ['uuid' => ':uuid', 'status' => ':status', 'name' => ':name']) }}`.replace(':uuid', uuid).replace(':status', status).replace(':name', name);
 
                 fetch(url, {
                     method: 'POST',

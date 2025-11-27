@@ -54,7 +54,6 @@
                                             <tr>
                                                 <th><input type="checkbox" id="checkAll"></th>
                                                 <th class="sort">ID</th>
-                                                <th class="sort">Ảnh</th>
                                                 <th class="sort">Hình ảnh</th>
                                                 <th class="sort">Tiêu đề</th>
                                                 <th class="sort">Nội dung</th>
@@ -75,9 +74,6 @@
                                                             <td><input class="form-check-input" type="checkbox" name="uuids[]"
                                                                     value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}"
-                                                                    alt="" style="width: 200px; height: 100px;">
-                                                            </td>
                                                             <td><img src="{{ asset('images/feature/' . $item->image) }}"
                                                                     alt="" style="width: 50px; height: 50px; object-fit: cover;">
                                                             </td>

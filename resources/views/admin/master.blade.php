@@ -4,6 +4,8 @@
 
 @include('admin.partials.head')
 
+@include('sweetalert::alert')
+
 <body>
 
     <!-- Begin page -->
@@ -57,7 +59,6 @@
                 .catch(error => alert('Có lỗi xảy ra!'));
         });
     </script>
-    @include('sweetalert::alert')
 </body>
 
 </html>
