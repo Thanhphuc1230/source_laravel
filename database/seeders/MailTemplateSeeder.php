@@ -16,26 +16,51 @@ class MailTemplateSeeder extends Seeder
         $templates = [
             [
                 'name' => 'Xác nhận đơn hàng',
-                'subject' => 'Xác nhận đơn hàng #{order_id}',
-                'content' => '<h2>Xin chào {customer_name},</h2>
+                'subject' => 'Đơn hàng mới #{order_id}',
+                'content' => '<h2>Thông báo đơn hàng mới #{order_id}</h2>
 
-<p>Cảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi!</p>
+<p>Xin chào,</p>
 
-<p><strong>Thông tin đơn hàng:</strong></p>
+<p>Một đơn hàng mới đã được đặt với thông tin chi tiết như sau:</p>
+
+<h3>Thông tin khách hàng:</h3>
 <ul>
-    <li>Mã đơn hàng: <strong>{order_id}</strong></li>
-    <li>Tổng tiền: <strong>{order_total}</strong></li>
-    <li>Trạng thái: <strong>{order_status}</strong></li>
-    <li>Ngày đặt: <strong>{order_date}</strong></li>
+    <li><strong>Họ tên:</strong> {customer_name}</li>
+    <li><strong>Email:</strong> {customer_email}</li>
+    <li><strong>Số điện thoại:</strong> {customer_phone}</li>
+    <li><strong>Địa chỉ giao hàng:</strong> {customer_address}</li>
+    <li><strong>Ghi chú:</strong> {order_note}</li>
 </ul>
 
-<p>Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất. Bạn sẽ nhận được thông tin cập nhật qua email.</p>
+<h3>Thông tin đơn hàng:</h3>
+<ul>
+    <li><strong>Mã đơn hàng:</strong> #{order_id}</li>
+    <li><strong>Ngày đặt hàng:</strong> {order_date}</li>
+    <li><strong>Phương thức thanh toán:</strong> {payment_method}</li>
+</ul>
 
-<p>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi.</p>
+<h3>Danh sách sản phẩm:</h3>
+<table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+    <thead>
+        <tr style="background-color: #f5f5f5;">
+            <th>Sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th>Thành tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        {products_list}
+    </tbody>
+</table>
+
+<h3 style="margin-top: 20px;">Tổng tiền: <span style="color: #e74c3c; font-size: 20px;">{order_total}</span></h3>
+
+<p>Vui lòng xử lý đơn hàng này trong thời gian sớm nhất.</p>
 
 <p>Trân trọng,<br>
-Đội ngũ cửa hàng</p>',
-                'variables' => ['customer_name', 'order_id', 'order_total', 'order_status', 'order_date'],
+Hệ thống</p>',
+                'variables' => ['order_id', 'customer_name', 'customer_email', 'customer_phone', 'customer_address', 'order_note', 'payment_method', 'order_total', 'order_date', 'products_list'],
                 'type' => 'order',
                 'is_active' => true,
             ],
