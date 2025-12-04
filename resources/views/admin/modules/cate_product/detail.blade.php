@@ -45,7 +45,7 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="phone-field" class="form-label">Danh mục</label>
-                                                <select class="form-select mb-3" aria-label="Default select example"
+                                                <select id="parent_id" class="form-select mb-3" aria-label="Default select example"
                                                     name="parent_id">
                                                     <option value="0"
                                                         {{ (old('parent_id') ?: $page->parent_id ?? '') == 0 ? 'selected' : '' }} style="font-weight: bold;">
@@ -176,6 +176,8 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Khởi tạo preview image
         previewImage('fileInput', 'imageContainer');
+        // Khởi tạo Select2 cho danh mục
+        $('#parent_id').select2();
     });
 </script>
 @endpush
