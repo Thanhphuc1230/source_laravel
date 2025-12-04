@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Services\CheckoutService;
+use App\Services\CartService;
 use App\Services\RateLimitService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,11 +13,13 @@ use RealRashid\SweetAlert\Facades\Alert;
 class CheckoutController extends Controller
 {
     protected $checkoutService;
+    protected $cartService;
     protected $rateLimitService;
 
-    public function __construct(CheckoutService $checkoutService)
+    public function __construct(CheckoutService $checkoutService, CartService $cartService)
     {
         $this->checkoutService = $checkoutService;
+        $this->cartService = $cartService;
         $this->rateLimitService = RateLimitService::forCheckout();
     }
 
@@ -31,7 +34,10 @@ class CheckoutController extends Controller
             return redirect()->route('web.cart');
         }
 
-        return view('frontend.modules.checkout.index');
+        $cart = $this->cartService->getCart();
+        $total = $this->cartService->getTotalPrice();
+
+        return view('frontend.modules.checkout.index', compact('cart', 'total'));
     }
 
     public function checkoutStore(Request $request)

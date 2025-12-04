@@ -30,7 +30,7 @@ class SearchController extends Controller
             return redirect()->route($data['redirect_route']);
         }
 
-        return view('frontend.modules.search.results', $data);
+        return view('frontend.modules.search.index', $data);
     }
 
     /**

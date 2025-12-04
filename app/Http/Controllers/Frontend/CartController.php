@@ -36,6 +36,12 @@ class CartController extends Controller
 
         // Check rate limit
         if ($this->rateLimitService->isBlocked($ip)) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => session('locale') == 'en' ? 'Too many requests. Please try again later.' : 'Quá nhiều yêu cầu. Vui lòng thử lại sau.'
+                ]);
+            }
             toast()->error(session('locale') == 'en' ? 'Too many requests. Please try again later.' : 'Quá nhiều yêu cầu. Vui lòng thử lại sau.');
             return back();
         }
@@ -48,12 +54,28 @@ class CartController extends Controller
 
         if (!$success) {
             $this->rateLimitService->incrementAttempts($ip);
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => session('locale') == 'en' ? 'Product not found' : 'Sản phẩm không tồn tại.'
+                ]);
+            }
             toast()->error(session('locale') == 'en' ? 'Product not found' : 'Sản phẩm không tồn tại.');
             return back();
         }
 
         // Clear attempts on success
         $this->rateLimitService->clearAttempts($ip);
+
+        $totalItems = $this->cartService->getTotalItems();
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => session('locale') == 'en' ? 'Added to cart successfully.' : 'Đã thêm vào giỏ hàng thành công.',
+                'totalItems' => $totalItems
+            ]);
+        }
 
         toast()->success(session('locale') == 'en' ? 'Added to cart successfully.' : 'Đã thêm vào giỏ hàng thành công.');
         return redirect()->route('web.cart');
@@ -62,6 +84,22 @@ class CartController extends Controller
     public function updateCart(Request $request)
     {
         $this->cartService->updateCart($request);
+
+        // Return JSON response for AJAX requests
+        if ($request->expectsJson() || $request->ajax()) {
+            $cart = $this->cartService->getCart();
+            $totalItems = $this->cartService->getTotalItems();
+            $totalPrice = $this->cartService->getTotalPrice();
+
+            return response()->json([
+                'success' => true,
+                'message' => session('locale') == 'en' ? 'Updated cart successfully.' : 'Cập nhật giỏ hàng thành công.',
+                'cart' => $cart,
+                'totalItems' => $totalItems,
+                'totalPrice' => $totalPrice,
+                'formattedTotalPrice' => number_format($totalPrice, 0, ',', '.') . ' VNĐ'
+            ]);
+        }
 
         toast()->success(session('locale') == 'en' ? 'Updated cart successfully.' : 'Cập nhật giỏ hàng thành công.');
         return back();

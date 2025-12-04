@@ -11,6 +11,6 @@ class PageController extends Controller
     {
         $data['page_detail'] = Page::where('id_page', $id_page)->firstOrFail();
 
-        return view('frontend.modules.page.detail', $data);
+        return view('frontend.modules.page.index', $data);
     }
 }

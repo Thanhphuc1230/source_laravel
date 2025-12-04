@@ -6,13 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Frontend\ContactRequest;
 use App\Models\Contact;
 use App\Services\RateLimitService;
+use App\Services\MailTemplateService;
+use App\Services\MailConfigService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ContactController extends Controller
 {
     private RateLimitService $rateLimitService;
+    private MailTemplateService $mailTemplateService;
+    private MailConfigService $mailConfigService;
 
     public function __construct()
     {
@@ -21,6 +28,8 @@ class ContactController extends Controller
             maxAttempts: config('auth.contact_rate_limit.max_attempts', 3),
             decayMinutes: config('auth.contact_rate_limit.decay_minutes', 5)
         );
+        $this->mailTemplateService = app(MailTemplateService::class);
+        $this->mailConfigService = app(MailConfigService::class);
     }
 
     public function contact()
@@ -42,6 +51,9 @@ class ContactController extends Controller
         // Create contact record
         $contact = $this->createContact($request);
 
+        // Send notification email to admin
+        $this->sendContactNotification($contact);
+
         // Increment attempts after successful creation
         $this->rateLimitService->incrementAttempts($ip);
 
@@ -61,5 +73,34 @@ class ContactController extends Controller
         $data['status'] = 0;
 
         return Contact::create($data);
+    }
+
+    /**
+     * Send contact notification email to admin
+     */
+    private function sendContactNotification(Contact $contact): void
+    {
+        try {
+            $email = DB::table('tp_systems')->value('email_alert');
+            Log::info('Email alert from system: ' . $email);
+
+            if ($email) {
+                $template = $this->mailTemplateService->getActiveByType('contact');
+                Log::info('Contact template: ', ['template' => $template]);
+
+                if ($template) {
+                    $mailer = $this->mailConfigService->createMailer();
+                    $mailer->to($email)->send(new \App\Mail\AlertContact($contact, $template));
+                    Log::info('Contact notification email sent to: ' . $email);
+                } else {
+                    Log::warning('No active contact template found');
+                }
+            } else {
+                Log::warning('No email_alert set in system');
+            }
+        } catch (\Exception $e) {
+            // Log error but don't fail the contact submission
+            Log::error('Failed to send contact notification email: ' . $e->getMessage());
+        }
     }
 }
