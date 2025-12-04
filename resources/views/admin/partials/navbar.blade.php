@@ -57,6 +57,11 @@
                     </a>
                 </li>
                 @endhasPermission
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.gallery.index') }}">
+                        <i class="ri-gallery-line"></i> <span data-key="t-widgets">Hình ảnh</span>
+                    </a>
+                </li>
                 @hasPermission('brand.view')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.brand.index') }}">

@@ -87,15 +87,6 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="phonenumberInput" class="form-label">Footer EN</label>
-                                                <textarea class="form-control" name="footer_en" id="content-en" rows="6" placeholder="Enter your message">{{ old('footer_en', $system->footer_en) }}</textarea>
-                                                @error('footer_en')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
                                         <!--end col-->
                                     </div>
                                     <!--end row-->
@@ -184,7 +175,7 @@
                                 <div class="live-preview">
                                     <div class="row">
 
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Favicon</label>
                                                 <img src="{{ asset('images/logo/' . $system->favicon) }}" alt="favicon"
@@ -194,7 +185,7 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Logo(200x100)</label>
                                                 <img src="{{ asset('images/logo/' . $system->logo) }}" alt="logo"
@@ -204,16 +195,36 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="firstNameinput" class="form-label">Watermark</label>
+                                                @if($system->watermark)
+                                                    <img src="{{ asset('images/logo/' . $system->watermark) }}" alt="watermark"
+                                                        width="100px">
+                                                @else
+                                                    <div class="text-muted small">Chưa có watermark</div>
+                                                @endif
+                                                @error('watermark')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Favicon</label>
                                                 <input type="file" name="favicon" class="form-control">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Logo</label>
                                                 <input type="file" name="logo" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
+                                                <label for="firstNameinput" class="form-label">Watermark</label>
+                                                <input type="file" name="watermark" class="form-control">
                                             </div>
                                         </div>
                                     </div>

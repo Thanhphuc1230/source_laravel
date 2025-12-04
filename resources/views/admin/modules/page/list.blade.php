@@ -52,6 +52,7 @@
                                                 <th class="sort">ID</th>
                                                 <th class="sort">Tiêu đề</th>
                                                 <th class="sort">Hiển thị</th>
+                                                <th class="sort">Footer</th>
                                                 <th class="sort">STT</th>
                                                 <th class="sort">Ngày cập nhật</th>
                                                 <th class="sort">Hành động</th>
@@ -78,6 +79,17 @@
                                                                         data-uuid="{{ $item->uuid }}" data-name="status"
                                                                         data-status="{{ $item->status }}"
                                                                         {{ $item->status == 1 ? 'checked' : '' }}>
+                                                                </div>
+                                                            </td>
+                                                            <td class="status">
+                                                                <div
+                                                                    class="form-check form-switch form-switch-success mb-3">
+                                                                    <input class="form-check-input status-checkbox"
+                                                                        type="checkbox" role="switch"
+                                                                        value="{{ $item->footer }}"
+                                                                        data-uuid="{{ $item->uuid }}" data-name="footer"
+                                                                        data-footer="{{ $item->footer }}"
+                                                                        {{ $item->footer == 1 ? 'checked' : '' }}>
                                                                 </div>
                                                             </td>
                                                             <td>
@@ -113,7 +125,7 @@
                                                 </form>
                                             @else
                                                 <tr>
-                                                    <td colspan="7" style="text-align:center">Chưa có dữ liệu</td>
+                                                    <td colspan="8" style="text-align:center">Chưa có dữ liệu</td>
                                                 </tr>
                                             @endif
                                         </tbody>

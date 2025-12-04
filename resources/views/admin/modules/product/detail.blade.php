@@ -98,7 +98,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            {{-- <div class="col-lg-6 col-sm-6">
+                                            <div class="col-lg-6 col-sm-6">
                                                 <div class="mb-3">
                                                     <label class="form-label" for="product-discount-input">Giá cũ</label>
                                                     <div class="input-group mb-3">
@@ -108,7 +108,7 @@
                                                             value="{{ old('price_old', $page->price_old ?? '') }}">
                                                     </div>
                                                 </div>
-                                            </div> --}}
+                                            </div>
                                             <!-- end col -->
                                         </div>
                                         <!-- end row -->

@@ -144,9 +144,13 @@
                                                             <td>
                                                                 <div class="d-flex gap-2">
                                                                     <div class="watch">
-                                                                        <a href="{{ route('web.resolve', ['id' => $item->id_product, 'slug' => $item->slug]) }}"
-                                                                            target="_blank"
-                                                                            class="btn btn-sm btn-primary watch-item-btn">Xem</a>
+                                                                        @if($item->slug && $item->id_product)
+                                                                            <a href="{{ route('web.resolve', ['id' => $item->id_product, 'slug' => $item->slug]) }}"
+                                                                                target="_blank"
+                                                                                class="btn btn-sm btn-primary watch-item-btn">Xem</a>
+                                                                        @else
+                                                                            <span class="text-muted">Chưa có slug</span>
+                                                                        @endif
                                                                     </div>
                                                                     @hasPermission('product.edit')
                                                                         <div class="edit">
