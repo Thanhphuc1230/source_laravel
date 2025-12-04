@@ -22,6 +22,13 @@ class CateProductController extends BaseController
     
     protected $cateProductRepository;
 
+    // Override default image config to allow SVG uploads
+    protected $defaultImageConfig = [
+        'convertToWebp' => false, // Disable WebP conversion for SVG compatibility
+        'quality' => 80,
+        'mimeTypes' => ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp', 'image/svg+xml', 'image/svg', 'text/xml', 'application/xml', 'application/svg+xml'],
+    ];
+
     public function __construct(CateProductRepositoryInterface $cateProductRepository, $imageFolder = 'cate_product')
     {
         $this->module = 'cate_product';

@@ -44,9 +44,9 @@ class CommentController extends BaseController
         return $this->view_admin('list', $data);
     }
 
-    public function status($uuid, $status, $field)
+    public function status($uuid, $status, $name)
     {
-        return $this->toggleService->toggleModelStatus($uuid, $status, $field, $this->model::class);
+        return $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
     }
 
     public function edit($uuid)

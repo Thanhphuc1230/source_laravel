@@ -11,12 +11,14 @@ class ContactController extends BaseController
     protected $nameItem;
     protected $imageFolder;
     protected $contactRepository;
+    protected $model;
 
     public function __construct(ContactRepositoryInterface $contactRepository, $imageFolder = 'contact')
     {
         $this->nameItem = 'Liên hệ';
         $this->imageFolder = $imageFolder;
         $this->contactRepository = $contactRepository;
+        $this->model = 'App\\Models\\Contact';
 
         parent::__construct($imageFolder);
         View::share('nameClass', $imageFolder);
@@ -56,12 +58,12 @@ class ContactController extends BaseController
 
     public function destroy(string $uuid)
     {
-        return $this->destroyData('App\\Models\\Contact', $uuid, $this->imageFolder);
+        return $this->dataRemovalService->destroyData($this->model, $uuid, $this->imageFolder);
     }
 
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-        return $this->dataRemovalService->destroyAllByUUIDs('App\\Models\\Contact', $uuids, $this->imageFolder);
+        return $this->dataRemovalService->destroyAllByUUIDs($this->model, $uuids, $this->imageFolder);
     }
 }
