@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\Admin\MailConfigRequest;
 use App\Services\MailConfigService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 
 class MailConfigController extends BaseController
@@ -69,6 +70,11 @@ class MailConfigController extends BaseController
     {
         $data = $request->validated();
 
+        // Only update password if a new one is provided (not empty)
+        if (!$request->filled('password')) {
+            unset($data['password']);
+        }
+
         if ($this->mailConfigService->updateConfig($data, $id)) {
             toast('Cập nhật cấu hình mail thành công', 'success');
         } else {
@@ -107,6 +113,18 @@ class MailConfigController extends BaseController
 
     public function destroy($id)
     {
+        $config = $this->mailConfigService->getConfigById($id);
+
+        if (!$config) {
+            toast('Cấu hình mail không tồn tại', 'error');
+            return redirect()->route('admin.mail-config.index');
+        }
+
+        if ($config->is_active) {
+            toast('Không thể xóa cấu hình mail đang hoạt động', 'error');
+            return redirect()->route('admin.mail-config.index');
+        }
+
         if ($this->mailConfigService->deleteConfig($id)) {
             toast('Xóa cấu hình mail thành công', 'success');
         } else {

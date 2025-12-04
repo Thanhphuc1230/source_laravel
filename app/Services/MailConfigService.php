@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\Interfaces\MailConfigRepositoryInterface;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class MailConfigService
 {
@@ -73,7 +74,8 @@ class MailConfigService
     public function createConfig(array $data)
     {
         // Clear cache
-        CacheService::forgetTag(CacheService::TAGS['system'] ?? 'system');
+        CacheService::forget('system', 'active_mail_config');
+        CacheService::forget('system', 'all_mail_configs');
 
         return $this->mailConfigRepository->createConfig($data);
     }
@@ -88,7 +90,8 @@ class MailConfigService
     public function updateConfig(array $data, $id)
     {
         // Clear cache
-        CacheService::forgetTag(CacheService::TAGS['system'] ?? 'system');
+        CacheService::forget('system', 'active_mail_config');
+        CacheService::forget('system', 'all_mail_configs');
 
         return $this->mailConfigRepository->updateConfig($data, $id);
     }
@@ -102,7 +105,8 @@ class MailConfigService
     public function setActiveConfig($id)
     {
         // Clear cache
-        CacheService::forgetTag(CacheService::TAGS['system'] ?? 'system');
+        CacheService::forget('system', 'active_mail_config');
+        CacheService::forget('system', 'all_mail_configs');
 
         return $this->mailConfigRepository->setActiveConfig($id);
     }
@@ -116,7 +120,8 @@ class MailConfigService
     public function deleteConfig($id)
     {
         // Clear cache
-        CacheService::forgetTag(CacheService::TAGS['system'] ?? 'system');
+        CacheService::forget('system', 'active_mail_config');
+        CacheService::forget('system', 'all_mail_configs');
 
         return $this->mailConfigRepository->deleteConfig($id);
     }
@@ -141,5 +146,49 @@ class MailConfigService
     public function getConfigById($id)
     {
         return $this->mailConfigRepository->find($id);
+    }
+
+    /**
+     * Create a custom mailer instance with DB config
+     *
+     * @return \Illuminate\Mail\Mailer
+     */
+    public function createMailer()
+    {
+        $config = $this->getActiveMailConfig();
+
+        // For port 587 (STARTTLS), use false to not wrap connection in SSL initially
+        // Server will upgrade connection to TLS via STARTTLS command
+        $transport = new \Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport(
+            $config['host'],
+            $config['port'],
+            false
+        );
+        
+        $transport->setUsername($config['username']);
+        $transport->setPassword($config['password']);
+
+        // Set stream options for SSL/TLS connections
+        $stream = $transport->getStream();
+        if ($stream instanceof \Symfony\Component\Mailer\Transport\Smtp\Stream\SocketStream) {
+            $stream->setStreamOptions([
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                ]
+            ]);
+        }
+
+        $mailer = new \Illuminate\Mail\Mailer(
+            'custom',
+            app('view'),
+            $transport,
+            app('events')
+        );
+
+        $mailer->alwaysFrom($config['from']['address'], $config['from']['name']);
+
+        return $mailer;
     }
 }

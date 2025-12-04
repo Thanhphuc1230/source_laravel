@@ -24,7 +24,8 @@
             <!-- end page title -->
             <form
                 action="{{ route('admin.mail-config.' . ($action == 'create' ? 'store' : 'update'), ['id' => $config->id ?? '']) }}"
-                method="POST">
+                method="POST"
+                autocomplete="off">
                 @csrf
                 @if($action == 'edit')
                     @method('PUT')
@@ -37,18 +38,73 @@
                             </div><!-- end card header -->
 
                             <div class="card-body">
+                                <input type="hidden" name="mailer" value="smtp">
+                                
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="mailer" class="form-label">Loại mailer <span class="text-danger">*</span></label>
-                                            <select name="mailer" id="mailer" class="form-control @error('mailer') is-invalid @enderror" required>
-                                                <option value="">Chọn loại mailer</option>
-                                                <option value="smtp" {{ ($action == 'edit' ? $config->mailer : old('mailer')) == 'smtp' ? 'selected' : '' }}>SMTP</option>
-                                                <option value="mailgun" {{ ($action == 'edit' ? $config->mailer : old('mailer')) == 'mailgun' ? 'selected' : '' }}>Mailgun</option>
-                                                <option value="ses" {{ ($action == 'edit' ? $config->mailer : old('mailer')) == 'ses' ? 'selected' : '' }}>Amazon SES</option>
-                                                <option value="sendmail" {{ ($action == 'edit' ? $config->mailer : old('mailer')) == 'sendmail' ? 'selected' : '' }}>Sendmail</option>
+                                            <label for="host" class="form-label">SMTP Host <span class="text-danger">*</span></label>
+                                            <input type="text" name="host" id="host" class="form-control @error('host') is-invalid @enderror"
+                                                   value="{{ $action == 'edit' ? $config->host : old('host', 'smtp.gmail.com') }}" 
+                                                   placeholder="smtp.gmail.com" required>
+                                            @error('host')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="port" class="form-label">SMTP Port <span class="text-danger">*</span></label>
+                                            <input type="number" name="port" id="port" class="form-control @error('port') is-invalid @enderror"
+                                                   value="{{ $action == 'edit' ? $config->port : old('port', 587) }}" required>
+                                            @error('port')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="username" class="form-label">Email đăng nhập <span class="text-danger">*</span></label>
+                                            <input type="email" name="username" id="username" class="form-control @error('username') is-invalid @enderror"
+                                                   value="{{ $action == 'edit' ? $config->username : old('username') }}" 
+                                                   placeholder="your-email@gmail.com" required>
+                                            @error('username')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">App Password @if($action == 'create')<span class="text-danger">*</span>@endif</label>
+                                            <input type="password" name="password" id="password"
+                                                   class="form-control @error('password') is-invalid @enderror"
+                                                   placeholder="@if($action == 'edit')Để trống nếu không đổi@else Nhập App Password @endif"
+                                                   autocomplete="new-password"
+                                                   @if($action == 'create') required @endif>
+                                            @error('password')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                            @if($action == 'edit')
+                                                <small class="text-muted">Để trống để giữ nguyên mật khẩu</small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="encryption" class="form-label">Mã hóa <span class="text-danger">*</span></label>
+                                            <select name="encryption" id="encryption" class="form-control @error('encryption') is-invalid @enderror" required>
+                                                <option value="tls" {{ ($action == 'edit' ? $config->encryption : old('encryption', 'tls')) == 'tls' ? 'selected' : '' }}>TLS (Port 587)</option>
+                                                <option value="ssl" {{ ($action == 'edit' ? $config->encryption : old('encryption')) == 'ssl' ? 'selected' : '' }}>SSL (Port 465)</option>
                                             </select>
-                                            @error('mailer')
+                                            @error('encryption')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -57,117 +113,10 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="is_active" class="form-label">Trạng thái</label>
-                                            <div class="form-check form-switch form-switch-success">
+                                            <div class="form-check form-switch form-switch-success mt-2">
                                                 <input class="form-check-input" type="checkbox" role="switch" id="is_active" name="is_active" value="1"
-                                                       {{ ($action == 'edit' ? $config->is_active : old('is_active')) ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="is_active">Đặt làm cấu hình hoạt động</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="smtp-fields" style="{{ ($action == 'edit' ? $config->mailer : old('mailer')) == 'smtp' ? '' : 'display: none;' }}">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="host" class="form-label">Host <span class="text-danger">*</span></label>
-                                                <input type="text" name="host" id="host" class="form-control @error('host') is-invalid @enderror"
-                                                       value="{{ $action == 'edit' ? $config->host : old('host') }}" required>
-                                                @error('host')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="port" class="form-label">Port <span class="text-danger">*</span></label>
-                                                <input type="number" name="port" id="port" class="form-control @error('port') is-invalid @enderror"
-                                                       value="{{ $action == 'edit' ? $config->port : old('port', 587) }}" required>
-                                                @error('port')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-                                                <input type="text" name="username" id="username" class="form-control @error('username') is-invalid @enderror"
-                                                       value="{{ $action == 'edit' ? $config->username : old('username') }}" required>
-                                                @error('username')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                                                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror"
-                                                       value="{{ $action == 'edit' ? $config->password : old('password') }}" required>
-                                                @error('password')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="encryption" class="form-label">Mã hóa</label>
-                                                <select name="encryption" id="encryption" class="form-control">
-                                                    <option value="">Không mã hóa</option>
-                                                    <option value="tls" {{ ($action == 'edit' ? $config->encryption : old('encryption')) == 'tls' ? 'selected' : '' }}>TLS</option>
-                                                    <option value="ssl" {{ ($action == 'edit' ? $config->encryption : old('encryption')) == 'ssl' ? 'selected' : '' }}>SSL</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="mailgun-fields" style="{{ ($action == 'edit' ? $config->mailer : old('mailer')) == 'mailgun' ? '' : 'display: none;' }}">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="host" class="form-label">Host</label>
-                                                <input type="text" name="host" id="mailgun-host" class="form-control"
-                                                       value="{{ $action == 'edit' ? $config->host : old('host') }}" placeholder="smtp.mailgun.org">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="port" class="form-label">Port</label>
-                                                <input type="number" name="port" id="mailgun-port" class="form-control"
-                                                       value="{{ $action == 'edit' ? $config->port : old('port', 587) }}">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
-                                                <input type="text" name="username" id="mailgun-username" class="form-control @error('username') is-invalid @enderror"
-                                                       value="{{ $action == 'edit' ? $config->username : old('username') }}" required>
-                                                @error('username')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                                                <input type="password" name="password" id="mailgun-password" class="form-control @error('password') is-invalid @enderror"
-                                                       value="{{ $action == 'edit' ? $config->password : old('password') }}" required>
-                                                @error('password')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
+                                                       {{ ($action == 'edit' ? $config->is_active : old('is_active', 1)) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="is_active">Kích hoạt</label>
                                             </div>
                                         </div>
                                     </div>
@@ -223,36 +172,4 @@
             </form>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-<script>
-$(document).ready(function() {
-    // Toggle fields based on mailer type
-    $('#mailer').on('change', function() {
-        var mailer = $(this).val();
-
-        // Hide all field groups
-        $('#smtp-fields, #mailgun-fields').hide();
-
-        // Show relevant fields and update requirements
-        if (mailer === 'smtp') {
-            $('#smtp-fields').show();
-            $('#host, #port, #username, #password').prop('required', true);
-        } else if (mailer === 'mailgun') {
-            $('#mailgun-fields').show();
-            $('#host, #port').prop('required', false);
-            $('#username, #password').prop('required', true);
-        } else if (mailer === 'ses') {
-            $('#username, #password').prop('required', true);
-            $('#host, #port').prop('required', false);
-        } else if (mailer === 'sendmail') {
-            $('#host, #port, #username, #password').prop('required', false);
-        }
-    });
-
-    // Trigger change on page load to show correct fields
-    $('#mailer').trigger('change');
-});
-</script>
 @endsection

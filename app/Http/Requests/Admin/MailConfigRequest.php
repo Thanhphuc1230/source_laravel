@@ -19,12 +19,14 @@ class MailConfigRequest extends BaseAdminRequest
      */
     public function rules(): array
     {
+        $isUpdate = $this->isMethod('PUT');
+
         $rules = [
             'mailer' => 'required|string|in:smtp,mailgun,ses,sendmail',
             'host' => 'required_if:mailer,smtp|string|max:255',
             'port' => 'required_if:mailer,smtp|integer|min:1|max:65535',
             'username' => 'required_if:mailer,smtp,mailgun|string|max:255',
-            'password' => 'required_if:mailer,smtp,mailgun|string|max:255',
+            'password' => ($isUpdate ? 'nullable|' : 'required_if:mailer,smtp,mailgun|') . 'string|max:255',
             'encryption' => 'nullable|string|in:tls,ssl',
             'from_address' => 'required|email|max:255',
             'from_name' => 'required|string|max:255',

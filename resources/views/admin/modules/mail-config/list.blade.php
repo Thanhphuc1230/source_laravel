@@ -97,7 +97,6 @@
                                                                         <form action="{{ route('admin.mail-config.delete', $config->id) }}"
                                                                               method="POST" style="display: inline;">
                                                                             @csrf
-                                                                            @method('DELETE')
                                                                             <button type="submit" class="btn btn-sm btn-danger remove-item-btn"
                                                                                     onclick="return confirm('Xác nhận xóa {{ $nameItem }} ?')">Xóa</button>
                                                                         </form>
@@ -122,6 +121,5 @@
             </div>
             <!-- container-fluid -->
         </div>
-        @include('admin.ajax.status')
         @include('admin.ajax.update-stt')
     @endsection
