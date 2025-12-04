@@ -43,6 +43,7 @@ class SystemRequest extends BaseAdminRequest
             // SEO & Branding
             'favicon' => 'nullable|image|mimes:ico,png,jpg,jpeg|max:512',
             'logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
+            'watermark' => 'nullable|image|mimes:png,jpg,jpeg|max:1024',
             'name_vn' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:500',
             'keyword' => 'nullable|string|max:1000',
@@ -87,6 +88,9 @@ class SystemRequest extends BaseAdminRequest
             'logo.image' => 'Logo phải là file hình ảnh',
             'logo.mimes' => 'Logo phải có định dạng: png, jpg, jpeg, svg',
             'logo.max' => 'Logo không được quá 2MB',
+            'watermark.image' => 'Watermark phải là file hình ảnh',
+            'watermark.mimes' => 'Watermark phải có định dạng: png, jpg, jpeg',
+            'watermark.max' => 'Watermark không được quá 1MB',
 
             // SEO
             'name_vn.max' => 'Tên website không được quá 255 ký tự',
@@ -117,6 +121,7 @@ class SystemRequest extends BaseAdminRequest
             'zalo' => 'Zalo',
             'favicon' => 'Favicon',
             'logo' => 'Logo',
+            'watermark' => 'Watermark',
             'name_vn' => 'Tên website',
             'description' => 'Mô tả',
             'keyword' => 'Từ khóa',
