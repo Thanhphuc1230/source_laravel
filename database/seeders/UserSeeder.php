@@ -15,11 +15,12 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Tạo Admin user
-        $adminUser = User::create([
+        $adminUser = User::firstOrCreate([
+            'email' => 'admin@gmail.com',
+        ], [
             'uuid' => Str::uuid(),
             'fullname' => 'Quản trị viên',
             'username' => 'admin',
-            'email' => 'admin@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('@admin123'),
             'level' => '1',
@@ -34,11 +35,12 @@ class UserSeeder extends Seeder
         }
 
         // Tạo Manager user
-        $managerUser = User::create([
+        $managerUser = User::firstOrCreate([
+            'email' => 'manager@gmail.com',
+        ], [
             'uuid' => Str::uuid(),
             'fullname' => 'Nguyễn Văn Quản lý',
             'username' => 'manager',
-            'email' => 'manager@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('@admin123'),
             'level' => '2',
@@ -53,11 +55,12 @@ class UserSeeder extends Seeder
         }
 
         // Tạo Staff user
-        $staffUser = User::create([
+        $staffUser = User::firstOrCreate([
+            'email' => 'staff@gmail.com',
+        ], [
             'uuid' => Str::uuid(),
             'fullname' => 'Trần Thị Nhân viên',
             'username' => 'staff',
-            'email' => 'staff@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('@admin123'),
             'level' => '3',
@@ -72,11 +75,12 @@ class UserSeeder extends Seeder
         }
 
         // Tạo Viewer user
-        $viewerUser = User::create([
+        $viewerUser = User::firstOrCreate([
+            'email' => 'viewer@gmail.com',
+        ], [
             'uuid' => Str::uuid(),
             'fullname' => 'Lê Văn Người xem',
             'username' => 'viewer',
-            'email' => 'viewer@gmail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('@admin123'),
             'level' => '4',

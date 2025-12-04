@@ -29,10 +29,5 @@ class DatabaseSeeder extends Seeder
         $this->call(NewsSeeder::class);
         $this->call(MailConfigSeeder::class);
         $this->call(MailTemplateSeeder::class);
-
-        // Thêm các seeder còn thiếu
-        $this->call(FeatureSeeder::class);
-        $this->call(FontSeeder::class);
-
     }
 }
