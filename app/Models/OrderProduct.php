@@ -15,4 +15,20 @@ class OrderProduct extends Model
     protected $primaryKey = 'id_order_product';
 
     protected $guarded = [];
+
+    /**
+     * Get the product for this order item
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id_product');
+    }
+
+    /**
+     * Get the order status for this order product
+     */
+    public function orderStatus()
+    {
+        return $this->belongsTo(OrderStatus::class, 'order_status_id', 'id_order_status');
+    }
 }

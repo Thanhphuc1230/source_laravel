@@ -12,6 +12,8 @@ class Contact extends Model
 
     protected $table = 'tp_contacts';
 
+    protected $primaryKey = 'id_contact';
+
     protected $fillable = [
         'uuid',
         'fullname',
