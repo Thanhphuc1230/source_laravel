@@ -3,12 +3,13 @@
 namespace App\Providers;
 
 use App\Repositories\Eloquent\BrandRepository;
-use App\Repositories\Eloquent\FeatureRepository;
+use App\Repositories\Eloquent\GalleryRepository;
 use App\Repositories\Eloquent\CateNewRepository;
 use App\Repositories\Eloquent\CateProductRepository;
 use App\Repositories\Eloquent\CommentRepository;
 use App\Repositories\Eloquent\ContactRepository;
 use App\Repositories\Eloquent\ChatRepository;
+use App\Repositories\Eloquent\FeatureRepository;
 use App\Repositories\Eloquent\FeedBackRepository;
 use App\Repositories\Eloquent\MailConfigRepository;
 use App\Repositories\Eloquent\MenuRepository;
@@ -20,12 +21,13 @@ use App\Repositories\Eloquent\SystemRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\Interfaces\BrandRepositoryInterface;
-use App\Repositories\Interfaces\FeatureRepositoryInterface;
+use App\Repositories\Interfaces\GalleryRepositoryInterface;
 use App\Repositories\Interfaces\CateNewRepositoryInterface;
 use App\Repositories\Interfaces\CateProductRepositoryInterface;
 use App\Repositories\Interfaces\ChatRepositoryInterface;
 use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Repositories\Interfaces\ContactRepositoryInterface;
+use App\Repositories\Interfaces\FeatureRepositoryInterface;
 use App\Repositories\Interfaces\FeedBackRepositoryInterface;
 use App\Repositories\Interfaces\MailConfigRepositoryInterface;
 use App\Repositories\Interfaces\MenuRepositoryInterface;
@@ -47,6 +49,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(BrandRepositoryInterface::class, BrandRepository::class);
         $this->app->bind(FeatureRepositoryInterface::class, FeatureRepository::class);
+        $this->app->bind(GalleryRepositoryInterface::class, GalleryRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(NewsRepositoryInterface::class, NewsRepository::class);
         $this->app->bind(CateProductRepositoryInterface::class, CateProductRepository::class);

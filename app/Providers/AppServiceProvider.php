@@ -5,8 +5,10 @@ namespace App\Providers;
 use App\Models\CateNew;
 use App\Models\CateProduct;
 use App\Models\Menu;
+use App\Models\Page;
 use App\Models\System;
 use App\Services\CacheService;
+use App\Services\CartService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
@@ -95,6 +97,23 @@ class AppServiceProvider extends ServiceProvider
                         ->get();
                 }
             );
+
+            // Footer pages
+            $data['footer_pages'] = CacheService::remember(
+                CacheService::TAGS['pages'],
+                'footer_pages',
+                CacheService::getTtl('long'),
+                function () {
+                    return Page::where('status', 1)
+                        ->where('footer', 1)
+                        ->orderBy('stt', 'asc')
+                        ->get();
+                }
+            );
+
+            // Cart count for header
+            $cartService = app(CartService::class);
+            $data['cart_count'] = $cartService->getTotalItems();
 
             $view->with($data);
         });

@@ -6,6 +6,7 @@ use App\Events\Brand\BrandChanged;
 use App\Events\CateNew\CateNewChanged;
 use App\Events\CateProduct\CateProductChanged;
 use App\Events\Feature\FeatureChanged;
+use App\Events\Gallery\GalleryChanged;
 use App\Events\Feedback\FeedbackChanged;
 use App\Events\Menu\MenuChanged;
 use App\Events\News\NewsChanged;
@@ -16,6 +17,7 @@ use App\Listeners\Brand\ClearBrandCache;
 use App\Listeners\CateNew\ClearCateNewCache;
 use App\Listeners\CateProduct\ClearCateProductCache;
 use App\Listeners\Feature\ClearFeatureCache;
+use App\Listeners\Gallery\ClearGalleryCache;
 use App\Listeners\Feedback\ClearFeedbackCache;
 use App\Listeners\Menu\ClearMenuCache;
 use App\Listeners\News\ClearNewsCache;
@@ -87,6 +89,11 @@ class EventServiceProvider extends ServiceProvider
         // Feature Events
         FeatureChanged::class => [
             ClearFeatureCache::class,
+        ],
+
+        // Gallery Events
+        GalleryChanged::class => [
+            ClearGalleryCache::class,
         ],
     ];
 
