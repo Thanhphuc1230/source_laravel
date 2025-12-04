@@ -8,6 +8,8 @@ use App\Models\CateNew;
 use App\Models\CateProduct;
 use App\Models\Product;
 use App\Models\Slider;
+use App\Models\Gallery;
+use App\Models\News;
 use Illuminate\Support\Facades\Cache;
 use App\Services\CacheService;
 
@@ -72,6 +74,29 @@ class HomeService
             CacheService::getTtl('long'),
             function () {
                 return Feature::where('status', 1)->orderBy('stt', 'asc')->get();
+            }
+        );
+
+        $data['latest_news'] = CacheService::remember(
+            CacheService::TAGS['news'],
+            'latest_news_home',
+            CacheService::getTtl('medium'),
+            function () {
+                return News::with('cate:id_cate_new,name_vn')
+                    ->select('id_new', 'name_vn', 'slug', 'image', 'intro_vn', 'created_at', 'category_id')
+                    ->where('status', 1)
+                    ->orderBy('created_at', 'desc')
+                    ->limit(3)
+                    ->get();
+            }
+        );
+
+        $data['galleries'] = CacheService::remember(
+            CacheService::TAGS['galleries'],
+            'galleries_home',
+            CacheService::getTtl('long'),
+            function () {
+                return Gallery::where('status', 1)->orderBy('stt', 'asc')->get();
             }
         );
 

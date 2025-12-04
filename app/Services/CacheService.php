@@ -20,6 +20,7 @@ class CacheService
         'brands' => 'brands',
         'features' => 'features',
         'sliders' => 'sliders',
+        'galleries' => 'galleries',
         'pages' => 'pages',
         'users' => 'users',
         'orders' => 'orders',
@@ -51,7 +52,11 @@ class CacheService
      */
     public static function remember(string $tag, string $key, int $ttl, callable $callback)
     {
-        return Cache::tags([$tag])->remember($key, $ttl, $callback);
+        if (Cache::supportsTags()) {
+            return Cache::tags([$tag])->remember($key, $ttl, $callback);
+        } else {
+            return Cache::remember($key, $ttl, $callback);
+        }
     }
 
     /**
@@ -62,7 +67,12 @@ class CacheService
      */
     public static function forgetTag(string $tag): bool
     {
-        return Cache::tags([$tag])->flush();
+        if (Cache::supportsTags()) {
+            return Cache::tags([$tag])->flush();
+        } else {
+            // For non-tagged caches, we can't flush by tag, so return true
+            return true;
+        }
     }
 
     /**
@@ -88,7 +98,11 @@ class CacheService
      */
     public static function forget(string $tag, string $key): bool
     {
-        return Cache::tags([$tag])->forget($key);
+        if (Cache::supportsTags()) {
+            return Cache::tags([$tag])->forget($key);
+        } else {
+            return Cache::forget($key);
+        }
     }
 
     /**
@@ -120,13 +134,17 @@ class CacheService
      */
     public static function getTagSize(string $tag): int
     {
-        try {
-            $store = Cache::tags([$tag])->getStore();
-            if (is_object($store) && method_exists($store, 'getSize')) {
-                return (int) call_user_func([$store, 'getSize']);
+        if (Cache::supportsTags()) {
+            try {
+                $store = Cache::tags([$tag])->getStore();
+                if (is_object($store) && method_exists($store, 'getSize')) {
+                    return (int) call_user_func([$store, 'getSize']);
+                }
+                return 0;
+            } catch (\Exception $e) {
+                return 0;
             }
-            return 0;
-        } catch (\Exception $e) {
+        } else {
             return 0;
         }
     }

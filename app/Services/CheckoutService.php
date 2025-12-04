@@ -7,17 +7,24 @@ use App\Mail\AlertOrder;
 use App\Models\OrderProduct;
 use App\Models\OrderShipping;
 use App\Models\OrderStatus;
+use App\Services\MailTemplateService;
+use App\Services\MailConfigService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CheckoutService
 {
     protected $cartService;
+    protected $mailTemplateService;
+    protected $mailConfigService;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService, MailTemplateService $mailTemplateService, MailConfigService $mailConfigService)
     {
         $this->cartService = $cartService;
+        $this->mailTemplateService = $mailTemplateService;
+        $this->mailConfigService = $mailConfigService;
     }
 
     /**
@@ -51,7 +58,7 @@ class CheckoutService
             $this->createOrderProducts($orderStatus->id_order_status);
 
             // Send notification email
-            $this->sendOrderNotification();
+            $this->sendOrderNotification($orderStatus->id_order_status);
 
             DB::commit();
 
@@ -124,19 +131,44 @@ class CheckoutService
     /**
      * Send order notification email
      *
+     * @param int $orderId
      * @return void
      */
-    private function sendOrderNotification(): void
+    private function sendOrderNotification(int $orderId): void
     {
         try {
-            $email = DB::table('tp_systems')->value('email_alert');
+            $orderDetails = $this->getOrderDetails($orderId);
+            
+            if (!$orderDetails) {
+                Log::warning('Order details not found for order ID: ' . $orderId);
+                return;
+            }
 
-            if ($email) {
-                Mail::to($email)->send(new AlertOrder('Order Success', 'Order Success'));
+            $template = $this->mailTemplateService->getActiveByType('order');
+            
+            if (!$template) {
+                Log::warning('No active order template found');
+                return;
+            }
+
+            $mailer = $this->mailConfigService->createMailer();
+            
+            // Send to admin
+            $adminEmail = DB::table('tp_systems')->value('email_alert');
+            if ($adminEmail) {
+                $mailer->to($adminEmail)->send(new AlertOrder($orderDetails, $template));
+                Log::info('Order notification email sent to admin: ' . $adminEmail);
+            }
+
+            // Send to customer
+            $customerEmail = $orderDetails['shipping']->email;
+            if ($customerEmail) {
+                $mailer->to($customerEmail)->send(new AlertOrder($orderDetails, $template));
+                Log::info('Order notification email sent to customer: ' . $customerEmail);
             }
         } catch (\Exception $e) {
             // Log error but don't fail the order
-            \Log::error('Failed to send order notification email: ' . $e->getMessage());
+            Log::error('Failed to send order notification email: ' . $e->getMessage());
         }
     }
 

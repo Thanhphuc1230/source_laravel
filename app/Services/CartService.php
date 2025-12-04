@@ -41,7 +41,7 @@ class CartService
             $quantity = $request->quantity;
         }
 
-        $product = Product::with('category')->where('uuid', $uuid)->first();
+        $product = Product::with('cate')->where('uuid', $uuid)->first();
 
         if (!$product) {
             return false;
@@ -82,9 +82,9 @@ class CartService
                 'price_old' => $product->price_old,
                 'avatar' => $product->image,
                 'uuid' => $product->uuid,
-                'name_cate' => $product->category->name_vn ?? '',
+                'name_cate' => $product->cate->name_vn ?? '',
                 'slug' => $product->slug,
-                'slug_cate' => $product->category->slug ?? '',
+                'slug_cate' => $product->cate->slug ?? '',
             ];
         }
 

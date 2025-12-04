@@ -38,12 +38,16 @@ class ProductService
             fn () => CateProduct::where('status', 1)->where('id_cate_product', $id_cate_product)->firstOrFail()
         );
 
-        // Cache category list (sidebar)
+        // Cache category list (sidebar) - Load all categories with hierarchy
         $data['category_product'] = \App\Services\CacheService::remember(
             \App\Services\CacheService::TAGS['categories'] ?? 'categories',
-            'category_product_home',
+            'category_product_sidebar',
             \App\Services\CacheService::getTtl('long'),
-            fn () => CateProduct::where('status', 1)->where('home', 1)->orderBy('stt', 'asc')->where('parent_id', 0)->get()
+            fn () => CateProduct::with(['products', 'children.products'])
+                ->where('status', 1)
+                ->orderBy('stt', 'asc')
+                ->get()
+                ->groupBy('parent_id')
         );
 
         // Build category id list (include children recursively)
@@ -53,7 +57,8 @@ class ProductService
         $query = Product::with(['cate:id_cate_product,name_vn,slug'])
             ->select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn', 'category_id', 'status', 'stt', 'created_at')
             ->whereIn('category_id', $categoryIds)
-            ->where('status', 1);
+            ->where('status', 1)
+            ->orderBy('created_at', 'desc');
 
         // Apply filters
         $query = $this->applyProductFilters($query, $request);

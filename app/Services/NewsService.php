@@ -90,9 +90,9 @@ class NewsService
             fn () => News::where('category_id', $data['news_detail']->category_id)
                 ->where('status', 1)
                 ->where('id_new', '!=', $data['news_detail']->id_new)
-                ->select('name_vn', 'slug', 'image', 'created_at')
+                ->select('id_new', 'name_vn', 'slug', 'image', 'created_at')
                 ->orderBy('created_at', 'desc')
-                ->limit(5)
+                ->limit(4)
                 ->get()
         );
 
