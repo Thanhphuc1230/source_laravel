@@ -30,12 +30,14 @@ use App\Repositories\Interfaces\ContactRepositoryInterface;
 use App\Repositories\Interfaces\FeatureRepositoryInterface;
 use App\Repositories\Interfaces\FeedBackRepositoryInterface;
 use App\Repositories\Interfaces\MailConfigRepositoryInterface;
+use App\Repositories\MailTemplateRepositoryInterface;
 use App\Repositories\Interfaces\MenuRepositoryInterface;
 use App\Repositories\Interfaces\NewsRepositoryInterface;
 use App\Repositories\Interfaces\PageRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\Interfaces\SliderRepositoryInterface;
 use App\Repositories\Interfaces\SystemRepositoryInterface;
+use App\Repositories\MailTemplateRepository;
 use App\Services\SlugResolutionService;
 use Illuminate\Support\ServiceProvider;
 
@@ -63,9 +65,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(MenuRepositoryInterface::class, MenuRepository::class);
         $this->app->bind(SystemRepositoryInterface::class, SystemRepository::class);
         $this->app->bind(ChatRepositoryInterface::class, ChatRepository::class);
+        $this->app->bind(MailTemplateRepositoryInterface::class, MailTemplateRepository::class);
 
         // Services
         $this->app->bind(SlugResolutionService::class, SlugResolutionService::class);
+        $this->app->bind(\App\Services\HomeService::class, \App\Services\HomeService::class);
         $this->app->bind(MailConfigRepositoryInterface::class, MailConfigRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
