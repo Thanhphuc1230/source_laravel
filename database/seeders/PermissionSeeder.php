@@ -195,6 +195,32 @@ class PermissionSeeder extends Seeder
                 'description' => 'Quyền xóa tính năng'
             ],
 
+            // Gallery permissions (Thư viện ảnh)
+            [
+                'name' => 'gallery.view',
+                'display_name' => 'Xem thư viện ảnh',
+                'group_name' => 'gallery',
+                'description' => 'Quyền xem danh sách thư viện ảnh'
+            ],
+            [
+                'name' => 'gallery.create',
+                'display_name' => 'Tạo thư viện ảnh',
+                'group_name' => 'gallery',
+                'description' => 'Quyền tạo thư viện ảnh mới'
+            ],
+            [
+                'name' => 'gallery.edit',
+                'display_name' => 'Sửa thư viện ảnh',
+                'group_name' => 'gallery',
+                'description' => 'Quyền chỉnh sửa thư viện ảnh'
+            ],
+            [
+                'name' => 'gallery.delete',
+                'display_name' => 'Xóa thư viện ảnh',
+                'group_name' => 'gallery',
+                'description' => 'Quyền xóa thư viện ảnh'
+            ],
+
             // Menu permissions (Menu)
             [
                 'name' => 'menu.view',
