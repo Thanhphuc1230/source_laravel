@@ -5,47 +5,27 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Services\CacheService;
-use App\Services\RateLimitService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\SlugResolutionService;
 
 class RouteController extends Controller
 {
+    protected $slugResolutionService;
+
+    public function __construct(SlugResolutionService $slugResolutionService)
+    {
+        $this->slugResolutionService = $slugResolutionService;
+    }
+
     /**
      * Universal route handler - xử lý tất cả slug với fallback chain
      * Priority: Product Detail > News Detail > Category Product > Category News > Page
      */
-    public function resolve($id, $slug)
+    public function resolve($slug)
     {
-        // Validate ID is numeric
-        if (!is_numeric($id)) {
-            return view('errors.404');
-        }
-
-        // Sanitize slug - remove any potentially harmful characters
-        $slug = preg_replace('/[^a-zA-Z0-9\-]/', '', $slug);
-        if (empty($slug)) {
-            return view('errors.404');
-        }
-
-        // Rate limiting for content access (prevent abuse)
-        $rateLimit = RateLimitService::forContent();
-        if ($rateLimit->isBlocked(request()->ip())) {
-            Log::warning('Rate limit exceeded for content access', [
-                'id' => $id,
-                'slug' => $slug,
-                'ip' => request()->ip(),
-                'user_agent' => request()->userAgent(),
-            ]);
-
-            return response()->view('errors.429', [], 429);
-        }
-
-        // Increment attempts for rate limiting
-        $rateLimit->incrementAttempts(request()->ip());
-
         // Cache key cho slug resolution
-        $cacheKey = "slug_resolution_{$id}_{$slug}";
+        $cacheKey = "slug_resolution_{$slug}";
 
         // Cache TTL từ config hoặc default 1 giờ
         $cacheTtl = config('cache.ttl.slug_resolution', 3600);
@@ -55,76 +35,16 @@ class RouteController extends Controller
             CacheService::TAGS['frontend'] ?? 'frontend',
             $cacheKey,
             $cacheTtl,
-            function () use ($id, $slug) {
-                return $this->findContentByIdAndSlug($id, $slug);
+            function () use ($slug) {
+                return $this->slugResolutionService->findContentBySlug($slug);
             }
         );
 
         if (! $result) {
-            Log::warning('Content not found by ID and slug', [
-                'id' => $id,
-                'slug' => $slug,
-                'user_agent' => request()->userAgent(),
-                'ip' => request()->ip(),
-            ]);
-
             return view('errors.404');
         }
 
-        // Log successful resolution
-        Log::info('Content resolved successfully', [
-            'id' => $id,
-            'slug' => $slug,
-            'type' => $result['type'],
-            'title' => $result['title'],
-        ]);
-
-        // Dispatch đến controller tương ứng
         return $this->dispatchToController($result);
-    }
-
-    /**
-     * Tìm content bằng ID và slug với single query
-     */
-    private function findContentByIdAndSlug(int $id, string $slug): ?array
-    {
-        try {
-            $query = "
-                SELECT 'product' as type, id_product as id, slug, name_vn as title, status
-                FROM tp_products
-                WHERE id_product = ? AND slug = ? AND status = 1
-                UNION ALL
-                SELECT 'news' as type, id_new as id, slug, name_vn as title, status
-                FROM tp_news
-                WHERE id_new = ? AND slug = ? AND status = 1
-                UNION ALL
-                SELECT 'cate_product' as type, id_cate_product as id, slug, name_vn as title, status
-                FROM tp_cate_products
-                WHERE id_cate_product = ? AND slug = ? AND status = 1
-                UNION ALL
-                SELECT 'cate_news' as type, id_cate_new as id, slug, name_vn as title, status
-                FROM tp_cate_news
-                WHERE id_cate_new = ? AND slug = ? AND status = 1
-                UNION ALL
-                SELECT 'page' as type, id_page as id, slug, name_vn as title, status
-                FROM tp_pages
-                WHERE id_page = ? AND slug = ? AND status = 1
-                LIMIT 1
-            ";
-
-            $result = DB::select($query, [$id, $slug, $id, $slug, $id, $slug, $id, $slug, $id, $slug]);
-
-            return $result ? (array) $result[0] : null;
-
-        } catch (\Exception $e) {
-            Log::error('Error finding content by ID and slug', [
-                'id' => $id,
-                'slug' => $slug,
-                'error' => $e->getMessage(),
-            ]);
-
-            return null;
-        }
     }
 
     /**
@@ -135,37 +55,24 @@ class RouteController extends Controller
         try {
             switch ($content['type']) {
                 case 'product':
-                    return app(ProductController::class)->detailProduct($content['id']);
+                    return app(ProductController::class)->detailProduct($content['slug']);
 
                 case 'news':
-                    return app(NewsController::class)->detailNews($content['id']);
+                    return app(NewsController::class)->detailNews($content['slug']);
 
                 case 'cate_product':
-                    return app(ProductController::class)->categoryProduct($content['id']);
+                    return app(ProductController::class)->categoryProduct($content['slug']);
 
                 case 'cate_news':
-                    return app(NewsController::class)->categoryNews($content['id']);
+                    return app(NewsController::class)->categoryNews($content['slug']);
 
                 case 'page':
-                    return app(PageController::class)->page($content['id']);
+                    return app(PageController::class)->page($content['slug']);
 
                 default:
-                    Log::warning('Unknown content type', [
-                        'type' => $content['type'],
-                        'id' => $content['id'],
-                        'slug' => $content['slug'],
-                    ]);
-
                     return view('errors.404');
             }
         } catch (\Exception $e) {
-            Log::error('Error dispatching to controller', [
-                'type' => $content['type'],
-                'id' => $content['id'],
-                'slug' => $content['slug'],
-                'error' => $e->getMessage(),
-            ]);
-
             return view('errors.404');
         }
     }

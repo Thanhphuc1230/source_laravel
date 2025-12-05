@@ -36,6 +36,7 @@ use App\Repositories\Interfaces\PageRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\Interfaces\SliderRepositoryInterface;
 use App\Repositories\Interfaces\SystemRepositoryInterface;
+use App\Services\SlugResolutionService;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -62,6 +63,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(MenuRepositoryInterface::class, MenuRepository::class);
         $this->app->bind(SystemRepositoryInterface::class, SystemRepository::class);
         $this->app->bind(ChatRepositoryInterface::class, ChatRepository::class);
+
+        // Services
+        $this->app->bind(SlugResolutionService::class, SlugResolutionService::class);
         $this->app->bind(MailConfigRepositoryInterface::class, MailConfigRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
