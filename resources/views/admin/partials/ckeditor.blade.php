@@ -8,9 +8,13 @@
         // Thêm cấu hình cho audio
         filebrowserAudioBrowseUrl: '/laravel-filemanager?type=Audio',
         filebrowserAudioUploadUrl: '/laravel-filemanager/upload?type=Audio&_token=',
-        extraPlugins: 'image2,html5audio,justify,font,colorbutton,maximize,link,table,youtube',
+        extraPlugins: 'image2,html5audio,justify,font,colorbutton,maximize,link,table,youtube,pastefromword',
         allowedContent: true,
-         // Thêm hai dòng này để sử dụng URL tương đối
+        pasteFromWordPromptCleanup: false,
+        pasteFromWordRemoveFontStyles: false,
+        pasteFromWordRemoveStyles: false,
+        pasteFilter: null,
+        forcePasteAsPlainText: false,
         baseHref: '/',
         forceRelativeUrls: true,
         toolbar: [{
