@@ -43,7 +43,6 @@ class SystemRequest extends BaseAdminRequest
             // SEO & Branding
             'favicon' => 'nullable|image|mimes:ico,png,jpg,jpeg|max:512',
             'logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
-            'watermark' => 'nullable|image|mimes:png,jpg,jpeg|max:1024',
             'name_vn' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:500',
             'keyword' => 'nullable|string|max:1000',

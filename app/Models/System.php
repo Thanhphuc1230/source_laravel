@@ -28,7 +28,6 @@ class System extends Model
         'zalo',
         'favicon',
         'logo',
-        'watermark',
         'name_vn',
         'description',
         'keyword',
