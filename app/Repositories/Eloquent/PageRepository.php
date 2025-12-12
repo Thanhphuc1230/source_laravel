@@ -4,18 +4,23 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Page;
 use App\Repositories\Interfaces\PageRepositoryInterface;
+use App\Services\SlugService;
 use Illuminate\Support\Str;
 
 class PageRepository extends BaseRepository implements PageRepositoryInterface
 {
+    protected $slugService;
+
     /**
      * PageRepository constructor.
      *
      * @param Page $model
+     * @param SlugService $slugService
      */
-    public function __construct(Page $model)
+    public function __construct(Page $model, SlugService $slugService)
     {
         parent::__construct($model);
+        $this->slugService = $slugService;
     }
 
     /**
@@ -74,32 +79,35 @@ class PageRepository extends BaseRepository implements PageRepositoryInterface
             ->first();
     }
     
-    /**
-     * @inheritDoc
-     */
     public function generateUniqueSlug($name, $uuid = null)
     {
-        $slug = Str::slug($name);
-        $originalSlug = $slug;
-        $count = 1;
-        
-        // Check if slug exists
-        $query = $this->model->where('slug', $slug);
-        
-        // Exclude current page when updating
+        $id = null;
         if ($uuid) {
-            $query->where('uuid', '!=', $uuid);
+            $page = $this->model->where('uuid', $uuid)->first();
+            $id = $page ? $page->id_page : null;
+        }
+
+        return !$id 
+            ? $this->slugService->generateUniqueSlugWithId($name, 0, 'tp_pages')
+            : $this->slugService->generateUniqueSlugWithIdGlobal($name, $id, 'tp_pages');
+    }
+
+    public function createWithAutoSlug(array $data, string $nameField = 'name_vn')
+    {
+        $hasCustomSlug = !empty($data['slug']);
+        
+        if (!$hasCustomSlug) {
+            $data['slug'] = $this->slugService->generateUniqueSlugWithId($data[$nameField], 0, 'tp_pages');
         }
         
-        while ($query->exists()) {
-            $slug = $originalSlug . '-' . $count++;
-            $query = $this->model->where('slug', $slug);
-            
-            if ($uuid) {
-                $query->where('uuid', '!=', $uuid);
-            }
+        $page = $this->create($data);
+        
+        if (!$hasCustomSlug) {
+            $realSlug = $this->generateUniqueSlug($data[$nameField], $page->uuid);
+            $this->update(['slug' => $realSlug], $page->uuid);
+            $page->slug = $realSlug;
         }
         
-        return $slug;
+        return $page;
     }
 }

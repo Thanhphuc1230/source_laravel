@@ -5,18 +5,23 @@ namespace App\Repositories\Eloquent;
 use App\Models\CateProduct;
 use App\Models\Product;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Services\SlugService;
 use Illuminate\Support\Str;
 
 class ProductRepository extends BaseRepository implements ProductRepositoryInterface
 {
+    protected $slugService;
+
     /**
      * ProductRepository constructor.
      *
      * @param Product $model
+     * @param SlugService $slugService
      */
-    public function __construct(Product $model)
+    public function __construct(Product $model, SlugService $slugService)
     {
         parent::__construct($model);
+        $this->slugService = $slugService;
     }
 
     /**
@@ -64,32 +69,35 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
             ->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function generateUniqueSlug($name, $uuid = null)
     {
-        $slug = Str::slug($name);
-        $originalSlug = $slug;
-        $count = 1;
-        
-        // Check if slug exists
-        $query = $this->model->where('slug', $slug);
-        
-        // Exclude current product when updating
+        $id = null;
         if ($uuid) {
-            $query->where('uuid', '!=', $uuid);
+            $product = $this->model->where('uuid', $uuid)->first();
+            $id = $product ? $product->id_product : null;
+        }
+
+        return !$id 
+            ? $this->slugService->generateUniqueSlugWithId($name, 0, 'tp_products')
+            : $this->slugService->generateUniqueSlugWithIdGlobal($name, $id, 'tp_products');
+    }
+
+    public function createWithAutoSlug(array $data, string $nameField = 'name_vn')
+    {
+        $hasCustomSlug = !empty($data['slug']);
+        
+        if (!$hasCustomSlug) {
+            $data['slug'] = $this->slugService->generateUniqueSlugWithId($data[$nameField], 0, 'tp_products');
         }
         
-        while ($query->exists()) {
-            $slug = $originalSlug . '-' . $count++;
-            $query = $this->model->where('slug', $slug);
-            
-            if ($uuid) {
-                $query->where('uuid', '!=', $uuid);
-            }
+        $product = $this->create($data);
+        
+        if (!$hasCustomSlug) {
+            $realSlug = $this->generateUniqueSlug($data[$nameField], $product->uuid);
+            $this->update(['slug' => $realSlug], $product->uuid);
+            $product->slug = $realSlug;
         }
         
-        return $slug;
+        return $product;
     }
 }

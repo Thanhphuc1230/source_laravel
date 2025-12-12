@@ -4,18 +4,23 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\CateNew;
 use App\Repositories\Interfaces\CateNewRepositoryInterface;
+use App\Services\SlugService;
 use Illuminate\Support\Str;
 
 class CateNewRepository extends BaseRepository implements CateNewRepositoryInterface
 {
+    protected $slugService;
+
     /**
      * CateNewRepository constructor.
      *
      * @param CateNew $model
+     * @param SlugService $slugService
      */
-    public function __construct(CateNew $model)
+    public function __construct(CateNew $model, SlugService $slugService)
     {
         parent::__construct($model);
+        $this->slugService = $slugService;
     }
 
     /**
@@ -59,38 +64,38 @@ class CateNewRepository extends BaseRepository implements CateNewRepositoryInter
             ->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function generateUniqueSlug($name, $uuid = null)
     {
-        $slug = Str::slug($name);
-        $originalSlug = $slug;
-        $count = 1;
-        
-        // Check if slug exists
-        $query = $this->model->where('slug', $slug);
-        
-        // Exclude current category when updating
+        $id = null;
         if ($uuid) {
-            $query->where('uuid', '!=', $uuid);
+            $category = $this->model->where('uuid', $uuid)->first();
+            $id = $category ? $category->id_cate_new : null;
         }
-        
-        while ($query->exists()) {
-            $slug = $originalSlug . '-' . $count++;
-            $query = $this->model->where('slug', $slug);
-            
-            if ($uuid) {
-                $query->where('uuid', '!=', $uuid);
-            }
-        }
-        
-        return $slug;
+
+        return !$id 
+            ? $this->slugService->generateUniqueSlugWithId($name, 0, 'tp_cate_news')
+            : $this->slugService->generateUniqueSlugWithIdGlobal($name, $id, 'tp_cate_news');
     }
 
-    /**
-     * @inheritDoc
-     */
+    public function createWithAutoSlug(array $data, string $nameField = 'name_vn')
+    {
+        $hasCustomSlug = !empty($data['slug']);
+        
+        if (!$hasCustomSlug) {
+            $data['slug'] = $this->slugService->generateUniqueSlugWithId($data[$nameField], 0, 'tp_cate_news');
+        }
+        
+        $category = $this->create($data);
+        
+        if (!$hasCustomSlug) {
+            $realSlug = $this->generateUniqueSlug($data[$nameField], $category->uuid);
+            $this->update(['slug' => $realSlug], $category->uuid);
+            $category->slug = $realSlug;
+        }
+        
+        return $category;
+    }
+
     public function getCategoriesWithChildren()
     {
         return $this->model->with('children')

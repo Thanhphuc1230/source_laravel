@@ -5,18 +5,23 @@ namespace App\Repositories\Eloquent;
 use App\Models\CateNew;
 use App\Models\News;
 use App\Repositories\Interfaces\NewsRepositoryInterface;
+use App\Services\SlugService;
 use Illuminate\Support\Str;
 
 class NewsRepository extends BaseRepository implements NewsRepositoryInterface
 {
+    protected $slugService;
+
     /**
      * NewsRepository constructor.
      *
      * @param News $model
+     * @param SlugService $slugService
      */
-    public function __construct(News $model)
+    public function __construct(News $model, SlugService $slugService)
     {
         parent::__construct($model);
+        $this->slugService = $slugService;
     }
 
     /**
@@ -61,32 +66,35 @@ class NewsRepository extends BaseRepository implements NewsRepositoryInterface
             ->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function generateUniqueSlug($name, $uuid = null)
     {
-        $slug = Str::slug($name);
-        $originalSlug = $slug;
-        $count = 1;
-        
-        // Check if slug exists
-        $query = $this->model->where('slug', $slug);
-        
-        // Exclude current news when updating
+        $id = null;
         if ($uuid) {
-            $query->where('uuid', '!=', $uuid);
+            $news = $this->model->where('uuid', $uuid)->first();
+            $id = $news ? $news->id_new : null;
+        }
+
+        return !$id 
+            ? $this->slugService->generateUniqueSlugWithId($name, 0, 'tp_news')
+            : $this->slugService->generateUniqueSlugWithIdGlobal($name, $id, 'tp_news');
+    }
+
+    public function createWithAutoSlug(array $data, string $nameField = 'name_vn')
+    {
+        $hasCustomSlug = !empty($data['slug']);
+        
+        if (!$hasCustomSlug) {
+            $data['slug'] = $this->slugService->generateUniqueSlugWithId($data[$nameField], 0, 'tp_news');
         }
         
-        while ($query->exists()) {
-            $slug = $originalSlug . '-' . $count++;
-            $query = $this->model->where('slug', $slug);
-            
-            if ($uuid) {
-                $query->where('uuid', '!=', $uuid);
-            }
+        $news = $this->create($data);
+        
+        if (!$hasCustomSlug) {
+            $realSlug = $this->generateUniqueSlug($data[$nameField], $news->uuid);
+            $this->update(['slug' => $realSlug], $news->uuid);
+            $news->slug = $realSlug;
         }
         
-        return $slug;
+        return $news;
     }
 }
