@@ -6,97 +6,81 @@
     <div class="container-fluid">
         <!-- Stats Cards -->
         <div class="row">
-            <div class="col-xl-3 col-md-6">
-                <div class="card card-animate">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-grow-1">
-                                <p class="text-uppercase fw-medium text-muted mb-0">Tổng Sản Phẩm</p>
+            <div class="col-xl-4 col-md-6">
+                <a href="{{ route('admin.product.index') }}" class="text-decoration-none">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <p class="text-uppercase fw-medium text-muted mb-0">Số lượng Sản phẩm</p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <h5 class="text-success fs-14 mb-0">
+                                        <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +{{ $totalProducts }}
+                                    </h5>
+                                </div>
                             </div>
-                            <div class="flex-shrink-0">
-                                <h5 class="text-success fs-14 mb-0">
-                                    <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +{{ $totalProducts }}
-                                </h5>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-end justify-content-between mt-4">
-                            <div>
-                                <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ number_format($totalProducts) }}</h4>
-                            </div>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-success-subtle rounded fs-3">
-                                    <i class="bx bx-package text-success"></i>
-                                </span>
+                            <div class="d-flex align-items-end justify-content-between mt-4">
+                                <div>
+                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ number_format($totalProducts) }}</h4>
+                                </div>
+                                <div class="avatar-sm flex-shrink-0">
+                                    <span class="avatar-title bg-success-subtle rounded fs-3">
+                                        <i class="bx bx-package text-success"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
 
-            <div class="col-xl-3 col-md-6">
-                <div class="card card-animate">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-grow-1">
-                                <p class="text-uppercase fw-medium text-muted mb-0">Tổng Đơn Hàng</p>
+            <div class="col-xl-4 col-md-6">
+                <a href="{{ route('admin.news.index') }}" class="text-decoration-none">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <p class="text-uppercase fw-medium text-muted mb-0">Số bài viết</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-flex align-items-end justify-content-between mt-4">
-                            <div>
-                                <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ number_format($totalOrders) }}</h4>
-                            </div>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-info-subtle rounded fs-3">
-                                    <i class="bx bx-shopping-bag text-info"></i>
-                                </span>
+                            <div class="d-flex align-items-end justify-content-between mt-4">
+                                <div>
+                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ number_format($totalNews) }}</h4>
+                                </div>
+                                <div class="avatar-sm flex-shrink-0">
+                                    <span class="avatar-title bg-info-subtle rounded fs-3">
+                                        <i class="bx bx-news text-info"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
 
-            <div class="col-xl-3 col-md-6">
-                <div class="card card-animate">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-grow-1">
-                                <p class="text-uppercase fw-medium text-muted mb-0">Tổng Doanh Thu</p>
+            <div class="col-xl-4 col-md-6">
+                <a href="{{ route('admin.comment.index') }}" class="text-decoration-none">
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <p class="text-uppercase fw-medium text-muted mb-0">Số comment</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-flex align-items-end justify-content-between mt-4">
-                            <div>
-                                <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ number_format($totalRevenue) }} VND</h4>
-                            </div>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                    <i class="bx bx-money text-warning"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6">
-                <div class="card card-animate">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-grow-1">
-                                <p class="text-uppercase fw-medium text-muted mb-0">Tổng Người Dùng</p>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-end justify-content-between mt-4">
-                            <div>
-                                <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ number_format($totalUsers) }}</h4>
-                            </div>
-                            <div class="avatar-sm flex-shrink-0">
-                                <span class="avatar-title bg-danger-subtle rounded fs-3">
-                                    <i class="bx bx-user text-danger"></i>
-                                </span>
+                            <div class="d-flex align-items-end justify-content-between mt-4">
+                                <div>
+                                    <h4 class="fs-22 fw-semibold ff-secondary mb-4">{{ number_format($totalComments) }}</h4>
+                                </div>
+                                <div class="avatar-sm flex-shrink-0">
+                                    <span class="avatar-title bg-warning-subtle rounded fs-3">
+                                        <i class="bx bx-comment text-warning"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
 
@@ -105,10 +89,10 @@
             <div class="col-xl-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title mb-0">Doanh Thu Theo Tháng</h4>
+                        <h4 class="card-title mb-0">Số Lượng Truy Cập</h4>
                     </div>
                     <div class="card-body">
-                        <canvas id="revenueChart" width="400" height="200"></canvas>
+                        <div id="visitsChart" style="width:100%; height:400px;"></div>
                     </div>
                 </div>
             </div>
@@ -181,7 +165,7 @@
                                 <tbody>
                                     @foreach($recentUsers as $user)
                                     <tr>
-                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->fullname }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->created_at->format('d/m/Y') }}</td>
                                     </tr>
@@ -196,29 +180,30 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const revenueData = @json(json_decode($revenueChart, true));
-    const ctx = document.getElementById('revenueChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: revenueData.map(item => item.month),
-            datasets: [{
-                label: 'Doanh Thu (VND)',
-                data: revenueData.map(item => item.revenue),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                tension: 0.1
-            }]
+    const chartData = @json(json_decode($chartData, true));
+    Highcharts.chart('visitsChart', {
+        chart: {
+            type: 'line'
         },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+        title: {
+            text: null
+        },
+        xAxis: {
+            categories: chartData.map(item => item.date)
+        },
+        yAxis: {
+            title: {
+                text: 'Số Lượng Truy Cập'
             }
+        },
+        series: [{
+            name: 'Truy Cập',
+            data: chartData.map(item => item.count),
+            color: '#007bff'
+        }],
+        credits: {
+            enabled: false
         }
     });
 </script>

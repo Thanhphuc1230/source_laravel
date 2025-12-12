@@ -95,9 +95,8 @@ class AnalyticController extends BaseController
 
         // Dashboard Stats
         $data['totalProducts'] = Product::count();
-        $data['totalOrders'] = DB::table('tp_order_status')->count();
-        $data['totalRevenue'] = DB::table('tp_order_status')->sum('total');
-        $data['totalUsers'] = User::count();
+        $data['totalNews'] = DB::table('tp_news')->count();
+        $data['totalComments'] = DB::table('tp_comments')->count();
 
         // Top Products (sold quantity)
         $data['topProducts'] = DB::table('tp_order_product')
