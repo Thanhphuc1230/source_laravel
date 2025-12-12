@@ -63,16 +63,12 @@ class NewsController extends BaseController
     public function store(NewsRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['slug'] = empty($data['slug']) ? $this->newsRepository->generateUniqueSlug($data['name_vn']) : $data['slug'];
-
-        // Handle image
+        $data['slug'] = $data['slug'] ?? $this->newsRepository->generateUniqueSlug($data['name_vn']);
         $data['image'] = $this->saveImage($request);
 
-        $news = $this->newsRepository->create($data);
+        $news = $this->newsRepository->createWithAutoSlug($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
-
-        // Remove related cache
-        NewsChanged::dispatch($news, 'created', $data['slug']);
+        NewsChanged::dispatch($news, 'created', $news->slug);
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }

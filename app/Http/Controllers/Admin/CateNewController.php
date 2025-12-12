@@ -64,17 +64,13 @@ class CateNewController extends BaseController
     public function store(CateNewRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
+        $data['slug'] = $data['slug'] ?? $this->cateNewRepository->generateUniqueSlug($data['name_vn']);
         $data['status'] = 1;
-
-        // Handle image - Save new image
         $data['image'] = $this->saveImage($request);
 
-        $cateNew = $this->cateNewRepository->create($data);
+        $cateNew = $this->cateNewRepository->createWithAutoSlug($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
-
-        // Remove related cache
-        CateNewChanged::dispatch($cateNew, 'created', $data['slug']);
+        CateNewChanged::dispatch($cateNew, 'created', $cateNew->slug);
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }

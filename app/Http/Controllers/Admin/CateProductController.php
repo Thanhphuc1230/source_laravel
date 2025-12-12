@@ -80,20 +80,13 @@ class CateProductController extends BaseController
     public function store(CateProductRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        
-        // Tạo slug từ name_vn nếu không có
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class) : $data['slug'];
+        $data['slug'] = $data['slug'] ?? $this->cateProductRepository->generateUniqueSlug($data['name_vn']);
         $data['status'] = 1;
-
-        // Handle image - Save new image
         $data['image'] = $this->saveImage($request, null, 'image');
 
-        $cateProduct = $this->cateProductRepository->create($data);
-
+        $cateProduct = $this->cateProductRepository->createWithAutoSlug($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
-
-        // Remove related cache
-        CateProductChanged::dispatch($cateProduct, 'created', $data['slug']);
+        CateProductChanged::dispatch($cateProduct, 'created', $cateProduct->slug);
 
         // Xử lý redirect
         if ($request->has('return_back')) {

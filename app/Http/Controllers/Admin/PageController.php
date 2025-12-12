@@ -62,17 +62,12 @@ class PageController extends BaseController
     public function store(PageRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['slug'] = empty($data['slug']) ? $this->pageRepository->generateUniqueSlug($data['name_vn']) : $data['slug'];
-
-        // Handle image
-        // Handle single image - Save new image
+        $data['slug'] = $data['slug'] ?? $this->pageRepository->generateUniqueSlug($data['name_vn']);
         $data['image'] = $this->saveImage($request);
 
-        $page = $this->pageRepository->create($data);
+        $page = $this->pageRepository->createWithAutoSlug($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
-
-        // Remove related cache
-        PageChanged::dispatch($page, 'created', $data['slug']);
+        PageChanged::dispatch($page, 'created', $page->slug);
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -102,16 +97,11 @@ class PageController extends BaseController
     {
         $current = $this->pageRepository->findByUuid($uuid);
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
-        $data['slug'] = empty($data['slug']) ? $this->pageRepository->generateUniqueSlug($data['name_vn'], $uuid) : $data['slug'];
-
-        // Handle image
-        // Handle single image - Update existing image
+        $data['slug'] = $data['slug'] ?? $this->pageRepository->generateUniqueSlug($data['name_vn'], $uuid);
         $data['image'] = $this->updateImage($request, $current);
 
         $this->pageRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
-
-        // Remove related cache
         PageChanged::dispatch($current, 'updated', $data['slug']);
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
@@ -121,10 +111,7 @@ class PageController extends BaseController
     {
         $page = $this->pageRepository->findByUuid($uuid);
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
-
-        // Remove related cache
         PageChanged::dispatch($page, 'status_updated');
-
         return $result;
     }
 
@@ -132,10 +119,7 @@ class PageController extends BaseController
     {
         $page = $this->pageRepository->findByUuid($uuid);
         $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
-
-        // Remove related cache
         PageChanged::dispatch($page, 'order_updated');
-
         return $result;
     }
 
@@ -143,24 +127,15 @@ class PageController extends BaseController
     {
         $page = $this->pageRepository->findByUuid($uuid);
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
-
-        // Remove related cache
         PageChanged::dispatch($page, 'deleted');
-
         return $result;
     }
 
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-
-        // Optimize: only select fields needed for events
-        $pageItems = $this->pageRepository->findByUuids($uuids, ['uuid', 'slug', 'name_vn']);
-
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
-
         PageChanged::dispatch(null, 'deleted');
-
         return $result;
     }
 }

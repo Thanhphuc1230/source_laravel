@@ -63,19 +63,13 @@ class ProductController extends BaseController
     public function store(ProductRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['slug'] = empty($data['slug']) ? $this->productRepository->generateUniqueSlug($data['name_vn']) : $data['slug'];
-
-        // Handle single image
+        $data['slug'] = $data['slug'] ?? $this->productRepository->generateUniqueSlug($data['name_vn']);
         $data['image'] = $this->saveImage($request);
-
-        // Handle multiple images - Save new images
         $data['image_detail'] = $this->saveMultipleImages($request);
 
-        $product = $this->productRepository->create($data);
+        $product = $this->productRepository->createWithAutoSlug($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
-
-        // Remove related cache
-        ProductChanged::dispatch($product, 'created', $data['slug']);
+        ProductChanged::dispatch($product, 'created', $product->slug);
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -105,18 +99,12 @@ class ProductController extends BaseController
     {
         $current = $this->productRepository->findByUuid($uuid);
         $data = $this->cleanRequestData($request);
-        $data['slug'] = empty($data['slug']) ? $this->productRepository->generateUniqueSlug($data['name_vn'], $uuid) : $data['slug'];
-
-        // Handle single image
+        $data['slug'] = $data['slug'] ?? $this->productRepository->generateUniqueSlug($data['name_vn'], $uuid);
         $data['image'] = $this->updateImage($request, $current);
-
-        // Handle multiple images - Update existing images
         $data['image_detail'] = $this->updateMultipleImages($request, $current);
 
         $this->productRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
-
-        // Remove related cache
         ProductChanged::dispatch($current, 'updated', $data['slug']);
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
@@ -126,10 +114,7 @@ class ProductController extends BaseController
     {
         $product = $this->productRepository->findByUuid($uuid);
         $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
-
-        // Remove related cache
         ProductChanged::dispatch($product, 'status_updated');
-
         return $result;
     }
 
@@ -137,39 +122,23 @@ class ProductController extends BaseController
     {
         $product = $this->productRepository->findByUuid($uuid);
         $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
-
-        // Remove related cache
         ProductChanged::dispatch($product, 'order_updated');
-
         return $result;
     }
-
-    // Method deleteImage đã được thay thế bằng logic xử lý trong updateMultipleImages
-    // Không cần thiết nữa vì hình ảnh sẽ được xử lý khi update
 
     public function destroy(string $uuid)
     {
         $product = $this->productRepository->findByUuid($uuid);
         $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
-
-        // Remove related cache
         ProductChanged::dispatch($product, 'deleted');
-
         return $result;
     }
 
     public function destroyAll(Request $request)
     {
         $uuids = $request->input('uuids', []);
-
-        // Get items before deletion for event dispatch (optimize: only get necessary fields)
-        $productItems = $this->productRepository->findByUuids($uuids, ['uuid', 'slug', 'name_vn', 'category_id']);
-
         $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
-
-        // Optimized event dispatch - individual events but with minimal data
         ProductChanged::dispatch(null, 'deleted');
-
         return $result;
     }
 }
