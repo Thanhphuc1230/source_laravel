@@ -39,7 +39,6 @@ class RouteController extends Controller
                 return $this->slugResolutionService->findContentBySlug($slug);
             }
         );
-
         if (! $result) {
             return view('errors.404');
         }
@@ -51,23 +50,23 @@ class RouteController extends Controller
      * Dispatch đến controller tương ứng
      */
     private function dispatchToController(array $content): mixed
-    {
+    {   
         try {
             switch ($content['type']) {
                 case 'product':
-                    return app(ProductController::class)->detailProduct($content['slug']);
+                    return app(ProductController::class)->detailProduct($content['id']);
 
                 case 'news':
-                    return app(NewsController::class)->detailNews($content['slug']);
+                    return app(NewsController::class)->detailNews($content['id']);
 
                 case 'cate_product':
-                    return app(ProductController::class)->categoryProduct($content['slug']);
+                    return app(ProductController::class)->categoryProduct($content['id']);
 
                 case 'cate_news':
-                    return app(NewsController::class)->categoryNews($content['slug']);
+                    return app(NewsController::class)->categoryNews($content['id']);
 
                 case 'page':
-                    return app(PageController::class)->page($content['slug']);
+                    return app(PageController::class)->page($content['id']);
 
                 default:
                     return view('errors.404');
