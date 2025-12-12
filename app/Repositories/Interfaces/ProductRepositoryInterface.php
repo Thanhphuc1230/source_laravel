@@ -28,4 +28,13 @@ interface ProductRepositoryInterface extends RepositoryInterface
      * @return string
      */
     public function generateUniqueSlug($name, $uuid = null);
+
+    /**
+     * Create product with auto-generated slug
+     *
+     * @param array $data
+     * @param string $nameField
+     * @return mixed
+     */
+    public function createWithAutoSlug(array $data, string $nameField = 'name_vn');
 }

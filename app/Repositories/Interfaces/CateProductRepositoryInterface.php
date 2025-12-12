@@ -35,4 +35,6 @@ interface CateProductRepositoryInterface extends RepositoryInterface
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getCategoriesWithChildren();
+
+    public function createWithAutoSlug(array $data, string $nameField = 'name_vn');
 }

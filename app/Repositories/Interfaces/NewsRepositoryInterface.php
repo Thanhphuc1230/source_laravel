@@ -28,4 +28,6 @@ interface NewsRepositoryInterface extends RepositoryInterface
      * @return string
      */
     public function generateUniqueSlug($name, $uuid = null);
+
+    public function createWithAutoSlug(array $data, string $nameField = 'name_vn');
 }
