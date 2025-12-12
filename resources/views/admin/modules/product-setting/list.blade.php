@@ -112,7 +112,7 @@
                                                                   <input class="form-check-input status-checkbox"
                                                                       type="checkbox" role="switch"
                                                                       value="{{ $item->is_active }}"
-                                                                      data-uuid="{{ $item->uuid }}" data-name="is_active"
+                                                                      data-uuid="{{ $item->uuid }}" data-field="is_active"
                                                                       data-status="{{ $item->is_active }}"
                                                                       {{ $item->is_active == 1 ? 'checked' : '' }}>
                                                              </div>

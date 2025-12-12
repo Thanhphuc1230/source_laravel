@@ -110,10 +110,10 @@ class ProductController extends BaseController
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
 
-    public function status($uuid, $status, $name)
+    public function status($uuid, $status, $field)
     {
         $product = $this->productRepository->findByUuid($uuid);
-        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $field, $this->model::class);
         ProductChanged::dispatch($product, 'status_updated');
         return $result;
     }

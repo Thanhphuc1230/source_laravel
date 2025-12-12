@@ -145,9 +145,9 @@ class ProductSettingController extends BaseController
         return $this->route_admin('index');
     }
 
-    public function status($uuid, $status, $name)
+    public function status($uuid, $status, $field)
     {
-        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $field, $this->model::class);
 
         return $result;
     }

@@ -85,7 +85,7 @@
                                                                     <input class="form-check-input status-checkbox"
                                                                         type="checkbox" role="switch"
                                                                         value="{{ $item->status }}"
-                                                                        data-uuid="{{ $item->uuid }}" data-name="status"
+                                                                        data-uuid="{{ $item->uuid }}" data-field="status"
                                                                         data-status="{{ $item->status }}"
                                                                         {{ $item->status == 1 ? 'checked' : '' }}>
                                                                 </div>

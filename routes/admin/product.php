@@ -9,7 +9,7 @@ Route::controller(ProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('index')->middleware('permission:product.view');
         Route::get('/create', 'create')->name('create')->middleware('permission:product.create');
-        Route::post('/status/{uuid}/{status}/{name}', 'status')->name('status')->middleware('permission:product.edit');
+        Route::post('/status/{uuid}/{status}/{field}', 'status')->name('status')->middleware('permission:product.edit');
         Route::post('/store', 'store')->name('store')->middleware('permission:product.create');
         Route::get('/edit/{uuid}/{page}', 'edit')->name('edit')->middleware('permission:product.edit');
         Route::post('/update/{uuid}', 'update')->name('update')->middleware('permission:product.edit');

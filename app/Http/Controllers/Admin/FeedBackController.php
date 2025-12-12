@@ -140,10 +140,10 @@ class FeedBackController extends BaseController
         return $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
     }
 
-    public function status($uuid, $status, $name)
+    public function status($uuid, $status, $field)
     {
         $feedback = $this->feedBackRepository->findByUuid($uuid);
-        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $field, $this->model::class);
 
         // Remove related cache
         FeedBackChanged::dispatch($feedback, 'status_updated');

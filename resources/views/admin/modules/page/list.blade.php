@@ -76,7 +76,7 @@
                                                                     <input class="form-check-input status-checkbox"
                                                                         type="checkbox" role="switch"
                                                                         value="{{ $item->status }}"
-                                                                        data-uuid="{{ $item->uuid }}" data-name="status"
+                                                                        data-uuid="{{ $item->uuid }}" data-field="status"
                                                                         data-status="{{ $item->status }}"
                                                                         {{ $item->status == 1 ? 'checked' : '' }}>
                                                                 </div>
@@ -87,7 +87,7 @@
                                                                     <input class="form-check-input status-checkbox"
                                                                         type="checkbox" role="switch"
                                                                         value="{{ $item->footer }}"
-                                                                        data-uuid="{{ $item->uuid }}" data-name="footer"
+                                                                        data-uuid="{{ $item->uuid }}" data-field="footer"
                                                                         data-footer="{{ $item->footer }}"
                                                                         {{ $item->footer == 1 ? 'checked' : '' }}>
                                                                 </div>

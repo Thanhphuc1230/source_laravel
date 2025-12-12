@@ -15,5 +15,5 @@ Route::controller(ProductSettingController::class)
         Route::post('/update/{uuid}', 'update')->name('update')->middleware('permission:system.edit');
         Route::get('/destroy/{uuid}', 'destroy')->name('destroy')->middleware('permission:system.edit');
         Route::post('/destroyAll', 'destroyAll')->name('destroyAll')->middleware('permission:system.edit');
-        Route::post('/status/{uuid}/{status}/{name}', 'status')->name('status')->middleware('permission:system.edit');
+        Route::post('/status/{uuid}/{status}/{field}', 'status')->name('status')->middleware('permission:system.edit');
     });

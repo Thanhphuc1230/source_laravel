@@ -9,7 +9,7 @@ Route::controller(CateProductController::class)
     ->group(function () {
         Route::get('/', 'index')->name('index')->middleware('permission:cate_product.view');
         Route::get('/create', 'create')->name('create')->middleware('permission:cate_product.create');
-        Route::post('/status/{uuid}/{status}/{name}', 'status')->name('status')->middleware('permission:cate_product.edit');
+        Route::post('/status/{uuid}/{status}/{field}', 'status')->name('status')->middleware('permission:cate_product.edit');
         Route::post('/store', 'store')->name('store')->middleware('permission:cate_product.create');
         Route::get('/edit/{uuid}/{page}', 'edit')->name('edit')->middleware('permission:cate_product.edit');
         Route::post('/update/{uuid}', 'update')->name('update')->middleware('permission:cate_product.edit');

@@ -63,7 +63,7 @@ class OrderController extends BaseController
         return $this->view_admin('list', $data);
     }
 
-    public function status($uuid, $status, $name)
+    public function status($uuid, $status, $field)
     {
         $orderStatus = OrderStatus::where('uuid_order_status', $uuid)->first();
 
@@ -73,7 +73,7 @@ class OrderController extends BaseController
             return redirect()->back();
         }
 
-        $orderStatus->update([$name => $status]);
+        $orderStatus->update([$field => $status]);
 
         $mess = $status == 1 ? 'Kích hoạt' : 'Tắt';
         toast($mess.' '.$this->nameItem.' thành công', 'success');

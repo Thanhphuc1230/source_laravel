@@ -53,10 +53,10 @@ class MenuController extends BaseController
         View::share('nameClass', $imageFolder);
     }
 
-    public function status($uuid, $status, $name)
+    public function status($uuid, $status, $field)
     {
         $menu = $this->menuRepository->findByUUID($uuid);
-        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, get_class($menu));
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $field, get_class($menu));
 
         // Remove related cache
         MenuChanged::dispatch($menu, 'status_updated');

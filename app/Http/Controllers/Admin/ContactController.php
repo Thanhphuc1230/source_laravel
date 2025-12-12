@@ -37,9 +37,9 @@ class ContactController extends BaseController
         return $this->view_admin('list', $data);
     }
 
-    public function status($uuid, $status, $name)
+    public function status($uuid, $status, $field)
     {
-        return $this->updateStatus($uuid, $status, $name);
+        return $this->updateStatus($uuid, $status, $field);
     }
 
     public function edit($uuid)

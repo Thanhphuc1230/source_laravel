@@ -163,10 +163,10 @@ class CateProductController extends BaseController
         return $result;
     }
 
-    public function status($uuid, $status, $name)
+    public function status($uuid, $status, $field)
     {
         $cateProduct = $this->cateProductRepository->findByUuid($uuid);
-        $result = $this->toggleService->toggleModelStatus($uuid, $status, $name, $this->model::class);
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $field, $this->model::class);
 
         // Remove related cache
         CateProductChanged::dispatch($cateProduct, 'status_updated');

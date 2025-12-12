@@ -82,7 +82,7 @@
                                                             </td>
                                                             <td class="status">
                                                                 <div class="form-check form-switch form-switch-success mb-3">
-                                                                    <input class="form-check-input status-checkbox" type="checkbox" role="switch" value="{{ $item->is_active }}" data-uuid="{{ $item->id }}" data-name="is_active" data-status="{{ $item->is_active }}" {{ $item->is_active == 1 ? 'checked' : '' }}>
+                                                                    <input class="form-check-input status-checkbox" type="checkbox" role="switch" value="{{ $item->is_active }}" data-uuid="{{ $item->id }}" data-field="is_active" data-status="{{ $item->is_active }}" {{ $item->is_active == 1 ? 'checked' : '' }}>
                                                                 </div>
                                                             </td>
                                                             <td>
