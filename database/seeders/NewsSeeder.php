@@ -10,12 +10,13 @@ class NewsSeeder extends Seeder
 {
     public function run(): void
     {
+        $newsRepo = app(\App\Repositories\Interfaces\NewsRepositoryInterface::class);
+        
         for ($i = 1; $i <= 10; $i++) {
-            DB::table('tp_news')->insert([
-                'uuid' => Str::uuid(),
+            $newsRepo->createWithAutoSlug([
                 'name_vn' => 'Tin tức '.$i,
                 'name_en' => 'News '.$i,
-                'slug' => Str::slug('tin-tuc-'.$i),
+                'slug' => '',
                 'image' => 'product-'.$i.'.webp',
                 'intro_vn' => 'Giới thiệu tin tức '.$i,
                 'intro_en' => 'News intro '.$i,
@@ -28,8 +29,6 @@ class NewsSeeder extends Seeder
                 'home' => false,
                 'stt' => $i,
                 'views' => 0,
-                'created_at' => now(),
-                'updated_at' => now(),
             ]);
         }
     }

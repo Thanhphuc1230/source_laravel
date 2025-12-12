@@ -15,18 +15,17 @@ class CategoryNewSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tp_cate_news')->insert([
-            'uuid' => Str::uuid(),
+        $cateRepo = app(\App\Repositories\Interfaces\CateNewRepositoryInterface::class);
+        
+        $category = $cateRepo->createWithAutoSlug([
             'name_vn' => 'Tin tức',
             'name_en' => 'News',
-            'slug' => 'tin-tuc',
+            'slug' => '',
             'keywords' => null,
             'description' => null,
             'status' => true,
             'stt' => 0,
             'parent_id' => 0,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
     }
 }

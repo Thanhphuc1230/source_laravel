@@ -15,19 +15,18 @@ class CategoryProductSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tp_cate_products')->insert([
-            'uuid' => Str::uuid(),
+        $cateRepo = app(\App\Repositories\Interfaces\CateProductRepositoryInterface::class);
+        
+        $category = $cateRepo->createWithAutoSlug([
             'name_vn' => 'Sản phẩm',
             'name_en' => 'Product',
-            'slug' => 'san-pham',
+            'slug' => '',
             'keywords' => null,
             'description' => null,
             'status' => true,
             'home' => false,
             'stt' => 0,
             'parent_id' => 0,
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
     }
 }
