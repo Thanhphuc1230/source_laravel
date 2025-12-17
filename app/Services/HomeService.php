@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\Slider;
 use App\Models\Gallery;
 use App\Models\News;
+use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Cache;
 use App\Services\CacheService;
 
@@ -99,6 +100,9 @@ class HomeService
                 return Gallery::where('status', 1)->orderBy('stt', 'asc')->get();
             }
         );
+
+        // Site Settings - Homepage
+        $data['homepageSettings'] = SiteSetting::where('group', 'homepage')->get()->keyBy('key');
 
         return $data;
     }
