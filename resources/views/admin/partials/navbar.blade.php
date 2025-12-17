@@ -228,6 +228,13 @@
                                 </a>
                             </li>
                             @endhasPermission
+                            {{-- @hasPermission('site_setting.view') --}}
+                            <li class="nav-item">
+                                <a href="{{ route('admin.site_setting.index') }}" class="nav-link"
+                                    data-key="t-site-setting">Cài đặt site
+                                </a>
+                            </li>
+                            {{-- @endhasPermission --}}
                             @hasPermission('user.view')
                             <li class="nav-item">
                                 <a href="{{ route('admin.user.index') }}" class="nav-link"

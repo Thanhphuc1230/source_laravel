@@ -556,6 +556,32 @@ class PermissionSeeder extends Seeder
                 'group_name' => 'mail_template',
                 'description' => 'Quyền xóa template mail'
             ],
+
+            // Site Setting permissions (Cài đặt site)
+            [
+                'name' => 'site_setting.view',
+                'display_name' => 'Xem cài đặt site',
+                'group_name' => 'site_setting',
+                'description' => 'Quyền xem danh sách cài đặt site'
+            ],
+            [
+                'name' => 'site_setting.create',
+                'display_name' => 'Tạo cài đặt site',
+                'group_name' => 'site_setting',
+                'description' => 'Quyền tạo cài đặt site mới'
+            ],
+            [
+                'name' => 'site_setting.edit',
+                'display_name' => 'Sửa cài đặt site',
+                'group_name' => 'site_setting',
+                'description' => 'Quyền chỉnh sửa cài đặt site'
+            ],
+            [
+                'name' => 'site_setting.delete',
+                'display_name' => 'Xóa cài đặt site',
+                'group_name' => 'site_setting',
+                'description' => 'Quyền xóa cài đặt site'
+            ],
         ];
 
         foreach ($permissions as $permission) {
