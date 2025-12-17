@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Listeners\Feedback;
+namespace App\Listeners\FeedBack;
 
-use App\Events\Feedback\FeedbackChanged;
+use App\Events\FeedBack\FeedbackChanged;
 use App\Services\CacheService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
-class ClearFeedbackCache
+class ClearFeedBackCache
 {
-    public function handle(FeedbackChanged $event): void
+    public function handle(FeedBackChanged $event): void
     {
         try {
             // Xóa cache feedback (tag-based)
