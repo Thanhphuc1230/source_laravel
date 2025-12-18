@@ -104,6 +104,9 @@ class HomeService
         // Site Settings - Homepage
         $data['homepageSettings'] = SiteSetting::where('group', 'homepage')->get()->keyBy('key');
 
+        // Trade Partner settings
+        $data['tradePartner'] =  SiteSetting::where('group', 'trade_partner')->get()->keyBy('key');
+
         return $data;
     }
 }

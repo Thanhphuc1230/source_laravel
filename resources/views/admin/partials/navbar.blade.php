@@ -88,64 +88,75 @@
                                 <a href="{{ route('admin.menu.index') }}" class="nav-link" data-key="t-calendar">Menu
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.site_setting.show', ['key' => 'homepage']) }}"
+                                    class="nav-link" data-key="t-homepage">Homepage</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.site_setting.show', ['key' => 'trade-partner']) }}"
+                                    class="nav-link" data-key="t-trade-partner">Trade Partner</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
                 @endhasPermission
                 @hasAnyPermission(['cate_product.view', 'product.view'])
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarProduct" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarProduct">
-                        <i class="ri-shopping-bag-3-line"></i> <span data-key="t-tables">Sản phẩm</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarProduct">
-                        <ul class="nav nav-sm flex-column">
-                            @hasPermission('cate_product.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.cate_product.index') }}" class="nav-link"
-                                    data-key="t-basic-tables">Danh mục </a>
-                            </li>
-                            @endhasPermission
-                            @hasPermission('product.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.product.index') }}" class="nav-link" data-key="t-grid-js">Bài viết</a>
-                            </li>
-                            @endhasPermission
-                            @hasPermission('order.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.order.index') }}" class="nav-link" data-key="t-grid-js">Đơn hàng</a>
-                            </li>
-                            @endhasPermission
-                            @hasPermission('product_setting.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.product-setting.index') }}" class="nav-link" data-key="t-grid-js">Cài đặt</a>
-                            </li>
-                            @endhasPermission
-                        </ul>
-                    </div>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarProduct" data-bs-toggle="collapse" role="button"
+                            aria-expanded="false" aria-controls="sidebarProduct">
+                            <i class="ri-shopping-bag-3-line"></i> <span data-key="t-tables">Sản phẩm</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarProduct">
+                            <ul class="nav nav-sm flex-column">
+                                @hasPermission('cate_product.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.cate_product.index') }}" class="nav-link"
+                                        data-key="t-basic-tables">Danh mục </a>
+                                </li>
+                                @endhasPermission
+                                @hasPermission('product.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.product.index') }}" class="nav-link"
+                                        data-key="t-grid-js">Bài viết</a>
+                                </li>
+                                @endhasPermission
+                                @hasPermission('order.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.order.index') }}" class="nav-link" data-key="t-grid-js">Đơn
+                                        hàng</a>
+                                </li>
+                                @endhasPermission
+                                @hasPermission('product_setting.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.product-setting.index') }}" class="nav-link"
+                                        data-key="t-grid-js">Cài đặt</a>
+                                </li>
+                                @endhasPermission
+                            </ul>
+                        </div>
+                    </li>
                 @endhasAnyPermission
                 @hasAnyPermission(['cate_news.view', 'news.view'])
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarNews">
-                        <i class="ri-newspaper-line"></i> <span data-key="t-layouts">Tin tức</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarNews">
-                        <ul class="nav nav-sm flex-column">
-                            @hasPermission('cate_news.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.cate_new.index') }}" class="nav-link">Chủ đề</a>
-                            </li>
-                            @endhasPermission
-                            @hasPermission('news.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.news.index') }}" class="nav-link">Bài viết</a>
-                            </li>
-                            @endhasPermission
-                        </ul>
-                    </div>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarNews" data-bs-toggle="collapse" role="button"
+                            aria-expanded="false" aria-controls="sidebarNews">
+                            <i class="ri-newspaper-line"></i> <span data-key="t-layouts">Tin tức</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarNews">
+                            <ul class="nav nav-sm flex-column">
+                                @hasPermission('cate_news.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.cate_new.index') }}" class="nav-link">Chủ đề</a>
+                                </li>
+                                @endhasPermission
+                                @hasPermission('news.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.news.index') }}" class="nav-link">Bài viết</a>
+                                </li>
+                                @endhasPermission
+                            </ul>
+                        </div>
+                    </li>
                 @endhasAnyPermission
                 @hasPermission('feedback.view')
                 <li class="nav-item">
@@ -155,103 +166,96 @@
                 </li>
                 @endhasAnyPermission
                 @hasAnyPermission(['contact.view', 'comment.view'])
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#Contact" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarNews">
-                        <i class="ri-message-line"></i> <span data-key="t-layouts">Liên hệ</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="Contact">
-                        <ul class="nav nav-sm flex-column">
-                            @hasPermission('contact.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.contact.index') }}" class="nav-link">Liên hệ</a>
-                            </li>
-                            @endhasPermission
-                            @hasPermission('comment.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.comment.index') }}" class="nav-link">Bình luận</a>
-                            </li>
-                            @endhasPermission
-                        </ul>
-                    </div>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#Contact" data-bs-toggle="collapse" role="button"
+                            aria-expanded="false" aria-controls="sidebarNews">
+                            <i class="ri-message-line"></i> <span data-key="t-layouts">Liên hệ</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="Contact">
+                            <ul class="nav nav-sm flex-column">
+                                @hasPermission('contact.view')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.contact.index') }}" class="nav-link">Liên hệ</a>
+                                    </li>
+                                @endhasPermission
+                                @hasPermission('comment.view')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.comment.index') }}" class="nav-link">Bình luận</a>
+                                    </li>
+                                @endhasPermission
+                            </ul>
+                        </div>
+                    </li>
                 @endhasAnyPermission
                 @hasPermission('chat.view')
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('admin.chat.index') }}">
-                        <i class="ri-chat-1-line"></i> <span data-key="t-widgets">Chat hỗ trợ</span>
-                        <span class="badge bg-danger ms-2" id="chat-unread-badge" style="display: none;">0</span>
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="{{ route('admin.chat.index') }}">
+                            <i class="ri-chat-1-line"></i> <span data-key="t-widgets">Chat hỗ trợ</span>
+                            <span class="badge bg-danger ms-2" id="chat-unread-badge" style="display: none;">0</span>
+                        </a>
+                    </li>
                 @endhasPermission
                 {{-- mail --}}
                 @hasAnyPermission(['mail-config.view', 'mail-template.view'])
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarMail" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarMail">
-                        <i class="ri-mail-line"></i> <span data-key="t-mail">Mail</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarMail">
-                        <ul class="nav nav-sm flex-column">
-                            @hasPermission('mail-config.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.mail-config.index') }}" class="nav-link"
-                                    data-key="t-mail-config">Cấu hình mail
-                                </a>
-                            </li>
-                            @endhasPermission
-                            @hasPermission('mail-template.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.mail-template.index') }}" class="nav-link"
-                                    data-key="t-mail-template">Template mail
-                                </a>
-                            </li>
-                            @endhasPermission
-                        </ul>
-                    </div>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarMail" data-bs-toggle="collapse" role="button"
+                            aria-expanded="false" aria-controls="sidebarMail">
+                            <i class="ri-mail-line"></i> <span data-key="t-mail">Mail</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarMail">
+                            <ul class="nav nav-sm flex-column">
+                                @hasPermission('mail-config.view')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.mail-config.index') }}" class="nav-link"
+                                            data-key="t-mail-config">Cấu hình mail
+                                        </a>
+                                    </li>
+                                @endhasPermission
+                                @hasPermission('mail-template.view')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.mail-template.index') }}" class="nav-link"
+                                            data-key="t-mail-template">Template mail
+                                        </a>
+                                    </li>
+                                @endhasPermission
+                            </ul>
+                        </div>
+                    </li>
                 @endhasAnyPermission
                 {{-- system --}}
                 @hasAnyPermission(['system.view', 'user.view'])
-                <li class="nav-item">
-                    <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarApps">
-                        <i class="ri-settings-3-line"></i> <span data-key="t-dashboards">Hệ thống</span>
-                    </a>
-                    <div class="collapse menu-dropdown" id="sidebarApps">
-                        <ul class="nav nav-sm flex-column">
-                            @hasPermission('system.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.system.index') }}" class="nav-link"
-                                    data-key="t-calendar">Quản
-                                    lý hệ thống
-                                </a>
-                            </li>
-                            @endhasPermission
-                            {{-- @hasPermission('site_setting.view') --}}
-                            <li class="nav-item">
-                                <a href="{{ route('admin.site_setting.index') }}" class="nav-link"
-                                    data-key="t-site-setting">Cài đặt site
-                                </a>
-                            </li>
-                            {{-- @endhasPermission --}}
-                            @hasPermission('user.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.user.index') }}" class="nav-link"
-                                    data-key="t-user-management">Quản lý người dùng
-                                </a>
-                            </li>
-                            @endhasPermission
-                            @hasPermission('user.view')
-                            <li class="nav-item">
-                                <a href="{{ route('admin.user-role.index') }}" class="nav-link"
-                                    data-key="t-user-role">Phân quyền người dùng
-                                </a>
-                            </li>
-                            @endhasPermission
-                        </ul>
-                    </div>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button"
+                            aria-expanded="false" aria-controls="sidebarApps">
+                            <i class="ri-settings-3-line"></i> <span data-key="t-dashboards">Hệ thống</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarApps">
+                            <ul class="nav nav-sm flex-column">
+                                @hasPermission('system.view')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.system.index') }}" class="nav-link"
+                                            data-key="t-calendar">Quản
+                                            lý hệ thống
+                                        </a>
+                                    </li>
+                                @endhasPermission
+                                @hasPermission('user.view')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.user.index') }}" class="nav-link"
+                                            data-key="t-user-management">Quản lý người dùng
+                                        </a>
+                                    </li>
+                                @endhasPermission
+                                @hasPermission('user.view')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.user-role.index') }}" class="nav-link"
+                                            data-key="t-user-role">Phân quyền người dùng
+                                        </a>
+                                    </li>
+                                @endhasPermission
+                            </ul>
+                        </div>
+                    </li>
                 @endhasAnyPermission
             </ul>
         </div>

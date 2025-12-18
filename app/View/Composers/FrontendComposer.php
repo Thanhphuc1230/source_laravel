@@ -11,15 +11,18 @@ use App\Models\Slider;
 use App\Models\System;
 use App\Services\CacheService;
 use App\Services\CartService;
+use App\Services\SiteSettingService;
 use Illuminate\View\View;
 
 class FrontendComposer
 {
     protected $cartService;
+    protected $siteSettingService;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService, SiteSettingService $siteSettingService)
     {
         $this->cartService = $cartService;
+        $this->siteSettingService = $siteSettingService;
     }
 
     public function compose(View $view)
