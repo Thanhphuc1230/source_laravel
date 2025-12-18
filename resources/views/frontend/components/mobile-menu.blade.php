@@ -36,27 +36,11 @@
         <!-- Menu Items -->
         <nav class="p-6">
             <ul class="space-y-4">
+                @foreach ($menu as $menuParent)
                 <li>
-                    <a href="/" class="block text-gray-800 hover:text-teal-600 text-lg py-2 transition">Home</a>
+                    <a href="{{ getUrlMenu($menuParent) }}" class="block text-gray-800 hover:text-teal-600 text-lg py-2 transition">{{ $menuParent->name_vn }}</a>
                 </li>
-                <li>
-                    <a href="/research-peptides" class="block text-gray-800 hover:text-teal-600 text-lg py-2 transition">Research Peptides</a>
-                </li>
-                <li>
-                    <a href="/research-capsules" class="block text-gray-800 hover:text-teal-600 text-lg py-2 transition">Research Capsules</a>
-                </li>
-                <li>
-                    <a href="/mixers-solvents" class="block text-gray-800 hover:text-teal-600 text-lg py-2 transition">Mixers & Solvents</a>
-                </li>
-                <li>
-                    <a href="/product-information" class="block text-gray-800 hover:text-teal-600 text-lg py-2 transition">Product Information & Labelling</a>
-                </li>
-                <li>
-                    <a href="/about" class="block text-gray-800 hover:text-teal-600 text-lg py-2 transition">About Us</a>
-                </li>
-                <li>
-                    <a href="/contact" class="block text-gray-800 hover:text-teal-600 text-lg py-2 transition">Contact</a>
-                </li>
+                @endforeach
             </ul>
         </nav>
     </div>

@@ -59,31 +59,15 @@
     </div>
     
     <!-- Desktop Navigation Menu -->
-    <nav class="hidden md:block border-t border-gray-100 bg-gray-50">
+    {{-- <nav class="hidden md:block border-t border-gray-100 bg-gray-50">
         <div class="container mx-auto px-4">
             <ul class="flex items-center justify-center gap-8 py-3">
+                @foreach ($menu as $menuParent)
                 <li>
-                    <a href="/" class="text-gray-700 hover:text-teal-600 font-medium transition">Home</a>
+                    <a href="{{ getUrlMenu($menuParent) }}" class="text-gray-700 hover:text-teal-600 font-medium transition">{{ $menuParent->name_vn }}</a>
                 </li>
-                <li>
-                    <a href="/research-peptides" class="text-gray-700 hover:text-teal-600 font-medium transition">Research Peptides</a>
-                </li>
-                <li>
-                    <a href="/research-capsules" class="text-gray-700 hover:text-teal-600 font-medium transition">Research Capsules</a>
-                </li>
-                <li>
-                    <a href="/mixers-solvents" class="text-gray-700 hover:text-teal-600 font-medium transition">Mixers & Solvents</a>
-                </li>
-                <li>
-                    <a href="/product-information" class="text-gray-700 hover:text-teal-600 font-medium transition">Product Information & Labelling</a>
-                </li>
-                <li>
-                    <a href="/about" class="text-gray-700 hover:text-teal-600 font-medium transition">About Us</a>
-                </li>
-                <li>
-                    <a href="/contact" class="text-gray-700 hover:text-teal-600 font-medium transition">Contact</a>
-                </li>
+                @endforeach
             </ul>
         </div>
-    </nav>
+    </nav> --}}
 </header>
