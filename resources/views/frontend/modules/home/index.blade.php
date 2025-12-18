@@ -1,6 +1,9 @@
 @extends('frontend.master')
 
-@section('title', 'Nupex - Premium Research Peptides')
+@section('title', $website ? $website->name_vn : '')
+@section('keywords', $website ? $website->keywords : '')
+@section('description', $website ? $website->description : '')
+@section('image', $website ? asset('images/logo/' . $website->logo) : '')
 
 @section('content')
     <!-- Hero Section -->
