@@ -40,12 +40,12 @@
                                                     <select class="form-select mb-3" name="category">
                                                         <option value="0" selected>Chọn chủ đề </option>
                                                         @foreach ($category as $item)
-                                                            <option value="{{ $item->id_category_new }}">
+                                                            <option value="{{ $item->id_cate_product }}">
                                                                 {{ $item->name_vn }}
                                                             </option>
                                                             @if ($item->children)
                                                                 @foreach ($item->children as $child)
-                                                                    <option value="{{ $child->id_category_new }}">
+                                                                    <option value="{{ $child->id_cate_product }}">
                                                                         |---{{ $child->name_vn }}
                                                                     </option>
                                                                 @endforeach

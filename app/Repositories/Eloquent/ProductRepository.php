@@ -44,8 +44,7 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         if (isset($filters['category']) && $filters['category'] != 0) {
             $categoryId = $filters['category'];
             $query->where(function ($q) use ($categoryId) {
-                $q->where('parent_id', $categoryId)
-                    ->orWhere('id_category_product', $categoryId);
+                $q->where('id_cate_product', $categoryId);
             });
         }
 
