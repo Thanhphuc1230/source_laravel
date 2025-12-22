@@ -1,39 +1,30 @@
-<!doctype html>
-<html class="no-js" lang="en">
-
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-    @include('frontend.partials.head')
+    @include('frontend.components.head')
 </head>
-
-<body>
-    <!-- Start Header Area -->
-    @include('frontend.partials.header')
-    <!-- end Header Area -->
+<body class="antialiased bg-white" x-data="{ mobileMenuOpen: false, searchOpen: false }">
+    
+    <!-- Announcement Bar -->
+    @include('frontend.components.announcement-bar')
+    
+    <!-- Header -->
+    @include('frontend.components.header')
+    
+    <!-- Mobile Menu -->
+    @include('frontend.components.mobile-menu')
+    
+    <!-- Main Content -->
     <main>
         @yield('content')
     </main>
-    <!-- Scroll to top start -->
-    <div class="scroll-top not-visible">
-        <i class="fa fa-angle-up"></i>
-    </div>
-    <!-- Scroll to Top End -->
-
-    <!-- footer area start -->
-    @include('frontend.partials.footer')
-    <!-- footer area end -->
-
-    <!-- Quick view modal start -->
-    @include('frontend.partials.quick_view')
-    <!-- Quick view modal end -->
-
-    <!-- offcanvas mini cart start -->
-    @include('frontend.partials.cart_mini')
-    <!-- offcanvas mini cart end -->
-
-    <!-- JS ============================================ -->
-    @include('frontend.partials.js')
-    @include('sweetalert::alert')
+    
+    <!-- Footer -->
+    @include('frontend.components.footer')
+    
+    <!-- Chat Button -->
+    @include('frontend.components.chat-button')
+    
     @stack('scripts')
 </body>
-
 </html>

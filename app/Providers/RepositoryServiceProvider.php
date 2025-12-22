@@ -17,9 +17,8 @@ use App\Repositories\Eloquent\NewsRepository;
 use App\Repositories\Eloquent\PageRepository;
 use App\Repositories\Eloquent\ProductRepository;
 use App\Repositories\Eloquent\SliderRepository;
-use App\Repositories\Eloquent\SystemRepository;
-use App\Repositories\Eloquent\UserRepository;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\Eloquent\SiteSettingRepository;
+use App\Repositories\Interfaces\SiteSettingRepositoryInterface;
 use App\Repositories\Interfaces\BrandRepositoryInterface;
 use App\Repositories\Interfaces\GalleryRepositoryInterface;
 use App\Repositories\Interfaces\CateNewRepositoryInterface;
@@ -66,6 +65,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SystemRepositoryInterface::class, SystemRepository::class);
         $this->app->bind(ChatRepositoryInterface::class, ChatRepository::class);
         $this->app->bind(MailTemplateRepositoryInterface::class, MailTemplateRepository::class);
+        $this->app->bind(SiteSettingRepositoryInterface::class, SiteSettingRepository::class);
 
         // Services
         $this->app->bind(SlugResolutionService::class, SlugResolutionService::class);
