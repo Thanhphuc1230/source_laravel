@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
-use App\Services\CacheService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Services\SlugResolutionService;
@@ -24,21 +23,8 @@ class RouteController extends Controller
      */
     public function resolve($slug)
     {
-        // Cache key cho slug resolution
-        $cacheKey = "slug_resolution_{$slug}";
+        $result = $this->slugResolutionService->findContentBySlug($slug);
 
-        // Cache TTL từ config hoặc default 1 giờ
-        $cacheTtl = config('cache.ttl.slug_resolution', 3600);
-
-        // Kiểm tra cache trước
-        $result = CacheService::remember(
-            CacheService::TAGS['frontend'] ?? 'frontend',
-            $cacheKey,
-            $cacheTtl,
-            function () use ($slug) {
-                return $this->slugResolutionService->findContentBySlug($slug);
-            }
-        );
         if (! $result) {
             return view('errors.404');
         }

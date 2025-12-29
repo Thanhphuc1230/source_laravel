@@ -22,32 +22,25 @@ class MailConfigService
      */
     public function getActiveMailConfig()
     {
-        return CacheService::remember(
-            CacheService::TAGS['system'] ?? 'system',
-            'active_mail_config',
-            CacheService::getTtl('long'),
-            function () {
-                $activeConfig = $this->mailConfigRepository->getActiveConfig();
+        $activeConfig = $this->mailConfigRepository->getActiveConfig();
 
-                if ($activeConfig) {
-                    return $activeConfig->toConfigArray();
-                }
+        if ($activeConfig) {
+            return $activeConfig->toConfigArray();
+        }
 
-                // Fallback to .env config
-                return [
-                    'driver' => config('mail.driver'),
-                    'host' => config('mail.host'),
-                    'port' => config('mail.port'),
-                    'username' => config('mail.username'),
-                    'password' => config('mail.password'),
-                    'encryption' => config('mail.encryption'),
-                    'from' => [
-                        'address' => config('mail.from.address'),
-                        'name' => config('mail.from.name'),
-                    ],
-                ];
-            }
-        );
+        // Fallback to .env config
+        return [
+            'driver' => config('mail.driver'),
+            'host' => config('mail.host'),
+            'port' => config('mail.port'),
+            'username' => config('mail.username'),
+            'password' => config('mail.password'),
+            'encryption' => config('mail.encryption'),
+            'from' => [
+                'address' => config('mail.from.address'),
+                'name' => config('mail.from.name'),
+            ],
+        ];
     }
 
     /**
@@ -57,12 +50,7 @@ class MailConfigService
      */
     public function getAllConfigs()
     {
-        return CacheService::remember(
-            CacheService::TAGS['system'] ?? 'system',
-            'all_mail_configs',
-            CacheService::getTtl('medium'),
-            fn () => $this->mailConfigRepository->getAllConfigs()
-        );
+        return $this->mailConfigRepository->getAllConfigs();
     }
 
     /**
@@ -73,10 +61,6 @@ class MailConfigService
      */
     public function createConfig(array $data)
     {
-        // Clear cache
-        CacheService::forget('system', 'active_mail_config');
-        CacheService::forget('system', 'all_mail_configs');
-
         return $this->mailConfigRepository->createConfig($data);
     }
 
@@ -89,10 +73,6 @@ class MailConfigService
      */
     public function updateConfig(array $data, $id)
     {
-        // Clear cache
-        CacheService::forget('system', 'active_mail_config');
-        CacheService::forget('system', 'all_mail_configs');
-
         return $this->mailConfigRepository->updateConfig($data, $id);
     }
 
@@ -104,10 +84,6 @@ class MailConfigService
      */
     public function setActiveConfig($id)
     {
-        // Clear cache
-        CacheService::forget('system', 'active_mail_config');
-        CacheService::forget('system', 'all_mail_configs');
-
         return $this->mailConfigRepository->setActiveConfig($id);
     }
 
@@ -119,10 +95,6 @@ class MailConfigService
      */
     public function deleteConfig($id)
     {
-        // Clear cache
-        CacheService::forget('system', 'active_mail_config');
-        CacheService::forget('system', 'all_mail_configs');
-
         return $this->mailConfigRepository->deleteConfig($id);
     }
 

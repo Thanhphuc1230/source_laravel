@@ -111,4 +111,16 @@ class MailConfigRepository extends BaseRepository implements MailConfigRepositor
             ];
         }
     }
+
+    /**
+     * Find mail configuration by ID
+     *
+     * @param int $id
+     * @param array $columns
+     * @return \App\Models\MailConfig|null
+     */
+    public function find($id, $columns = ['*'])
+    {
+        return parent::find($id, $columns);
+    }
 }

@@ -31,24 +31,14 @@ class ProductService
         $data = [];
 
         // Cache category data
-        $data['category_detail'] = \App\Services\CacheService::remember(
-            \App\Services\CacheService::TAGS['categories'] ?? 'categories',
-            "category_detail_{$id_cate_product}",
-            \App\Services\CacheService::getTtl('long'),
-            fn () => CateProduct::where('status', 1)->where('id_cate_product', $id_cate_product)->firstOrFail()
-        );
+        $data['category_detail'] = CateProduct::where('status', 1)->where('id_cate_product', $id_cate_product)->firstOrFail();
 
         // Cache category list (sidebar) - Load all categories with hierarchy
-        $data['category_product'] = \App\Services\CacheService::remember(
-            \App\Services\CacheService::TAGS['categories'] ?? 'categories',
-            'category_product_sidebar',
-            \App\Services\CacheService::getTtl('long'),
-            fn () => CateProduct::with(['products', 'children.products'])
-                ->where('status', 1)
-                ->orderBy('stt', 'asc')
-                ->get()
-                ->groupBy('parent_id')
-        );
+        $data['category_product'] = CateProduct::with(['products', 'children.products'])
+            ->where('status', 1)
+            ->orderBy('stt', 'asc')
+            ->get()
+            ->groupBy('parent_id');
 
         // Build category id list (include children recursively)
         $categoryIds = $this->getAllCategoryIds($data['category_detail']->id_cate_product);
@@ -85,36 +75,20 @@ class ProductService
         $data = [];
 
         // Cache product detail
-        $data['product_detail'] = \App\Services\CacheService::remember(
-            \App\Services\CacheService::TAGS['products'] ?? 'products',
-            "product_detail_{$id_product}",
-            \App\Services\CacheService::getTtl('long'),
-            fn () => Product::with(['cate:id_cate_product,name_vn,slug'])
-                ->where('id_product', $id_product)
-                ->firstOrFail()
-        );
+        $data['product_detail'] = Product::with(['cate:id_cate_product,name_vn,slug'])
+            ->where('id_product', $id_product)
+            ->firstOrFail();
 
         // Cache related products
-        $data['related_product'] = \App\Services\CacheService::remember(
-            \App\Services\CacheService::TAGS['products'] ?? 'products',
-            "related_products_{$data['product_detail']->category_id}_{$data['product_detail']->id_product}",
-            \App\Services\CacheService::getTtl('medium'),
-            fn () => Product::select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn')
-                ->where('category_id', $data['product_detail']->category_id)
-                ->where('id_product', '!=', $data['product_detail']->id_product)
-                ->where('status', 1)
-                ->orderBy('created_at', 'desc')
-                ->limit(8)
-                ->get()
-        );
+        $data['related_product'] = Product::where('category_id', $data['product_detail']->category_id)
+            ->where('id_product', '!=', $data['product_detail']->id_product)
+            ->where('status', 1)
+            ->orderBy('stt', 'asc')
+            ->limit(8)
+            ->get();
 
         // Cache approved comments
-        $data['comments'] = \App\Services\CacheService::remember(
-            \App\Services\CacheService::TAGS['comments'] ?? 'comments',
-            "product_comments_{$data['product_detail']->id_product}",
-            \App\Services\CacheService::getTtl('medium'),
-            fn () => $this->commentRepository->getApprovedCommentsForItem('product', $data['product_detail']->id_product)
-        );
+        $data['comments'] = $this->commentRepository->getApprovedCommentsForItem('product', $data['product_detail']->id_product);
 
         return $data;
     }

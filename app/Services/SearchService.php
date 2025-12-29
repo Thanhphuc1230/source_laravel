@@ -21,31 +21,18 @@ class SearchService
         $data = [];
 
         if (!empty($query)) {
-            // Create cache key based on all search parameters
-            $sort = $request->get('sort', 'relevance');
-            $page = $request->get('page', 1);
-            $cacheKey = "search_products_{$query}_{$sort}_{$perPage}_{$page}";
+            // Base query for search
+            $searchQuery = Product::with(['cate:id_cate_product,name_vn,slug'])
+                ->select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn', 'category_id', 'status', 'stt', 'created_at')
+                ->where('status', 1);
 
-            // Cache search results
-            $data['products'] = \App\Services\CacheService::remember(
-                \App\Services\CacheService::TAGS['search'] ?? 'search',
-                $cacheKey,
-                \App\Services\CacheService::getTtl('short'), // Short TTL for search results
-                function () use ($query, $request, $perPage) {
-                    // Base query for search
-                    $searchQuery = Product::with(['cate:id_cate_product,name_vn,slug'])
-                        ->select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn', 'category_id', 'status', 'stt', 'created_at')
-                        ->where('status', 1);
+            // Apply search filters
+            $searchQuery = $this->applySearchFilters($searchQuery, $query);
 
-                    // Apply search filters
-                    $searchQuery = $this->applySearchFilters($searchQuery, $query);
+            // Apply sorting (default by relevance, then by stt)
+            $searchQuery = $this->applySearchSorting($searchQuery, $request);
 
-                    // Apply sorting (default by relevance, then by stt)
-                    $searchQuery = $this->applySearchSorting($searchQuery, $request);
-
-                    return $searchQuery->paginate($perPage)->appends($request->query());
-                }
-            );
+            $data['products'] = $searchQuery->paginate($perPage)->appends($request->query());
         } else {
             $data['products'] = collect([]);
         }
@@ -178,17 +165,12 @@ class SearchService
         }
 
         // Cache search suggestions
-        $suggestions = \App\Services\CacheService::remember(
-            \App\Services\CacheService::TAGS['search'] ?? 'search',
-            "search_suggestions_{$query}",
-            \App\Services\CacheService::getTtl('medium'),
-            fn () => Product::where('status', 1)
-                ->where('name_vn', 'like', "%{$query}%")
-                ->orderBy('stt', 'asc')
-                ->limit(10)
-                ->pluck('name_vn')
-                ->toArray()
-        );
+        $suggestions = Product::where('status', 1)
+            ->where('name_vn', 'like', "%{$query}%")
+            ->orderBy('stt', 'asc')
+            ->limit(10)
+            ->pluck('name_vn')
+            ->toArray();
 
         return ['suggestions' => $suggestions];
     }

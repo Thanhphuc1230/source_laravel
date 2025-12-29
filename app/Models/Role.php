@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Cache;
-use App\Services\CacheService;
 
 class Role extends Model
 {
@@ -108,13 +106,6 @@ class Role extends Model
      */
     private function forgetCachedPermissions(): void
     {
-        // Xóa cache cho tất cả users có role này
-        $this->users()->chunk(100, function ($users) {
-            foreach ($users as $user) {
-                // Forget under users tag and legacy key
-                CacheService::forget(CacheService::TAGS['users'] ?? 'users', "user.{$user->id}.permissions");
-                Cache::forget("user.{$user->id}.permissions");
-            }
-        });
+        // No cache to clear with Cachable
     }
 }

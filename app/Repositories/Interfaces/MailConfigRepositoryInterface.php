@@ -58,4 +58,13 @@ interface MailConfigRepositoryInterface
      * @return array
      */
     public function testConfig(array $config);
+
+    /**
+     * Find mail configuration by ID
+     *
+     * @param int $id
+     * @param array $columns
+     * @return \App\Models\MailConfig|null
+     */
+    public function find($id, $columns = ['*']);
 }

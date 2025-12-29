@@ -7,7 +7,6 @@ use App\Models\CateProduct;
 use App\Models\Menu;
 use App\Models\Page;
 use App\Models\System;
-use App\Services\CacheService;
 use App\Services\CartService;
 use App\View\Composers\FrontendComposer;
 use Illuminate\Pagination\Paginator;
