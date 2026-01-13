@@ -64,38 +64,6 @@ class CateProductRepository extends BaseRepository implements CateProductReposit
             ->get();
     }
 
-    public function generateUniqueSlug($name, $uuid = null)
-    {
-        $id = null;
-        if ($uuid) {
-            $category = $this->model->where('uuid', $uuid)->first();
-            $id = $category ? $category->id_cate_product : null;
-        }
-
-        return !$id 
-            ? $this->slugService->generateUniqueSlugWithId($name, 0, 'tp_cate_products')
-            : $this->slugService->generateUniqueSlugWithIdGlobal($name, $id, 'tp_cate_products');
-    }
-
-    public function createWithAutoSlug(array $data, string $nameField = 'name_vn')
-    {
-        $hasCustomSlug = !empty($data['slug']);
-        
-        if (!$hasCustomSlug) {
-            $data['slug'] = $this->slugService->generateUniqueSlugWithId($data[$nameField], 0, 'tp_cate_products');
-        }
-        
-        $category = $this->create($data);
-        
-        if (!$hasCustomSlug) {
-            $realSlug = $this->generateUniqueSlug($data[$nameField], $category->uuid);
-            $this->update(['slug' => $realSlug], $category->uuid);
-            $category->slug = $realSlug;
-        }
-        
-        return $category;
-    }
-
     public function getCategoriesWithChildren()
     {
         return $this->model->with('children')
