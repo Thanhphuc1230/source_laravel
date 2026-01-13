@@ -21,20 +21,9 @@ interface CateNewRepositoryInterface extends RepositoryInterface
     public function getActiveParentCategories();
 
     /**
-     * Generate unique slug for category
-     *
-     * @param string $name
-     * @param string|null $uuid
-     * @return string
-     */
-    public function generateUniqueSlug($name, $uuid = null);
-
-    /**
      * Get categories with children for hierarchical display
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getCategoriesWithChildren();
-
-    public function createWithAutoSlug(array $data, string $nameField = 'name_vn');
 }

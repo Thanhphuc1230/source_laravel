@@ -27,15 +27,4 @@ interface PageRepositoryInterface extends RepositoryInterface
      * @return \App\Models\Page|null
      */
     public function getPageBySlug($slug);
-    
-    /**
-     * Generate unique slug for page
-     *
-     * @param string $name
-     * @param string|null $uuid
-     * @return string
-     */
-    public function generateUniqueSlug($name, $uuid = null);
-
-    public function createWithAutoSlug(array $data, string $nameField = 'name_vn');
 }

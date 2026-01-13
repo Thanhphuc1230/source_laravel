@@ -19,15 +19,4 @@ interface NewsRepositoryInterface extends RepositoryInterface
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getActiveCategories();
-
-    /**
-     * Generate unique slug for news
-     *
-     * @param string $name
-     * @param string|null $uuid
-     * @return string
-     */
-    public function generateUniqueSlug($name, $uuid = null);
-
-    public function createWithAutoSlug(array $data, string $nameField = 'name_vn');
 }
