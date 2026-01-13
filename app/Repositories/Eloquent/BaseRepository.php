@@ -251,7 +251,12 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function updateStatus($uuid, $status)
     {
-        return $this->model->where('uuid', $uuid)->update(['status' => $status]);
+        $model = $this->model->where('uuid', $uuid)->first();
+        if ($model) {
+            $model->status = $status;
+            return $model->save();
+        }
+        return false;
     }
 
     /**
@@ -303,5 +308,86 @@ abstract class BaseRepository implements RepositoryInterface
 
         // simple UUID v4 pattern check
         return (bool) preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $value);
+    }
+
+    /**
+     * Generate unique slug for a model
+     * 
+     * @param string $name The name to generate slug from
+     * @param string|null $uuid UUID of existing record (for updates)
+     * @param string $tableName Table name for slug uniqueness check
+     * @param string $slugField Field name for slug (default 'slug')
+     * @param string $primaryKey Primary key field name
+     * @return string
+     */
+    public function generateUniqueSlug(string $name, ?string $uuid = null, string $tableName = null, string $slugField = 'slug', string $primaryKey = null)
+    {
+        // Use slugService if available in child repository
+        if (property_exists($this, 'slugService') && $this->slugService) {
+            $tableName = $tableName ?? $this->model->getTable();
+            $primaryKey = $primaryKey ?? $this->model->getKeyName();
+            
+            $id = null;
+            if ($uuid) {
+                $record = $this->model->where('uuid', $uuid)->first();
+                $id = $record ? $record->{$primaryKey} : null;
+            }
+
+            return !$id 
+                ? $this->slugService->generateUniqueSlugWithId($name, 0, $tableName, $slugField)
+                : $this->slugService->generateUniqueSlugWithIdGlobal($name, $id, $tableName, $slugField);
+        }
+
+        // Fallback: simple slug generation without SlugService
+        $slug = \Illuminate\Support\Str::slug($name);
+        $count = 1;
+        $originalSlug = $slug;
+        
+        while (true) {
+            $query = $this->model->where($slugField, $slug);
+            if ($uuid) {
+                $query->where('uuid', '!=', $uuid);
+            }
+            
+            if (!$query->exists()) {
+                break;
+            }
+            
+            $slug = $originalSlug . '-' . $count;
+            $count++;
+        }
+        
+        return $slug;
+    }
+
+    /**
+     * Create record with automatic slug generation
+     * 
+     * @param array $data
+     * @param string $nameField Field name to generate slug from (default 'name_vn')
+     * @param string $slugField Field name for slug (default 'slug')
+     * @return Model
+     */
+    public function createWithAutoSlug(array $data, string $nameField = 'name_vn', string $slugField = 'slug')
+    {
+        $hasCustomSlug = !empty($data[$slugField]);
+        
+        if (!$hasCustomSlug) {
+            $tableName = $this->model->getTable();
+            $data[$slugField] = $this->generateUniqueSlug($data[$nameField], null, $tableName, $slugField);
+        }
+        
+        $record = $this->create($data);
+        
+        // Regenerate slug with actual ID if needed (for SlugService)
+        if (!$hasCustomSlug && property_exists($this, 'slugService') && $this->slugService) {
+            $realSlug = $this->generateUniqueSlug($data[$nameField], $record->uuid, $this->model->getTable(), $slugField);
+            if ($realSlug !== $record->{$slugField}) {
+                $this->update([$slugField => $realSlug], $record->uuid);
+                $record->{$slugField} = $realSlug;
+            }
+        }
+        
+        return $record;
     }
 }
