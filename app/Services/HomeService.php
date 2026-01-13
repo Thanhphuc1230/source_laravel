@@ -14,19 +14,52 @@ use App\Models\SiteSetting;
 
 class HomeService
 {
+    /**
+     * Get home page data with caching
+     * 
+     * Note: Individual models use Cachable trait for automatic query caching.
+     * This method groups multiple queries but each query is cached by the trait.
+     * 
+     * @return array
+     */
     public function getHomeData()
     {
-        $data['sliders'] = Slider::where('status', 1)->orderBy('stt', 'asc')->get();
+        $data = [];
 
-        $data['category_news'] = CateNew::where('status', 1)->where('home', 1)->orderBy('stt', 'asc')->get();
+        // All queries below use Cachable trait for automatic caching
+        // Cache is invalidated automatically when models are created/updated/deleted
+        
+        $data['sliders'] = Slider::where('status', 1)
+            ->orderBy('stt', 'asc')
+            ->get();
 
-        $data['category_product'] = CateProduct::with('products')->where('status', 1)->where('home', 1)->orderBy('stt', 'asc')->get();
+        $data['category_news'] = CateNew::where('status', 1)
+            ->where('home', 1)
+            ->orderBy('stt', 'asc')
+            ->get();
 
-        $data['hot_products'] = Product::where('status', 1)->where('hot', 1)->orderBy('stt', 'asc')->limit(8)->get();
+        // Eager load products to prevent N+1
+        $data['category_product'] = CateProduct::with(['products' => function($q) {
+                $q->where('status', 1)->orderBy('stt', 'asc')->limit(8);
+            }])
+            ->where('status', 1)
+            ->where('home', 1)
+            ->orderBy('stt', 'asc')
+            ->get();
 
-        $data['brands'] = Brand::where('status', 1)->orderBy('stt', 'asc')->get();
+        $data['hot_products'] = Product::where('status', 1)
+            ->where('hot', 1)
+            ->orderBy('stt', 'asc')
+            ->limit(8)
+            ->get();
 
-        $data['features'] = Feature::where('status', 1)->orderBy('stt', 'asc')->get();
+        $data['brands'] = Brand::where('status', 1)
+            ->orderBy('stt', 'asc')
+            ->get();
+
+        $data['features'] = Feature::where('status', 1)
+            ->orderBy('stt', 'asc')
+            ->get();
 
         $data['latest_news'] = News::with('cate:id_cate_new,name_vn')
             ->select('id_new', 'name_vn', 'slug', 'image', 'intro_vn', 'created_at', 'category_id')
@@ -35,13 +68,19 @@ class HomeService
             ->limit(3)
             ->get();
 
-        $data['galleries'] = Gallery::where('status', 1)->orderBy('stt', 'asc')->get();
+        $data['galleries'] = Gallery::where('status', 1)
+            ->orderBy('stt', 'asc')
+            ->get();
 
         // Site Settings - Homepage
-        $data['homepageSettings'] = SiteSetting::where('group', 'homepage')->get()->keyBy('key');
+        $data['homepageSettings'] = SiteSetting::where('group', 'homepage')
+            ->get()
+            ->keyBy('key');
 
         // Trade Partner settings
-        $data['tradePartner'] =  SiteSetting::where('group', 'trade_partner')->get()->keyBy('key');
+        $data['tradePartner'] = SiteSetting::where('group', 'trade_partner')
+            ->get()
+            ->keyBy('key');
 
         return $data;
     }
