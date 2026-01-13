@@ -123,7 +123,6 @@ class CheckoutService
                 'product_id' => $product['id_product'],
                 'quantity' => $product['qty'],
                 'price' => $product['price'],
-                'created_at' => now(),
             ]);
         }
     }

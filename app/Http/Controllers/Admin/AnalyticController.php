@@ -40,6 +40,15 @@ class AnalyticController extends BaseController
         if ($request->has('month') && $request->has('year')) {
             $currentMonth = intval($request->get('month'));
             $currentYear = intval($request->get('year'));
+            
+            // Validate month and year
+            if ($currentMonth < 1 || $currentMonth > 12) {
+                $currentMonth = $now->month;
+            }
+            if ($currentYear < 2000 || $currentYear > 2100) {
+                $currentYear = $now->year;
+            }
+            
             // set a new "now" based on requested month/year for week calculations if needed
             $now = Carbon::createFromDate($currentYear, $currentMonth, 1);
         }
@@ -99,19 +108,24 @@ class AnalyticController extends BaseController
         $data['totalComments'] = DB::table('tp_comments')->count();
 
         // Top Products (sold quantity)
-        $data['topProducts'] = DB::table('tp_order_product')
+        $topProductIds = DB::table('tp_order_product')
             ->select('product_id', DB::raw('SUM(quantity) as total_sold'))
             ->groupBy('product_id')
             ->orderBy('total_sold', 'desc')
             ->limit(5)
-            ->get()
-            ->map(function ($item) {
-                $product = Product::find($item->product_id);
-                return [
-                    'name' => $product ? $product->name_vn : 'Unknown',
-                    'sold' => $item->total_sold,
-                ];
-            });
+            ->get();
+        
+        // Eager load products to avoid N+1
+        $productIds = $topProductIds->pluck('product_id')->toArray();
+        $products = Product::whereIn('id_product', $productIds)->get()->keyBy('id_product');
+        
+        $data['topProducts'] = $topProductIds->map(function ($item) use ($products) {
+            $product = $products->get($item->product_id);
+            return [
+                'name' => $product ? $product->name_vn : 'Unknown',
+                'sold' => $item->total_sold,
+            ];
+        });
 
         // Recent Orders
         $data['recentOrders'] = DB::table('tp_order_status')

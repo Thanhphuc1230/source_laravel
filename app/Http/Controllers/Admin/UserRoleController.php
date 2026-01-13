@@ -88,14 +88,25 @@ class UserRoleController extends Controller
             return redirect()->back();
         }
 
+        if (empty($roles)) {
+            toast('Vui lòng chọn vai trò!', 'error');
+            return redirect()->back();
+        }
+
+        $successCount = 0;
         foreach ($userIds as $userId) {
             $user = User::find($userId);
             if ($user) {
                 $user->syncRoles($roles);
+                $successCount++;
             }
         }
 
-        toast("Cập nhật phân quyền cho " . count($userIds) . " người dùng thành công!", 'success');
+        if ($successCount > 0) {
+            toast("Cập nhật phân quyền cho " . $successCount . " người dùng thành công!", 'success');
+        } else {
+            toast('Không có người dùng nào được cập nhật!', 'warning');
+        }
         return redirect()->route('admin.user-role.index');
     }
 

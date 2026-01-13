@@ -40,6 +40,11 @@ class CartService
         if ($request->quantity) {
             $quantity = $request->quantity;
         }
+        
+        // Validate quantity
+        if ($quantity <= 0 || $quantity > 999) {
+            return false;
+        }
 
         $product = Product::with('cate')->where('uuid', $uuid)->first();
 

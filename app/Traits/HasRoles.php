@@ -172,11 +172,11 @@ trait HasRoles
     public function hasPermission($permission): bool
     {
         if (is_string($permission)) {
-            return in_array($permission, $this->getPermissionsAttributeAttribute());
+            return in_array($permission, $this->getUserPermissions());
         }
 
         if (is_array($permission)) {
-            return !empty(array_intersect($permission, $this->getPermissionsAttributeAttribute()));
+            return !empty(array_intersect($permission, $this->getUserPermissions()));
         }
 
         return false;
@@ -192,7 +192,7 @@ trait HasRoles
         }
 
         if (is_array($permissions)) {
-            return empty(array_diff($permissions, $this->getPermissionsAttributeAttribute()));
+            return empty(array_diff($permissions, $this->getUserPermissions()));
         }
 
         return false;
@@ -204,11 +204,11 @@ trait HasRoles
     public function hasAnyPermission($permissions): bool
     {
         if (is_string($permissions)) {
-            return in_array($permissions, $this->getPermissionsAttributeAttribute());
+            return in_array($permissions, $this->getUserPermissions());
         }
 
         if (is_array($permissions)) {
-            return !empty(array_intersect($permissions, $this->getPermissionsAttributeAttribute()));
+            return !empty(array_intersect($permissions, $this->getUserPermissions()));
         }
 
         return false;

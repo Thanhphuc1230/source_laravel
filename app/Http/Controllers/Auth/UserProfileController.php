@@ -50,8 +50,11 @@ class UserProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Phiên đăng nhập hết hạn');
+        }
 
-        $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->only(['fullname', 'username', 'email', 'phone', 'address']), [
             'fullname' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
@@ -65,13 +68,8 @@ class UserProfileController extends Controller
                 ->withInput();
         }
 
-        $user->update([
-            'fullname' => $request->fullname,
-            'username' => $request->username,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-        ]);
+        $user->fill($validator->validated());
+        $user->save();
 
         return redirect()->back()->with('success', 'Thông tin cá nhân đã được cập nhật thành công!');
     }
@@ -81,7 +79,12 @@ class UserProfileController extends Controller
      */
     public function updatePassword(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Phiên đăng nhập hết hạn');
+        }
+
+        $validator = Validator::make($request->only(['current_password', 'password', 'password_confirmation']), [
             'current_password' => 'required',
             'password' => 'required|string|min:8|confirmed',
         ]);
@@ -92,17 +95,14 @@ class UserProfileController extends Controller
                 ->withInput();
         }
 
-        $user = Auth::user();
-
         // Check current password
         if (!Hash::check($request->current_password, $user->password)) {
             return redirect()->back()->with('password_error', 'Mật khẩu hiện tại không đúng!');
         }
 
         // Update password
-        $user->update([
-            'password' => Hash::make($request->password),
-        ]);
+        $user->password = Hash::make($request->password);
+        $user->save();
 
         return redirect()->back()->with('password_success', 'Mật khẩu đã được thay đổi thành công!');
     }

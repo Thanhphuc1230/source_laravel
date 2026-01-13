@@ -38,19 +38,28 @@ class ProfileController extends BaseController
 
     public function update($uuid, ProfileRequest $request)
     {
-        $data = $request->except('_token');
-        $data['updated_at'] = new \DateTime;
-        $admin = User::where('uuid', Auth::user()->uuid)->first();
-
-        // Handle avatar - Update existing avatar
-        $data['avatar'] = $this->updateImage($request, $admin, null, 'avatar');
-
-        if ($admin) {
-            $admin->update($data);
-            toast('Cập nhật thông tin thành công ', 'success');
-        } else {
-            toast('admin not found', 'error');
+        $user = Auth::user();
+        if (!$user) {
+            toast('Phiên đăng nhập hết hạn', 'error');
+            return redirect()->route('getLogin');
         }
+
+        $admin = User::where('uuid', $user->uuid)->first();
+        if (!$admin) {
+            toast('Không tìm thấy người dùng', 'error');
+            return back();
+        }
+
+        $data = $request->except('_token', 'updated_at');
+        
+        // Handle avatar - Update existing avatar
+        $avatarPath = $this->updateImage($request, $admin, null, 'avatar');
+        if ($avatarPath) {
+            $data['avatar'] = $avatarPath;
+        }
+
+        $admin->update($data);
+        toast('Cập nhật thông tin thành công', 'success');
 
         return back();
     }

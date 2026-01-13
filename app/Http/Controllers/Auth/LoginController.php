@@ -24,11 +24,11 @@ class LoginController extends Controller
 
     public function getLogin()
     {
-        if (Auth::check() && (Auth::user()->level == 2 || Auth::user()->level == 1)) {
+        $user = Auth::user();
+        if ($user && ($user->level == 2 || $user->level == 1)) {
             return redirect()->route('admin.analytics.index');
-        } else {
-            return view('auth.login');
         }
+        return view('auth.login');
     }
 
     public function postLogin(LoginRequest $request)

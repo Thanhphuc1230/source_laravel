@@ -73,7 +73,9 @@ class OrderController extends BaseController
             return redirect()->back();
         }
 
-        $orderStatus->update([$field => $status]);
+        // Set field directly since status and auth_id are not fillable (security)
+        $orderStatus->$field = $status;
+        $orderStatus->save();
 
         $mess = $status == 1 ? 'Kích hoạt' : 'Tắt';
         toast($mess.' '.$this->nameItem.' thành công', 'success');
