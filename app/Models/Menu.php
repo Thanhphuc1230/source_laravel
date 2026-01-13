@@ -24,7 +24,10 @@ class Menu extends Model
         'parent_id',
         'object_id',
         'stt',
-        'status',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
     ];
 
     public function children()

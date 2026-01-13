@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('message');
             $table->string('image');
-            $table->tinyInteger('status')->default(0);
+            $table->boolean('status')->default(false);
             $table->integer('stt')->default(0);
             $table->timestamps();
 

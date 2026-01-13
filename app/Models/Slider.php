@@ -14,5 +14,9 @@ class Slider extends Model
 
     protected $primaryKey = 'id_slider';
 
-    protected $fillable = ['name_vn', 'link', 'status', 'image', 'stt', 'uuid'];
+    protected $fillable = ['name_vn', 'link', 'image', 'stt', 'uuid'];
+
+    protected $casts = [
+        'status' => 'boolean',
+    ];
 }

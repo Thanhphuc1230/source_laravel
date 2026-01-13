@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('content');
             $table->integer('id_post');
             $table->integer('type_post')->comment('Thuộc dạng bài viết nào:1: tin tức, 2: sản phẩm, 3: trang tĩnh');
-            $table->integer('status')->default(0);
+            $table->boolean('status')->default(false);
             $table->tinyInteger('rating')->nullable()->comment('Đánh giá sao (1-5) chỉ cho sản phẩm');
             $table->timestamps();
         });

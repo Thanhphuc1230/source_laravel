@@ -14,7 +14,19 @@ class OrderProduct extends Model
 
     protected $primaryKey = 'id_order_product';
 
-    protected $guarded = [];
+    protected $fillable = [
+        'uuid_order_product',
+        'order_status_id',
+        'product_id',
+        'quantity',
+        'price',
+        'attribute',
+    ];
+
+    protected $casts = [
+        'quantity' => 'integer',
+        'price' => 'integer',
+    ];
 
     /**
      * Get the product for this order item

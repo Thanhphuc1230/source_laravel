@@ -23,14 +23,15 @@ class News extends Model
         'content_vn',
         'content_en',
         'category_id',
-        'status',
         'stt',
         'slug',
         'image',
         'keywords',
         'description',
-        'created_at',
-        'updated_at',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
     ];
 
     public function cate()

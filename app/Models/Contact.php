@@ -21,6 +21,9 @@ class Contact extends Model
         'phone',
         'subject',
         'message',
-        'status',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
     ];
 }

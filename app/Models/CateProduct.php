@@ -21,9 +21,12 @@ class CateProduct extends Model
         'keywords',
         'description',
         'image',
-        'status',
         'stt',
         'parent_id',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
     ];
 
     public function children()

@@ -21,10 +21,13 @@ class CateNew extends Model
         'keywords',
         'description',
         'image',
-        'status',
         'stt',
-        'home',
         'parent_id',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
+        'home' => 'boolean',
     ];
 
     public function children()

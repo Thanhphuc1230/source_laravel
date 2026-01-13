@@ -12,5 +12,9 @@ class FeedBack extends Model
 
     protected $table = 'tp_feedback';
 
-    protected $fillable = ['uuid', 'name', 'message', 'status', 'stt', 'image'];
+    protected $fillable = ['uuid', 'name', 'message', 'stt', 'image'];
+
+    protected $casts = [
+        'status' => 'boolean',
+    ];
 }

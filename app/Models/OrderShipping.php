@@ -14,5 +14,17 @@ class OrderShipping extends Model
 
     protected $primaryKey = 'id_order_shipping';
 
-    protected $guarded = [];
+    protected $fillable = [
+        'uuid_order_shipping',
+        'f_name_order',
+        'l_name_order',
+        'phone',
+        'email',
+        'address',
+        'note',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
+    ];
 }

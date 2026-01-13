@@ -21,12 +21,16 @@ class Page extends Model
         'slug',
         'content_vn',
         'content_en',
-        'status',
         'footer',
         'stt',
         'image',
         'keywords',
         'description',
         'parent_id',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
+        'footer' => 'boolean',
     ];
 }

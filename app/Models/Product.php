@@ -27,12 +27,17 @@ class Product extends Model
         'content_en',
         'image',
         'image_detail',
-        'status',
-        'hot',
         'stt',
         'keywords',
         'description',
         'category_id',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
+        'hot' => 'boolean',
+        'price' => 'decimal:2',
+        'price_old' => 'decimal:2',
     ];
 
     public function cate()

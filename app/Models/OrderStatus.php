@@ -14,7 +14,17 @@ class OrderStatus extends Model
 
     protected $primaryKey = 'id_order_status';
 
-    protected $guarded = [];
+    protected $fillable = [
+        'uuid_order_status',
+        'shipping_id',
+        'payment_method',
+        'total',
+    ];
+
+    protected $casts = [
+        'status' => 'boolean',
+        'total' => 'decimal:2',
+    ];
 
     /**
      * Get the shipping information for this order

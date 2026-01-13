@@ -14,5 +14,9 @@ class Brand extends Model
 
     protected $primaryKey = 'id_brand';
 
-    protected $fillable = ['name_vn', 'status', 'image', 'stt', 'uuid'];
+    protected $fillable = ['name_vn', 'image', 'stt', 'uuid'];
+
+    protected $casts = [
+        'status' => 'boolean',
+    ];
 }
