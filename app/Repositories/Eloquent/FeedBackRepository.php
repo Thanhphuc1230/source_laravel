@@ -63,6 +63,11 @@ class FeedBackRepository extends BaseRepository implements FeedBackRepositoryInt
      */
     public function updateStatus($uuid, $status)
     {
-        return $this->model->where('uuid', $uuid)->update(['status' => $status]);
+        $model = $this->model->where('uuid', $uuid)->first();
+        if ($model) {
+            $model->status = $status;
+            return $model->save();
+        }
+        return false;
     }
 }
