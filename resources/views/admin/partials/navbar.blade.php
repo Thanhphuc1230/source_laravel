@@ -187,14 +187,14 @@
                         </div>
                     </li>
                 @endhasAnyPermission
-                @hasPermission('chat.view')
+                {{-- @hasPermission('chat.view')
                     <li class="nav-item">
                         <a class="nav-link menu-link" href="{{ route('admin.chat.index') }}">
                             <i class="ri-chat-1-line"></i> <span data-key="t-widgets">Chat hỗ trợ</span>
                             <span class="badge bg-danger ms-2" id="chat-unread-badge" style="display: none;">0</span>
                         </a>
                     </li>
-                @endhasPermission
+                @endhasPermission --}}
                 {{-- mail --}}
                 @hasAnyPermission(['mail-config.view', 'mail-template.view'])
                     <li class="nav-item">

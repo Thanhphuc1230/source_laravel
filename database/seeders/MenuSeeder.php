@@ -64,7 +64,7 @@ class MenuSeeder extends Seeder
                 'uuid' => Str::uuid(),
                 'name_vn' => 'Liên Hệ',
                 'name_en' => 'Contact',
-                'link' => 'lien-he',
+                'link' => 'lien-he.html',
                 'slug' => 'lien-he',
                 'type' => 'link',
                 'parent_id' => 0,

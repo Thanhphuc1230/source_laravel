@@ -20,5 +20,4 @@ yarn-error.log
 /.cursor
 /public/images
 docs_backup/
-/resources/views/frontend/
 /public/frontend/
