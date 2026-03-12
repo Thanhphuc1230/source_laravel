@@ -1,13 +1,13 @@
 <script>
     // Cấu hình CKEditor với các tùy chọn
     var options = {
-        filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
-        filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
-        filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-        filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token=',
+        filebrowserImageBrowseUrl: '/filemanager?type=Images',
+        filebrowserImageUploadUrl: '/filemanager/upload?type=Images&_token=',
+        filebrowserBrowseUrl: '/filemanager?type=Files',
+        filebrowserUploadUrl: '/filemanager/upload?type=Files&_token=',
         // Thêm cấu hình cho audio
-        filebrowserAudioBrowseUrl: '/laravel-filemanager?type=Audio',
-        filebrowserAudioUploadUrl: '/laravel-filemanager/upload?type=Audio&_token=',
+        filebrowserAudioBrowseUrl: '/filemanager?type=Audio',
+        filebrowserAudioUploadUrl: '/filemanager/upload?type=Audio&_token=',
         extraPlugins: 'image2,html5audio,justify,font,colorbutton,maximize,link,table,youtube,pastefromword',
         allowedContent: true,
         pasteFromWordPromptCleanup: false,
