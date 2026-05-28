@@ -5,7 +5,10 @@ namespace App\Http\Middleware;
 use App\Models\Analytic;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Str;
 
 class Visit
 {
@@ -14,41 +17,53 @@ class Visit
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
-        // Get client IP address
-        $ip = $request->ip();
-
-        // Get or initialize session visit count for this IP
-        $sessionKey = 'visits_'.str_replace('.', '_', $ip);
-        $ipVisitCount = Session::get($sessionKey, 0);
-
-        // Check if IP has exceeded max visits per session (20)
-        if ($ipVisitCount >= 20) {
-            // IP has reached max visits, don't increment analytics
+        if (! $request->isMethod('GET') || $request->expectsJson()) {
             return $next($request);
         }
 
-        // Increment session visit count for this IP
-        Session::put($sessionKey, $ipVisitCount + 1);
+        $visitorId = $request->cookie('site_visit_id');
+        $shouldQueueCookie = $visitorId === null;
 
-        // Get the current date
-        $currentDate = now()->toDateString();
-
-        // Tìm record theo ngày
-        $visit = Analytic::where('visit_date', $currentDate)->first();
-
-        if ($visit) {
-            // Nếu đã có thì update +1
-            $visit->increment('visit_count');
+        if ($visitorId !== null) {
+            $visitorKey = hash('sha256', $visitorId);
         } else {
-            // Nếu chưa có thì tạo mới với visit_count = 1
-            Analytic::create([
-                'visit_date' => $currentDate,
-                'visit_count' => 1,
-            ]);
+            $visitorKey = hash('sha256', implode('|', [
+                $request->ip() ?? '',
+                $request->userAgent() ?? '',
+            ]));
+            $visitorId = (string) Str::uuid();
         }
 
-        return $next($request);
+        $cacheKey = 'visit_tracked_'.$visitorKey;
+
+        if (Cache::add($cacheKey, true, now()->addMinutes(30))) {
+            $currentDate = now()->toDateString();
+
+            Cache::lock('visit_counter_'.$currentDate, 5)->block(3, function () use ($currentDate) {
+                $visit = Analytic::query()
+                    ->whereDate('visit_date', $currentDate)
+                    ->first();
+
+                if ($visit) {
+                    $visit->increment('visit_count');
+                    return;
+                }
+
+                Analytic::query()->create([
+                    'visit_date' => $currentDate,
+                    'visit_count' => 1,
+                ]);
+            });
+        }
+
+        $response = $next($request);
+
+        if ($shouldQueueCookie) {
+            Cookie::queue('site_visit_id', $visitorId, 60 * 24 * 30);
+        }
+
+        return $response;
     }
 }
