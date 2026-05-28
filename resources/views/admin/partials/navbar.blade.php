@@ -88,14 +88,6 @@
                                 <a href="{{ route('admin.menu.index') }}" class="nav-link" data-key="t-calendar">Menu
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ route('admin.site_setting.show', ['key' => 'homepage']) }}"
-                                    class="nav-link" data-key="t-homepage">Homepage</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('admin.site_setting.show', ['key' => 'trade-partner']) }}"
-                                    class="nav-link" data-key="t-trade-partner">Trade Partner</a>
-                            </li>
                         </ul>
                     </div>
                 </li>
