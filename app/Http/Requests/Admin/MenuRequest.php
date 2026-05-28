@@ -29,7 +29,7 @@ class MenuRequest extends BaseAdminRequest
             'parent_id' => 'required|integer',
             'object_ids' => 'required_unless:type,link|array',
             'name_vn' => 'required_if:type,link',
-            'link' => 'required_if:type,link|url',
+            'link' => 'required_if:type,link',
         ];
     }
 
