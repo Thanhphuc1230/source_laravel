@@ -26,9 +26,6 @@ class HomeService
     {
         $data = [];
 
-        // All queries below use Cachable trait for automatic caching
-        // Cache is invalidated automatically when models are created/updated/deleted
-        
         $data['sliders'] = Slider::where('status', 1)
             ->orderBy('stt', 'asc')
             ->get();
@@ -53,34 +50,12 @@ class HomeService
             ->limit(8)
             ->get();
 
-        $data['brands'] = Brand::where('status', 1)
-            ->orderBy('stt', 'asc')
-            ->get();
-
-        $data['features'] = Feature::where('status', 1)
-            ->orderBy('stt', 'asc')
-            ->get();
-
         $data['latest_news'] = News::with('cate:id_cate_new,name_vn')
             ->select('id_new', 'name_vn', 'slug', 'image', 'intro_vn', 'created_at', 'category_id')
             ->where('status', 1)
             ->orderBy('created_at', 'desc')
             ->limit(3)
             ->get();
-
-        $data['galleries'] = Gallery::where('status', 1)
-            ->orderBy('stt', 'asc')
-            ->get();
-
-        // Site Settings - Homepage
-        $data['homepageSettings'] = SiteSetting::where('group', 'homepage')
-            ->get()
-            ->keyBy('key');
-
-        // Trade Partner settings
-        $data['tradePartner'] = SiteSetting::where('group', 'trade_partner')
-            ->get()
-            ->keyBy('key');
 
         return $data;
     }

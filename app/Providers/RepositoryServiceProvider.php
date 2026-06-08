@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\Eloquent\AboutRepository;
 use App\Repositories\Eloquent\BrandRepository;
 use App\Repositories\Eloquent\GalleryRepository;
 use App\Repositories\Eloquent\CateNewRepository;
@@ -16,8 +17,12 @@ use App\Repositories\Eloquent\MenuRepository;
 use App\Repositories\Eloquent\NewsRepository;
 use App\Repositories\Eloquent\PageRepository;
 use App\Repositories\Eloquent\ProductRepository;
+use App\Repositories\Eloquent\ProjectRepository;
 use App\Repositories\Eloquent\SliderRepository;
 use App\Repositories\Eloquent\SiteSettingRepository;
+use App\Repositories\Eloquent\SystemRepository;
+use App\Repositories\Eloquent\UserRepository;
+use App\Repositories\Interfaces\AboutRepositoryInterface;
 use App\Repositories\Interfaces\SiteSettingRepositoryInterface;
 use App\Repositories\Interfaces\BrandRepositoryInterface;
 use App\Repositories\Interfaces\GalleryRepositoryInterface;
@@ -34,8 +39,10 @@ use App\Repositories\Interfaces\MenuRepositoryInterface;
 use App\Repositories\Interfaces\NewsRepositoryInterface;
 use App\Repositories\Interfaces\PageRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Interfaces\ProjectRepositoryInterface;
 use App\Repositories\Interfaces\SliderRepositoryInterface;
 use App\Repositories\Interfaces\SystemRepositoryInterface;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\MailTemplateRepository;
 use App\Services\SlugResolutionService;
 use Illuminate\Support\ServiceProvider;
@@ -49,10 +56,12 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(AboutRepositoryInterface::class, AboutRepository::class);
         $this->app->bind(BrandRepositoryInterface::class, BrandRepository::class);
         $this->app->bind(FeatureRepositoryInterface::class, FeatureRepository::class);
         $this->app->bind(GalleryRepositoryInterface::class, GalleryRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+        $this->app->bind(ProjectRepositoryInterface::class, ProjectRepository::class);
         $this->app->bind(NewsRepositoryInterface::class, NewsRepository::class);
         $this->app->bind(CateProductRepositoryInterface::class, CateProductRepository::class);
         $this->app->bind(CateNewRepositoryInterface::class, CateNewRepository::class);
