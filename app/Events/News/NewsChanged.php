@@ -15,15 +15,17 @@ class NewsChanged
 
     public $action; // 'created', 'updated', 'deleted', 'status_updated'
 
-    public $slug; // Thêm slug để listener có thể xóa slug resolution cache
+    public $slug_vn;
+    public $slug_en;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($news = null, string $action = 'changed', ?string $slug = null)
+    public function __construct($news = null, string $action = 'changed', ?string $slug_vn = null, ?string $slug_en = null)
     {
         $this->news = $news;
         $this->action = $action;
-        $this->slug = $slug ?? $news?->slug; // Auto-detect slug từ news
+        $this->slug_vn = $slug_vn ?? $news?->slug_vn;
+        $this->slug_en = $slug_en ?? $news?->slug_en;
     }
 }

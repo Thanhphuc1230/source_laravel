@@ -56,6 +56,7 @@ class NewsController extends BaseController
         $data['category'] = $this->newsRepository->getActiveCategories();
         $data['action'] = 'create';
         $data['nameItem'] = $this->nameItem;
+        $data['imageFolder'] = $this->imageFolder;
 
         return $this->view_admin('detail', $data);
     }
@@ -63,12 +64,12 @@ class NewsController extends BaseController
     public function store(NewsRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['slug'] = $data['slug'] ?? $this->newsRepository->generateUniqueSlug($data['name_vn']);
-        $data['image'] = $this->saveImage($request);
+        $data['image_vn'] = $this->saveImage($request, null, 'image_vn');
+        $data['image_en'] = $this->saveImage($request, null, 'image_en');
 
         $news = $this->newsRepository->createWithAutoSlug($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
-        NewsChanged::dispatch($news, 'created', $news->slug);
+        NewsChanged::dispatch($news, 'created');
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -98,16 +99,18 @@ class NewsController extends BaseController
     {
         $current = $this->newsRepository->findByUuid($uuid);
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
-        $data['slug'] = empty($data['slug']) ? $this->newsRepository->generateUniqueSlug($data['name_vn'], $uuid) : $data['slug'];
+        $data['slug_vn'] = empty($data['slug_vn']) ? $this->newsRepository->generateUniqueSlug($data['name_vn'], $uuid, null, 'slug_vn') : \Illuminate\Support\Str::slug($data['slug_vn']);
+        $data['slug_en'] = empty($data['slug_en']) && !empty($data['name_en']) ? $this->newsRepository->generateUniqueSlug($data['name_en'], $uuid, null, 'slug_en') : (empty($data['slug_en']) ? null : \Illuminate\Support\Str::slug($data['slug_en']));
         
         // Handle image
-        $data['image'] = $this->updateImage($request, $current);
+        $data['image_vn'] = $this->updateImage($request, $current, null, 'image_vn');
+        $data['image_en'] = $this->updateImage($request, $current, null, 'image_en');
 
         $this->newsRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
-        NewsChanged::dispatch($current, 'updated', $data['slug']);
+        NewsChanged::dispatch($current, 'updated', $data['slug_vn'], $data['slug_en']);
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }

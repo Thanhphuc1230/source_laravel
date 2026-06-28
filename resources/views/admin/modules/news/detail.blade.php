@@ -30,38 +30,14 @@
                     <div class="col-lg-8">
                         <div class="card">
                             <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label" for="product-title-input">Tiêu đề </label>
-                                    <input type="text" id="name_vn"
-                                        class="form-control @error('name_vn') is-invalid @enderror" name="name_vn"
-                                        value="{{ old('name_vn', $page->name_vn ?? '') }}"
-                                        placeholder="Enter your title page ">
-                                    @error('name_vn')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label for="intro-vn" class="form-label">Giới thiệu </label>
-                                        <textarea class="form-control @error('intro_vn') is-invalid @enderror" name="intro_vn" rows="6"
-                                            placeholder="Enter your message">{{ old('intro_vn', $page->intro_vn ?? '') }}</textarea>
-                                        @error('intro_vn')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="mb-3">
-                                        <label for="content-vn" class="form-label">Nội dung </label>
-                                        <textarea id="content-vn" class="form-control @error('content_vn') is-invalid @enderror" name="content_vn"
-                                            rows="6" placeholder="Enter your message">{{ old('content_vn', $page->content_vn ?? '') }}</textarea>
-                                        @error('content_vn')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
+                                @include('admin.partials.localized-fields', [
+                                    'fields' => [
+                                        ['base' => 'name', 'label' => 'Tiêu đề', 'col' => 'col-md-12'],
+                                        ['base' => 'intro', 'label' => 'Giới thiệu', 'col' => 'col-md-12', 'rows' => 4, 'type' => 'textarea'],
+                                        ['base' => 'content', 'label' => 'Nội dung', 'col' => 'col-md-12', 'rows' => 6, 'type' => 'textarea', 'ckeditor' => true],
+                                    ],
+                                    'model' => $page ?? null,
+                                ])
                             </div>
                         </div>
                         <!-- end card -->
@@ -71,28 +47,15 @@
                                 <h5 class="card-title mb-0">Hình ảnh bài viết</h5>
                             </div>
                             <div class="card-body">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="firstNameinput" class="form-label">Hình ảnh(400x600)</label>
-                                        <input type="file" id="fileInput" name="image"
-                                            class="form-control @error('image') is-invalid @enderror">
-                                        <div id="imageContainer"></div>
-                                        @error('image')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
+                                <div class="row">
+                                    @foreach (['vn', 'en'] as $locale)
+                                        @include('admin.partials.image-upload', [
+                                            'locale' => $locale,
+                                            'imageFolder' => $imageFolder,
+                                            'model' => $page ?? null,
+                                        ])
+                                    @endforeach
                                 </div>
-
-                                @if (!empty($page->image))
-                                    <div class="col-md-6">
-                                        <div class="mb-3" style="display:flex;flex-direction: column;">
-                                            <label for="firstNameinput" class="form-label">Hình ảnh hiện tại</label>
-                                            <img src="{{ asset('images/' . $imageFolder . '/' . $page->image) }}"
-                                                alt="" width="200px" height="auto">
-                                        </div>
-
-                                    </div>
-                                @endif
                             </div>
                         </div>
                         <!-- end card -->
@@ -111,7 +74,7 @@
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Hiện thị</h5>
+                                <h5 class="card-title mb-0">Hiển thị</h5>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
@@ -126,52 +89,16 @@
                                     </select>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="created_at" class="form-label">Ngày đăng</label>
-                                    <input type="datetime-local" id="created_at" name="created_at"
-                                        class="form-control @error('created_at') is-invalid @enderror"
-                                        value="{{ old('created_at', isset($page->created_at) ? \Carbon\Carbon::parse($page->created_at)->format('Y-m-d\TH:i') : '') }}">
+                                @include('admin.partials.publishing-fields', ['model' => $page ?? null, 'col' => 'col-md-12'])
 
-                                </div>
+                                @include('admin.partials.localized-fields', [
+                                    'fields' => [
+                                        ['base' => 'slug', 'label' => 'Slug', 'col' => 'col-md-12', 'type' => 'text'],
+                                    ],
+                                    'model' => $page ?? null,
+                                ])
 
-                                <div class="mb-3">
-                                    <label for="choices-publish-visibility-input" class="form-label">STT</label>
-                                    <input type="number" name="stt"
-                                        class="form-control @error('stt') is-invalid @enderror"
-                                        placeholder="Enter your stt" value="{{ old('stt', $page->stt ?? '') }}">
-                                    @error('stt')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="slug" class="form-label">Slug</label>
-                                    <input type="text" name="slug" id="slug-input"
-                                        class="form-control @error('slug') is-invalid @enderror"
-                                        placeholder="Enter your slug" value="{{ old('slug', $page->slug ?? '') }}">
-                                    @error('slug')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <!-- Preview Link Section -->
-                                @if (isset($page) && $page->slug && $page->status && $page->category_id)
-                                    @php
-                                        $categorySlug = \App\Models\CateNew::find($page->category_id)?->slug ?? '';
-                                    @endphp
-                                    @if ($categorySlug)
-                                        <div class="mb-3">
-                                            <label class="form-label">Xem trang</label>
-                                            <div>
-                                                <a href="{{ route('web.resolve', ['id' => $page->id_new, 'slug' => $page->slug]) }}"
-                                                    target="_blank" class="text-decoration-none">
-                                                    <span>{{ request()->getSchemeAndHttpHost() }}/{{ $page->id_new }}-{{ $page->slug }}.html</span>
-                                                    <i class="ri-eye-line ms-1"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endif
+                                @include('admin.partials.preview-link', ['model' => $page ?? null])
                                 <div class="mb-3">
                                     <label for="category_id" class="form-label">Chủ đề tin tức</label>
                                     <select class="form-select" id="choices-category-input" name="category_id">
@@ -185,8 +112,6 @@
                                         @endphp
                                     </select>
                                 </div>
-
-
                             </div>
                             <!-- end card body -->
                         </div>
@@ -197,22 +122,13 @@
                                 <h5 class="card-title mb-0">SEO</h5>
                             </div>
                             <div class="card-body">
-                                <div>
-                                    <label class="form-label" for="meta-description-input">Từ khóa</label>
-                                    <textarea class="form-control @error('keywords') is-invalid @enderror" name="keywords" rows="3"
-                                        placeholder="Enter your message">{{ old('keywords', $page->keywords ?? '') }}</textarea>
-                                    @error('keywords')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div>
-                                    <label class="form-label" for="meta-description-input">Mô tả ngắn</label>
-                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3"
-                                        placeholder="Enter your message">{{ old('description', $page->description ?? '') }}</textarea>
-                                    @error('description')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                                @include('admin.partials.localized-fields', [
+                                    'fields' => [
+                                        ['base' => 'keyword', 'label' => 'Từ khóa', 'col' => 'col-md-12', 'rows' => 3, 'type' => 'textarea'],
+                                        ['base' => 'description', 'label' => 'Mô tả ngắn', 'col' => 'col-md-12', 'rows' => 3, 'type' => 'textarea'],
+                                    ],
+                                    'model' => $page ?? null,
+                                ])
                             </div>
                             <!-- end card body -->
                         </div>

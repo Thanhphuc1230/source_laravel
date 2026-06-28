@@ -21,14 +21,18 @@ class NewsRequest extends BaseAdminRequest
             'content_vn' => 'required|string',
             'content_en' => 'nullable|string',
             'category_id' => 'required|exists:tp_cate_news,id_cate_new',
-            'slug' => 'nullable|string|max:255',
+            'slug_vn' => 'nullable|string|max:255',
+            'slug_en' => 'nullable|string|max:255',
             'status' => 'required|in:0,1',
             'stt' => 'required|integer|min:0',
-            'image' => request()->route('uuid')
-            ? 'nullable|:tp_news,image,'.request()->route('uuid').',uuid|image|mimes:jpeg,png,jpg,gif,webp'
-            : 'required|:tp_news,image|image|mimes:jpeg,png,jpg,gif,webp',
-            'keywords' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'image_vn' => request()->route('uuid')
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp'
+            : 'required|image|mimes:jpeg,png,jpg,gif,webp',
+            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
+            'keyword_vn' => 'required|string|max:255',
+            'keyword_en' => 'nullable|string|max:255',
+            'description_vn' => 'required|string|max:255',
+            'description_en' => 'nullable|string|max:255',
         ];
     }
 
@@ -48,14 +52,16 @@ class NewsRequest extends BaseAdminRequest
             'status.required' => 'Vui lòng chọn trạng thái tin tức',
             'stt.required' => 'Vui lòng nhập số thứ tự tin tức',
             'stt.integer' => 'Số thứ tự phải là số nguyên',
-            'slug.max' => 'Slug không được quá 255 ký tự',
+            'slug_vn.max' => 'Slug VN không được quá 255 ký tự',
+            'slug_en.max' => 'Slug EN không được quá 255 ký tự',
             'image.required' => 'Vui lòng chọn hình ảnh tin tức',
             'image.image' => 'Hình ảnh không hợp lệ',
             'image.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg, gif, webp',
             'image.max' => 'Hình ảnh không được quá 2MB',
             'category_id.exists' => 'Chủ đề tin tức không tồn tại',
-            'keywords.required' => 'Vui lòng nhập từ khóa tin tức',
-            'keywords.max' => 'Từ khóa không được quá 255 ký tự',
+            'keyword_vn.required' => 'Vui lòng nhập từ khóa tiếng Việt',
+            'keyword_vn.max' => 'Từ khóa tiếng Việt không được quá 255 ký tự',
+            'keyword_en.max' => 'Từ khóa tiếng Anh không được quá 255 ký tự',
             'description.required' => 'Vui lòng nhập mô tả tin tức',
             'description.max' => 'Mô tả không được quá 255 ký tự',
         ];
