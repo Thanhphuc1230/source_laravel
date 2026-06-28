@@ -47,6 +47,8 @@ return new class extends Migration
             $table->index('uuid');              // Required for lookups
 
             // Composite indexes (cover single column usage too)
+            $table->index(['status', 'slug_vn']);   // Route resolution optimization
+            $table->index(['status', 'slug_en']);   // Route resolution optimization
             $table->index(['status', 'stt']);       // Covers: status filtering + ordering
             $table->index(['status', 'home']);      // Covers: status + homepage products
             $table->index(['status', 'category_id']); // Covers: status + category filtering

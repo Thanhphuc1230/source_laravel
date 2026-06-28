@@ -35,6 +35,8 @@ return new class extends Migration
             // Essential indexes only
             $table->index('slug_vn');              // Required for route resolution
             $table->index('slug_en');              // Required for route resolution
+            $table->index(['status', 'slug_vn']);   // Route resolution optimization
+            $table->index(['status', 'slug_en']);   // Route resolution optimization
             $table->index(['status', 'stt']);   // Covers: status filtering + ordering
         });
     }

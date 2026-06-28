@@ -36,6 +36,8 @@ return new class extends Migration
             $table->index('uuid');              // Required for lookups
 
             // Composite indexes for hierarchical queries
+            $table->index(['status', 'slug_vn']);   // Route resolution optimization
+            $table->index(['status', 'slug_en']);   // Route resolution optimization
             $table->index(['status', 'parent_id', 'stt']); // Covers: status + hierarchy + ordering
             $table->index(['parent_id', 'stt']);          // Covers: hierarchy navigation
         });

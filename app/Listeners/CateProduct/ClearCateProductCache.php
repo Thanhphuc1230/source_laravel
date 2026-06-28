@@ -3,16 +3,16 @@
 namespace App\Listeners\CateProduct;
 
 use App\Events\CateProduct\CateProductChanged;
-use Illuminate\Support\Facades\Log;
+use App\Services\CacheService;
+use Illuminate\Support\Facades\Cache;
 
 class ClearCateProductCache
 {
-    /**
-     * Handle the event.
-     */
     public function handle(CateProductChanged $event): void
     {
-        // With Cachable trait, cache is automatically cleared on model save/update/delete
-        // No need to manually clear cache
+        CacheService::forgetTags(['frontend', 'categories', 'products']);
+        if (!Cache::supportsTags()) {
+            Cache::flush();
+        }
     }
 }
