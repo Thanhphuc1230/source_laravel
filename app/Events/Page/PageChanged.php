@@ -15,15 +15,17 @@ class PageChanged
 
     public $action; // 'created', 'updated', 'deleted', 'status_updated'
 
-    public $slug; // Thêm slug để listener có thể xóa slug resolution cache
+    public $slug_vn;
+    public $slug_en;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($page = null, string $action = 'changed', ?string $slug = null)
+    public function __construct($page = null, string $action = 'changed', ?string $slug_vn = null, ?string $slug_en = null)
     {
         $this->page = $page;
         $this->action = $action;
-        $this->slug = $slug ?? $page?->slug; // Auto-detect slug từ page
+        $this->slug_vn = $slug_vn ?? $page?->slug_vn;
+        $this->slug_en = $slug_en ?? $page?->slug_en;
     }
 }

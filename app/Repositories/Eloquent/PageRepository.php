@@ -74,7 +74,9 @@ class PageRepository extends BaseRepository implements PageRepositoryInterface
      */
     public function getPageBySlug($slug)
     {
-        return $this->model->where('slug', $slug)
+        return $this->model->where(function ($q) use ($slug) {
+            $q->where('slug_vn', $slug)->orWhere('slug_en', $slug);
+        })
             ->where('status', 1)
             ->first();
     }

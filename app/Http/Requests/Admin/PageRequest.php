@@ -22,9 +22,14 @@ class PageRequest extends BaseAdminRequest
             ],
             'content_vn' => 'required|max:65535',
             'content_en' => 'nullable|max:65535',
-            'keywords' => 'required',
-            'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'slug_vn' => 'nullable|max:255',
+            'slug_en' => 'nullable|max:255',
+            'keyword_vn' => 'required|max:255',
+            'keyword_en' => 'nullable|max:255',
+            'description_vn' => 'required',
+            'description_en' => 'nullable',
+            'image_vn' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ];
     }
 

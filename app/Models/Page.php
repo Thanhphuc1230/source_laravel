@@ -18,16 +18,40 @@ class Page extends Model
         'uuid',
         'name_vn',
         'name_en',
-        'slug',
+        'slug_vn',
+        'slug_en',
         'content_vn',
         'content_en',
         'footer',
         'stt',
-        'image',
-        'keywords',
-        'description',
+        'image_vn',
+        'image_en',
+        'keyword_vn',
+        'keyword_en',
+        'description_vn',
+        'description_en',
         'parent_id',
     ];
+
+    public function getSlugAttribute()
+    {
+        return $this->slug_vn ?: $this->slug_en;
+    }
+
+    public function getImageAttribute()
+    {
+        return $this->image_vn ?: $this->image_en;
+    }
+
+    public function getKeywordsAttribute()
+    {
+        return $this->keyword_vn ?: $this->keyword_en;
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return $this->description_vn ?: $this->description_en;
+    }
 
     protected $casts = [
         'status' => 'boolean',
