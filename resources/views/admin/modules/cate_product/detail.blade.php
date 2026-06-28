@@ -22,124 +22,51 @@
                                         <input type="hidden" name="currentPage" value="{{ $currentPage }}">
                                     @endif
                                     <div class="row">
-                                        <div class="mb-3">
-                                            <label class="form-label" for="product-title-input">Tiêu đề
-                                            </label>
-                                            <input type="text" id="name_vn" class="form-control @error('name_vn') is-invalid @enderror" name="name_vn"
-                                                value="{{ old('name_vn', $page->name_vn ?? '') }}"
-                                                placeholder="Enter your title page ">
-                                            @error('name_vn')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
+                                        @include('admin.partials.localized-fields', [
+                                            'fields' => [
+                                                ['base' => 'name', 'label' => 'Tiêu đề', 'col' => 'col-md-6'],
+                                                ['base' => 'slug', 'label' => 'Slug', 'col' => 'col-md-6', 'type' => 'text'],
+                                            ],
+                                            'model' => $page ?? null,
+                                        ])
+
+                                        <div class="col-md-12 mb-3">
+                                            <label for="parent_id" class="form-label">Danh mục cha</label>
+                                            <select id="parent_id" class="form-select mb-3" aria-label="Default select example"
+                                                name="parent_id">
+                                                <option value="0"
+                                                    {{ (old('parent_id') ?: $page->parent_id ?? '') == 0 ? 'selected' : '' }} style="font-weight: bold;">
+                                                    Trang chính</option>
+                                                @php
+                                                    renderCategoryOptions(
+                                                        $category,
+                                                        0,
+                                                        old('parent_id') ?: $page->parent_id ?? null,
+                                                        'id_cate_product',
+                                                    );
+                                                @endphp
+                                            </select>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="slug" class="form-label">Slug</label>
-                                                <input type="text" name="slug" class="form-control @error('slug') is-invalid @enderror"
-                                                    value="{{ old('slug', $page->slug ?? '') }}" placeholder="Slug">
-                                            </div>
-                                            @error('slug')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="phone-field" class="form-label">Danh mục</label>
-                                                <select id="parent_id" class="form-select mb-3" aria-label="Default select example"
-                                                    name="parent_id">
-                                                    <option value="0"
-                                                        {{ (old('parent_id') ?: $page->parent_id ?? '') == 0 ? 'selected' : '' }} style="font-weight: bold;">
-                                                        Trang chính</option>
-                                                    @php
-                                                        renderCategoryOptions(
-                                                            $category,
-                                                            0,
-                                                            old('parent_id') ?: $page->parent_id ?? null,
-                                                            'id_cate_product',
-                                                        );
-                                                    @endphp
-                                                </select>
-                                            </div>
-                                        </div>
+
+                                        @include('admin.partials.localized-fields', [
+                                            'fields' => [
+                                                ['base' => 'keyword', 'label' => 'Từ khóa', 'col' => 'col-md-6', 'rows' => 3, 'type' => 'textarea'],
+                                                ['base' => 'description', 'label' => 'Mô tả ngắn', 'col' => 'col-md-6', 'rows' => 3, 'type' => 'textarea'],
+                                            ],
+                                            'model' => $page ?? null,
+                                        ])
                                         
-                                        <!-- Preview Link Section -->
-                                        @if(isset($page) && $page->slug && $page->status)
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Xem trang</label>
-                                                <div>
-                                                    <a href="{{ route('web.resolve', ['id' => $page->id_cate_product, 'slug' => $page->slug]) }}" target="_blank" class="text-decoration-none">
-                                                        <span>{{ request()->getSchemeAndHttpHost() }}/{{ $page->id_cate_product }}-{{ $page->slug }}.html</span>
-                                                        <i class="ri-eye-line ms-1"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @endif
-                                        <!--end col-->
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="lastNameinput" class="form-label">Từ khóa</label>
-                                                <textarea class="form-control @error('keywords') is-invalid @enderror" name="keywords" rows="3" placeholder="Enter your message">{{ old('keywords', $page->keywords ?? '') }}</textarea>
-                                            </div>
-                                            @error('keywords')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <!--end col-->
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="compnayNameinput" class="form-label">Mô tả ngắn</label>
-                                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3" placeholder="Enter your message">{{ old('description', $page->description ?? '') }}</textarea>
-                                            </div>
-                                            @error('description')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                        @include('admin.partials.preview-link', ['model' => $page ?? null])
+                                        @include('admin.partials.publishing-fields', ['model' => $page ?? null])
 
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="compnayNameinput" class="form-label">Số thứ tự</label>
-                                                <input type="number" name="stt" class="form-control @error('stt') is-invalid @enderror"
-                                                    placeholder="Enter your title page"
-                                                    value="{{ old('stt', $page->stt ?? '') }}">
-                                            </div>
-                                            @error('stt')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
+                                        @foreach (['vn', 'en'] as $locale)
+                                            @include('admin.partials.image-upload', [
+                                                'locale' => $locale,
+                                                'imageFolder' => $imageFolder,
+                                                'model' => $page ?? null,
+                                            ])
+                                        @endforeach
 
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="created_at" class="form-label">Ngày đăng</label>
-                                                <input type="datetime-local" id="created_at" name="created_at"
-                                                    class="form-control @error('created_at') is-invalid @enderror"
-                                                    value="{{ old('created_at', isset($page->created_at) ? \Carbon\Carbon::parse($page->created_at)->format('Y-m-d\TH:i') : '') }}">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="firstNameinput" class="form-label">Hình ảnh</label>
-                                                <input type="file" id="fileInput" name="image" class="form-control @error('image') is-invalid @enderror">
-                                                <div id="imageContainer"></div>
-                                                @error('image')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        @if (!empty($page->image))
-                                            <div class="col-md-6">
-                                                <div class="mb-3" style="display:flex;flex-direction: column;">
-                                                    <label for="firstNameinput" class="form-label">Hình ảnh hiện
-                                                        tại</label>
-                                                    <img src="{{ asset('images/' . $imageFolder . '/' . $page->image) }}"
-                                                        alt="" width="200px" height="auto">
-                                                </div>
-                                            </div>
-                                        @endif
-                                        <!--end col-->
                                         @if ($action == 'create')
                                             <div class="col-lg-12">
                                                 <div class="text-end">
@@ -157,7 +84,6 @@
                                                 </div>
                                             </div>
                                         @endif
-                                        <!--end col-->
                                     </div>
                                     <!--end row-->
                                 </form>
@@ -172,11 +98,7 @@
 
 @push('scripts')
 <script>
-    // Sử dụng hàm preview image đã định nghĩa trong master
     document.addEventListener('DOMContentLoaded', function() {
-        // Khởi tạo preview image
-        previewImage('fileInput', 'imageContainer');
-        // Khởi tạo Select2 cho danh mục
         $('#parent_id').select2();
     });
 </script>
