@@ -32,22 +32,37 @@ class CateProduct extends Model
 
     public function getSlugAttribute()
     {
-        return $this->slug_vn ?: $this->slug_en;
+        $locale = app()->getLocale();
+        return $this->{'slug_' . $locale} ?: ($this->slug_vn ?: $this->slug_en);
+    }
+
+    public function getNameAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{'name_' . $locale} ?: ($this->name_vn ?: $this->name_en);
     }
 
     public function getImageAttribute()
     {
-        return $this->image_vn ?: $this->image_en;
+        $locale = app()->getLocale();
+        return $this->{'image_' . $locale} ?: ($this->image_vn ?: $this->image_en);
+    }
+
+    public function getKeywordAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{'keyword_' . $locale} ?: ($this->keyword_vn ?: $this->keyword_en);
     }
 
     public function getKeywordsAttribute()
     {
-        return $this->keyword_vn ?: $this->keyword_en;
+        return $this->getKeywordAttribute();
     }
 
     public function getDescriptionAttribute()
     {
-        return $this->description_vn ?: $this->description_en;
+        $locale = app()->getLocale();
+        return $this->{'description_' . $locale} ?: ($this->description_vn ?: $this->description_en);
     }
 
     protected $casts = [
@@ -62,7 +77,7 @@ class CateProduct extends Model
     public function products()
     {
         return $this->hasMany(Product::class, 'category_id', 'id_cate_product')->where('status', 1)
-        ->select('id_product','uuid', 'name_vn', 'slug_vn', 'slug_en', 'price','image', 'intro_vn', 'category_id', 'status','hot','stt', 'created_at')
+        ->select('id_product','uuid', 'name_vn', 'slug_vn', 'slug_en', 'price','image_vn', 'image_en', 'intro_vn', 'category_id', 'status','hot','stt', 'created_at')
         ->orderBy('stt', 'asc');
     }
 

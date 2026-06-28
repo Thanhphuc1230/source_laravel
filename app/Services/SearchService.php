@@ -22,8 +22,8 @@ class SearchService
 
         if (!empty($query)) {
             // Base query for search
-            $searchQuery = Product::with(['cate:id_cate_product,name_vn,slug'])
-                ->select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn', 'category_id', 'status', 'stt', 'created_at')
+            $searchQuery = Product::with(['cate:id_cate_product,name_vn,name_en,slug_vn,slug_en'])
+                ->select('id_product', 'uuid', 'name_vn', 'name_en', 'slug_vn', 'slug_en', 'price', 'price_old', 'image_vn', 'image_en', 'intro_vn', 'intro_en', 'category_id', 'status', 'stt', 'created_at')
                 ->where('status', 1);
 
             // Apply search filters
@@ -52,8 +52,11 @@ class SearchService
      */
     private function applySearchFilters($query, string $searchQuery)
     {
-        // Search only in Vietnamese product name
-        $query->where('name_vn', 'like', "%{$searchQuery}%");
+        // Search in product name
+        $query->where(function ($q) use ($searchQuery) {
+            $q->where('name_vn', 'like', "%{$searchQuery}%")
+              ->orWhere('name_en', 'like', "%{$searchQuery}%");
+        });
 
         return $query;
     }
@@ -145,7 +148,7 @@ class SearchService
 
         // Add page metadata
         $data['page_title'] = 'Tìm kiếm: "' . $searchQuery . '"';
-        $data['page_description'] = 'Kết quả tìm kiếm cho "' . $searchQuery . '" - ' . $data['total_results'] . ' sản phẩm';
+        $data['page_description'] = 'Kết quả tìm kiếm cho "' . $searchQuery . '" - ' . ($data['total_results'] ?? 0) . ' sản phẩm';
 
         return $data;
     }
@@ -166,7 +169,10 @@ class SearchService
 
         // Cache search suggestions
         $suggestions = Product::where('status', 1)
-            ->where('name_vn', 'like', "%{$query}%")
+            ->where(function ($q) use ($query) {
+                $q->where('name_vn', 'like', "%{$query}%")
+                  ->orWhere('name_en', 'like', "%{$query}%");
+            })
             ->orderBy('stt', 'asc')
             ->limit(10)
             ->pluck('name_vn')

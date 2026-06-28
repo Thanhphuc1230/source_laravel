@@ -44,8 +44,8 @@ class ProductService
         $categoryIds = $this->getAllCategoryIds($data['category_detail']->id_cate_product);
 
         // Base query
-        $query = Product::with(['cate:id_cate_product,name_vn,slug'])
-            ->select('id_product', 'uuid', 'name_vn', 'slug', 'price', 'price_old', 'image', 'intro_vn', 'category_id', 'status', 'stt', 'created_at')
+        $query = Product::with(['cate:id_cate_product,name_vn,name_en,slug_vn,slug_en'])
+            ->select('id_product', 'uuid', 'name_vn', 'name_en', 'slug_vn', 'slug_en', 'price', 'price_old', 'image_vn', 'image_en', 'intro_vn', 'intro_en', 'category_id', 'status', 'stt', 'created_at')
             ->whereIn('category_id', $categoryIds)
             ->where('status', 1)
             ->orderBy('created_at', 'desc');
@@ -75,7 +75,7 @@ class ProductService
         $data = [];
 
         // Cache product detail
-        $data['product_detail'] = Product::with(['cate:id_cate_product,name_vn,slug'])
+        $data['product_detail'] = Product::with(['cate:id_cate_product,name_vn,name_en,slug_vn,slug_en'])
             ->where('id_product', $id_product)
             ->firstOrFail();
 

@@ -33,13 +33,13 @@ class NewsService
         // Cache category detail
         $data['category_detail'] = CateNew::where('status', 1)
             ->where('id_cate_new', $id_cate_new)
-            ->select('id_cate_new', 'name_vn', 'slug', 'status')
+            ->select('id_cate_new', 'name_vn', 'name_en', 'slug_vn', 'slug_en', 'status')
             ->firstOrFail();
 
         // Cache news in category
         $data['news'] = News::where('category_id', $data['category_detail']->id_cate_new)
             ->where('status', 1)
-            ->select('id_new', 'name_vn', 'intro_vn', 'slug', 'image', 'created_at', 'category_id')
+            ->select('id_new', 'name_vn', 'name_en', 'intro_vn', 'intro_en', 'slug_vn', 'slug_en', 'image_vn', 'image_en', 'created_at', 'category_id')
             ->orderBy('created_at', 'desc')
             ->paginate(8);
 
@@ -61,17 +61,17 @@ class NewsService
 
         // Cache news detail with category relationship
         $data['news_detail'] = News::with(['cate' => function ($query) {
-            $query->select('id_cate_new', 'name_vn', 'slug');
+            $query->select('id_cate_new', 'name_vn', 'name_en', 'slug_vn', 'slug_en');
         }])
             ->where('id_new', $id_news)
-            ->select('id_new', 'name_vn', 'slug', 'image', 'content_vn', 'created_at', 'category_id', 'keywords', 'description')
+            ->select('id_new', 'name_vn', 'name_en', 'slug_vn', 'slug_en', 'image_vn', 'image_en', 'content_vn', 'content_en', 'created_at', 'category_id', 'keyword_vn', 'keyword_en', 'description_vn', 'description_en')
             ->firstOrFail();
 
         // Cache related news
         $data['related_news'] = News::where('category_id', $data['news_detail']->category_id)
             ->where('status', 1)
             ->where('id_new', '!=', $data['news_detail']->id_new)
-            ->select('id_new', 'name_vn', 'slug', 'image', 'created_at')
+            ->select('id_new', 'name_vn', 'name_en', 'slug_vn', 'slug_en', 'image_vn', 'image_en', 'created_at')
             ->orderBy('created_at', 'desc')
             ->limit(4)
             ->get();
@@ -95,14 +95,14 @@ class NewsService
         return [
             'category_product' => CateProduct::where('status', 1)
                 ->where('parent_id', 0)
-                ->select('name_vn', 'status', 'slug')
+                ->select('name_vn', 'name_en', 'status', 'slug_vn', 'slug_en')
                 ->orderBy('created_at', 'desc')
                 ->limit(8)
                 ->get(),
 
             'product_hot' => Product::where('status', 1)
                 ->where('hot', 1)
-                ->select('name_vn', 'slug', 'image', 'price', 'created_at')
+                ->select('name_vn', 'name_en', 'slug_vn', 'slug_en', 'image_vn', 'image_en', 'price', 'created_at')
                 ->orderBy('created_at', 'desc')
                 ->limit(5)
                 ->get()

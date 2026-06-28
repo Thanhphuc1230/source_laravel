@@ -50,8 +50,8 @@ class HomeService
             ->limit(8)
             ->get();
 
-        $data['latest_news'] = News::with('cate:id_cate_new,name_vn')
-            ->select('id_new', 'name_vn', 'slug', 'image', 'intro_vn', 'created_at', 'category_id')
+        $data['latest_news'] = News::with('cate:id_cate_new,name_vn,name_en,slug_vn,slug_en')
+            ->select('id_new', 'name_vn', 'name_en', 'slug_vn', 'slug_en', 'image_vn', 'image_en', 'intro_vn', 'intro_en', 'created_at', 'category_id')
             ->where('status', 1)
             ->orderBy('created_at', 'desc')
             ->limit(3)
