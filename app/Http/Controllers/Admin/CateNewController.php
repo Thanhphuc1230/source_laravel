@@ -57,6 +57,7 @@ class CateNewController extends BaseController
         $data['category'] = $this->cateNewRepository->getActiveParentCategories();
         $data['action'] = 'create';
         $data['nameItem'] = $this->nameItem;
+        $data['imageFolder'] = $this->imageFolder;
 
         return $this->view_admin('detail', $data);
     }
@@ -64,13 +65,13 @@ class CateNewController extends BaseController
     public function store(CateNewRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['slug'] = $data['slug'] ?? $this->cateNewRepository->generateUniqueSlug($data['name_vn']);
         $data['status'] = 1;
-        $data['image'] = $this->saveImage($request);
+        $data['image_vn'] = $this->saveImage($request, null, 'image_vn');
+        $data['image_en'] = $this->saveImage($request, null, 'image_en');
 
         $cateNew = $this->cateNewRepository->createWithAutoSlug($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
-        CateNewChanged::dispatch($cateNew, 'created', $cateNew->slug);
+        CateNewChanged::dispatch($cateNew, 'created');
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -100,16 +101,18 @@ class CateNewController extends BaseController
     {
         $current = $this->cateNewRepository->findByUuid($uuid);
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
-        $data['slug'] = empty($data['slug']) ? $this->generateUniqueSlug($data['name_vn'], $this->model::class, $uuid) : $data['slug'];
+        $data['slug_vn'] = empty($data['slug_vn']) ? $this->cateNewRepository->generateUniqueSlug($data['name_vn'], $uuid, null, 'slug_vn') : \Illuminate\Support\Str::slug($data['slug_vn']);
+        $data['slug_en'] = empty($data['slug_en']) && !empty($data['name_en']) ? $this->cateNewRepository->generateUniqueSlug($data['name_en'], $uuid, null, 'slug_en') : (empty($data['slug_en']) ? null : \Illuminate\Support\Str::slug($data['slug_en']));
 
         // Handle image - Update existing image
-        $data['image'] = $this->updateImage($request, $current);
+        $data['image_vn'] = $this->updateImage($request, $current, null, 'image_vn');
+        $data['image_en'] = $this->updateImage($request, $current, null, 'image_en');
 
         $this->cateNewRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
         // Remove related cache
-        CateNewChanged::dispatch($current, 'updated', $data['slug']);
+        CateNewChanged::dispatch($current, 'updated', $data['slug_vn'], $data['slug_en']);
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }

@@ -17,13 +17,38 @@ class CateNew extends Model
     protected $fillable = [
         'uuid',
         'name_vn',
-        'slug',
-        'keywords',
-        'description',
-        'image',
+        'name_en',
+        'slug_vn',
+        'slug_en',
+        'keyword_vn',
+        'keyword_en',
+        'description_vn',
+        'description_en',
+        'image_vn',
+        'image_en',
         'stt',
         'parent_id',
     ];
+
+    public function getSlugAttribute()
+    {
+        return $this->slug_vn ?: $this->slug_en;
+    }
+
+    public function getImageAttribute()
+    {
+        return $this->image_vn ?: $this->image_en;
+    }
+
+    public function getKeywordsAttribute()
+    {
+        return $this->keyword_vn ?: $this->keyword_en;
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return $this->description_vn ?: $this->description_en;
+    }
 
     protected $casts = [
         'status' => 'boolean',

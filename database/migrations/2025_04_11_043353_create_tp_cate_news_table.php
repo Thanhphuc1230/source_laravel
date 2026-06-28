@@ -16,10 +16,14 @@ return new class extends Migration
             $table->uuid()->unique();
             $table->string('name_vn');
             $table->string('name_en')->nullable();
-            $table->string('slug');
-            $table->string('image')->nullable();
-            $table->string('keywords')->nullable();
-            $table->string('description')->nullable();
+            $table->string('slug_vn');
+            $table->string('slug_en')->nullable();
+            $table->string('image_vn')->nullable();
+            $table->string('image_en')->nullable();
+            $table->string('keyword_vn')->nullable();
+            $table->string('keyword_en')->nullable();
+            $table->string('description_vn')->nullable();
+            $table->string('description_en')->nullable();
             $table->boolean('status')->default(true);
             $table->boolean('home')->default(false);
             $table->unsignedInteger('stt')->default(0)->nullable();
@@ -27,7 +31,8 @@ return new class extends Migration
             $table->timestamps();
 
             // Essential indexes for hierarchy
-            $table->index('slug');              // Required for route resolution
+            $table->index('slug_vn');              // Required for route resolution
+            $table->index('slug_en');              // Required for route resolution
             $table->index('uuid');              // Required for lookups
 
             // Composite indexes for hierarchical queries
