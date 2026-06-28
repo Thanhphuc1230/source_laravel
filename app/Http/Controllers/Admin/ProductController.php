@@ -56,6 +56,7 @@ class ProductController extends BaseController
         $data['category'] = $this->productRepository->getActiveCategories();
         $data['action'] = 'create';
         $data['nameItem'] = $this->nameItem;
+        $data['imageFolder'] = $this->imageFolder;
 
         return $this->view_admin('detail', $data);
     }
@@ -63,13 +64,13 @@ class ProductController extends BaseController
     public function store(ProductRequest $request)
     {
         $data = $request->except('_token', 'return_back', 'return_list');
-        $data['slug'] = $data['slug'] ?? $this->productRepository->generateUniqueSlug($data['name_vn']);
-        $data['image'] = $this->saveImage($request);
+        $data['image_vn'] = $this->saveImage($request, null, 'image_vn');
+        $data['image_en'] = $this->saveImage($request, null, 'image_en');
         $data['image_detail'] = $this->saveMultipleImages($request);
 
         $product = $this->productRepository->createWithAutoSlug($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
-        ProductChanged::dispatch($product, 'created', $product->slug);
+        ProductChanged::dispatch($product, 'created');
 
         return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
@@ -99,13 +100,15 @@ class ProductController extends BaseController
     {
         $current = $this->productRepository->findByUuid($uuid);
         $data = $this->cleanRequestData($request);
-        $data['slug'] = $data['slug'] ?? $this->productRepository->generateUniqueSlug($data['name_vn'], $uuid);
-        $data['image'] = $this->updateImage($request, $current);
+        $data['slug_vn'] = empty($data['slug_vn']) ? $this->productRepository->generateUniqueSlug($data['name_vn'], $uuid, null, 'slug_vn') : \Illuminate\Support\Str::slug($data['slug_vn']);
+        $data['slug_en'] = empty($data['slug_en']) && !empty($data['name_en']) ? $this->productRepository->generateUniqueSlug($data['name_en'], $uuid, null, 'slug_en') : (empty($data['slug_en']) ? null : \Illuminate\Support\Str::slug($data['slug_en']));
+        $data['image_vn'] = $this->updateImage($request, $current, null, 'image_vn');
+        $data['image_en'] = $this->updateImage($request, $current, null, 'image_en');
         $data['image_detail'] = $this->updateMultipleImages($request, $current);
 
         $this->productRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
-        ProductChanged::dispatch($current, 'updated', $data['slug']);
+        ProductChanged::dispatch($current, 'updated', $data['slug_vn'], $data['slug_en']);
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }

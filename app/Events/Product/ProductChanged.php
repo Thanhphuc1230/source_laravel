@@ -15,15 +15,17 @@ class ProductChanged
 
     public $action; // 'created', 'updated', 'deleted', 'status_updated'
 
-    public $slug; // Thêm slug để listener có thể xóa slug resolution cache
+    public $slug_vn;
+    public $slug_en;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($product = null, string $action = 'changed', ?string $slug = null)
+    public function __construct($product = null, string $action = 'changed', ?string $slug_vn = null, ?string $slug_en = null)
     {
         $this->product = $product;
         $this->action = $action;
-        $this->slug = $slug ?? $product?->slug; // Auto-detect slug từ product
+        $this->slug_vn = $slug_vn ?? $product?->slug_vn;
+        $this->slug_en = $slug_en ?? $product?->slug_en;
     }
 }

@@ -17,14 +17,18 @@ class ProductRequest extends BaseAdminRequest
             'name_vn' => 'required|string|max:255',
             'name_en' => 'nullable|string|max:255',
 
-            'slug' => 'max:255',
+            'slug_vn' => 'nullable|string|max:255',
+            'slug_en' => 'nullable|string|max:255',
 
-            'keywords' => 'required|max:255',
-            'description' => 'required|max:255',
+            'keyword_vn' => 'required|max:255',
+            'keyword_en' => 'nullable|max:255',
+            'description_vn' => 'required|max:255',
+            'description_en' => 'nullable|max:255',
 
-            'image' => request()->route('uuid')
-            ? 'nullable|:tp_products,image,'.request()->route('uuid').',uuid|image|mimes:jpeg,png,jpg,gif,webp'
-            : 'required|:tp_products,image|image|mimes:jpeg,png,jpg,gif,webp',
+            'image_vn' => request()->route('uuid')
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp'
+            : 'required|image|mimes:jpeg,png,jpg,gif,webp',
+            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
 
             'image_detail' => 'nullable|array',
             'image_detail.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
@@ -53,9 +57,11 @@ class ProductRequest extends BaseAdminRequest
             'name_vn.max' => 'Tên sản phẩm tiếng Việt không được vượt quá 255 ký tự.',
             'name_en.string' => 'Tên sản phẩm tiếng Anh phải là chuỗi.',
             'name_en.max' => 'Tên sản phẩm tiếng Anh không được vượt quá 255 ký tự.',
-            'slug.max' => 'Slug không được vượt quá 255 ký tự.',
-            'keywords.required' => 'Từ khóa là bắt buộc.',
-            'keywords.max' => 'Từ khóa không được vượt quá 255 ký tự.',
+            'slug_vn.max' => 'Slug VN không được vượt quá 255 ký tự.',
+            'slug_en.max' => 'Slug EN không được vượt quá 255 ký tự.',
+            'keyword_vn.required' => 'Từ khóa tiếng Việt là bắt buộc.',
+            'keyword_vn.max' => 'Từ khóa tiếng Việt không được vượt quá 255 ký tự.',
+            'keyword_en.max' => 'Từ khóa tiếng Anh không được vượt quá 255 ký tự.',
             'description.required' => 'Mô tả là bắt buộc.',
             'description.max' => 'Mô tả không được vượt quá 255 ký tự.',
             'image.required' => 'Ảnh là bắt buộc.',
