@@ -78,7 +78,9 @@
     // Khởi tạo CKEditor cho nhiều editor
     const editors = ['intro-vn', 'intro-en', 'content-vn', 'content-en'];
     editors.forEach(editor => {
-        CKEDITOR.replace(editor, options);
+        if (document.getElementById(editor)) {
+            CKEDITOR.replace(editor, options);
+        }
     });
 </script>
 
