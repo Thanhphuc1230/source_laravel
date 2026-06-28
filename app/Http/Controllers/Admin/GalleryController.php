@@ -63,7 +63,7 @@ class GalleryController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list');
 
         // Handle image - Save new image
-        $data['image'] = $this->saveImageWithWatermark($request);
+        $data['image'] = $this->saveImage($request);
 
         $gallery = $this->galleryRepository->create($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
@@ -100,7 +100,7 @@ class GalleryController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
 
         // Handle image - Update existing image
-        $data['image'] = $this->updateImageWithWatermark($request, $current);
+        $data['image'] = $this->updateImage($request, $current);
 
         $this->galleryRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
