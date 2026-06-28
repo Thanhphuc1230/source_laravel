@@ -42,23 +42,23 @@ class SlugResolutionService
         try {
             // Tìm theo slug trực tiếp - slug đã là unique với format name-id
             $query = "
-                SELECT 'page' as type, id_page as id, slug, name_vn as title
-                FROM tp_pages WHERE slug = ? AND status = 1
+                SELECT 'page' as type, id_page as id, slug_vn as slug, name_vn as title
+                FROM tp_pages WHERE (slug_vn = ? OR slug_en = ?) AND status = 1
                 UNION ALL
-                SELECT 'product' as type, id_product as id, slug, name_vn as title
-                FROM tp_products WHERE slug = ? AND status = 1
+                SELECT 'product' as type, id_product as id, slug_vn as slug, name_vn as title
+                FROM tp_products WHERE (slug_vn = ? OR slug_en = ?) AND status = 1
                 UNION ALL
-                SELECT 'news' as type, id_new as id, slug, name_vn as title
-                FROM tp_news WHERE slug = ? AND status = 1
+                SELECT 'news' as type, id_new as id, slug_vn as slug, name_vn as title
+                FROM tp_news WHERE (slug_vn = ? OR slug_en = ?) AND status = 1
                 UNION ALL
-                SELECT 'cate_product' as type, id_cate_product as id, slug, name_vn as title
-                FROM tp_cate_products WHERE slug = ? AND status = 1
+                SELECT 'cate_product' as type, id_cate_product as id, slug_vn as slug, name_vn as title
+                FROM tp_cate_products WHERE (slug_vn = ? OR slug_en = ?) AND status = 1
                 UNION ALL
-                SELECT 'cate_news' as type, id_cate_new as id, slug, name_vn as title
-                FROM tp_cate_news WHERE slug = ? AND status = 1
+                SELECT 'cate_news' as type, id_cate_new as id, slug_vn as slug, name_vn as title
+                FROM tp_cate_news WHERE (slug_vn = ? OR slug_en = ?) AND status = 1
                 LIMIT 1
             ";
-            $params = [$slug, $slug, $slug, $slug, $slug];
+            $params = [$slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug];
 
             $result = DB::select($query, $params);
             return $result ? (array) $result[0] : null;

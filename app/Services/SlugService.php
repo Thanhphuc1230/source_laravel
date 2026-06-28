@@ -8,30 +8,39 @@ use Illuminate\Support\Facades\DB;
 class SlugService
 {
     /**
-     * Tạo slug duy nhất với format: name-slug-id
-     * Ví dụ: san-pham-1, tin-tuc-5
+     * Tạo slug duy nhất (không gắn ID)
      *
      * @param string $name Tên gốc để tạo slug
-     * @param int $id ID của entity
      * @param string $table Tên bảng để kiểm tra unique
-     * @param string $column Tên cột slug (default: 'slug')
+     * @param string $column Tên cột slug (default: 'slug_vn')
+     * @param int|null $id ID hiện tại để loại trừ khi update
      * @return string
      */
-    public function generateUniqueSlugWithId(string $name, int $id, string $table, string $column = 'slug'): string
+    public function generateUniqueSlug(string $name, string $table, string $column = 'slug_vn', ?int $id = null): string
     {
         $baseSlug = Str::slug($name);
-        $slug = $baseSlug . '-' . $id;
+        if (empty($baseSlug)) {
+            $baseSlug = 'n-a';
+        }
+        $slug = $baseSlug;
 
         $idColumn = $this->getIdColumnName($table);
         $counter = 1;
-        $originalSlug = $slug;
 
-        while (DB::table($table)->where($column, $slug)->where($idColumn, '!=', $id)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
+        while (DB::table($table)->where($column, $slug)->when($id, fn($q) => $q->where($idColumn, '!=', $id))->exists()) {
+            $slug = $baseSlug . '-' . $counter;
             $counter++;
         }
 
         return $slug;
+    }
+
+    /**
+     * Tương thích ngược với hàm cũ nhưng không ghép ID vào slug
+     */
+    public function generateUniqueSlugWithId(string $name, int $id, string $table, string $column = 'slug_vn'): string
+    {
+        return $this->generateUniqueSlug($name, $table, $column, $id > 0 ? $id : null);
     }
 
     protected function getIdColumnName(string $table): string
@@ -49,12 +58,6 @@ class SlugService
 
     /**
      * Kiểm tra xem slug có bị trùng trong các bảng khác không
-     * (Để đảm bảo không trùng với các entity khác trong hệ thống)
-     *
-     * @param string $slug
-     * @param string $excludeTable Bảng loại trừ (để khi update không check chính nó)
-     * @param int|null $excludeId ID loại trừ
-     * @return bool
      */
     public function isSlugUniqueAcrossTables(string $slug, string $excludeTable = null, int $excludeId = null): bool
     {
@@ -67,9 +70,11 @@ class SlugService
         ];
 
         foreach ($tables as $table => $idColumn) {
-            $query = DB::table($table)->where('slug', $slug)->where('status', 1);
+            $query = DB::table($table)->where(function($q) use ($slug) {
+                $q->where('slug_vn', $slug)
+                  ->orWhere('slug_en', $slug);
+            })->where('status', 1);
 
-            // Loại trừ bảng và ID hiện tại (để khi update)
             if ($excludeTable === $table && $excludeId) {
                 $query->where($idColumn, '!=', $excludeId);
             }
@@ -83,28 +88,30 @@ class SlugService
     }
 
     /**
-     * Tạo slug duy nhất với ID và đảm bảo không trùng trong toàn bộ hệ thống
-     *
-     * @param string $name
-     * @param int $id
-     * @param string $table
-     * @param string $column
-     * @return string
+     * Tạo slug duy nhất toàn hệ thống (không ghép ID)
      */
-    public function generateUniqueSlugWithIdGlobal(string $name, int $id, string $table, string $column = 'slug'): string
+    public function generateUniqueSlugGlobal(string $name, string $table, string $column = 'slug_vn', ?int $id = null): string
     {
         $baseSlug = Str::slug($name);
-        $slug = $baseSlug . '-' . $id;
-
-        // Nếu slug đã tồn tại trong hệ thống (không phải của entity hiện tại), thêm hậu tố
+        if (empty($baseSlug)) {
+            $baseSlug = 'n-a';
+        }
+        $slug = $baseSlug;
         $counter = 1;
-        $originalSlug = $slug;
 
         while (!$this->isSlugUniqueAcrossTables($slug, $table, $id)) {
-            $slug = $originalSlug . '-' . $counter;
+            $slug = $baseSlug . '-' . $counter;
             $counter++;
         }
 
         return $slug;
+    }
+
+    /**
+     * Tương thích ngược với hàm cũ
+     */
+    public function generateUniqueSlugWithIdGlobal(string $name, int $id, string $table, string $column = 'slug_vn'): string
+    {
+        return $this->generateUniqueSlugGlobal($name, $table, $column, $id > 0 ? $id : null);
     }
 }

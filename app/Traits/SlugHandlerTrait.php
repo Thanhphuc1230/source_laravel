@@ -28,7 +28,9 @@ trait SlugHandlerTrait
      */
     private function slugExists(string $slug, string $modelClass, ?string $currentUuid = null): bool
     {
-        $query = $modelClass::where('slug', $slug);
+        $query = $modelClass::where(function ($q) use ($slug) {
+            $q->where('slug_vn', $slug)->orWhere('slug_en', $slug);
+        });
 
         if ($currentUuid) {
             $query->where('uuid', '!=', $currentUuid);
