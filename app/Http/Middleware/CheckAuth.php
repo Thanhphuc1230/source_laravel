@@ -15,8 +15,15 @@ class CheckAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && (Auth::user()->level == 1 || Auth::user()->level == 2)) {
+        if (Auth::check() && in_array(Auth::user()->level, [1, 2, 3, 4])) {
             return $next($request);
+        }
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'message' => 'Session expired. Please log in again.',
+                'redirect' => route('getLogin')
+            ], 401);
         }
 
         return redirect()->route('getLogin');

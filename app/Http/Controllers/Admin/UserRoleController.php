@@ -59,17 +59,20 @@ class UserRoleController extends Controller
         $user = User::findOrFail($id);
         $roles = $request->input('roles', []);
         $permissions = $request->input('permissions', []);
-        $assignmentType = $request->input('assignment_type', 'roles');
 
-        if ($assignmentType === 'roles') {
-            // Sync roles and clear direct permissions
-            $user->syncRoles($roles);
-            $user->syncDirectPermissions([]);
-        } else {
-            // Clear roles and sync direct permissions
-            $user->syncRoles([]);
-            $user->syncDirectPermissions($permissions);
-        }
+        // Sync roles
+        $user->syncRoles($roles);
+
+        // Get permission IDs that are already inherited from the assigned roles
+        $rolePermissionIds = \App\Models\Permission::whereHas('roles', function($q) use ($roles) {
+            $q->whereIn('id', $roles);
+        })->pluck('id')->toArray();
+
+        // Direct permissions are the ones checked but not in the inherited role permissions
+        $directPermissions = array_diff($permissions, $rolePermissionIds);
+
+        // Sync direct permissions
+        $user->syncDirectPermissions($directPermissions);
 
         // Clear cache to refresh permissions
         $user->forgetCachedPermissions();

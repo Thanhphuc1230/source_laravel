@@ -43,5 +43,4 @@ Route::prefix('admin')
         require __DIR__.'/admin/mail-config.php';
         require __DIR__.'/admin/mail-template.php';
         require __DIR__.'/admin/gallery.php';
-        require __DIR__.'/admin/site-setting.php';
     });

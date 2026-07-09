@@ -582,6 +582,31 @@ class PermissionSeeder extends Seeder
                 'group_name' => 'site_setting',
                 'description' => 'Quyền xóa cài đặt site'
             ],
+            // Font permissions (Font chữ)
+            [
+                'name' => 'font.view',
+                'display_name' => 'Xem font chữ',
+                'group_name' => 'font',
+                'description' => 'Quyền xem danh sách font chữ'
+            ],
+            [
+                'name' => 'font.create',
+                'display_name' => 'Tạo font chữ',
+                'group_name' => 'font',
+                'description' => 'Quyền tạo font chữ mới'
+            ],
+            [
+                'name' => 'font.edit',
+                'display_name' => 'Sửa font chữ',
+                'group_name' => 'font',
+                'description' => 'Quyền chỉnh sửa font chữ'
+            ],
+            [
+                'name' => 'font.delete',
+                'display_name' => 'Xóa font chữ',
+                'group_name' => 'font',
+                'description' => 'Quyền xóa font chữ'
+            ],
         ];
 
         foreach ($permissions as $permission) {

@@ -96,7 +96,13 @@ class RoleSeeder extends Seeder
             // Mail Config - đầy đủ
             'mail-config.view', 'mail-config.create', 'mail-config.edit', 'mail-config.delete',
             // Mail Template - đầy đủ
-            'mail-template.view', 'mail-template.create', 'mail-template.edit', 'mail-template.delete'
+            'mail-template.view', 'mail-template.create', 'mail-template.edit', 'mail-template.delete',
+            // Gallery - đầy đủ
+            'gallery.view', 'gallery.create', 'gallery.edit', 'gallery.delete',
+            // Site Setting - đầy đủ
+            'site_setting.view', 'site_setting.create', 'site_setting.edit', 'site_setting.delete',
+            // Font - đầy đủ
+            'font.view', 'font.create', 'font.edit', 'font.delete'
         ])->pluck('id')->toArray();
         
         $managerRole->syncPermissions($managerPermissions);
@@ -134,7 +140,13 @@ class RoleSeeder extends Seeder
             // Profile - xem và sửa
             'profile.view', 'profile.edit',
             // Chat - chỉ xem và trả lời (không quản lý)
-            'chat.view', 'chat.reply'
+            'chat.view', 'chat.reply',
+            // Gallery - xem, tạo, sửa
+            'gallery.view', 'gallery.create', 'gallery.edit',
+            // Site Setting - xem và sửa
+            'site_setting.view', 'site_setting.edit',
+            // Font - chỉ xem
+            'font.view'
         ])->pluck('id')->toArray();
         
         $staffRole->syncPermissions($staffPermissions);
@@ -180,7 +192,13 @@ class RoleSeeder extends Seeder
             // Permission - chỉ xem
             'permission.view',
             // Chat - chỉ xem
-            'chat.view'
+            'chat.view',
+            // Gallery - chỉ xem
+            'gallery.view',
+            // Site Setting - chỉ xem
+            'site_setting.view',
+            // Font - chỉ xem
+            'font.view'
         ])->pluck('id')->toArray();
         
         $viewerRole->syncPermissions($viewerPermissions);

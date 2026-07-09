@@ -214,12 +214,9 @@ trait HasRoles
         return false;
     }
 
-    /**
-     * Xóa cache permissions
-     */
     public function forgetCachedPermissions(): void
     {
-        // No cache to forget
+        Cache::forget('user_permissions_' . $this->id);
     }
 
     /**
@@ -296,12 +293,11 @@ trait HasRoles
         return [];
     }
 
-    /**
-     * Get permissions attribute properly
-     */
     public function getPermissionsAttributeAttribute()
     {
-        return $this->permissions()->pluck('name')->toArray();
+        return Cache::remember('user_permissions_' . $this->id, now()->addMinutes(60), function() {
+            return $this->permissions()->pluck('name')->toArray();
+        });
     }
 
     /**

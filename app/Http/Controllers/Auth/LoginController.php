@@ -25,7 +25,7 @@ class LoginController extends Controller
     public function getLogin()
     {
         $user = Auth::user();
-        if ($user && ($user->level == 2 || $user->level == 1)) {
+        if ($user && in_array($user->level, [1, 2, 3, 4])) {
             return redirect()->route('admin.analytics.index');
         }
         return view('auth.login');
@@ -127,7 +127,7 @@ class LoginController extends Controller
     {
         $user = Auth::user();
 
-        return ($user->level == 1 || $user->level == 2)
+        return in_array($user->level, [1, 2, 3, 4])
             ? 'admin.analytics.index'
             : 'website.home';
     }

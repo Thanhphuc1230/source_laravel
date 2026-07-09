@@ -57,11 +57,13 @@
                     </a>
                 </li>
                 @endhasPermission
+                @hasPermission('gallery.view')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.gallery.index') }}">
                         <i class="ri-gallery-line"></i> <span data-key="t-widgets">Hình ảnh</span>
                     </a>
                 </li>
+                @endhasPermission
                 @hasPermission('brand.view')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.brand.index') }}">
@@ -76,22 +78,30 @@
                     </a>
                 </li>
                 @endhasPermission
-                @hasPermission('menu.view')
+                @hasAnyPermission(['menu.view', 'font.view'])
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarLayouts" data-bs-toggle="collapse" role="button"
-                        aria-expanded="false" aria-controls="sidebarApps">
+                        aria-expanded="false" aria-controls="sidebarLayouts">
                         <i class="ri-layout-4-line"></i> <span data-key="t-layouts">Giao diện</span>
                     </a>
                     <div class="collapse menu-dropdown" id="sidebarLayouts">
                         <ul class="nav nav-sm flex-column">
+                            @hasPermission('menu.view')
                             <li class="nav-item">
                                 <a href="{{ route('admin.menu.index') }}" class="nav-link" data-key="t-calendar">Menu
                                 </a>
                             </li>
+                            @endhasPermission
+                            @hasPermission('font.view')
+                            <li class="nav-item">
+                                <a href="{{ route('admin.fonts.index') }}" class="nav-link" data-key="t-fonts">Quản lý Font
+                                </a>
+                            </li>
+                            @endhasPermission
                         </ul>
                     </div>
                 </li>
-                @endhasPermission
+                @endhasAnyPermission
                 @hasAnyPermission(['cate_product.view', 'product.view'])
                     <li class="nav-item">
                         <a class="nav-link menu-link" href="#sidebarProduct" data-bs-toggle="collapse" role="button"
@@ -215,7 +225,7 @@
                     </li>
                 @endhasAnyPermission
                 {{-- system --}}
-                @hasAnyPermission(['system.view', 'user.view'])
+                @hasAnyPermission(['system.view', 'user.view', 'role.view'])
                     <li class="nav-item">
                         <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button"
                             aria-expanded="false" aria-controls="sidebarApps">
@@ -226,8 +236,7 @@
                                 @hasPermission('system.view')
                                     <li class="nav-item">
                                         <a href="{{ route('admin.system.index') }}" class="nav-link"
-                                            data-key="t-calendar">Quản
-                                            lý hệ thống
+                                            data-key="t-calendar">Quản lý hệ thống
                                         </a>
                                     </li>
                                 @endhasPermission
@@ -235,6 +244,13 @@
                                     <li class="nav-item">
                                         <a href="{{ route('admin.user.index') }}" class="nav-link"
                                             data-key="t-user-management">Quản lý người dùng
+                                        </a>
+                                    </li>
+                                @endhasPermission
+                                @hasPermission('role.view')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.user-role.roles.index') }}" class="nav-link"
+                                            data-key="t-roles">Quản lý vai trò
                                         </a>
                                     </li>
                                 @endhasPermission

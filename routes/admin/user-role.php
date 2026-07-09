@@ -10,10 +10,10 @@ Route::prefix('user-role')->name('user-role.')->group(function () {
     Route::post('/bulk-update', [UserRoleController::class, 'bulkUpdateRoles'])->name('bulk-update')->middleware('permission:user.edit');
     
     // Role management routes
-    Route::get('/roles', [UserRoleController::class, 'roleIndex'])->name('roles.index')->middleware('permission:user.view');
-    Route::get('/roles/create', [UserRoleController::class, 'roleCreate'])->name('roles.create')->middleware('permission:user.create');
-    Route::post('/roles', [UserRoleController::class, 'roleStore'])->name('roles.store')->middleware('permission:user.create');
-    Route::get('/roles/{id}/edit', [UserRoleController::class, 'roleEdit'])->name('roles.edit')->middleware('permission:user.edit');
-    Route::put('/roles/{id}', [UserRoleController::class, 'roleUpdate'])->name('roles.update')->middleware('permission:user.edit');
-    Route::delete('/roles/{id}', [UserRoleController::class, 'roleDestroy'])->name('roles.destroy')->middleware('permission:user.delete');
+    Route::get('/roles', [UserRoleController::class, 'roleIndex'])->name('roles.index')->middleware('permission:role.view');
+    Route::get('/roles/create', [UserRoleController::class, 'roleCreate'])->name('roles.create')->middleware('permission:role.create');
+    Route::post('/roles', [UserRoleController::class, 'roleStore'])->name('roles.store')->middleware('permission:role.create');
+    Route::get('/roles/{id}/edit', [UserRoleController::class, 'roleEdit'])->name('roles.edit')->middleware('permission:role.edit');
+    Route::put('/roles/{id}', [UserRoleController::class, 'roleUpdate'])->name('roles.update')->middleware('permission:role.edit');
+    Route::delete('/roles/{id}', [UserRoleController::class, 'roleDestroy'])->name('roles.destroy')->middleware('permission:role.delete');
 });
