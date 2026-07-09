@@ -251,3 +251,14 @@ composer require laravel/pint --dev
 
 > Tham khảo thêm: [PSR-12 Standard](https://www.php-fig.org/psr/psr-12/)
 
+---
+
+### 🎨 4. Taste Skill & Design Aesthetics (Quy tắc Thẩm mỹ & Giao diện Cao cấp)
+Hệ thống này đề cao tính thẩm mỹ cao cấp (Premium UI/UX). Bất kỳ AI Assistant nào làm việc trên repository này đều phải tuân thủ nghiêm ngặt các quy tắc thiết kế:
+* **Giao diện WOW**: Sử dụng màu sắc hài hòa (HSL/RGB tinh tế, Dark/Light Mode hiện đại), Typography sang trọng (Inter, Outfit, Chakra Petch), bo góc card và nút từ `8px` đến `16px`, sử dụng hiệu ứng bóng đổ mịn (soft shadows) và viền mờ (glassmorphism).
+* **Tương tác sống động**: Tất cả các phần tử tương tác (button, link, card) bắt buộc phải có hiệu ứng hover mượt mà (`transition: all 0.3s ease-in-out`), tạo cảm giác phản hồi tức thì và sinh động.
+* **Quy trình Phát triển Trọn gói (1-Command Generator)**: Khi được giao thiết kế một website/tính năng theo một chủ đề cụ thể, AI phải tự động tạo hoàn chỉnh từ cấu trúc dữ liệu, các lớp logic nghiệp vụ (Service/Repository), giao diện quản trị (sử dụng Blade Components chuẩn của dự án) cho đến giao diện frontend được thiết kế chuyên nghiệp, đậm chất thẩm mỹ phù hợp với chủ đề đó mà không cần hỏi lại từng bước.
+* **Không dùng Placeholders**: Tuyệt đối không để ô trống hoặc nội dung mẫu vô nghĩa (như lorem ipsum). Hãy sử dụng dữ liệu mẫu thực tế, hình ảnh minh họa sinh động.
+
+Tham khảo chi tiết tại bộ quy tắc kiến trúc chuẩn: [SOURCE_STRUCTURE.md](file:///d:/laragon/www/source_laravel/SOURCE_STRUCTURE.md#8-taste-skill--design-aesthetics-quy-tac-tham-my--trai-nghiem-giao-dien-cao-cap).
+

@@ -87,11 +87,11 @@ Service Layer là nơi tập trung toàn bộ nghiệp vụ logic của hệ th�
 | **`ImageService.php`** | Xử lý Upload, Resize, Convert WebP tự động cho hình ảnh hệ thống. |
 | **`DataRemovalService.php`** | Xử lý xóa an toàn bản ghi cơ sở dữ liệu kèm dọn dẹp file hình ảnh vật lý trên ổ đĩa. |
 
-### 3.2 Cấu trúc Eloquent Models & Đa Ngôn Ngữ (`app/Models/`)
-Tất cả các Model nội dung chính (**`Product`**, **`News`**, **`CateProduct`**, **`CateNew`**, **`Page`**) đều được trang bị bộ **Dynamic Accessors** thông minh:
+### 3.2 Cấu trúc Eloquent Models & Tự Động Định Dạng Đường Dẫn Ảnh (`app/Models/`)
+Tất cả các Model nội dung chính (**`Product`**, **`News`**, **`CateProduct`**, **`CateNew`**, **`Page`**) và các model đơn lẻ đều được trang bị bộ **Dynamic Accessors** thông minh và **AutoImagePathsTrait**:
 
+1. **Đa ngôn ngữ tự động**:
 ```php
-// Ví dụ mẫu trong App\Models\Product (hoặc News, CateProduct...)
 public function getSlugAttribute() {
     $locale = app()->getLocale();
     return $this->{'slug_' . $locale} ?: ($this->slug_vn ?: $this->slug_en);
@@ -101,13 +101,17 @@ public function getNameAttribute() {
     $locale = app()->getLocale();
     return $this->{'name_' . $locale} ?: ($this->name_vn ?: $this->name_en);
 }
-
-public function getKeywordAttribute() {
-    $locale = app()->getLocale();
-    return $this->{'keyword_' . $locale} ?: ($this->keyword_vn ?: $this->keyword_en);
-}
 ```
-*Tác dụng*: Ở bất kỳ đâu (Views hay Services), khi gọi `$model->slug`, `$model->name`, `$model->keyword`, `$model->description`, hệ thống sẽ tự động trả về giá trị chuẩn theo ngôn ngữ hiện tại của ứng dụng.
+*Tác dụng*: Gọi trực tiếp `$model->slug`, `$model->name` để lấy dữ liệu đúng locale hiện tại.
+
+2. **Cơ chế phân giải ảnh tự động (`AutoImagePathsTrait`)**:
+* **Lưu trữ**: Database chỉ lưu đường dẫn tương đối (ví dụ: `images/news/1720516789.webp`).
+* **Truy xuất**: Nhờ sử dụng `AutoImagePathsTrait` trong các model, khi truy cập `$model->image` (hoặc `$model->image_vn`, `$model->image_en`, `$model->avatar`, `$system->logo`), hệ thống tự động trả về **URL tuyệt đối đầy đủ** qua hàm `asset()` (ví dụ: `http://localhost/images/news/1720516789.webp`).
+* **Ví dụ gọi hiển thị ở view**:
+```html
+<img src="{{ $item->image }}" alt="">
+```
+* **Tương thích ngược**: Trait tự động nhận diện nếu bản ghi cũ chỉ lưu tên file (ví dụ: `filename.jpg`) để phân giải đúng thư mục tương ứng theo model đó (news, product, brand, v.v.).
 
 ---
 
@@ -189,3 +193,43 @@ php artisan sitemap:generate
 
 ---
 *Tài liệu này là chuẩn mực kiến trúc duy nhất của dự án. Mọi nâng cấp tiếp theo bắt buộc phải tuân thủ các quy tắc thiết kế đã định nghĩa ở trên.*
+
+---
+
+## 8. TASTE SKILL & DESIGN AESTHETICS (QUY TẮC THẨM MỸ & TRẢI NGHIỆM GIAO DIỆN CAO CẤP)
+
+> **QUAN TRỌNG**: Khi nhận được yêu cầu phát triển một tính năng mới hoặc xây dựng một module/trang web hoàn chỉnh từ đầu, các AI Assistant **bắt buộc** phải tuân thủ bộ quy tắc thẩm mỹ giao diện cao cấp dưới đây để đảm bảo sản phẩm bàn giao có chất lượng thiết kế chuẩn Premium UI/UX.
+
+### 8.1 Quy tắc về Thiết kế Thị giác (Visual Aesthetics)
+1. **Bảng màu tinh tế (Harmonious Palette)**:
+   - Tuyệt đối không sử dụng các màu cơ bản thô cứng (đỏ nguyên bản, xanh lá nguyên bản, xanh lam nguyên bản).
+   - Hãy dùng các dải màu hiện đại, phối hợp tông màu tối giản (Sleek Dark Mode, Deep Blue Gray, Light HSL) kết hợp với màu nhấn nổi bật (Accent Colors) như tím neon, vàng hoàng hôn, xanh lục bảo ngọc.
+2. **Typography Hiện đại**:
+   - Sử dụng các font chữ hiện đại từ Google Fonts (như `Inter`, `Roboto`, `Outfit`, `Chakra Petch`) thay cho font mặc định của trình duyệt.
+   - Định nghĩa hierarchy (phân cấp chữ) rõ ràng từ `h1` đến `p`, căn chỉnh khoảng cách dòng (`line-height`) và khoảng cách chữ (`letter-spacing`) hợp lý để nâng tầm sang trọng của giao diện.
+3. **Hiệu ứng Cao cấp**:
+   - Áp dụng các kỹ thuật thiết kế hiện đại như:
+     - **Glassmorphism**: Mặt gương mờ (`background: rgba(...)`, `backdrop-filter: blur(10px)`).
+     - **Smooth Gradients**: Dải chuyển màu mượt mà trên nền hoặc tiêu đề.
+     - **Góc bo cong mềm mại**: Bo tròn từ `8px` đến `16px` cho card, button.
+     - **Shadows mịn màng**: Tránh bóng đổ đen đục, hãy dùng các bóng đổ mờ nhạt có pha màu sắc nền.
+
+### 8.2 Quy tắc về Tương tác và Chuyển động (UX & Micro-animations)
+1. **Phản hồi Tương tác (Interactive Hover & Focus)**:
+   - Tất cả các nút bấm, liên kết, thẻ card phải có hiệu ứng chuyển đổi trạng thái khi hover/click (ví dụ: phóng to nhẹ `scale(1.02)`, đổi màu nền mượt mà, chuyển màu viền).
+2. **Subtle Micro-animations**:
+   - Thêm các hoạt ảnh tinh tế sử dụng CSS transitions / animations (`all 0.3s ease-in-out`) để giao diện trông "sống động" và phản hồi tức thì với hành vi của người dùng.
+
+### 8.3 Quy tắc về Tính Hoàn thiện (No Placeholders)
+1. **Tuyệt đối không dùng Placeholders dạng ô trống/text giả**:
+   - Nếu cần ảnh minh họa, hãy sử dụng các asset chất lượng cao hoặc dùng các khối màu gradient nghệ thuật làm nền, tránh để ô vuông xám xịt hoặc chữ "No Image".
+2. **Dữ liệu mẫu chân thực (Realistic Seed Data)**:
+   - Khi seeding dữ liệu hoặc tạo demo, sử dụng tên bài viết, sản phẩm, giá cả và nội dung chân thực theo đúng chủ đề người dùng yêu cầu, không dùng text lộn xộn hoặc text lorem ipsum vô nghĩa.
+
+### 8.4 Hướng dẫn Xây dựng Module/Trang web theo Chủ đề chỉ với 1 Lệnh (Single-Command Generator Flow)
+Khi người dùng ra lệnh *"Xây dựng website/tính năng về chủ đề [X]"*, AI hãy tự động thực thi trọn vẹn luồng sau mà không cần hỏi lại từng bước:
+1. **Lên cấu trúc CSDL phù hợp**: Định nghĩa migration bảng mới kèm composite indexes đầy đủ.
+2. **Triển khai Backend**: Viết Model (tích hợp `AutoImagePathsTrait`), Repository, Request validation và Service xử lý logic nghiệp vụ.
+3. **Tạo giao diện Admin**: Sử dụng 100% các **Blade Components** (`table-wrapper`, `localized-fields`, `image-upload`) trong phần quản trị.
+4. **Tạo giao diện Frontend**: Viết các layout và component frontend với **Premium Aesthetics** (Glassmorphism, Gradients, Typography hiện đại) tương ứng với chủ đề của website [X] (Ví dụ: Chủ đề nội thất gỗ thì dùng tông màu trầm ấm của gỗ, font chữ sang trọng lịch lãm; chủ đề công nghệ thì dùng gam màu neon/dark mode hiện đại).
+
