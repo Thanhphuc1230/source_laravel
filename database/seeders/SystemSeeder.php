@@ -25,8 +25,8 @@ class SystemSeeder extends Seeder
             'instagram' => 'https://instagram.com/sample',
             'zalo' => 'https://zalo.com/sample',
 
-            'favicon' => '1719371505-logo.png',
-            'logo' => '1719371505-logo.png',
+            'favicon' => 'images/logo/1719371505-logo.png',
+            'logo' => 'images/logo/1719371505-logo.png',
             'name_vn' => 'Công ty TNHH Thương mại và Dịch vụ ',
             'description' => 'Công ty TNHH Thương mại và Dịch vụ ',
             'keyword' => 'Công ty TNHH Thương mại và Dịch vụ ',

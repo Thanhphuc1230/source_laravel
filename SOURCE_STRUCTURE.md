@@ -231,5 +231,10 @@ Khi người dùng ra lệnh *"Xây dựng website/tính năng về chủ đề 
 1. **Lên cấu trúc CSDL phù hợp**: Định nghĩa migration bảng mới kèm composite indexes đầy đủ.
 2. **Triển khai Backend**: Viết Model (tích hợp `AutoImagePathsTrait`), Repository, Request validation và Service xử lý logic nghiệp vụ.
 3. **Tạo giao diện Admin**: Sử dụng 100% các **Blade Components** (`table-wrapper`, `localized-fields`, `image-upload`) trong phần quản trị.
-4. **Tạo giao diện Frontend**: Viết các layout và component frontend với **Premium Aesthetics** (Glassmorphism, Gradients, Typography hiện đại) tương ứng với chủ đề của website [X] (Ví dụ: Chủ đề nội thất gỗ thì dùng tông màu trầm ấm của gỗ, font chữ sang trọng lịch lãm; chủ đề công nghệ thì dùng gam màu neon/dark mode hiện đại).
+4. **Tạo giao diện Frontend**: Xây dựng cấu trúc thư mục, layout, views và CSS/JS tuân thủ nghiêm ngặt theo **Blueprint Frontend chất lượng cao** tại [architect-frontend.md](file:///d:/laragon/www/source_laravel/architect-frontend.md). Áp dụng các quy tắc:
+   - Tổ chức layout: `master.blade.php`, `partials/`, `modules/`.
+   - Sử dụng hệ thống biến CSS linh hoạt quản lý màu sắc, typography (Outfit, Playfair Display) và chế độ chuyển đổi giao diện theo mùa (Spring, Summer, Autumn, Winter).
+   - Thiết kế giao diện **Premium Aesthetics** (Glassmorphism, Gradients, Black & White hover to colored) phù hợp với chủ đề [X].
+   - Sử dụng Named Route định danh: `route('web.resolve', ['slug' => $item->slug])`.
+   - Xử lý đa ngôn ngữ qua helper `lang($model, 'trường')`.
 

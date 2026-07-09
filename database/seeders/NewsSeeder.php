@@ -16,8 +16,8 @@ class NewsSeeder extends Seeder
             $newsRepo->createWithAutoSlug([
                 'name_vn' => 'Tin tức '.$i,
                 'name_en' => 'News '.$i,
-                'image_vn' => 'product-'.$i.'.webp',
-                'image_en' => 'product-'.$i.'.webp',
+                'image_vn' => 'images/news/product-'.$i.'.webp',
+                'image_en' => 'images/news/product-'.$i.'.webp',
                 'intro_vn' => 'Giới thiệu tin tức '.$i,
                 'intro_en' => 'News intro '.$i,
                 'content_vn' => 'Nội dung tin tức '.$i,
