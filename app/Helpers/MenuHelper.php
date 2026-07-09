@@ -14,9 +14,10 @@ if (!function_exists('getUrlMenu')) {
 
         switch ($item->type) {
             case 'page':
-                $slug = Page::where('id_page', $item->object_id)
+                $page = Page::where('id_page', $item->object_id)
                     ->where('status', 1)
-                    ->value('slug');
+                    ->first();
+                $slug = $page ? $page->slug : null;
 
                 if (empty($slug)) {
                     return route('web.404');
@@ -25,9 +26,10 @@ if (!function_exists('getUrlMenu')) {
                 return route('web.resolve', ['id' => $item->object_id, 'slug' => $slug]);
 
             case 'cate_new':
-                $slug = CateNew::where('id_cate_new', $item->object_id)
+                $cateNew = CateNew::where('id_cate_new', $item->object_id)
                     ->where('status', 1)
-                    ->value('slug');
+                    ->first();
+                $slug = $cateNew ? $cateNew->slug : null;
 
                 if (empty($slug)) {
                     return route('web.404');
@@ -36,9 +38,10 @@ if (!function_exists('getUrlMenu')) {
                 return route('web.resolve', ['id' => $item->object_id, 'slug' => $slug]);
 
             case 'cate_product':
-                $slug = CateProduct::where('id_cate_product', $item->object_id)
+                $cateProduct = CateProduct::where('id_cate_product', $item->object_id)
                     ->where('status', 1)
-                    ->value('slug');
+                    ->first();
+                $slug = $cateProduct ? $cateProduct->slug : null;
 
                 if (empty($slug)) {
                     return route('web.404');

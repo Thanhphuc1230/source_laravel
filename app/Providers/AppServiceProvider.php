@@ -7,6 +7,8 @@ use App\Models\CateProduct;
 use App\Models\Menu;
 use App\Models\Page;
 use App\Models\System;
+use App\Models\Slider;
+use App\Models\Product;
 use App\Services\CartService;
 use App\View\Composers\FrontendComposer;
 use Illuminate\Pagination\Paginator;
@@ -32,5 +34,15 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrapFive();
 
         View::composer('frontend.*', FrontendComposer::class);
+
+        // Clear frontend cache dynamically when data changes
+        $clearFrontendCache = function() {
+            Cache::forget('frontend_global_data');
+        };
+
+        foreach ([System::class, Menu::class, Slider::class, CateProduct::class, CateNew::class, Page::class, Product::class] as $model) {
+            $model::saved($clearFrontendCache);
+            $model::deleted($clearFrontendCache);
+        }
     }
 }
