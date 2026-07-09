@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\AutoImagePathsTrait;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Slider extends Model
 {
-    use Cachable, HasFactory;
+    use AutoImagePathsTrait, Cachable, HasFactory;
 
     protected $table = 'tp_sliders';
 

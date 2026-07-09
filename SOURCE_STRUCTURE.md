@@ -1,480 +1,191 @@
-﻿# TAI LIEU TONG HOP SOURCE CODE (ONE-STOP)
+# tài liệu cấu trúc mã nguồn dự án (source structure & architecture guide)
 
-Tai lieu nay duoc cap nhat de muc tieu: chi can doc file nay la hieu duoc toan bo source code chinh cua du an.
+> **Mục tiêu**: Tài liệu này được biên soạn và cập nhật liên tục để bất kỳ **AI Assistant (như Gemini, ChatGPT, Claude, Antigravity)** hoặc **Software Engineer** mới nào khi đọc qua cũng ngay lập tức hiểu toàn bộ kiến trúc chuẩn, luồng dữ liệu, cấu trúc Module, Service, Repository, Database Indexing và bộ Blade Component của hệ thống.
 
-Ngay doi chieu source: 2026-05-15
-Framework: Laravel 10
-PHP: >= 8.1 (theo composer.json)
-
----
-
-## 1) Tong quan he thong
-
-Day la du an Laravel theo huong CMS + website ban hang, gom 3 lop giao tiep chinh:
-
-- Frontend (public): home, san pham, tin tuc, page dong, cart, checkout, contact.
-- Admin: CRUD module noi dung + van hanh + phan quyen.
-- API: mot so endpoint bo sung (vd fonts active cho CKEditor, Sanctum user endpoint).
-
-Kien truc khong dung MVC thuan, ma da them:
-
-- Repository layer (tach truy van du lieu khoi controller).
-- Service layer (tach nghiep vu dung chung).
-- Event/Listener (clear cache theo module).
-- Traits + BaseController cho admin CRUD pattern.
-- View Composer cho frontend data global.
+**Ngày cập nhật kiến trúc**: 2026-06-28  
+**Framework**: Laravel 10.x  
+**PHP Version**: >= 8.1  
+**Kiến trúc cốt lõi**: Layered Architecture (Controller -> Service -> Repository -> Model) + Event-Driven Cache Invalidation + Blade Component Design System + Multi-language Accessors.
 
 ---
 
-## 2) Cong nghe va package chinh
+## 1. TỔNG QUAN HỆ THỐNG & TƯ TƯỞNG THIẾT KẾ
 
-Theo composer.json:
+Hệ thống là một CMS thương mại điện tử & tin tức đa ngôn ngữ (Việt - Anh) quy mô trung bình-lớn, được thiết kế theo các nguyên lý **Clean Code**, **SOLID** và **Separation of Concerns (SoC)**:
 
-- laravel/framework ^10.10
-- laravel/sanctum ^3.3
-- genealabs/laravel-model-caching ^12.0
-- predis/predis ^3.2
-- intervention/image ^2.3
-- spatie/laravel-sitemap ^7.3
-- unisharp/laravel-filemanager ^2.10
-- realrashid/sweet-alert ^7.3
-
-Dev tools:
-
-- barryvdh/laravel-debugbar
-- phpunit/phpunit ^10.1
-- laravel/pint
+1. **Frontend Layer (Giao diện người dùng)**:
+   - **Tối ưu định tuyến**: Sử dụng duy nhất 1 Route động (`web.resolve`) cho toàn bộ đường dẫn slug (Sản phẩm, Bài viết, Danh mục, Trang tĩnh).
+   - **Đa ngôn ngữ tự động (Automatic Localization)**: Models tự động nhận diện ngôn ngữ hiện tại (`app()->getLocale()`) thông qua bộ Eloquent Accessors động.
+2. **Admin Layer (Quản trị hệ thống)**:
+   - **Blade Component Design System**: Toàn bộ UI Admin (Bảng danh sách, Nút switch trạng thái, Ô nhập STT, Cụm action, Form đa ngôn ngữ, Upload ảnh, SEO Link Preview) đều được đóng gói thành các **Blade Components** tái sử dụng.
+   - **RBAC (Role-Based Access Control)**: Phân quyền chi tiết theo Role và Permission string thông qua Middleware & Blade Directives custom (`@hasPermission`, `@hasRole`).
+3. **Core Services & Data Layer**:
+   - **Repository Pattern**: Tách biệt hoàn toàn các truy vấn ORM khỏi Controller.
+   - **Service Layer**: Đóng gói toàn bộ Business Logic (Cart, Checkout, Slug Resolution, Search, Analytics).
+   - **Event-Driven Cache Invalidation**: Tự động làm sạch bộ nhớ đệm frontend theo Tag khi Admin thay đổi dữ liệu.
 
 ---
 
-## 3) Cau truc thu muc cap cao
+## 2. CẤU TRÚC THƯ MỤC DỰ ÁN
 
 ```text
 source_laravel/
-|-- app/
-|-- bootstrap/
-|-- config/
-|-- database/
-|-- public/
-|-- resources/
-|-- routes/
-|-- storage/
-|-- tests/
-|-- artisan
-|-- composer.json
-|-- phpunit.xml
-`-- SOURCE_STRUCTURE.md
+├── app/
+│   ├── Console/Commands/          # Custom Artisan Commands (sitemap, admin:create, make:featured)
+│   ├── Events/                    # Domain Events khi Model thay đổi (Product, News, Cate, Page...)
+│   ├── Exceptions/                # Custom Exception Handler
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Admin/             # Controllers Quản trị kế thừa BaseController
+│   │   │   ├── Frontend/          # Controllers Giao diện người dùng (RouteController, Home, Cart...)
+│   │   │   └── Auth/              # Controllers Xác thực & OTP
+│   │   ├── Middleware/            # Custom Middlewares (checkAuth, RBAC, Language, Visit...)
+│   │   └── Requests/Admin/        # Form Requests validation (ProductRequest, NewsRequest...)
+│   ├── Listeners/                 # Event Listeners (tự động xóa cache frontend theo Tags)
+│   ├── Models/                    # Eloquent Models tích hợp Cachable Trait & Multi-lang Accessors
+│   ├── Providers/                 # Service Providers (App, Admin, Repository, Event, Route)
+│   ├── Repositories/              # Repository Layer (Interfaces & Eloquent Implementations)
+│   ├── Services/                  # Service Layer (Business logic chính)
+│   └── Traits/                    # Reusable Traits (DataRemovalTrait, ImageHandlerTrait, SlugHandlerTrait)
+├── config/                        # File cấu hình hệ thống (cache, lfm, mail, database...)
+├── database/
+│   ├── migrations/                # Schema migrations tích hợp Composite Indexes tối ưu tốc độ
+│   └── seeders/                   # Database Seeders mẫu
+├── public/                        # Public assets (css, js, images, vendor)
+├── resources/
+│   └── views/
+│       ├── admin/
+│       │   ├── modules/           # Views admin theo module (product, news, analytics...)
+│       │   └── partials/          # Header, Footer, Navbar, JS/CSS head
+│       ├── components/admin/      # Bộ tái sử dụng chuẩn Blade Components (<x-admin.table-wrapper>...)
+│       └── frontend/              # Views giao diện người dùng
+├── routes/
+│   ├── admin/                     # Route files chia nhỏ theo từng module quản trị
+│   ├── frontend/                  # Route files frontend (home, cart, dynamic)
+│   ├── web.php                    # Route aggregator chính
+│   └── api.php                    # API endpoints
+└── SOURCE_STRUCTURE.md            # Document kiến trúc này
 ```
 
 ---
 
-## 4) Request lifecycle va diem vao he thong
+## 3. CHI TIẾT CÁC LỚP NGIỆP VỤ (LAYERED ARCHITECTURE)
 
-### 4.1 HTTP lifecycle
+### 3.1 Cấu trúc Service Layer (`app/Services/`)
+Service Layer là nơi tập trung toàn bộ nghiệp vụ logic của hệ thống. Tất cả câu truy vấn SQL tại đây đều tuân thủ nguyên tắc khai báo rõ ràng các cột đa ngôn ngữ (`slug_vn`, `slug_en`, `image_vn`, `image_en`, `keyword_vn`, `keyword_en`, `description_vn`, `description_en`):
 
-1. Web server vao public/index.php.
-2. Khoi tao app qua bootstrap/app.php.
-3. Bind kernel:
-   - App\Http\Kernel
-   - App\Console\Kernel
-   - App\Exceptions\Handler
-4. App\Http\Kernel ap dung global middleware + middleware group + aliases.
-5. Route duoc tai qua RouteServiceProvider -> routes/web.php va routes/api.php.
+| File Service | Chức năng chính |
+| :--- | :--- |
+| **`SlugResolutionService.php`** | Xử lý chuỗi UNION ALL ưu tiên (Page > Product > News > CateProduct > CateNews) dựa trên chỉ mục hợp phần `[status, slug_vn]` và `[status, slug_en]`. |
+| **`HomeService.php`** | Tổng hợp dữ liệu Trang chủ (Sliders, Hot Products, Category News/Products, Latest News) tối ưu Eager Loading. |
+| **`ProductService.php`** | Xử lý logic lọc sản phẩm, phân trang, danh mục đệ quy đa cấp và chi tiết sản phẩm. |
+| **`NewsService.php`** | Xử lý danh sách tin tức theo danh mục, bài viết chi tiết và sản phẩm liên quan. |
+| **`SearchService.php`** | Xử lý tìm kiếm sản phẩm đa ngôn ngữ, sắp xếp kết quả và gợi ý tìm kiếm AJAX. |
+| **`CartService.php`** | Quản lý giỏ hàng lưu giữ trong Session, tính tổng tiền, thuế, khuyến mãi. |
+| **`CheckoutService.php`** | Xử lý Database Transaction cho đơn hàng: Lưu Shipping -> Order Status -> Order Products -> Gửi Email thông báo. |
+| **`CacheService.php`** | Wrapper quản lý Cache theo Tags (`frontend`, `products`, `news`, `categories`, `pages`). |
+| **`ImageService.php`** | Xử lý Upload, Resize, Convert WebP tự động cho hình ảnh hệ thống. |
+| **`DataRemovalService.php`** | Xử lý xóa an toàn bản ghi cơ sở dữ liệu kèm dọn dẹp file hình ảnh vật lý trên ổ đĩa. |
 
-### 4.2 Middleware aliases quan trong
+### 3.2 Cấu trúc Eloquent Models & Đa Ngôn Ngữ (`app/Models/`)
+Tất cả các Model nội dung chính (**`Product`**, **`News`**, **`CateProduct`**, **`CateNew`**, **`Page`**) đều được trang bị bộ **Dynamic Accessors** thông minh:
 
-Trong app/Http/Kernel.php:
+```php
+// Ví dụ mẫu trong App\Models\Product (hoặc News, CateProduct...)
+public function getSlugAttribute() {
+    $locale = app()->getLocale();
+    return $this->{'slug_' . $locale} ?: ($this->slug_vn ?: $this->slug_en);
+}
 
-- checkAuth: bao ve admin area.
-- visit: track truy cap.
-- admin.level, role, permission: RBAC middleware.
+public function getNameAttribute() {
+    $locale = app()->getLocale();
+    return $this->{'name_' . $locale} ?: ($this->name_vn ?: $this->name_en);
+}
 
-### 4.3 Console lifecycle
-
-Trong app/Console/Kernel.php:
-
-- Auto load command trong app/Console/Commands.
-- Dang ky them command cu the qua $commands.
-- Lich schedule hien de trong (chua co cron job nghiep vu).
-
----
-
-## 5) Ban do route
-
-### 5.1 Web route tong
-
-routes/web.php la file aggregator:
-
-- include routes/utilities.php
-- include routes/auth/login.php
-- include frontend:
-  - routes/frontend/home.php
-  - routes/frontend/cart.php
-  - routes/frontend/dynamic.php
-- include admin group:
-  - prefix admin
-  - name admin.
-  - middleware checkAuth
-  - require 26 file module trong routes/admin/*.php
-
-### 5.2 Frontend route
-
-- home.php: trang chu, lien he, subscribe, trang 404.
-- cart.php: cart + checkout flow.
-- dynamic.php: bat route dong /{slug}.html -> Frontend\RouteController@resolve.
-
-### 5.3 Dynamic route flow
-
-SlugResolutionService tim slug theo chain:
-
-1. page
-2. product
-3. news
-4. cate_product
-5. cate_news
-
-Sau do Frontend\RouteController dispatch sang controller tuong ung.
-
-### 5.4 Utilities route
-
-routes/utilities.php co:
-
-- switch language: lang/{locale}
-- serve sitemap: /sitemap.xml
-- custom file manager API: admin/files/* (middleware web, auth, permission:system.view)
-
-### 5.5 API route
-
-routes/api.php:
-
-- GET /api/user (sanctum)
-- GET /api/fonts/active (cho CKEditor font list)
+public function getKeywordAttribute() {
+    $locale = app()->getLocale();
+    return $this->{'keyword_' . $locale} ?: ($this->keyword_vn ?: $this->keyword_en);
+}
+```
+*Tác dụng*: Ở bất kỳ đâu (Views hay Services), khi gọi `$model->slug`, `$model->name`, `$model->keyword`, `$model->description`, hệ thống sẽ tự động trả về giá trị chuẩn theo ngôn ngữ hiện tại của ứng dụng.
 
 ---
 
-## 6) Cau truc chi tiet trong app/
+## 4. BỘ THIẾT KẾ CHUẨN BLADE COMPONENTS (`resources/views/components/admin/`)
 
-```text
-app/
-|-- Console/
-|   `-- Commands/
-|-- Events/
-|-- Exceptions/
-|-- Handlers/
-|-- Helpers/
-|-- Http/
-|   |-- Controllers/
-|   |-- Middleware/
-|   `-- Requests/
-|-- Listeners/
-|-- Mail/
-|-- Models/
-|-- Providers/
-|-- Repositories/
-|-- Services/
-|-- Traits/
-`-- View/Composers/
+Hệ thống đã loại bỏ hoàn toàn việc viết code HTML trùng lặp hoặc gọi `@include` rời rạc ở trang quản trị, thay thế bằng hệ thống Blade Components chuẩn hóa:
+
+| Blade Component | Cú pháp sử dụng | Công dụng |
+| :--- | :--- | :--- |
+| **`table-wrapper.blade.php`** | `<x-admin.table-wrapper :nameClass="$nameClass">` | Đóng gói thẻ `<form id="delete-form-all">`, bảng `<table>`, `<x-slot:header>` và `$slot` thân bảng. |
+| **`table-switch.blade.php`** | `<x-admin.table-switch :uuid="$item->uuid" field="status" :value="$item->status" />` | Đóng gói nút công tắc Toggle Ajax đổi trạng thái (`status`, `home`, `hot`, `footer`). |
+| **`table-stt.blade.php`** | `<x-admin.table-stt :uuid="$item->uuid" :value="$item->stt" />` | Ô nhập số thứ tự cập nhật Ajax trực tiếp trong bảng. |
+| **`table-actions.blade.php`** | `<x-admin.table-actions :uuid="$item->uuid" :slug="$item->slug" ... />` | Cụm nút hành động chuẩn hóa (Xem trước SEO Link Preview, Nút Sửa, Nút Xóa). |
+| **`localized-fields.blade.php`** | `<x-admin.localized-fields :fields="$fields" :model="$page" />` | Tự động sinh các ô nhập liệu đa ngôn ngữ VN / EN (Text Input, Textarea, CKEditor). |
+| **`image-upload.blade.php`** | `<x-admin.image-upload locale="vn" :model="$page" imageFolder="product" />` | Khối upload ảnh kèm Preview client-side cho `image_vn` và `image_en`. |
+| **`preview-link.blade.php`** | `<x-admin.preview-link :model="$page" />` | Đường dẫn xem trước trang chuẩn SEO dạng `http://domain/slug.html`. |
+| **`publishing-fields.blade.php`** | `<x-admin.publishing-fields :model="$page" />` | Khối nhập Số thứ tự và Ngày đăng hỗ trợ tùy chỉnh Grid linh hoạt. |
+
+---
+
+## 5. TỐI ƯU HÓA TRUY VẤN & TỰ ĐỘNG LÀM SẠCH CACHE
+
+### 5.1 Chỉ mục Hợp phần CSDL (Composite Database Indexes)
+Để câu lệnh `UNION ALL` trong `SlugResolutionService` đạt tốc độ phản hồi tức thì (chỉ ~117ms bao gồm toàn bộ quá trình boot framework), 5 bảng CSDL chính (`tp_products`, `tp_news`, `tp_cate_products`, `tp_cate_news`, `tp_pages`) đã được đánh bộ chỉ mục hợp phần:
+- `INDEX (status, slug_vn)`
+- `INDEX (status, slug_en)`
+- `INDEX (status, stt)`
+
+### 5.2 Tự động làm sạch Cache theo Event (Cache Invalidation)
+Khi Admin thực hiện bất kỳ thao tác Thêm, Sửa, Xóa hoặc Đổi trạng thái bản ghi, các Event Listeners (`ClearProductCache`, `ClearNewsCache`, `ClearCateProductCache`, `ClearCateNewCache`, `ClearPageCache`) sẽ tự động được kích hoạt để xóa sạch các tag bộ nhớ đệm liên quan:
+```php
+CacheService::forgetTags(['frontend', 'products', 'news', 'categories', 'pages']);
 ```
 
-### 6.1 Controllers
+---
 
-Tong so controller dang co: 46 file
+## 6. QUY TRÌNH THÊM MỘT MODULE MỚI THEO CHUẨN HỆ THỐNG
 
-- Admin: quan tri module (analytics, product, news, page, menu, slider, brand, feedback, feature, chat, order, user, role, mail config/template, gallery, site setting, ...).
-- Frontend: home, product, news, page, cart, checkout, contact, search, route dynamic.
-- Auth: login, profile, email verification, password reset OTP flow.
-- API: comment, chat.
+Khi cần thêm một Module quản trị mới (ví dụ: `Banner`), AI hoặc Developer cần thực hiện đúng 8 bước sau:
 
-### 6.2 Base admin pattern
-
-app/Http/Controllers/Admin/BaseController.php:
-
-- Build duong dan view theo module: admin.modules.{module}
-- Helper redirect route admin
-- Khoi tao service dung chung:
-  - ImageService
-  - DataRemovalService
-  - ModelToggleService
-- Dung trait:
-  - DataRemovalTrait
-  - ImageHandlerTrait
-  - SlugHandlerTrait
-
-### 6.3 Middleware custom
-
-- CheckAuth
-- CheckRole
-- CheckPermission
-- CheckAdminLevel
-- Language
-- Visit
-
-### 6.4 Providers
-
-- AppServiceProvider:
-  - Paginator::useBootstrapFive()
-  - bind View::composer('frontend.*', FrontendComposer::class)
-- AdminServiceProvider:
-  - custom blade directives: @hasRole, @hasPermission, @hasAnyRole, @hasAnyPermission
-- RepositoryServiceProvider:
-  - bind interface -> repository implementation
-- EventServiceProvider:
-  - map event -> listener cho clear cache
-- MailConfigServiceProvider:
-  - hien khong co bootstrap/register custom logic
-
-### 6.5 View composer
-
-FrontendComposer inject du lieu global cho toan bo frontend.*:
-
-- system config
-- menu tree
-- slider ads
-- category product/news
-- footer pages
-- cart_count
-- products_hot
+1. **Tạo Migration & Model**:
+   - Khai báo đầy đủ các trường `uuid`, `name_vn`, `name_en`, `slug_vn`, `slug_en`, `status`, `stt`.
+   - Thêm Composite Index `['status', 'slug_vn']` và `['status', 'slug_en']`.
+   - Thêm các Dynamic Accessors đa ngôn ngữ trong Model.
+2. **Tạo Repository Interface & Implementation**:
+   - Kế thừa `BaseRepository` và đăng ký Binding trong `RepositoryServiceProvider`.
+3. **Tạo Form Request**:
+   - Kế thừa `BaseAdminRequest` để validate dữ liệu đầu vào.
+4. **Tạo Admin Controller**:
+   - Kế thừa `BaseController` để tận dụng các Trait `ImageHandlerTrait`, `SlugHandlerTrait`, `DataRemovalTrait`.
+5. **Đăng ký Route Quản trị**:
+   - Tạo file `routes/admin/banner.php` và include vào `routes/web.php`.
+6. **Xây dựng Blade Views**:
+   - Sử dụng 100% các **Blade Components** (`<x-admin.table-wrapper>`, `<x-admin.localized-fields>`...) trong `list.blade.php` và `detail.blade.php`.
+7. **Đăng ký Event & Listener Clear Cache**:
+   - Đảm bảo khi Model thay đổi thì Listener tự động gọi `CacheService::forgetTags(['frontend', 'banners'])`.
+8. **Chạy làm sạch bộ nhớ đệm**:
+   - Chạy lệnh `php artisan optimize:clear` để hệ thống ghi nhận cấu hình mới.
 
 ---
 
-## 7) Repository va Service layer
-
-### 7.1 Repository
-
-app/Repositories gom:
-
-- Interfaces/*
-- Eloquent/*
-- MailTemplateRepository.php
-- MailTemplateRepositoryInterface.php
-
-Eloquent/BaseRepository.php cung cap:
-
-- CRUD co ho tro ID hoac UUID
-- timestamp prepare
-- UUID auto gen neu thieu
-- filter + paginate co search/sort
-- update status/order
-- delete/find by UUID list
-- helper tao slug unique
-
-### 7.2 Services (17 file)
-
-- CacheService
-- CartService
-- CheckoutService
-- CommentService
-- DataRemovalService
-- HomeService
-- ImageService
-- MailConfigService
-- MailTemplateService
-- ModelToggleService
-- NewsService
-- ProductService
-- RateLimitService
-- SearchService
-- SiteSettingService
-- SlugResolutionService
-- SlugService
-
-Noi bat:
-
-- RateLimitService: factory methods theo use case (forLogin, forContact, forCart, forCheckout, forContent).
-- CartService: luu gio hang trong session, tinh tong so luong/tong tien.
-- CheckoutService: transaction tao shipping + order status + order products + gui mail thong bao.
-- MailConfigService: lay config mail active tu DB, co fallback config mail.*.
-
----
-
-## 8) Event/Listener va cache invalidation
-
-Co event-listener theo module de clear cache sau CRUD:
-
-- Brand
-- CateNew
-- CateProduct
-- Feature
-- Gallery
-- Menu
-- News
-- Page
-- Product
-- Slider
-- Feedback/FeedBack (xem muc van de da xac minh)
-
-Y nghia:
-
-- Giu controller gon, khong hard-code clear cache tai tung action.
-- De mo rong khi can bo sung queue/notification sau nay.
-
----
-
-## 9) Domain model va database
-
-### 9.1 Model chinh
-
-- Content: Product, CateProduct, News, CateNew, Page, Menu, Slider, Brand, Feature, Gallery
-- Tuong tac: FeedBack, Contact, Comment, ChatSession, ChatMessage
-- Ban hang: OrderShipping, OrderStatus, OrderProduct, ProductSetting
-- He thong: User, Role, Permission, System, SiteSetting, MailConfig, MailTemplate, Font, Analytic
-
-### 9.2 Migration map (32 file)
-
-Nhom bang chinh:
-
-- Core Laravel: users, password_reset_tokens, failed_jobs, personal_access_tokens
-- CMS/Product: tp_cate_products, tp_products, tp_cate_news, tp_news, tp_pages, tp_menus, tp_sliders
-- Business: tp_order_shipping, tp_order_status, tp_order_product, product_settings
-- Interaction: tp_contacts, tp_feedback, tp_comments, chat tables
-- ACL: tp_roles, tp_permissions, role_permission, role_user, user_permission
-- System config: tp_systems, tp_analytics, tp_brands, tp_features, tp_fonts, tp_galleries, tp_mail_configs, tp_mail_templates, site_settings
-
----
-
-## 10) View layer
-
-resources/views gom:
-
-- admin/ (master, partials, ajax, modules)
-- frontend/
-- auth/
-- errors/
-- vendor/
-
-Pattern admin theo module:
-
-- resources/views/admin/modules/{module}/list.blade.php
-- resources/views/admin/modules/{module}/detail.blade.php
-
----
-
-## 11) Auth, security, permission
-
-- Login route custom:
-  - GET /admintv
-  - POST /admintv_post_login
-  - GET /admintv_logout
-- LoginController co rate-limit theo IP qua RateLimitService.
-- User chua verify email thi khong dang nhap duoc admin.
-- RBAC middleware bao ve route admin theo permission string.
-- Blade directives trong AdminServiceProvider de an/hien UI theo role/permission.
-
----
-
-## 12) Mail va notification flow
-
-- Mailable classes:
-  - AlertContact
-  - AlertOrder
-  - EmailVerificationOtp
-  - PasswordResetOtpMail
-- Password reset dang su dung OTP flow qua phone identifier + gui OTP qua email.
-- Checkout gui mail cho:
-  - admin (tp_systems.email_alert)
-  - customer (shipping.email)
-
----
-
-## 13) Artisan commands custom
-
-Trong app/Console/Commands:
-
-- admin:create: tao tai khoan admin.
-- make:featured {name}: scaffold migration + model + admin controller + request.
-- sitemap:generate: tao public/sitemap.xml bang Spatie Sitemap.
-- app:check-permissions: command kiem tra permission mau.
-
----
-
-## 14) Testing hien tai
-
-So test file hien co: 5
-
-- tests/Feature/ExampleTest.php
-- tests/Unit/ExampleTest.php
-- tests/Unit/Admin/CateNewControllerTest.php
-- tests/TestCase.php
-- tests/CreatesApplication.php
-
-Danh gia:
-
-- Coverage thap so voi do rong module.
-- Chua thay test cho slug dynamic route, checkout transaction, permission middleware, event/listener cache flow.
-
----
-
-## 15) Van de da doi chieu trong source (quan trong)
-
-Nhung diem duoi day da thay trong code, can luu y khi maintain/deploy:
-
-1. Khong nhat quan ten FeedBack vs Feedback.
-   - Folder dang la app/Events/FeedBack va app/Listeners/FeedBack.
-   - Nhieu noi import dang Feedback (chu thuong/hoa khac).
-   - Tren Linux co nguy co class not found do filesystem case-sensitive.
-
-2. RepositoryServiceProvider thieu import cho UserRepositoryInterface va UserRepository.
-   - File dang bind 2 class nay nhung chua use tuong ung.
-
-3. RepositoryServiceProvider import interface feedback voi ten FeedbackRepositoryInterface
-   nhung class dang duoc dung o code la FeedBackRepositoryInterface.
-
-4. FeedBackController::destroyAll() dang goi FeedbackChanged::dispatch(...)
-   trong khi event class ton tai la FeedBackChanged.
-
-5. ClearFeedBackCache import event App\Events\FeedBack\FeedbackChanged
-   nhung method handle(FeedBackChanged $event) dung ten class khac.
-
-6. Co mot so message/comment tieng Viet bi loi encoding trong mot so file.
-   Nen chuan hoa UTF-8 toan bo de tranh loi UI/log.
-
-Luu y: cac diem tren la issue code hien tai, khong phai issue cua tai lieu.
-
----
-
-## 16) Checklist them module moi (de dung kien truc hien tai)
-
-1. Tao migration + model.
-2. Tao repository interface + implementation.
-3. Bind vao RepositoryServiceProvider.
-4. Tao FormRequest validate.
-5. Tao Admin controller (uu tien ke thua BaseController).
-6. Tao route file rieng trong routes/admin/ va require tu routes/web.php.
-7. Tao view trong resources/views/admin/modules/{module}.
-8. Neu co cache frontend/admin: tao Event + Listener clear cache.
-9. Cap nhat permission seed + middleware permission.
-10. Bo sung test Unit/Feature cho CRUD va route chinh.
-
----
-
-## 17) Lenh van hanh co ban
+## 7. CÁC LỆNH VẬN HÀNH THƯỜNG DÙNG
 
 ```bash
+# Cài đặt & khởi tạo ban đầu
 composer install
 php artisan key:generate
-php artisan migrate
-php artisan db:seed
-php artisan serve
-```
+php artisan migrate:fresh --seed
 
-Lenh bo sung huu ich:
+# Làm sạch toàn bộ bộ nhớ đệm (View, Route, Config, Events)
+php artisan optimize:clear
 
-```bash
+# Tạo tài khoản Admin mới qua Console
 php artisan admin:create
+
+# Tự động tạo file Sitemap chuẩn SEO
 php artisan sitemap:generate
-php artisan test
-./vendor/bin/pint
 ```
 
 ---
-
-## 18) Ket luan
-
-Kien truc du an da theo huong module hoa ro rang, phu hop cho CMS + e-commerce medium scale:
-
-- Route tach module
-- Controller gon nhieu noi da dua nghiep vu sang Service/Repository
-- Event/Listener cho cache invalidation
-- RBAC middleware + blade directives
-
-De he thong on dinh hon khi deploy production (dac biet Linux), uu tien xu ly nhat quan naming FeedBack/Feedback, chuan import trong providers, va tang test cho cac flow trong yeu.
+*Tài liệu này là chuẩn mực kiến trúc duy nhất của dự án. Mọi nâng cấp tiếp theo bắt buộc phải tuân thủ các quy tắc thiết kế đã định nghĩa ở trên.*

@@ -28,8 +28,8 @@
     @if (!empty($currentImage))
         <div class="mb-3" style="display:flex;flex-direction: column;">
             <label class="form-label">{{ $label }} {{ strtoupper($locale) }} hiện tại</label>
-            <img src="{{ asset('images/' . $imageFolder . '/' . $currentImage) }}" 
-                 alt="" width="250px" height="300" style="object-fit: contain;">
+            <img src="{{ $currentImage }}" 
+                  alt="" width="250px" height="300" style="object-fit: contain;">
         </div>
     @endif
 </div>

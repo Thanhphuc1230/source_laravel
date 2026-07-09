@@ -90,7 +90,7 @@
                                                             <td><input class="form-check-input" type="checkbox"
                                                                     name="uuids[]" value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}"
+                                                            <td><img src="{{ $item->image }}"
                                                                     alt="" style="height: 100px;"></td>
                                                             <td>{{ $item->name_vn }} @if ($item->category_id != 0)
                                                                     <br> <span class="text-muted">Danh mục:

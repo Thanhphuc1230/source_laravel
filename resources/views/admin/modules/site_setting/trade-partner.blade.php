@@ -69,7 +69,7 @@
                                            value="{{ $settings['trade_partner_image'] ?? '' }}">
                                     <div class="mt-2" id="tradePartnerImagePreview">
                                         @if(isset($settings['trade_partner_image']) && $settings['trade_partner_image'])
-                                            <img src="{{ asset('images/site_setting/' . $settings['trade_partner_image']) }}" 
+                                            <img src="{{ str_starts_with($settings['trade_partner_image'], 'images/') ? asset($settings['trade_partner_image']) : asset('images/site_setting/' . $settings['trade_partner_image']) }}" 
                                                  alt="Trade Partner Image" class="img-thumbnail" style="max-width: 400px; max-height: 300px;">
                                         @endif
                                     </div>

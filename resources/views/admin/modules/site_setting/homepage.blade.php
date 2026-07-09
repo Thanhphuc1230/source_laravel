@@ -50,7 +50,7 @@
                                     <input type="hidden" name="settings[hero_image]" id="heroImagePath" value="{{ $settings['hero_image'] ?? '' }}">
                                     <div class="mt-2" id="heroImagePreview">
                                         @if(isset($settings['hero_image']) && $settings['hero_image'])
-                                            <img src="{{ asset('images/site_setting/' . $settings['hero_image']) }}" alt="Hero Image" class="img-thumbnail" style="max-width: 300px; max-height: 200px;">
+                                            <img src="{{ str_starts_with($settings['hero_image'], 'images/') ? asset($settings['hero_image']) : asset('images/site_setting/' . $settings['hero_image']) }}" alt="Hero Image" class="img-thumbnail" style="max-width: 300px; max-height: 200px;">
                                         @endif
                                     </div>
                                 </div>

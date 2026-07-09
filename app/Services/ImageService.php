@@ -45,13 +45,13 @@ class ImageService
 
             // Xử lý chuyển đổi WebP nếu được yêu cầu
             if (isset($options['convertToWebp']) && $options['convertToWebp']) {
-                return $this->handleWebpConversion($file, $imageFolder, $fileName, $options);
+                $fileName = $this->handleWebpConversion($file, $imageFolder, $fileName, $options);
             } else {
                 // Lưu file gốc nếu không chuyển WebP
                 $file->move(public_path("images/{$imageFolder}"), $fileName);
             }
 
-            return $fileName;
+            return "images/{$imageFolder}/{$fileName}";
         } catch (Exception $e) {
             throw $e;
         }
@@ -72,7 +72,7 @@ class ImageService
     public function updateImage($request, $model, string $imageFolder, string $fieldName, array $options = [])
     {
         if (! $request->hasFile($fieldName)) {
-            return $model->$fieldName;
+            return method_exists($model, 'getRawOriginal') ? $model->getRawOriginal($fieldName) : $model->$fieldName;
         }
 
         try {
@@ -98,13 +98,36 @@ class ImageService
             return false;
         }
 
-        $filePath = public_path("images/{$imageFolder}/{$fileName}");
+        $filePath = $this->getPhysicalPath($fileName, $imageFolder);
 
         if (File::exists($filePath)) {
             return File::delete($filePath);
         }
 
         return false;
+    }
+
+    /**
+     * Lấy đường dẫn vật lý trên server từ tên file, đường dẫn tương đối hoặc URL tuyệt đối
+     */
+    private function getPhysicalPath($fileName, string $imageFolder): string
+    {
+        if (filter_var($fileName, FILTER_VALIDATE_URL)) {
+            $path = parse_url($fileName, PHP_URL_PATH);
+            $search = "images/";
+            $pos = strpos($path, $search);
+            if ($pos !== false) {
+                $relativePath = substr($path, $pos);
+                return public_path($relativePath);
+            }
+            return public_path(ltrim($path, '/'));
+        }
+
+        if (str_starts_with($fileName, 'images/')) {
+            return public_path($fileName);
+        }
+
+        return public_path("images/{$imageFolder}/{$fileName}");
     }
 
     /**
@@ -421,7 +444,7 @@ class ImageService
             $quality = $options['quality'] ?? 80;
             $this->convertToWebp($file->getPathname(), $targetPath, $quality);
 
-            return $fileName;
+            return "images/{$imageFolder}/{$fileName}";
         } catch (Exception $e) {
             throw $e;
         }

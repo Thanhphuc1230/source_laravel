@@ -178,7 +178,7 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Favicon</label>
-                                                <img src="{{ asset('images/logo/' . $system->favicon) }}" alt="favicon"
+                                                <img src="{{ $system->favicon }}" alt="favicon"
                                                     width="48px">
                                                 @error('favicon')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -188,7 +188,7 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label for="firstNameinput" class="form-label">Logo(200x100)</label>
-                                                <img src="{{ asset('images/logo/' . $system->logo) }}" alt="logo"
+                                                <img src="{{ $system->logo }}" alt="logo"
                                                     width="150px">
                                                 @error('logo')
                                                     <span class="text-danger">{{ $message }}</span>

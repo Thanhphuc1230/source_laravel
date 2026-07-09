@@ -117,7 +117,7 @@
                                                     <tr>
                                                         @php $product = getProduct($item->product_id); @endphp
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td><img src="{{ asset('images/product/' . $product->image) }}"
+                                                        <td><img src="{{ $product->image }}"
                                                                 width="50px"></td>
                                                         <td><a href="{{ route('web.resolve',['id' => $product->id_product, 'slug' => $product->slug]) }}">{{ $product->name_vn }}</a></td>
                                                       

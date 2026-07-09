@@ -135,11 +135,8 @@
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
-                            @php
-                                $avatar = Auth::user()->avatar ? Auth::user()->avatar : 'default.jpg';
-                            @endphp
                             <img class="rounded-circle header-profile-user"
-                                src="{{ asset('images/users/' . $avatar) }}" alt="Header Avatar">
+                                src="{{ Auth::user()->avatar }}" alt="Header Avatar">
                             <span class="text-start ms-xl-2">
                                 <span
                                     class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ Auth::user()->fullname }}</span>

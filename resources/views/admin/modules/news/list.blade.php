@@ -89,7 +89,7 @@
                                                             <td><input class="form-check-input" type="checkbox" name="uuids[]"
                                                                     value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}" alt=""
+                                                            <td><img src="{{ $item->image }}" alt=""
                                                                     style="height: 100px;"></td>
                                                             <td>{{ $item->name_vn }}<br>Chủ đề: {{$item->cate->name_vn}}</td>
                                                             <td class="status">

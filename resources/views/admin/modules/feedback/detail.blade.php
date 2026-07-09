@@ -91,8 +91,8 @@
                                             <div class="col-md-6">
                                                 <div class="mb-3" style="display:flex;flex-direction: column;">
                                                     <label for="firstNameinput" class="form-label">Hình ảnh hiện tại</label>
-                                                    <img src="{{ asset('images/feedback/' . $page->image) }}" alt=""
-                                                        width="200px" height="auto">
+                                                     <img src="{{ $page->image }}" alt=""
+                                                         width="200px" height="auto">
                                                 </div>
                                             </div>
                                         @endif

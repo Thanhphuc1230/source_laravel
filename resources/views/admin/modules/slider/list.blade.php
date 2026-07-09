@@ -73,8 +73,8 @@
                                                             <td><input class="form-check-input" type="checkbox" name="uuids[]"
                                                                     value="{{ $item->uuid }}"></td>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td><img src="{{ asset('images/' . $nameClass . '/' . $item->image) }}"
-                                                                    alt="" style="width: 200px; height: 100px;">
+                                                            <td><img src="{{ $item->image }}"
+                                                                     alt="" style="width: 200px; height: 100px;">
                                                             </td>
                                                             <td>{{ $item->name_vn }}</td>
                                                             <td class="status">

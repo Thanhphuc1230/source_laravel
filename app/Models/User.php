@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\AutoImagePathsTrait;
 use App\Traits\HasRoles;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Cachable, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, AutoImagePathsTrait, Cachable, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.

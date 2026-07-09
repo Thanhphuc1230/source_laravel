@@ -7,6 +7,8 @@ CKEDITOR.editorConfig = function(config) {
     // config base url
     config.baseHref = '/';
     config.forceRelativeUrls = true;
+    config.allowedContent = true;
+    config.pasteFilter = null;
     // Add custom fonts
     config.font_names = 'Chakra Petch;Arial;Comic Sans MS;Courier New;Times New Roman;Roboto;';
 

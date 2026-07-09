@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class DataRemovalService
 {
     // Danh sách các field ảnh có thể có
-    private $imageFields = ['image', 'avatar', 'logo', 'favicon'];
+    private $imageFields = ['image', 'image_vn', 'image_en', 'avatar', 'logo', 'favicon'];
 
     public function destroyAllByUUIDs($model, $uuids, $imageFolder)
     {
@@ -85,7 +85,22 @@ class DataRemovalService
     private function deleteSingleImage($item, $field, $imageFolder)
     {
         if (isset($item->$field) && $item->$field) {
-            $imagePath = public_path("images/{$imageFolder}/{$item->$field}");
+            $fileName = method_exists($item, 'getRawOriginal') ? $item->getRawOriginal($field) : $item->$field;
+            if (!$fileName) {
+                return;
+            }
+
+            if (filter_var($fileName, FILTER_VALIDATE_URL)) {
+                $path = parse_url($fileName, PHP_URL_PATH);
+                $search = "images/";
+                $pos = strpos($path, $search);
+                $imagePath = $pos !== false ? public_path(substr($path, $pos)) : public_path(ltrim($path, '/'));
+            } elseif (str_starts_with($fileName, 'images/')) {
+                $imagePath = public_path($fileName);
+            } else {
+                $imagePath = public_path("images/{$imageFolder}/{$fileName}");
+            }
+
             if (File::exists($imagePath)) {
                 File::delete($imagePath);
             }
@@ -101,7 +116,8 @@ class DataRemovalService
             return;
         }
 
-        $imageDetail = json_decode($item->image_detail, true);
+        $rawDetail = method_exists($item, 'getRawOriginal') ? $item->getRawOriginal('image_detail') : $item->image_detail;
+        $imageDetail = json_decode($rawDetail, true);
 
         if (! is_array($imageDetail)) {
             return;
@@ -109,7 +125,11 @@ class DataRemovalService
 
         foreach ($imageDetail as $imageName) {
             if ($imageName) {
-                $imagePath = public_path("images/{$imageFolder}/{$imageName}");
+                if (str_starts_with($imageName, 'images/')) {
+                    $imagePath = public_path($imageName);
+                } else {
+                    $imagePath = public_path("images/{$imageFolder}/{$imageName}");
+                }
                 if (File::exists($imagePath)) {
                     File::delete($imagePath);
                 }
