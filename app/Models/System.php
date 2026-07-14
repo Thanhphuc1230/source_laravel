@@ -37,4 +37,19 @@ class System extends Model
         'footer_js',
         'map',
     ];
+
+    public function getMetaNameAttribute()
+    {
+        return $this->name_vn;
+    }
+
+    public function getMetaKeywordAttribute()
+    {
+        return $this->keyword;
+    }
+
+    public function getMetaDescriptionAttribute()
+    {
+        return $this->description;
+    }
 }

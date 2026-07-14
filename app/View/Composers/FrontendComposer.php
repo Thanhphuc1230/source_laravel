@@ -31,7 +31,7 @@ class FrontendComposer
         $globalData = Cache::remember('frontend_global_data', now()->addMinutes(120), function() {
             return [
                 // Website data
-                'website' => System::first(),
+                'web' => System::first(),
 
                 // Menu data
                 'menu' => Menu::with('children')
