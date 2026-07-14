@@ -261,6 +261,14 @@
                                         </a>
                                     </li>
                                 @endhasPermission
+                                @hasPermission('system.edit')
+                                    <li class="nav-item">
+                                        <a href="{{ route('admin.system.clearCache') }}" class="nav-link text-danger font-weight-bold"
+                                            data-key="t-clear-cache">
+                                            <i class="ri-delete-bin-line mr-1"></i> Xóa bộ nhớ đệm
+                                        </a>
+                                    </li>
+                                @endhasPermission
                             </ul>
                         </div>
                     </li>

@@ -53,4 +53,22 @@ class SystemController extends BaseController
 
         return back();
     }
+
+    public function clearCache()
+    {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+            
+            // Invalidate model-caching cache if library is present
+            if (class_exists(\GeneaLabs\LaravelModelCaching\Helper::class)) {
+                \Illuminate\Support\Facades\Artisan::call('modelCache:clear');
+            }
+            
+            toast('Đã xóa toàn bộ bộ nhớ đệm (cache) hệ thống thành công!', 'success');
+        } catch (\Exception $e) {
+            toast('Có lỗi xảy ra khi xóa cache: ' . $e->getMessage(), 'error');
+        }
+
+        return back();
+    }
 }
