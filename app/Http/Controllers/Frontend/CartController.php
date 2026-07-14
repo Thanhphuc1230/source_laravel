@@ -94,7 +94,7 @@ class CartController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => session('locale') == 'en' ? 'Updated cart successfully.' : 'Cập nhật giỏ hàng thành công.',
-                'cart' => $cart,
+                'cart' => array_values($cart),
                 'totalItems' => $totalItems,
                 'totalPrice' => $totalPrice,
                 'formattedTotalPrice' => number_format($totalPrice, 0, ',', '.') . ' VNĐ'

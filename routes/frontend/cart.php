@@ -11,6 +11,7 @@ Route::name('web.')
         Route::get('/cart', [CartController::class, 'index'])->name('cart');
         Route::get('/add-to-cart/{uuid}/{quantity?}', [CartController::class, 'addToCart'])->name('addToCart');
         Route::post('/update-cart', [CartController::class, 'updateCart'])->name('updateCart');
+        Route::get('/remove-item/{uuid}/{stt}', [CartController::class, 'removeItem'])->name('removeItem');
 
         // Checkout
         Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
