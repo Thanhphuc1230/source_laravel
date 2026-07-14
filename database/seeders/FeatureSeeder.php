@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Feature;
+use Illuminate\Support\Str;
 
 class FeatureSeeder extends Seeder
 {
@@ -14,41 +15,41 @@ class FeatureSeeder extends Seeder
     {
         $features = [
             [
-                'title_vn' => 'Free Shipping',
-                'content_vn' => 'For orders from $50',
-                'image' => null,
+                'title_vn' => 'Giá Tốt Nhất',
+                'content_vn' => 'Cam kết giá tour rẻ nhất và chất lượng tốt nhất.',
+                'image' => 'fa-solid fa-tags',
                 'status' => 1,
                 'stt' => 1,
-                'uuid' => \Illuminate\Support\Str::uuid(),
+                'uuid' => Str::uuid()->toString(),
             ],
             [
-                'title_vn' => 'Support 24/7',
-                'content_vn' => 'Call us anytime',
-                'image' => null,
+                'title_vn' => 'Hỗ Trợ 24/7',
+                'content_vn' => 'Tổng đài hỗ trợ tư vấn khách hàng mọi lúc mọi nơi.',
+                'image' => 'fa-solid fa-headset',
                 'status' => 1,
                 'stt' => 2,
-                'uuid' => \Illuminate\Support\Str::uuid(),
+                'uuid' => Str::uuid()->toString(),
             ],
             [
-                'title_vn' => '100% Safety',
-                'content_vn' => 'Only secure payments',
-                'image' => null,
+                'title_vn' => 'Thanh Toán An Toàn',
+                'content_vn' => 'Phương thức thanh toán đa dạng và bảo mật tuyệt đối.',
+                'image' => 'fa-solid fa-shield-halved',
                 'status' => 1,
                 'stt' => 3,
-                'uuid' => \Illuminate\Support\Str::uuid(),
+                'uuid' => Str::uuid()->toString(),
             ],
             [
-                'title_vn' => 'Hot Offers',
-                'content_vn' => 'Discounts up to 90%',
-                'image' => null,
+                'title_vn' => 'Dịch Vụ Đẳng Cấp',
+                'content_vn' => 'Đảm bảo trải nghiệm du lịch nghỉ dưỡng 5 sao sang trọng.',
+                'image' => 'fa-solid fa-star',
                 'status' => 1,
                 'stt' => 4,
-                'uuid' => \Illuminate\Support\Str::uuid(),
+                'uuid' => Str::uuid()->toString(),
             ],
         ];
 
         foreach ($features as $feature) {
-            \App\Models\Feature::create($feature);
+            Feature::create($feature);
         }
     }
 }

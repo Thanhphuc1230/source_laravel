@@ -29,5 +29,8 @@ class DatabaseSeeder extends Seeder
         $this->call(NewsSeeder::class);
         $this->call(MailConfigSeeder::class);
         $this->call(MailTemplateSeeder::class);
+        $this->call(FeatureSeeder::class);
+        $this->call(SliderSeeder::class);
+        $this->call(AnalyticSeeder::class);
     }
 }
