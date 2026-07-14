@@ -41,7 +41,8 @@
         "files": [
             "app/Helpers/CateHelper.php",
             "app/Helpers/MenuHelper.php",
-            "app/Helpers/CartHelper.php"
+            "app/Helpers/CartHelper.php",
+            "app/Helpers/Language.php"
         ]
     },
     "scripts": {
