@@ -26,11 +26,11 @@ function testEndpoint($method, $uri, $payload = [], $headers = []) {
     }
     echo "------------------------------------------------------------\n";
 
-    // Set JSON headers
     $server = [
         'HTTP_ACCEPT' => 'application/json',
         'CONTENT_TYPE' => 'application/json',
-        'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'
+        'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest',
+        'HTTP_X_APP_TOKEN' => 'bt_sec_e9b8f2d5c1a4e76f9b8c7d6e5a4f3b2c'
     ];
     foreach ($headers as $key => $val) {
         $server['HTTP_' . strtoupper(str_replace('-', '_', $key))] = $val;

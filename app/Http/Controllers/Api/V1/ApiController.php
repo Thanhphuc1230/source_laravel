@@ -25,7 +25,10 @@ class ApiController extends Controller
      */
     public function getSystem()
     {
-        $system = System::first();
+        $system = cache()->remember('api_system_config', 3600, function () {
+            return System::first();
+        });
+
         if (!$system) {
             return response()->json([
                 'success' => false,
@@ -58,14 +61,15 @@ class ApiController extends Controller
      */
     public function getSliders()
     {
-        $sliders = Slider::where('status', true)->orderBy('stt', 'asc')->get();
-        
-        $data = $sliders->map(function ($slide) {
-            return [
-                'name' => $slide->name_vn,
-                'image' => asset($slide->image),
-                'link' => $slide->link ?? '#'
-            ];
+        $data = cache()->remember('api_sliders', 3600, function () {
+            $sliders = Slider::where('status', true)->orderBy('stt', 'asc')->get();
+            return $sliders->map(function ($slide) {
+                return [
+                    'name' => $slide->name_vn,
+                    'image' => asset($slide->image),
+                    'link' => $slide->link ?? '#'
+                ];
+            })->toArray();
         });
 
         return response()->json([
@@ -80,15 +84,16 @@ class ApiController extends Controller
      */
     public function getCategories()
     {
-        $categories = CateProduct::where('status', true)->orderBy('stt', 'asc')->get();
-
-        $data = $categories->map(function ($cate) {
-            return [
-                'id' => $cate->id_cate_product,
-                'name' => $cate->name_vn,
-                'slug' => $cate->slug_vn,
-                'image' => $cate->image_vn ? asset($cate->image_vn) : null
-            ];
+        $data = cache()->remember('api_categories', 3600, function () {
+            $categories = CateProduct::where('status', true)->orderBy('stt', 'asc')->get();
+            return $categories->map(function ($cate) {
+                return [
+                    'id' => $cate->id_cate_product,
+                    'name' => $cate->name_vn,
+                    'slug' => $cate->slug_vn,
+                    'image' => $cate->image_vn ? asset($cate->image_vn) : null
+                ];
+            })->toArray();
         });
 
         return response()->json([
@@ -413,9 +418,20 @@ class ApiController extends Controller
      */
     public function getPageDetail($id_page)
     {
-        $page = Page::where('id_page', $id_page)->first();
+        $data = cache()->remember("api_page_{$id_page}", 3600, function () use ($id_page) {
+            $page = Page::where('id_page', $id_page)->first();
+            if (!$page) return null;
+            return [
+                'id' => $page->id_page,
+                'uuid' => $page->uuid,
+                'name' => $page->name_vn,
+                'slug' => $page->slug_vn,
+                'content' => $page->content_vn,
+                'image' => $page->image_vn ? asset($page->image_vn) : null
+            ];
+        });
 
-        if (!$page) {
+        if (!$data) {
             return response()->json([
                 'success' => false,
                 'message' => 'Page not found.',
@@ -426,14 +442,7 @@ class ApiController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Page details retrieved successfully.',
-            'data' => [
-                'id' => $page->id_page,
-                'uuid' => $page->uuid,
-                'name' => $page->name_vn,
-                'slug' => $page->slug_vn,
-                'content' => $page->content_vn,
-                'image' => $page->image_vn ? asset($page->image_vn) : null
-            ]
+            'data' => $data
         ]);
     }
 

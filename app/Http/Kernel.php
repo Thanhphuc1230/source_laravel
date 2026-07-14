@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'admin.level' => \App\Http\Middleware\CheckAdminLevel::class,
         'role' => \App\Http\Middleware\CheckRole::class,
         'permission' => \App\Http\Middleware\CheckPermission::class,
+        'api.token' => \App\Http\Middleware\VerifyApiToken::class,
     ];
 }
