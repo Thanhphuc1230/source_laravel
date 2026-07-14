@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Analytic extends Model
 {
-    use Cachable, HasFactory;
+    use HasFactory;
 
     protected $table = 'tp_analytics';
 
