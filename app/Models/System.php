@@ -36,6 +36,10 @@ class System extends Model
         'body_js',
         'footer_js',
         'map',
+        'contact_title_vn',
+        'contact_desc_vn',
+        'contact_title_en',
+        'contact_desc_en',
     ];
 
     public function getMetaNameAttribute()

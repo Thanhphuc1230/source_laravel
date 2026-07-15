@@ -71,4 +71,41 @@ class SystemController extends BaseController
 
         return back();
     }
+
+    public function editContact()
+    {
+        $data['system'] = $this->systemRepository->all()->first();
+        return $this->view_admin('contact', $data);
+    }
+
+    public function updateContact($id, \Illuminate\Http\Request $request)
+    {
+        $request->validate([
+            'contact_title_vn' => 'nullable|string|max:255',
+            'contact_desc_vn' => 'nullable|string',
+            'contact_title_en' => 'nullable|string|max:255',
+            'contact_desc_en' => 'nullable|string',
+        ]);
+
+        $data = $request->only([
+            'contact_title_vn',
+            'contact_desc_vn',
+            'contact_title_en',
+            'contact_desc_en'
+        ]);
+
+        $data['updated_at'] = now();
+        $system = $this->systemRepository->find($id);
+
+        if ($system) {
+            $this->systemRepository->update($data, $id);
+            Cache::forget('website_data');
+            Cache::forget('api_system_config');
+            toast('Cập nhật nội dung liên hệ thành công', 'success');
+        } else {
+            toast('System not found', 'error');
+        }
+
+        return back();
+    }
 }

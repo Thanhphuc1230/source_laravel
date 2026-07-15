@@ -11,4 +11,8 @@ Route::controller(SystemController::class)
         Route::get('/clear-cache', 'clearCache')->name('clearCache')->middleware('permission:system.edit');
         Route::post('/store', 'store')->name('store')->middleware('permission:system.edit');
         Route::post('/update/{id}', 'update')->name('update')->middleware('permission:system.edit');
+        
+        // Contact page specific configuration routes
+        Route::get('/contact', 'editContact')->name('editContact')->middleware('permission:system.edit');
+        Route::post('/contact/update/{id}', 'updateContact')->name('updateContact')->middleware('permission:system.edit');
     });

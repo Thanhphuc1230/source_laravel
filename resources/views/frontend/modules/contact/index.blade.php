@@ -16,8 +16,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="text-center max-w-xl mx-auto mb-12 space-y-2">
             <span class="text-gold-650 text-xs font-extrabold uppercase tracking-widest">Liên hệ</span>
-            <h1 class="text-3xl font-heading font-black text-emerald-950">Kết Nối Với Chúng Tôi</h1>
-            <p class="text-xs text-gray-500">Gửi tin nhắn hoặc yêu cầu của bạn, chúng tôi luôn sẵn lòng lắng nghe và hỗ trợ.</p>
+            <h1 class="text-3xl font-heading font-black text-emerald-950">{!! lang($web, 'contact_title') ?? 'Kết Nối Với Chúng Tôi' !!}</h1>
+            <div class="text-xs text-gray-500">{!! lang($web, 'contact_desc') ?? 'Gửi tin nhắn hoặc yêu cầu của bạn, chúng tôi luôn sẵn lòng lắng nghe và hỗ trợ.' !!}</div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">

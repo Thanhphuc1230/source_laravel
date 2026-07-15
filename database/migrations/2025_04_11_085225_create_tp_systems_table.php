@@ -34,6 +34,12 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('keyword')->nullable();
 
+            // Contact page text settings
+            $table->string('contact_title_vn')->nullable();
+            $table->text('contact_desc_vn')->nullable();
+            $table->string('contact_title_en')->nullable();
+            $table->text('contact_desc_en')->nullable();
+
             $table->text('map')->nullable();
             $table->timestamps();
         });

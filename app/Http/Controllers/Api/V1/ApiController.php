@@ -51,7 +51,9 @@ class ApiController extends Controller
                 'facebook' => $system->facebook ?? 'https://facebook.com/basetravel',
                 'youtube' => $system->youtube ?? 'https://youtube.com/basetravel',
                 'twitter' => $system->twitter ?? 'https://twitter.com/basetravel',
-                'instagram' => $system->instagram ?? 'https://instagram.com/basetravel'
+                'instagram' => $system->instagram ?? 'https://instagram.com/basetravel',
+                'contact_title' => $system->contact_title_vn ?? 'Kết Nối Với Chúng Tôi',
+                'contact_desc' => $system->contact_desc_vn ?? 'Gửi tin nhắn hoặc yêu cầu của bạn, chúng tôi luôn sẵn lòng lắng nghe và hỗ trợ.',
             ]
         ]);
     }
