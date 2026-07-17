@@ -1,4 +1,4 @@
-# Thiết kế giao diện Frontend – Điện Máy Trường An PQ
+# Thiết kế giao diện Frontend – Base
 
 > Tài liệu này định nghĩa bộ quy tắc thiết kế visual, CSS system, và UX chuẩn.
 > Đọc file này khi tạo hoặc chỉnh sửa giao diện để đảm bảo tính nhất quán Premium UI/UX.
@@ -209,7 +209,7 @@ resources/views/frontend/
 
 | Chủ đề | Primary Color | Font Heading | Accent |
 |---|---|---|---|
-| Điện máy / Công nghiệp | `#c0392b` (đỏ) | Montserrat | `#f39c12` (vàng) |
+| Base / Công nghiệp | `#c0392b` (đỏ) | Montserrat | `#f39c12` (vàng) |
 | Bất động sản | `#d4af37` (vàng kim) | Playfair Display | `#1a1a2e` (navy) |
 | Du lịch | `#0077b6` (xanh dương) | Outfit | `#48cae4` (xanh nhạt) |
 | Thời trang | `#2d2d2d` (đen) | Cormorant Garamond | `#c9a96e` (vàng nhạt) |

@@ -1,4 +1,4 @@
-# Bản đồ dữ liệu động Frontend – Điện Máy Trường An PQ
+# Bản đồ dữ liệu động Frontend – Base
 
 > Tài liệu này mô tả toàn bộ biến động có sẵn trong mọi frontend Blade view.
 > Mỗi khi viết hoặc sửa view, đọc file này để biết chính xác dùng biến nào ở đâu.

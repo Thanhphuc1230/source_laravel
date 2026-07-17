@@ -1,4 +1,4 @@
-# AGENTS.md – Quy tắc cốt lõi dự án Điện Máy Trường An PQ
+# AGENTS.md – Quy tắc cốt lõi dự án Base
 
 > File này được AI tự động đọc mỗi phiên. Xem các file chi tiết trong thư mục `.agents/` để biết thêm.
 
@@ -12,9 +12,9 @@ Phải dùng biến động từ `$website`. Xem chi tiết: `.agents/frontend-d
 
 | Sai ❌ | Đúng ✅ |
 |---|---|
-| `Điện Máy Trường An PQ` | `{{ $website->name_vn }}` |
+| `Base` | `{{ $website->name_vn }}` |
 | `0979.248.298` | `{{ $website->phone }}` |
-| `dienmaytruongan@gmail.com` | `{{ $website->email }}` |
+| `contact@base.local` | `{{ $website->email }}` |
 | `src="https://www.google.com/maps/embed..."` | `src="{{ $website->map }}"` |
 | `<img src="/images/logo/logo.png">` | `<img src="{{ asset($website->logo) }}">` |
 

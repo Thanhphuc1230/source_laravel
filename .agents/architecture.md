@@ -1,4 +1,4 @@
-# Kiến trúc mã nguồn – Điện Máy Trường An PQ
+# Kiến trúc mã nguồn – Base
 
 > Tài liệu kiến trúc kỹ thuật. Đọc file này khi cần hiểu cấu trúc thư mục, Models, Routes, tạo module mới, hoặc debug luồng dữ liệu.
 > Kết hợp với `frontend-data-map.md` và `frontend-design.md` là đủ để viết code mà không cần đọc source. Đọc file này khi cần hiểu cấu trúc thư mục, tạo module mới, hoặc debug luồng dữ liệu.
