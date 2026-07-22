@@ -86,14 +86,21 @@ public/
 
 ## 4. Models – Chuẩn dữ liệu
 
-### AutoImagePathsTrait
+### AutoImagePathsTrait & Cơ chế lưu trữ ảnh Year/Month
 Tất cả model có ảnh gắn trait này. Khi gọi `$model->image`, tự trả về **URL tuyệt đối đầy đủ**.
 
-```php
-// DB lưu: images/product/1720516789.webp
-<img src="{{ $product->image }}">
-// → http://domain/images/product/1720516789.webp (KHÔNG cần asset())
-```
+Từ tháng 07/2026, hệ thống sử dụng cấu trúc lưu trữ phân cấp thời gian kết hợp băm tên file:
+`images/{module}/{YYYY}/{MM}/{filename_hash}.{extension}`
+
+*   **Tên file**: Băm MD5 tên gốc + timestamp + random string nhằm tránh trùng lặp và an toàn I/O.
+*   **Trường hợp lưu đầy đủ**:
+    ```php
+    // DB lưu: images/product/2026/07/8d08638ae5c736c9d4ed5454819c13a9.webp
+    <img src="{{ $product->image }}">
+    // → http://domain/images/product/2026/07/8d08638ae5c736c9d4ed5454819c13a9.webp (Không cần asset())
+    ```
+*   **Tương thích ngược (Fallback)**:
+    Nếu DB chỉ lưu tên file đơn dạng `slide_1.jpg` (ví dụ từ Seeders cũ), Trait sẽ tự động map về thư mục module tương ứng: `images/{module}/slide_1.jpg`.
 
 > **Ngoại lệ**: `$website->logo` và `$website->favicon` vẫn cần `asset()` thủ công.
 

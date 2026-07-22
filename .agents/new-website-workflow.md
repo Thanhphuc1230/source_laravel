@@ -59,7 +59,7 @@ php artisan migrate
 
 ### Nguyên tắc seeder QUAN TRỌNG:
 - ✅ Nội dung **thực tế**, đúng chủ đề (KHÔNG dùng Lorem Ipsum)
-- ✅ Ảnh lưu **local** (`public/images/product/`, `public/images/news/`...) — KHÔNG dùng URL CDN
+- ✅ Ảnh mẫu lưu **local** (ví dụ: `public/images/product/slide_1.jpg`) và được gán đường dẫn đơn (ví dụ: `'image' => 'slide_1.jpg'`) trong seeders. Nhờ cơ chế fallback của `AutoImagePathsTrait`, hệ thống sẽ tự động tìm đúng thư mục tương ứng của module để hiển thị.
 - ✅ `price` điền số thực (VD: 2500000), `price_old` nếu đang giảm giá
 - ✅ `logo` trong SystemSeeder: `images/logo/logo.png` (relative path)
 - ✅ `map` trong SystemSeeder: embed URL Google Maps đầy đủ
@@ -77,7 +77,7 @@ php artisan migrate:fresh --seed
 ```php
 // Model:
 class Product extends Model {
-    use AutoImagePathsTrait; // Tự convert image → full URL
+    use AutoImagePathsTrait; // Tự convert image → full URL (tự động xử lý cả ảnh phân cấp YYYY/MM và ảnh đơn fallback)
 
     public function getNameAttribute() {
         $locale = app()->getLocale();

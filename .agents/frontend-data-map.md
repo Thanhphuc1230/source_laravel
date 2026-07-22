@@ -134,6 +134,6 @@ Không có biến riêng — **toàn bộ lấy từ `$website`** (toàn cục).
 
 ## 8. Lưu ý quan trọng
 
-- **AutoImagePathsTrait**: Khi gọi `$model->image` đã là URL tuyệt đối — **không cần** bọc thêm `asset()`. Ngoại lệ: `$website->logo` và `$website->favicon` vẫn cần `asset()`.
+- **AutoImagePathsTrait & Đường dẫn ảnh mới**: Khi gọi `$model->image` đã là URL tuyệt đối — **không cần** bọc thêm `asset()`. Cả ảnh mới lưu theo cấu trúc phân cấp `images/{module}/{YYYY}/{MM}/{hash}.webp` và ảnh cũ lưu tên file đơn đều được tự động phân tích và hiển thị chính xác. Ngoại lệ: `$website->logo` và `$website->favicon` vẫn cần `asset()`.
 - **Cache tự xóa**: Khi Admin cập nhật System → tự xóa key `website_data` và `frontend_global_data`.
 - **Xóa cache thủ công**: Admin → Hệ thống → Xoá cache, hoặc `php artisan optimize:clear`.
