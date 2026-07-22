@@ -161,7 +161,9 @@ class ImageService
     private function generateFileName(UploadedFile $file, array $options = []): string
     {
         $prefix = $options['prefix'] ?? '';
-        $extension = $file->getClientOriginalExtension();
+        
+        // Đoán extension thật dựa trên mime type, nếu không đoán được mới dùng getClientOriginalExtension()
+        $extension = $file->guessExtension() ?: $file->getClientOriginalExtension();
         
         // Băm tên file để tránh trùng đè file và an toàn I/O
         $hashName = md5($file->getClientOriginalName() . time() . Str::random(10));
