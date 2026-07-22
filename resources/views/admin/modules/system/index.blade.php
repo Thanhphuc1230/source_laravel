@@ -161,33 +161,5 @@
     </div>
 
     @include('admin.partials.ckeditor')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof CKEDITOR !== 'undefined') {
-                if (document.getElementById('footer-vn')) {
-                    CKEDITOR.replace('footer-vn', options);
-                }
-                if (document.getElementById('footer-en')) {
-                    CKEDITOR.replace('footer-en', options);
-                }
-            }
-
-            // UX: Đảm bảo tối thiểu phải chọn 1 ngôn ngữ hoạt động
-            const checkboxVi = document.getElementById('lang-vi');
-            const checkboxEn = document.getElementById('lang-en');
-
-            if (checkboxVi && checkboxEn) {
-                const enforceMinActiveLang = (event) => {
-                    if (!checkboxVi.checked && !checkboxEn.checked) {
-                        event.preventDefault();
-                        event.target.checked = true;
-                        alert('Hệ thống yêu cầu tối thiểu phải chọn một ngôn ngữ hoạt động.');
-                    }
-                };
-
-                checkboxVi.addEventListener('change', enforceMinActiveLang);
-                checkboxEn.addEventListener('change', enforceMinActiveLang);
-            }
-        });
-    </script>
+    <script src="{{ asset('js/admin/system-lang.js') }}"></script>
 @endsection

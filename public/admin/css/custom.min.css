@@ -1,2 +1,12 @@
 
+/* ───────────────────────────────────────────
+   CKEditor 5 - Custom admin styles
+   ─────────────────────────────────────────── */
+.ck.ck-editor { width: 100%; }
+.ck-editor__editable_inline { min-height: 250px; max-height: 600px; }
+.ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) { border-color: #ced4da; }
+.ck.ck-toolbar { background-color: #f8f9fa !important; border-radius: 4px 4px 0 0 !important; }
+.ck.ck-editor__editable { border-radius: 0 0 4px 4px !important; }
+.ck-source-editing-area textarea { min-height: 250px; font-family: monospace; font-size: 13px; }
+
 /*# sourceMappingURL=custom.min.css.map */

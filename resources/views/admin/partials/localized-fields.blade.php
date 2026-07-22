@@ -33,14 +33,14 @@
                 
                 @if ($type === 'textarea')
                     <textarea 
-                        {{ $id ? 'id='.$id : '' }} 
+                        @if($id) id="{{ $id }}" data-ckeditor="true" @endif
                         class="form-control @error($name) is-invalid @enderror" 
                         name="{{ $name }}" 
                         rows="{{ $rows }}" 
                         placeholder="Enter {{ $label }}">{{ $value }}</textarea>
                 @else
                     <input type="text" 
-                        {{ $id ? 'id='.$id : '' }} 
+                        @if($id) id="{{ $id }}" @endif
                         class="form-control @error($name) is-invalid @enderror" 
                         name="{{ $name }}" 
                         value="{{ $value }}" 

@@ -36,8 +36,8 @@
             -moz-osx-font-smoothing: grayscale;
         }
     </style>
-    {{-- ckeditor --}}
-    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('vendor/ckeditor5/ckeditor5.css') }}">
+    <script src="{{ asset('vendor/ckeditor5/ckeditor.js') }}"></script>
 
     {{-- Chart js --}}
     <script src="https://code.highcharts.com/highcharts.js"></script>
