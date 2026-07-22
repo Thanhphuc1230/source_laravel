@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\ProductSetting;
+use App\Models\NewsSetting;
 use Illuminate\Database\Seeder;
 
-class ProductSettingSeeder extends Seeder
+class NewsSettingSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,65 +14,65 @@ class ProductSettingSeeder extends Seeder
     {
         $settings = [
             [
-                'key' => 'products_pagination',
+                'key' => 'news_pagination',
                 'value' => '8',
                 'type' => 'number',
                 'group' => 'general',
-                'description' => 'Số lượng sản phẩm hiển thị trên một trang',
+                'description' => 'Số lượng tin tức hiển thị trên một trang',
                 'sort_order' => 1,
                 'is_active' => true,
             ],
             [
-                'key' => 'products_font_size',
+                'key' => 'news_font_size',
                 'value' => '16px',
                 'type' => 'text',
                 'group' => 'style',
-                'description' => 'Kích thước font chữ tiêu đề sản phẩm',
+                'description' => 'Kích thước font chữ tiêu đề tin tức',
                 'sort_order' => 2,
                 'is_active' => true,
             ],
             [
-                'key' => 'products_show_intro',
+                'key' => 'news_show_intro',
                 'value' => '1',
                 'type' => 'boolean',
                 'group' => 'general',
-                'description' => 'Hiển thị giới thiệu ngắn của sản phẩm',
+                'description' => 'Hiển thị giới thiệu ngắn của tin tức',
                 'sort_order' => 3,
                 'is_active' => true,
             ],
             [
-                'key' => 'products_click_image_detail',
+                'key' => 'news_click_image_detail',
                 'value' => '1',
                 'type' => 'boolean',
                 'group' => 'general',
-                'description' => 'Cho phép click vào hình ảnh sản phẩm để xem chi tiết',
+                'description' => 'Cho phép click vào hình ảnh tin tức để xem chi tiết',
                 'sort_order' => 4,
                 'is_active' => true,
             ],
             [
-                'key' => 'products_title_color',
+                'key' => 'news_title_color',
                 'value' => '#064e3b',
                 'type' => 'text',
                 'group' => 'style',
-                'description' => 'Màu sắc của tiêu đề sản phẩm',
+                'description' => 'Màu sắc của tiêu đề tin tức',
                 'sort_order' => 5,
                 'is_active' => true,
             ],
             [
-                'key' => 'products_category_color',
+                'key' => 'news_category_color',
                 'value' => '#b45309',
                 'type' => 'text',
                 'group' => 'style',
-                'description' => 'Màu sắc của tên danh mục sản phẩm',
+                'description' => 'Màu sắc của tên danh mục tin tức',
                 'sort_order' => 6,
                 'is_active' => true,
             ],
         ];
 
-        ProductSetting::truncate();
+        NewsSetting::truncate();
 
         foreach ($settings as $setting) {
-            ProductSetting::create($setting);
+            NewsSetting::create($setting);
         }
     }
 }
