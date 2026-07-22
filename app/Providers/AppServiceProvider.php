@@ -37,6 +37,15 @@ class AppServiceProvider extends ServiceProvider
 
         // Clear frontend cache dynamically when data changes
         $clearFrontendCache = function() {
+            if (class_exists(\App\Services\CacheService::class)) {
+                \App\Services\CacheService::forgetTag('frontend');
+                \App\Services\CacheService::forgetTag('system');
+                \App\Services\CacheService::forgetTag('menu');
+                \App\Services\CacheService::forgetTag('sliders');
+                \App\Services\CacheService::forgetTag('categories');
+                \App\Services\CacheService::forgetTag('pages');
+                \App\Services\CacheService::forgetTag('products');
+            }
             Cache::forget('frontend_global_data');
         };
 

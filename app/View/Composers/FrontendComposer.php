@@ -27,61 +27,50 @@ class FrontendComposer
 
     public function compose(View $view)
     {
-        // Cache frontend global queries to optimize speed and DB queries
-        $globalData = Cache::remember('frontend_global_data', now()->addMinutes(120), function() {
-            return [
-                // Website data
-                'web' => System::first(),
+        $cacheTtl = 120; // 2 giờ
 
-                // Menu data
-                'menu' => Menu::with('children')
-                    ->where('parent_id', 0)
-                    ->orderBy('stt', 'asc')
-                    ->get(),
+        $data = [
+            // 1. Dữ liệu hệ thống (Tag: system)
+            'web' => \App\Services\CacheService::remember('system', 'frontend_web_data', $cacheTtl, function() {
+                return System::first();
+            }),
 
-                // Ads (sliders)
-                'ads' => Slider::where('status', 1)
-                    ->orderBy('stt', 'asc')
-                    ->get(),
+            // 2. Dữ liệu Menu (Tag: menu)
+            'menu' => \App\Services\CacheService::remember('menu', 'frontend_menu_data', $cacheTtl, function() {
+                return Menu::with('children')->where('parent_id', 0)->orderBy('stt', 'asc')->get();
+            }),
 
-                // Category product
-                'cate_product' => CateProduct::where('status', 1)
-                    ->where('parent_id', 0)
-                    ->orderBy('stt', 'asc')
-                    ->get(),
+            // 3. Slider/Ads (Tag: sliders)
+            'ads' => \App\Services\CacheService::remember('sliders', 'frontend_sliders_data', $cacheTtl, function() {
+                return Slider::where('status', 1)->orderBy('stt', 'asc')->get();
+            }),
 
-                // Category product footer
-                'category_product_footer' => CateProduct::where('status', 1)
-                    ->whereIn('parent_id', [0, 1])
-                    ->orderBy('stt', 'asc')
-                    ->get(),
+            // 4. Danh mục sản phẩm (Tag: categories)
+            'cate_product' => \App\Services\CacheService::remember('categories', 'frontend_cate_product_data', $cacheTtl, function() {
+                return CateProduct::where('status', 1)->where('parent_id', 0)->orderBy('stt', 'asc')->get();
+            }),
+            'category_product_footer' => \App\Services\CacheService::remember('categories', 'frontend_cate_product_footer_data', $cacheTtl, function() {
+                return CateProduct::where('status', 1)->whereIn('parent_id', [0, 1])->orderBy('stt', 'asc')->get();
+            }),
 
-                // Category news footer
-                'category_news_footer' => CateNew::where('status', 1)
-                    ->where('parent_id', 0)
-                    ->orderBy('stt', 'asc')
-                    ->get(),
+            // 5. Danh mục tin tức (Tag: categories)
+            'category_news_footer' => \App\Services\CacheService::remember('categories', 'frontend_cate_news_footer_data', $cacheTtl, function() {
+                return CateNew::where('status', 1)->where('parent_id', 0)->orderBy('stt', 'asc')->get();
+            }),
 
-                // Footer pages
-                'footer_pages' => Page::where('status', 1)
-                    ->where('footer', 1)
-                    ->orderBy('stt', 'asc')
-                    ->get(),
+            // 6. Trang tĩnh footer (Tag: pages)
+            'footer_pages' => \App\Services\CacheService::remember('pages', 'frontend_footer_pages_data', $cacheTtl, function() {
+                return Page::where('status', 1)->where('footer', 1)->orderBy('stt', 'asc')->get();
+            }),
 
-                // Products hot
-                'products_hot' => Product::where('status', 1)
-                    ->where('hot', 1)
-                    ->orderBy('stt', 'asc')
-                    ->limit(10)
-                    ->get(),
-            ];
-        });
+            // 7. Sản phẩm nổi bật (Tag: products)
+            'products_hot' => \App\Services\CacheService::remember('products', 'frontend_products_hot_data', $cacheTtl, function() {
+                return Product::where('status', 1)->where('hot', 1)->orderBy('stt', 'asc')->limit(10)->get();
+            }),
 
-        // Merge cached global data with request-specific data
-        $data = array_merge($globalData, [
-            // Cart count (session-based, cannot be cached globally)
+            // Giỏ hàng (Session-based, không cache)
             'cart_count' => $this->cartService->getTotalItems(),
-        ]);
+        ];
 
         $view->with($data);
     }
