@@ -18,6 +18,4 @@ yarn-error.log
 /.idea
 /.vscode
 /.cursor
-/public/images
 docs_backup/
-/public/frontend/
