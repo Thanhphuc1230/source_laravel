@@ -12,10 +12,7 @@ use Illuminate\Support\Facades\View;
 
 class BrandController extends BaseController
 {
-    use CrudOperationsTrait {
-        store as protected performTraitStore;
-        update as protected performTraitUpdate;
-    }
+    use CrudOperationsTrait;
 
     protected $module;
     protected $model;
