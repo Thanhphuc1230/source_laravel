@@ -52,6 +52,19 @@ Admin có nút **"Xoá cache"** tại: Admin → Hệ thống → Xoá cache
 
 ---
 
+## QUY TẮC SỐ 6 – KHÔNG DÙNG CDN (DOWNLOAD ASSETS)
+
+Khi cần sử dụng thư viện JS/CSS, Font, Icon (như FontAwesome, jQuery, Tailwind...), **PHẢI** tải tệp tin về lưu trữ cục bộ trong thư mục `public/` thay vì nhúng trực tiếp link CDN từ bên thứ ba.
+
+---
+
+## QUY TẮC SỐ 7 – TÁCH BIỆT CODE CSS & JS (NO INLINE/EMBEDDED)
+
+* **Không viết** code CSS hoặc JS tĩnh trực tiếp trong các file Blade (thẻ `<style>`, `<script>`). Phải tổ chức chúng vào các file `.css`, `.js` chuẩn cấu trúc trong thư mục `public/`.
+* **Không viết** thuộc tính CSS inline (`style="..."`) trực tiếp vào các thẻ HTML, trừ trường hợp dữ liệu đó thực sự động và được cấu hình từ database (như màu sắc, font-size cấu hình từ Admin).
+
+---
+
 ## CÁC FILE THAM KHẢO CHI TIẾT
 
 | File | Nội dung |

@@ -5,7 +5,6 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="@yield('description')">
     <meta name="keywords" content="@yield('keywords')">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -19,20 +18,38 @@
     <link rel="alternate" hreflang="vi" href="{{ route('web.home') }}">
     <link rel="canonical" href="{{ request()->fullUrl() }}">
 
-    <!-- fonts -->
+    <!-- Open Graph / Meta Facebook & Zalo & Viber -->
     <meta property="og:locale" content="vi_VN">
-    <meta property="og:type" content="{{ $web->meta_name }}">
-    <meta property="og:site_name" content="{{ $web->meta_name }}">
-    <meta property="og:image" content="@yield('images')">
-    <meta property="og:image:alt" content="@yield('images')">
+    <meta property="og:type" content="{{ $web->meta_name ?? 'website' }}">
+    <meta property="og:site_name" content="{{ $web->meta_name ?? 'Base' }}">
     <meta property="og:title" content="@yield('module')">
     <meta property="og:description" content="@yield('description')">
-    <meta property="og:image" content="{{ asset('images/logo/' . $web->favicon) }}">
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
     <meta property="og:url" content="{{ request()->fullUrl() }}">
-    <meta property="og:image:width" content="300">
-    <meta property="og:image:height" content="300">
+
+    @if(View::hasSection('images') && trim(View::yieldContent('images')) != '')
+        <meta property="og:image" content="@yield('images')">
+        <meta property="og:image:secure_url" content="@yield('images')">
+        <meta property="og:image:alt" content="@yield('module')">
+    @else
+        <meta property="og:image" content="{{ asset($web->logo ? 'images/logo/' . $web->logo : '') }}">
+        <meta property="og:image:secure_url" content="{{ asset($web->logo ? 'images/logo/' . $web->logo : '') }}">
+        <meta property="og:image:alt" content="{{ $web->name_vn ?? 'Base' }}">
+    @endif
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('module')">
+    <meta name="twitter:description" content="@yield('description')">
+    @if(View::hasSection('images') && trim(View::yieldContent('images')) != '')
+        <meta name="twitter:image" content="@yield('images')">
+    @else
+        <meta name="twitter:image" content="{{ asset($web->logo ? 'images/logo/' . $web->logo : '') }}">
+    @endif
+
+    {{-- Schema JSON-LD --}}
+    @include('frontend.partials.schema')
     <!-- STYLESHEETS -->
 
 <!-- Google Fonts -->
