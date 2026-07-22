@@ -8,9 +8,15 @@
 <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group h-full">
     <!-- Clickable Tour Image -->
     <div class="relative h-56 overflow-hidden bg-gray-150 zoom-effect">
-        <a href="{{ route('web.resolve', ['slug' => $tourSlug]) }}" class="block w-full h-full">
-            <img src="{{ asset($tourImage) }}" alt="{{ $tourName }}" class="w-full h-full object-cover">
-        </a>
+        @if($product_settings['click_image_detail'] ?? true)
+            <a href="{{ route('web.resolve', ['slug' => $tourSlug]) }}" class="block w-full h-full">
+                <img src="{{ asset($tourImage) }}" alt="{{ $tourName }}" class="w-full h-full object-cover">
+            </a>
+        @else
+            <div class="block w-full h-full">
+                <img src="{{ asset($tourImage) }}" alt="{{ $tourName }}" class="w-full h-full object-cover">
+            </div>
+        @endif
         
         <!-- Hot Badge -->
         @if($tour->hot)
@@ -21,7 +27,7 @@
 
         <!-- Category Badge -->
         @if($tour->cate)
-            <span class="absolute top-4 right-4 bg-emerald-950/80 backdrop-blur-sm text-gold-500 text-3xs font-bold px-2.5 py-1 rounded-md tracking-wide z-10">
+            <span class="absolute top-4 right-4 bg-emerald-950/80 backdrop-blur-sm text-3xs font-bold px-2.5 py-1 rounded-md tracking-wide z-10" style="color: {{ $product_settings['category_color'] ?? '#b45309' }}">
                 {{ lang($tour->cate, 'name') }}
             </span>
         @endif
@@ -44,7 +50,7 @@
             </div>
 
             <!-- Tour Title Link -->
-            <h3 class="font-heading font-bold text-sm text-emerald-950 line-clamp-2 leading-snug group-hover:text-emerald-700 transition-colors">
+            <h3 class="font-heading font-bold line-clamp-2 leading-snug group-hover:text-emerald-700 transition-colors" style="font-size: {{ $product_settings['font_size'] ?? '14px' }}; color: {{ $product_settings['title_color'] ?? '#064e3b' }}">
                 <a href="{{ route('web.resolve', ['slug' => $tourSlug]) }}">
                     {{ $tourName }}
                 </a>

@@ -68,6 +68,24 @@ class FrontendComposer
                 return Product::where('status', 1)->where('hot', 1)->orderBy('stt', 'asc')->limit(10)->get();
             }),
 
+            // 8. Toàn bộ cấu hình sản phẩm (Tag: products)
+            'product_settings' => [
+                'font_size' => \App\Models\ProductSetting::get('products_font_size', '16px'),
+                'show_intro' => \App\Models\ProductSetting::get('products_show_intro', true),
+                'click_image_detail' => \App\Models\ProductSetting::get('products_click_image_detail', true),
+                'title_color' => \App\Models\ProductSetting::get('products_title_color', '#064e3b'),
+                'category_color' => \App\Models\ProductSetting::get('products_category_color', '#b45309'),
+            ],
+
+            // 9. Toàn bộ cấu hình tin tức (Tag: news)
+            'news_settings' => [
+                'font_size' => \App\Models\NewsSetting::get('news_font_size', '16px'),
+                'show_intro' => \App\Models\NewsSetting::get('news_show_intro', true),
+                'click_image_detail' => \App\Models\NewsSetting::get('news_click_image_detail', true),
+                'title_color' => \App\Models\NewsSetting::get('news_title_color', '#064e3b'),
+                'category_color' => \App\Models\NewsSetting::get('news_category_color', '#b45309'),
+            ],
+
             // Giỏ hàng (Session-based, không cache)
             'cart_count' => $this->cartService->getTotalItems(),
         ];

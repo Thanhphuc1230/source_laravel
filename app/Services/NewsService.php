@@ -36,12 +36,14 @@ class NewsService
             ->select('id_cate_new', 'name_vn', 'name_en', 'slug_vn', 'slug_en', 'status')
             ->firstOrFail();
 
+        $perPage = (int) \App\Models\NewsSetting::get('news_pagination', 8);
+
         // Cache news in category
         $data['news'] = News::where('category_id', $data['category_detail']->id_cate_new)
             ->where('status', 1)
             ->select('id_new', 'name_vn', 'name_en', 'intro_vn', 'intro_en', 'slug_vn', 'slug_en', 'image_vn', 'image_en', 'created_at', 'category_id')
             ->orderBy('created_at', 'desc')
-            ->paginate(8);
+            ->paginate($perPage);
 
         // Get common data
         $data = array_merge($data, $this->getCommonFrontendData());

@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="bg-emerald-950 text-white py-16 text-center space-y-2">
-        <span class="text-gold-500 text-xs font-bold uppercase tracking-widest">Cẩm nang du lịch</span>
+        <span class="text-xs font-bold uppercase tracking-widest" style="color: {{ $news_settings['category_color'] ?? '#b45309' }}">Cẩm nang du lịch</span>
         <h1 class="text-3xl font-heading font-extrabold">{{ lang($category_detail, 'name') }}</h1>
         <p class="text-3xs text-gray-300">Tổng hợp tin tức, bí quyết du lịch hữu ích nhất dành cho bạn</p>
     </div>
@@ -26,23 +26,31 @@
                             @endphp
                             <article class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between group h-full">
                                 <div class="relative h-48 overflow-hidden bg-gray-200">
-                                    <a href="{{ route('web.resolve', ['slug' => $postSlug]) }}" class="block w-full h-full">
-                                        <img src="{{ asset($postImage) }}" alt="{{ $postName }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                    </a>
+                                    @if($news_settings['click_image_detail'] ?? true)
+                                        <a href="{{ route('web.resolve', ['slug' => $postSlug]) }}" class="block w-full h-full">
+                                            <img src="{{ asset($postImage) }}" alt="{{ $postName }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                        </a>
+                                    @else
+                                        <div class="block w-full h-full">
+                                            <img src="{{ asset($postImage) }}" alt="{{ $postName }}" class="w-full h-full object-cover">
+                                        </div>
+                                    @endif
                                     <span class="absolute bottom-4 left-4 bg-emerald-950 text-white text-3xs font-bold px-2.5 py-1 rounded-md tracking-wide">
                                         {{ $postDate }}
                                     </span>
                                 </div>
                                 <div class="p-5 flex-grow flex flex-col justify-between">
                                     <div class="space-y-2">
-                                        <h3 class="font-heading font-bold text-sm text-emerald-950 leading-snug group-hover:text-emerald-700 transition-colors line-clamp-2">
+                                        <h3 class="font-heading font-bold leading-snug group-hover:text-emerald-700 transition-colors line-clamp-2" style="font-size: {{ $news_settings['font_size'] ?? '14px' }}; color: {{ $news_settings['title_color'] ?? '#064e3b' }}">
                                             <a href="{{ route('web.resolve', ['slug' => $postSlug]) }}">
                                                 {{ $postName }}
                                             </a>
                                         </h3>
-                                        <p class="text-3xs text-gray-400 leading-relaxed line-clamp-2">
-                                            {{ strip_tags(lang($post, 'intro')) }}
-                                        </p>
+                                        @if($news_settings['show_intro'] ?? true)
+                                            <p class="text-3xs text-gray-400 leading-relaxed line-clamp-2">
+                                                {{ strip_tags(lang($post, 'intro')) }}
+                                            </p>
+                                        @endif
                                     </div>
                                     <div class="pt-4">
                                         <a href="{{ route('web.resolve', ['slug' => $postSlug]) }}" class="inline-flex items-center space-x-1.5 text-xs font-bold text-emerald-900 group-hover:text-gold-600 transition-colors">

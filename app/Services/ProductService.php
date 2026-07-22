@@ -182,9 +182,10 @@ class ProductService
      */
     private function getPerPageValue(Request $request)
     {
-        $perPage = (int) $request->get('per_page', 16);
+        $defaultPerPage = (int) \App\Models\ProductSetting::get('products_pagination', 8);
+        $perPage = (int) $request->get('per_page', $defaultPerPage);
         if ($perPage <= 0 || $perPage > 100) {
-            $perPage = 16;
+            $perPage = $defaultPerPage;
         }
         return $perPage;
     }
