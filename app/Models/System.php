@@ -18,7 +18,8 @@ class System extends Model
     protected $fillable = [
         'email',
         'email_alert',
-        'address',
+        'address_vn',
+        'address_en',
         'phone',
         'footer_vn',
         'footer_en',
@@ -30,8 +31,11 @@ class System extends Model
         'favicon',
         'logo',
         'name_vn',
-        'description',
-        'keyword',
+        'name_en',
+        'description_vn',
+        'description_en',
+        'keyword_vn',
+        'keyword_en',
         'header_js',
         'body_js',
         'footer_js',
@@ -44,16 +48,16 @@ class System extends Model
 
     public function getMetaNameAttribute()
     {
-        return $this->name_vn;
+        return lang($this, 'name');
     }
 
     public function getMetaKeywordAttribute()
     {
-        return $this->keyword;
+        return lang($this, 'keyword');
     }
 
     public function getMetaDescriptionAttribute()
     {
-        return $this->description;
+        return lang($this, 'description');
     }
 }

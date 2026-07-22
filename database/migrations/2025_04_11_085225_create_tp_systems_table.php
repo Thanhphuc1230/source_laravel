@@ -16,10 +16,12 @@ return new class extends Migration
             // thông tin liên hệ
             $table->string('email', 50);
             $table->string('email_alert', 50)->nullable();
-            $table->text('address')->nullable();
+            $table->text('address_vn')->nullable();
+            $table->text('address_en')->nullable();
             $table->string('phone', 20)->nullable();
             $table->text('footer_vn')->nullable();
             $table->text('footer_en')->nullable();
+            
             // socical media
             $table->string('facebook')->nullable();
             $table->string('youtube')->nullable();
@@ -31,8 +33,11 @@ return new class extends Migration
             $table->string('favicon')->nullable();
             $table->string('logo')->nullable();
             $table->string('name_vn')->nullable();
-            $table->text('description')->nullable();
-            $table->text('keyword')->nullable();
+            $table->string('name_en')->nullable();
+            $table->text('description_vn')->nullable();
+            $table->text('description_en')->nullable();
+            $table->text('keyword_vn')->nullable();
+            $table->text('keyword_en')->nullable();
 
             // Contact page text settings
             $table->string('contact_title_vn')->nullable();

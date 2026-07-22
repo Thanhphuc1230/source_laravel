@@ -26,7 +26,8 @@ class SystemRequest extends BaseAdminRequest
             // Thông tin liên hệ cơ bản
             'email' => 'required|email|max:50',
             'email_alert' => 'nullable|email|max:50',
-            'address' => 'nullable|string|max:1000',
+            'address_vn' => 'nullable|string|max:1000',
+            'address_en' => 'nullable|string|max:1000',
             'phone' => 'nullable|string|max:20',
 
             // Footer content
@@ -44,8 +45,11 @@ class SystemRequest extends BaseAdminRequest
             'favicon' => 'nullable|image|mimes:ico,png,jpg,jpeg|max:512',
             'logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
             'name_vn' => 'nullable|string|max:255',
-            'description' => 'nullable|string|max:500',
-            'keyword' => 'nullable|string|max:1000',
+            'name_en' => 'nullable|string|max:255',
+            'description_vn' => 'nullable|string|max:500',
+            'description_en' => 'nullable|string|max:500',
+            'keyword_vn' => 'nullable|string|max:1000',
+            'keyword_en' => 'nullable|string|max:1000',
 
             // Map embed
             'map' => 'nullable|string|max:2000',
