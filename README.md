@@ -157,6 +157,7 @@ Route::delete('/{id}', 'destroy')->middleware('permission:product.delete');
 - **Route-level Protection**: Middleware bảo vệ routes nhạy cảm
 - **View-level Protection**: Blade directives ẩn/hiện elements theo quyền
 - **Multi-layer Security**: Bảo mật nhiều lớp từ Route → Request → Controller
+- **Rate Limiting & Brute-Force Protection**: Giới hạn tối đa 5 lần thử đăng nhập sai cho mỗi cặp `{email}|{IP}` (khóa 15 phút) và giới hạn tối đa 3 lần gửi contact trong 5 phút từ mỗi IP sử dụng RateLimiter của Laravel.
 
 ## ⚡ Artisan Commands
 
@@ -178,7 +179,7 @@ php artisan sitemap:generate
 - **ImageService**: Xử lý upload, resize, WebP conversion
 - **DataRemovalService**: Xóa data với cleanup ảnh tự động
 - **ModelToggleService**: Toggle status và update order
-- **RateLimitService**: IP-based rate limiting cho login và contact
+- **RateLimitService**: Rate limiting chống brute-force cho đăng nhập admin (kết hợp email + IP) và chống spam gửi contact (dựa trên IP) sử dụng RateLimiter của Laravel.
 
 ### Traits  
 - **ImageHandlerTrait**: Centralized image processing

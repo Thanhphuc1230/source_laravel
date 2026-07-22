@@ -81,6 +81,7 @@ public/
 | `CacheService` | Wrapper xóa cache theo Tags |
 | `ImageService` | Upload, Resize, Convert WebP |
 | `DataRemovalService` | Xóa bản ghi + dọn file ảnh vật lý |
+| `RateLimitService` | Giới hạn số lần đăng nhập sai (Brute-Force) và gửi Contact chống spam |
 
 ---
 
@@ -316,3 +317,16 @@ php artisan admin:create
 # Tạo sitemap SEO
 php artisan sitemap:generate
 ```
+
+---
+
+## 11. Bảo mật & Chống Brute-Force/Spam (Rate Limiting)
+
+Sử dụng `App\Services\RateLimitService` bọc quanh `RateLimiter` của Laravel để cấu hình:
+1. **Login Admin** (tối đa 5 lần thử/15 phút):
+   * Key định danh: `{email/username}|{IP}` (Ngăn chặn brute-force trên từng tài khoản mà không gây ảnh hưởng đến IP dùng chung).
+   * Lỗi thử sai: Trả về thông báo kèm số lần còn lại (Ví dụ: *"Mật khẩu không đúng. Vui lòng nhập lại. Bạn còn 3 lần thử."*).
+   * Block khi quá hạn: Báo lỗi *"Bạn đã nhập sai quá 5 lần. Vui lòng thử lại sau X phút."* (Dùng `RateLimiter::availableIn`).
+2. **Spam Contact** (tối đa 3 lần gửi/5 phút):
+   * Key định danh: `{IP}`.
+   * Chặn gửi contact từ IP spam và báo thời gian block qua SweetAlert.
