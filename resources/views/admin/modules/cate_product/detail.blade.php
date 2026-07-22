@@ -59,7 +59,7 @@
                                         @include('admin.partials.preview-link', ['model' => $page ?? null])
                                         @include('admin.partials.publishing-fields', ['model' => $page ?? null])
 
-                                        @foreach (['vn', 'en'] as $locale)
+                                        @foreach ($adminLanguages as $locale)
                                             @include('admin.partials.image-upload', [
                                                 'locale' => $locale,
                                                 'imageFolder' => $imageFolder,

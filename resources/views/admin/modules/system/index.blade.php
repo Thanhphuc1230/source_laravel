@@ -29,6 +29,25 @@
                                 <h5 class="card-title mb-0 font-weight-bold">Thông tin website</h5>
                             </div>
                             <div class="card-body">
+                                <!-- Cấu hình ngôn ngữ hoạt động -->
+                                <div class="mb-4 pb-3 border-b border-gray-150">
+                                    <label class="form-label font-weight-bold d-block">Ngôn ngữ hoạt động</label>
+                                    <div class="d-flex align-items-center">
+                                        <div class="form-check form-switch form-switch-success me-4">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="lang-vi" name="active_languages[]" value="vi" {{ in_array('vi', $system->active_languages ?? ['vi', 'en']) ? 'checked' : '' }}>
+                                            <label class="form-check-label font-weight-semibold" for="lang-vi">Tiếng Việt (VI)</label>
+                                        </div>
+                                        <div class="form-check form-switch form-switch-success">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="lang-en" name="active_languages[]" value="en" {{ in_array('en', $system->active_languages ?? ['vi', 'en']) ? 'checked' : '' }}>
+                                            <label class="form-check-label font-weight-semibold" for="lang-en">Tiếng Anh (EN)</label>
+                                        </div>
+                                    </div>
+                                    @error('active_languages')
+                                        <span class="text-danger d-block mt-1">{{ $message }}</span>
+                                    @enderror
+                                    <small class="text-muted d-block mt-1">Khi tắt một ngôn ngữ, các ô nhập liệu của ngôn ngữ đó trên toàn trang quản trị sẽ tự động ẩn đi.</small>
+                                </div>
+
                                 @include('admin.partials.localized-fields', [
                                     'model' => $system,
                                     'fields' => [
@@ -151,6 +170,23 @@
                 if (document.getElementById('footer-en')) {
                     CKEDITOR.replace('footer-en', options);
                 }
+            }
+
+            // UX: Đảm bảo tối thiểu phải chọn 1 ngôn ngữ hoạt động
+            const checkboxVi = document.getElementById('lang-vi');
+            const checkboxEn = document.getElementById('lang-en');
+
+            if (checkboxVi && checkboxEn) {
+                const enforceMinActiveLang = (event) => {
+                    if (!checkboxVi.checked && !checkboxEn.checked) {
+                        event.preventDefault();
+                        event.target.checked = true;
+                        alert('Hệ thống yêu cầu tối thiểu phải chọn một ngôn ngữ hoạt động.');
+                    }
+                };
+
+                checkboxVi.addEventListener('change', enforceMinActiveLang);
+                checkboxEn.addEventListener('change', enforceMinActiveLang);
             }
         });
     </script>

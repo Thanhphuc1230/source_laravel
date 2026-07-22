@@ -35,6 +35,23 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('frontend.*', FrontendComposer::class);
 
+        View::composer('admin.*', function ($view) {
+            if (class_exists(\App\Models\System::class)) {
+                $system = Cache::remember('admin_system_config', now()->addHours(24), function() {
+                    return \App\Models\System::first();
+                });
+                $activeLocales = $system->active_languages ?? ['vi', 'en'];
+                $adminLanguages = [];
+                if (in_array('vi', $activeLocales)) $adminLanguages[] = 'vn';
+                if (in_array('en', $activeLocales)) $adminLanguages[] = 'en';
+
+                $view->with([
+                    'systemConfig' => $system,
+                    'adminLanguages' => $adminLanguages
+                ]);
+            }
+        });
+
         // Clear frontend cache dynamically when data changes
         $clearFrontendCache = function() {
             if (class_exists(\App\Services\CacheService::class)) {
@@ -47,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
                 \App\Services\CacheService::forgetTag('products');
             }
             Cache::forget('frontend_global_data');
+            Cache::forget('admin_system_config');
         };
 
         foreach ([System::class, Menu::class, Slider::class, CateProduct::class, CateNew::class, Page::class, Product::class] as $model) {

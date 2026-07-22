@@ -14,6 +14,7 @@ class SystemSeeder extends Seeder
     {
         DB::table('tp_systems')->insert([
             'email' => 'info@basetravel.com',
+            'active_languages' => '["vi","en"]',
             'address_vn' => 'Lầu 5, Tòa nhà Travel, TP. Hồ Chí Minh',
             'address_en' => '5th Floor, Travel Building, Ho Chi Minh City',
             'phone' => '1800 6700',

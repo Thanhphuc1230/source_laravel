@@ -8,6 +8,20 @@
 ])
 
 @php
+    // Đọc active languages từ global systemConfig
+    $activeLocales = isset($systemConfig) ? ($systemConfig->active_languages ?? ['vi', 'en']) : ['vi', 'en'];
+    
+    $shouldRender = false;
+    if ($locale === 'vn' && in_array('vi', $activeLocales)) {
+        $shouldRender = true;
+    }
+    if ($locale === 'en' && in_array('en', $activeLocales)) {
+        $shouldRender = true;
+    }
+@endphp
+
+@if ($shouldRender)
+@php
     $fieldName = $base . '_' . $locale;
     $currentImage = data_get($model, $fieldName);
     $inputUuid = 'file_' . $fieldName;
@@ -43,3 +57,4 @@
     });
 </script>
 @endpush
+@endif

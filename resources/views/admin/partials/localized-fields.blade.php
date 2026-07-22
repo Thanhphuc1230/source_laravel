@@ -8,7 +8,16 @@
         $rows = $field['rows'] ?? 6;
         $col = $field['col'] ?? 'col-12'; // Mặc định là full width
         $useEditor = $field['ckeditor'] ?? false;
-        $languages = ['vn' => 'VN', 'en' => 'EN'];
+        
+        // Đọc active languages từ global systemConfig
+        $activeLocales = isset($systemConfig) ? ($systemConfig->active_languages ?? ['vi', 'en']) : ['vi', 'en'];
+        $languages = [];
+        if (in_array('vi', $activeLocales)) {
+            $languages['vn'] = 'VN';
+        }
+        if (in_array('en', $activeLocales)) {
+            $languages['en'] = 'EN';
+        }
     @endphp
 
     <div class="row">

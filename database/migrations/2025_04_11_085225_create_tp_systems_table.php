@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('tp_systems', function (Blueprint $table) {
             $table->id('id_system');
+            $table->text('active_languages')->nullable(); // Cấu hình ngôn ngữ hoạt động động
             // thông tin liên hệ
             $table->string('email', 50);
             $table->string('email_alert', 50)->nullable();

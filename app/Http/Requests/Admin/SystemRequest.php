@@ -23,6 +23,8 @@ class SystemRequest extends BaseAdminRequest
     public function rules(): array
     {
         return [
+            'active_languages' => 'required|array|min:1',
+            'active_languages.*' => 'in:vi,en',
             // Thông tin liên hệ cơ bản
             'email' => 'required|email|max:50',
             'email_alert' => 'nullable|email|max:50',
@@ -62,6 +64,8 @@ class SystemRequest extends BaseAdminRequest
     public function messages(): array
     {
         return [
+            'active_languages.required' => 'Bạn phải chọn ít nhất một ngôn ngữ hoạt động',
+            'active_languages.min' => 'Bạn phải chọn ít nhất một ngôn ngữ hoạt động',
             // Email validation
             'email.required' => 'Email hệ thống là bắt buộc',
             'email.email' => 'Email hệ thống không đúng định dạng',

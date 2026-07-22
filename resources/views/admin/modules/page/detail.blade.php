@@ -44,7 +44,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    @foreach (['vn', 'en'] as $locale)
+                                    @foreach ($adminLanguages as $locale)
                                         @include('admin.partials.image-upload', [
                                             'locale' => $locale,
                                             'imageFolder' => $imageFolder,

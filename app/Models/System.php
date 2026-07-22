@@ -15,7 +15,12 @@ class System extends Model
 
     protected $primaryKey = 'id_system';
 
+    protected $casts = [
+        'active_languages' => 'array',
+    ];
+
     protected $fillable = [
+        'active_languages',
         'email',
         'email_alert',
         'address_vn',
