@@ -145,7 +145,7 @@
                                                                 <div class="d-flex gap-2">
                                                                     <div class="watch">
                                                                         @if($item->slug && $item->id_product)
-                                                                            <a href="{{ route('web.resolve', ['id' => $item->id_product, 'slug' => $item->slug]) }}"
+                                                                            <a href="{{ route('web.resolve', ['slug' => $item->slug]) }}"
                                                                                 target="_blank"
                                                                                 class="btn btn-sm btn-primary watch-item-btn">Xem</a>
                                                                         @else

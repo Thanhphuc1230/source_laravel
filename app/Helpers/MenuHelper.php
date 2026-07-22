@@ -23,7 +23,7 @@ if (!function_exists('getUrlMenu')) {
                     return route('web.404');
                 }
 
-                return route('web.resolve', ['id' => $item->object_id, 'slug' => $slug]);
+                return route('web.resolve', ['slug' => $slug]);
 
             case 'cate_new':
                 $cateNew = CateNew::where('id_cate_new', $item->object_id)
@@ -35,7 +35,7 @@ if (!function_exists('getUrlMenu')) {
                     return route('web.404');
                 }
 
-                return route('web.resolve', ['id' => $item->object_id, 'slug' => $slug]);
+                return route('web.resolve', ['slug' => $slug]);
 
             case 'cate_product':
                 $cateProduct = CateProduct::where('id_cate_product', $item->object_id)
@@ -47,7 +47,7 @@ if (!function_exists('getUrlMenu')) {
                     return route('web.404');
                 }
 
-                return route('web.resolve', ['id' => $item->object_id, 'slug' => $slug]);
+                return route('web.resolve', ['slug' => $slug]);
 
             case 'link':
                 if (empty($item->link) || $item->link === '#') {
