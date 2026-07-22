@@ -156,6 +156,11 @@
                                     <a href="{{ route('admin.news.index') }}" class="nav-link">Bài viết</a>
                                 </li>
                                 @endhasPermission
+                                @hasPermission('system.view')
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.news-setting.index') }}" class="nav-link">Cài đặt</a>
+                                </li>
+                                @endhasPermission
                             </ul>
                         </div>
                     </li>

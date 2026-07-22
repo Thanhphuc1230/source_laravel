@@ -35,6 +35,7 @@ Route::prefix('admin')
         require __DIR__.'/admin/order.php';
         require __DIR__.'/admin/contact.php';
         require __DIR__.'/admin/product-setting.php';
+        require __DIR__.'/admin/news-setting.php';
         require __DIR__.'/admin/comment.php';
         require __DIR__.'/admin/user-role.php';
         require __DIR__.'/admin/fonts.php';
