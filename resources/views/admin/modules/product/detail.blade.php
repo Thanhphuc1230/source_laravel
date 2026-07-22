@@ -126,7 +126,7 @@
                                                     @foreach (json_decode($page->image_detail) as $index => $img_detail)
                                                         <div class="col-md-3 mb-2 existing-image-item" data-image="{{ $img_detail }}">
                                                             <div class="position-relative">
-                                                                <img src="{{ str_starts_with($img_detail, 'images/') ? asset($img_detail) : asset('images/' . $imageFolder . '/' . $img_detail) }}"
+                                                                <img src="{{ str_starts_with($img_detail, 'uploads/') ? asset($img_detail) : asset('uploads/' . $imageFolder . '/' . $img_detail) }}"
                                                                     alt="Product detail"
                                                                     style="width: 200px; height: 200px;object-fit: contain"
                                                                     class="img-fluid rounded">

@@ -2,7 +2,7 @@
 @section('module', 'Liên hệ - ' . $web->meta_name)
 @section('keywords', $web->meta_keyword)
 @section('description', $web->meta_description)
-@section('images', asset('images/logo/' . $web->logo))
+@section('images', $web->logo)
 
 @section('content')
     <div class="bg-gray-100 py-6 border-b border-gray-200/50">

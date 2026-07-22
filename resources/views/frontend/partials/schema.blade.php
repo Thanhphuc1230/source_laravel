@@ -6,7 +6,7 @@
     "@id": "{{ route('web.home') }}#organization",
     "name": "{{ $web->name_vn ?? 'Base' }}",
     "url": "{{ route('web.home') }}",
-    "logo": "{{ asset($web->logo ? 'images/logo/' . $web->logo : '') }}",
+    "logo": "{{ $web->logo ?? '' }}",
     "contactPoint": {
         "@type": "ContactPoint",
         "telephone": "{{ $web->phone ?? '' }}",

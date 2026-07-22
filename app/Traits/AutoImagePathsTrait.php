@@ -26,7 +26,7 @@ trait AutoImagePathsTrait
 
     public function getAvatarAttribute($value)
     {
-        return $this->resolveImageUrl($value) ?: asset('images/users/default.jpg');
+        return $this->resolveImageUrl($value) ?: asset('uploads/users/default.jpg');
     }
 
     public function getLogoAttribute($value)
@@ -49,13 +49,13 @@ trait AutoImagePathsTrait
             return $value;
         }
 
-        if (str_starts_with($value, 'images/')) {
+        if (str_starts_with($value, 'uploads/')) {
             return asset($value);
         }
 
         // Tương thích ngược: tự lấy folder tương ứng nếu chỉ lưu tên file
         $folder = $this->getFolderFromModel();
-        return asset("images/{$folder}/{$value}");
+        return asset("uploads/{$folder}/{$value}");
     }
 
     protected function getFolderFromModel()

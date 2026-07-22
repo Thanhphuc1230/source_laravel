@@ -27,8 +27,8 @@ class SystemSeeder extends Seeder
             'instagram' => 'https://instagram.com/basetravel',
             'zalo' => 'https://zalo.me/0909090909',
 
-            'favicon' => 'images/logo/1719371505-logo.png',
-            'logo' => 'images/logo/1719371505-logo.png',
+            'favicon' => 'uploads/logo/1719371505-logo.png',
+            'logo' => 'uploads/logo/1719371505-logo.png',
             'name_vn' => 'BASE TRAVEL',
             'name_en' => 'BASE TRAVEL',
             'description_vn' => 'BASE TRAVEL - Tour Du Lịch Uy Tín Hàng Đầu',

@@ -224,7 +224,7 @@ class MenuController extends BaseController
 
         foreach ($imageFields as $field) {
             if (isset($menu->$field) && $menu->$field) {
-                $imagePath = public_path("images/{$imageFolder}/{$menu->$field}");
+                $imagePath = public_path("uploads/{$imageFolder}/{$menu->$field}");
                 if (file_exists($imagePath)) {
                     unlink($imagePath);
                 }

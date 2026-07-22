@@ -2,7 +2,7 @@
 @section('module', $web->meta_name)
 @section('keywords', $web->meta_keyword)
 @section('description', $web->meta_description)
-@section('images', asset('images/logo/' . $web->favicon))
+@section('images', $web->favicon)
 
 @section('content')
     <!-- Main Slider Carousel -->

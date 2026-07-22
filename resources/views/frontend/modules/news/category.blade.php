@@ -2,7 +2,7 @@
 @section('module', lang($category_detail, 'name'))
 @section('keywords', lang($category_detail, 'keyword'))
 @section('description', lang($category_detail, 'description'))
-@section('images', asset(lang($category_detail, 'image') ?? 'images/logo/' . $web->logo))
+@section('images', lang($category_detail, 'image') ?? $web->logo)
 
 @section('content')
     <div class="bg-emerald-950 text-white py-16 text-center space-y-2">

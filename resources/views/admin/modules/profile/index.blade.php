@@ -27,10 +27,7 @@
                         <div class="card-body p-4">
                             <div class="text-center">
                                 <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
-                                    @php
-                                        $avatar = Auth::user()->avatar ? Auth::user()->avatar : 'default.jpg';
-                                    @endphp
-                                    <img src="{{ asset('images/users/' . $avatar) }}"
+                                    <img src="{{ Auth::user()->avatar }}"
                                         class="rounded-circle avatar-xl img-thumbnail user-profile-image"
                                         alt="user-profile-image">
                                     <div class="avatar-xs p-0 rounded-circle profile-photo-edit">

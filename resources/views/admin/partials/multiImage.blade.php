@@ -299,7 +299,7 @@
         container.className = 'preview-item';
 
         let img = document.createElement('img');
-        img.src = '{{ asset('images/products/') }}/' + image; // Đường dẫn đến hình ảnh cũ
+        img.src = '{{ asset('uploads/products/') }}/' + image; // Đường dẫn đến hình ảnh cũ
         img.className = 'preview-image';
 
         let deleteBtn = document.createElement('button');

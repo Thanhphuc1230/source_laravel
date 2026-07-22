@@ -2,7 +2,7 @@
 @section('module', lang($product_detail, 'name'))
 @section('keywords', lang($product_detail, 'keyword'))
 @section('description', lang($product_detail, 'description'))
-@section('images', asset($product_detail->image_vn ?? 'images/logo/' . $web->logo))
+@section('images', $product_detail->image_vn ?? $web->logo)
 
 @section('content')
     <!-- Product Detail Header Breadcrumb -->

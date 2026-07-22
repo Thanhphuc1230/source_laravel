@@ -64,7 +64,7 @@ class SiteSettingSeeder extends Seeder
             ['key' => 'hero_image'],
             [
                 'type' => 'image',
-                'value' => '/images/hero-bg.jpg',
+                'value' => '/uploads/hero-bg.jpg',
                 'group' => 'homepage',
                 'description' => 'Hình ảnh hero section'
             ]

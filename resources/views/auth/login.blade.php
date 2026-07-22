@@ -32,7 +32,7 @@
     <div class="auth-page-wrapper pt-5">
         <!-- auth page bg -->
         <div class="auth-one-bg-position auth-one-bg" id="auth-particles"
-            style="background-image: url({{ asset('images/bg/auth-one-bg.jpg') }})">
+            style="background-image: url({{ asset('uploads/bg/auth-one-bg.jpg') }})">
             <div class="bg-overlay"></div>
 
             <div class="shape">
@@ -51,7 +51,7 @@
                         <div class="text-center mt-sm-5 mb-4 text-white-50">
                             <div>
                                 <a href="https://triviet.net/" class="d-inline-block auth-logo">
-                                    <img src="{{ asset('images/bg/logo.png ') }}" alt="" height="60">
+                                    <img src="{{ asset('uploads/bg/logo.png') }}" alt="" height="60">
                                 </a>
                             </div>
                         </div>

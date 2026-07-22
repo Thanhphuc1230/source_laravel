@@ -61,10 +61,10 @@ class ImageService
                 $fileName = $this->handleWebpConversion($file, $subPath, $fileName, $options);
             } else {
                 // Lưu file gốc nếu không chuyển WebP
-                $file->move(public_path("images/{$subPath}"), $fileName);
+                $file->move(public_path("uploads/{$subPath}"), $fileName);
             }
 
-            return "images/{$subPath}/{$fileName}";
+            return "uploads/{$subPath}/{$fileName}";
         } catch (Exception $e) {
             throw $e;
         }
@@ -127,7 +127,7 @@ class ImageService
     {
         if (filter_var($fileName, FILTER_VALIDATE_URL)) {
             $path = parse_url($fileName, PHP_URL_PATH);
-            $search = "images/";
+            $search = "uploads/";
             $pos = strpos($path, $search);
             if ($pos !== false) {
                 $relativePath = substr($path, $pos);
@@ -136,11 +136,11 @@ class ImageService
             return public_path(ltrim($path, '/'));
         }
 
-        if (str_starts_with($fileName, 'images/')) {
+        if (str_starts_with($fileName, 'uploads/')) {
             return public_path($fileName);
         }
 
-        return public_path("images/{$imageFolder}/{$fileName}");
+        return public_path("uploads/{$imageFolder}/{$fileName}");
     }
 
     /**
@@ -148,16 +148,13 @@ class ImageService
      */
     private function ensureDirectoryExists(string $imageFolder): void
     {
-        $path = public_path("images/{$imageFolder}");
+        $path = public_path("uploads/{$imageFolder}");
 
         if (! File::exists($path)) {
             File::makeDirectory($path, 0755, true);
         }
     }
 
-    /**
-     * Tạo tên file duy nhất
-     */
     private function generateFileName(UploadedFile $file, array $options = []): string
     {
         $prefix = $options['prefix'] ?? '';
@@ -314,7 +311,7 @@ class ImageService
         $this->ensureDirectoryExists($subPath);
 
         $webpFileName = pathinfo($fileName, PATHINFO_FILENAME).'.webp';
-        $targetPath = public_path("images/{$subPath}/{$webpFileName}");
+        $targetPath = public_path("uploads/{$subPath}/{$webpFileName}");
         $quality = $options['quality'] ?? 80;
 
         if (! $this->convertToWebp($file->getPathname(), $targetPath, $quality)) {
@@ -342,11 +339,11 @@ class ImageService
                     if (isset($options['convertToWebp']) && $options['convertToWebp']) {
                         $fileName = $this->handleWebpConversion($file, $subPath, $fileName, $options);
                     } else {
-                        $file->move(public_path("images/{$subPath}"), $fileName);
+                        $file->move(public_path("uploads/{$subPath}"), $fileName);
                     }
 
-                    // Lưu đường dẫn tương đối bắt đầu bằng images/
-                    $files[] = "images/{$subPath}/{$fileName}";
+                    // Lưu đường dẫn tương đối bắt đầu bằng uploads/
+                    $files[] = "uploads/{$subPath}/{$fileName}";
                 } catch (Exception $e) {
                     continue;
                 }
@@ -359,34 +356,20 @@ class ImageService
     /**
      * Xử lý hình ảnh chi tiết lúc update với logic xóa và thêm mới
      */
-    public function updateDetailImages($request, $current, $imageFolder, $fieldName = 'image_detail', array $options = [])
+    public function updateDetailImages($request, $model, string $imageFolder, string $fieldName = 'image_detail', array $options = [])
     {
-        // Lấy danh sách hình ảnh hiện tại từ model
-        $existingImages = json_decode($current->image_detail, true) ?: [];
+        $existingImages = json_decode($model->$fieldName, true) ?: [];
 
-        // Lấy danh sách hình ảnh được giữ lại từ request (nếu có)
-        $keptImages = $request->input('kept_images', '[]');
+        // Lấy danh sách hình ảnh được giữ lại từ request
+        $keptImages = $request->input('kept_images', []);
 
-        // Chuyển đổi string JSON thành array
-        if (is_string($keptImages)) {
-            $keptImages = json_decode($keptImages, true) ?: [];
-        }
+        // Filter chỉ giữ lại những hình ảnh thực sự tồn tại trong model cũ
+        $filteredExistingImages = array_intersect($existingImages, $keptImages);
 
-        // Lọc ra những hình ảnh được giữ lại
-        $filteredExistingImages = [];
-        if (! empty($keptImages) && is_array($keptImages)) {
-            foreach ($keptImages as $keptImage) {
-                if (in_array($keptImage, $existingImages)) {
-                    $filteredExistingImages[] = $keptImage;
-                }
-            }
-        }
-
-        // Xử lý hình ảnh mới được upload
         $newImages = [];
-        if ($request->hasFile($fieldName)) {
+        if ($request->hasFile('image_detail')) {
             $subPath = $this->getSubPath($imageFolder);
-            foreach ($request->file($fieldName) as $file) {
+            foreach ($request->file('image_detail') as $file) {
                 try {
                     // Tạo tên file duy nhất
                     $fileName = $this->generateFileName($file, $options);
@@ -398,11 +381,11 @@ class ImageService
                     if (isset($options['convertToWebp']) && $options['convertToWebp']) {
                         $fileName = $this->handleWebpConversion($file, $subPath, $fileName, $options);
                     } else {
-                        $file->move(public_path("images/{$subPath}"), $fileName);
+                        $file->move(public_path("uploads/{$subPath}"), $fileName);
                     }
 
-                    // Lưu đường dẫn tương đối bắt đầu bằng images/
-                    $newImages[] = "images/{$subPath}/{$fileName}";
+                    // Lưu đường dẫn tương đối bắt đầu bằng uploads/
+                    $newImages[] = "uploads/{$subPath}/{$fileName}";
                 } catch (Exception $e) {
                     continue;
                 }
@@ -456,13 +439,13 @@ class ImageService
             $this->ensureDirectoryExists($subPath);
 
             // Đường dẫn file đích
-            $targetPath = public_path("images/{$subPath}/{$fileName}");
+            $targetPath = public_path("uploads/{$subPath}/{$fileName}");
 
             // Chuyển đổi và lưu ảnh dạng WebP
             $quality = $options['quality'] ?? 80;
             $this->convertToWebp($file->getPathname(), $targetPath, $quality);
 
-            return "images/{$subPath}/{$fileName}";
+            return "uploads/{$subPath}/{$fileName}";
         } catch (Exception $e) {
             throw $e;
         }

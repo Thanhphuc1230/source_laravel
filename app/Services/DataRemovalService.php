@@ -92,13 +92,13 @@ class DataRemovalService
 
             if (filter_var($fileName, FILTER_VALIDATE_URL)) {
                 $path = parse_url($fileName, PHP_URL_PATH);
-                $search = "images/";
+                $search = "uploads/";
                 $pos = strpos($path, $search);
                 $imagePath = $pos !== false ? public_path(substr($path, $pos)) : public_path(ltrim($path, '/'));
-            } elseif (str_starts_with($fileName, 'images/')) {
+            } elseif (str_starts_with($fileName, 'uploads/')) {
                 $imagePath = public_path($fileName);
             } else {
-                $imagePath = public_path("images/{$imageFolder}/{$fileName}");
+                $imagePath = public_path("uploads/{$imageFolder}/{$fileName}");
             }
 
             if (File::exists($imagePath)) {
@@ -125,10 +125,10 @@ class DataRemovalService
 
         foreach ($imageDetail as $imageName) {
             if ($imageName) {
-                if (str_starts_with($imageName, 'images/')) {
+                if (str_starts_with($imageName, 'uploads/')) {
                     $imagePath = public_path($imageName);
                 } else {
-                    $imagePath = public_path("images/{$imageFolder}/{$imageName}");
+                    $imagePath = public_path("uploads/{$imageFolder}/{$imageName}");
                 }
                 if (File::exists($imagePath)) {
                     File::delete($imagePath);

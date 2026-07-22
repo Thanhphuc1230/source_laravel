@@ -2,12 +2,12 @@
 @section('module', lang($category_detail, 'name'))
 @section('keywords', lang($category_detail, 'keyword'))
 @section('description', lang($category_detail, 'description'))
-@section('images', asset($category_detail->image_vn ?? 'images/logo/' . $web->logo))
+@section('images', $category_detail->image_vn ?? $web->logo)
 
 @section('content')
     <!-- Category Page Header Banner -->
     <div class="bg-emerald-950 text-white py-16 relative overflow-hidden">
-        <div class="absolute inset-0 bg-cover bg-center opacity-25" style="background-image: url('{{ asset($category_detail->image ?? 'images/slider/slide_1.jpg') }}');"></div>
+        <div class="absolute inset-0 bg-cover bg-center opacity-25" style="background-image: url('{{ $category_detail->image ?? asset('uploads/slider/slide_1.jpg') }}');"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-950/60 to-emerald-950/30"></div>
         <div class="max-w-7xl mx-auto px-4 relative z-10 text-center space-y-2">
             <span class="text-gold-500 text-xs font-bold uppercase tracking-widest">Danh mục du lịch</span>

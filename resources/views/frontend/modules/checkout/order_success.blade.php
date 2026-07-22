@@ -2,7 +2,7 @@
 @section('module', 'Đặt hàng thành công - ' . $web->meta_name)
 @section('keywords', $web->meta_keyword)
 @section('description', $web->meta_description)
-@section('images', asset('images/logo/' . $web->logo))
+@section('images', $web->logo)
 
 @section('content')
     <div class="max-w-4xl mx-auto px-4 py-16 text-center space-y-6">

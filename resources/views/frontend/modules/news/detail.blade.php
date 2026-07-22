@@ -2,7 +2,7 @@
 @section('module', lang($news_detail, 'name'))
 @section('keywords', lang($news_detail, 'keyword'))
 @section('description', lang($news_detail, 'description'))
-@section('images', asset(lang($news_detail, 'image') ?? 'images/logo/' . $web->logo))
+@section('images', lang($news_detail, 'image') ?? $web->logo)
 
 @section('content')
     <div class="bg-gray-100 py-4 border-b border-gray-200/50">

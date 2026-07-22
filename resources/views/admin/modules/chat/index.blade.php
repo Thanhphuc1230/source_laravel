@@ -95,7 +95,7 @@
                                                         <div class="avatar-sm me-2">
                                                             <span
                                                                 class="avatar-title" style="background-color:unset">
-                                                                <img src="{{asset('images/users/default.jpg')}}" alt="" width="45" height="45">
+                                                                <img src="{{asset('uploads/users/default.jpg')}}" alt="" width="45" height="45">
                                                             </span>
                                                         </div>
                                                         <div>

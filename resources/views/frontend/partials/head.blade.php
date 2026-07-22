@@ -9,8 +9,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/logo/' . $web->favicon) }}" sizes="48x48">
-    <link rel="icon" type="image/png" href="{{ asset('images/logo/' . $web->favicon) }}" sizes="48x48">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ $web->favicon }}" sizes="48x48">
+    <link rel="icon" type="image/png" href="{{ $web->favicon }}" sizes="48x48">
 
     <!-- CSS (Font, Vendor, Icon, Plugins & Style CSS files) -->
     <link rel="preload" href="@yield('images')" as="image">
@@ -31,8 +31,8 @@
         <meta property="og:image:secure_url" content="@yield('images')">
         <meta property="og:image:alt" content="@yield('module')">
     @else
-        <meta property="og:image" content="{{ asset($web->logo ? 'images/logo/' . $web->logo : '') }}">
-        <meta property="og:image:secure_url" content="{{ asset($web->logo ? 'images/logo/' . $web->logo : '') }}">
+        <meta property="og:image" content="{{ $web->logo ?? '' }}">
+        <meta property="og:image:secure_url" content="{{ $web->logo ?? '' }}">
         <meta property="og:image:alt" content="{{ $web->name_vn ?? 'Base' }}">
     @endif
     <meta property="og:image:width" content="1200">
@@ -45,7 +45,7 @@
     @if(View::hasSection('images') && trim(View::yieldContent('images')) != '')
         <meta name="twitter:image" content="@yield('images')">
     @else
-        <meta name="twitter:image" content="{{ asset($web->logo ? 'images/logo/' . $web->logo : '') }}">
+        <meta name="twitter:image" content="{{ $web->logo ?? '' }}">
     @endif
 
     {{-- Schema JSON-LD --}}
