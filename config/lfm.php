@@ -106,7 +106,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'disk' => 'images',
+    'disk' => 'uploads',
 
     'rename_file' => false,
 
@@ -203,7 +203,7 @@ return [
     ],
 
     // Cấu hình thư mục gốc
-    'base_directory' => 'images',
+    'base_directory' => 'uploads',
 
     'valid_file_mimetypes' => [
         // ... các mime types khác
