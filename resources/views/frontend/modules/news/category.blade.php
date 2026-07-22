@@ -71,7 +71,7 @@
                 <!-- Pagination -->
                 @if($news->hasPages())
                     <div class="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm flex justify-center mt-6">
-                        {!! $news->links() !!}
+                        {!! $news->links('frontend.partials.pagination') !!}
                     </div>
                 @endif
             </div>

@@ -142,8 +142,8 @@
                 <!-- Pagination controls -->
                 @if($products->hasPages())
                     <div class="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm flex justify-center">
-                        <div class="pagination-wrap">
-                            {!! $products->links() !!}
+                        <div class="pagination-wrap w-full">
+                            {!! $products->links('frontend.partials.pagination') !!}
                         </div>
                     </div>
                 @endif
