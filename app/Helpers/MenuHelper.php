@@ -12,6 +12,38 @@ if (!function_exists('getUrlMenu')) {
             return route('web.404');
         }
 
+        if ($item->type === 'link') {
+            if (empty($item->link) || $item->link === '#') {
+                return '#';
+            }
+            return $item->link;
+        }
+
+        // Tạo cache key duy nhất
+        $cacheKey = "menu_item_url_{$item->type}_{$item->object_id}";
+        $cacheTtl = 7200; // 2 giờ
+
+        // Sử dụng CacheService nếu có để hỗ trợ tag và tự động dọn dẹp
+        if (class_exists(\App\Services\CacheService::class)) {
+            return \App\Services\CacheService::remember(
+                \App\Services\CacheService::TAGS['frontend'] ?? 'frontend',
+                $cacheKey,
+                $cacheTtl,
+                function () use ($item) {
+                    return getUrlMenuRaw($item);
+                }
+            );
+        }
+
+        return Cache::remember($cacheKey, $cacheTtl, function () use ($item) {
+            return getUrlMenuRaw($item);
+        });
+    }
+}
+
+if (!function_exists('getUrlMenuRaw')) {
+    function getUrlMenuRaw($item)
+    {
         switch ($item->type) {
             case 'page':
                 $page = Page::where('id_page', $item->object_id)
@@ -48,12 +80,6 @@ if (!function_exists('getUrlMenu')) {
                 }
 
                 return route('web.resolve', ['slug' => $slug]);
-
-            case 'link':
-                if (empty($item->link) || $item->link === '#') {
-                    return '#';
-                }
-                return $item->link;
 
             default:
                 return route('web.home');
