@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id('id_brand');
             $table->uuid();
             $table->string('name_vn');
+            $table->string('name_en')->nullable();
             $table->boolean('status')->default(true);
-            $table->string('image')->nullable();
+            $table->string('image_vn')->nullable();
+            $table->string('image_en')->nullable();
             $table->unsignedInteger('stt')->default(0)->nullable();
             $table->timestamps();
 

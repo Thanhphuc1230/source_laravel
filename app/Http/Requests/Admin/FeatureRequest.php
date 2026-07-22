@@ -13,21 +13,25 @@ class FeatureRequest extends BaseAdminRequest
      */
     public function rules(): array
     {
+        $imageRule = request()->route('uuid')
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048'
+            : 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048';
+
         return [
             'title_vn' => 'required|max:255',
+            'title_en' => 'nullable|max:255',
             'content_vn' => 'required',
+            'content_en' => 'nullable',
             'stt' => 'required|integer',
-            'image' => request()->route('uuid')
-                ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048'
-                : 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
+            'image' => $imageRule,
         ];
     }
 
     public function messages(): array
     {
         return [
-            'title_vn.required' => 'Tiêu đề không được để trống',
-            'content_vn.required' => 'Nội dung không được để trống',
+            'title_vn.required' => 'Tiêu đề Tiếng Việt không được để trống',
+            'content_vn.required' => 'Nội dung Tiếng Việt không được để trống',
             'stt.required' => 'Số thứ tự không được để trống',
             'stt.integer' => 'Số thứ tự phải là số',
             'image.required' => 'Hình ảnh không được để trống',

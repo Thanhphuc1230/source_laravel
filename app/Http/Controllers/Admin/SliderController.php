@@ -62,8 +62,9 @@ class SliderController extends BaseController
     {
         $data = $request->except('_token', 'return_back', 'return_list');
 
-        // Handle image - Save new image
-        $data['image'] = $this->saveImage($request);
+        // Handle image - Save new images
+        $data['image_vn'] = $this->saveImage($request, null, 'image_vn');
+        $data['image_en'] = $this->saveImage($request, null, 'image_en');
 
         $slider = $this->sliderRepository->create($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
@@ -99,8 +100,9 @@ class SliderController extends BaseController
         $current = $this->sliderRepository->findByUuid($uuid);
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
 
-        // Handle image - Update existing image
-        $data['image'] = $this->updateImage($request, $current);
+        // Handle image - Update existing images
+        $data['image_vn'] = $this->updateImage($request, $current, null, 'image_vn');
+        $data['image_en'] = $this->updateImage($request, $current, null, 'image_en');
 
         $this->sliderRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');

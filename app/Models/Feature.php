@@ -15,7 +15,7 @@ class Feature extends Model
 
     protected $primaryKey = 'id_feature';
 
-    protected $fillable = ['title_vn', 'content_vn', 'image', 'stt', 'uuid'];
+    protected $fillable = ['title_vn', 'title_en', 'content_vn', 'content_en', 'image', 'stt', 'uuid', 'status'];
 
     protected $casts = [
         'status' => 'boolean',

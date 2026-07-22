@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\View;
 
 class BrandController extends BaseController
 {
-    use CrudOperationsTrait;
+    use CrudOperationsTrait {
+        store as protected performTraitStore;
+        update as protected performTraitUpdate;
+    }
 
     protected $module;
     protected $model;
@@ -50,65 +53,42 @@ class BrandController extends BaseController
         return $this->view_admin('list', $data);
     }
 
-    /**
-     * Store method uses trait
-     */
     public function store(BrandRequest $request)
     {
-        return $this->performStore($request);
+        $data = $request->except('_token', 'return_back', 'return_list');
+        
+        // Handle multilingual images
+        $data['image_vn'] = $this->saveImage($request, null, 'image_vn');
+        $data['image_en'] = $this->saveImage($request, null, 'image_en');
+
+        $brand = $this->brandRepository->create($data);
+        toast('Thêm '.$this->nameItem.' thành công', 'success');
+
+        BrandChanged::dispatch($brand, 'created');
+
+        return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
     }
 
-    /**
-     * Edit method uses trait
-     */
-    public function edit($uuid, $currentPage)
-    {
-        return $this->performEdit($uuid, $currentPage);
-    }
-
-    /**
-     * Update method uses trait
-     */
     public function update(BrandRequest $request, string $uuid)
     {
-        return $this->performUpdate($request, $uuid);
-    }
+        $current = $this->brandRepository->findByUuid($uuid);
+        
+        if (!$current) {
+            toast('Không tìm thấy '.$this->nameItem, 'error');
+            return back();
+        }
 
-    /**
-     * Destroy method uses trait
-     */
-    public function destroy(string $uuid)
-    {
-        return $this->performDestroy($uuid);
-    }
+        $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
+        
+        // Handle multilingual images
+        $data['image_vn'] = $this->updateImage($request, $current, null, 'image_vn');
+        $data['image_en'] = $this->updateImage($request, $current, null, 'image_en');
 
-    /**
-     * Destroy all method uses trait
-     */
-    public function destroyAll(Request $request)
-    {
-        return $this->performDestroyAll($request);
-    }
+        $this->brandRepository->update($data, $uuid);
+        toast('Cập nhật '.$this->nameItem.' thành công', 'success');
 
-    public function status($uuid, $status, $field)
-    {
-        $brand = $this->brandRepository->findByUuid($uuid);
-        $result = $this->toggleService->toggleModelStatus($uuid, $status, $field, $this->model::class);
+        BrandChanged::dispatch($current, 'updated');
 
-        // Dispatch event for cache invalidation
-        BrandChanged::dispatch($brand, 'status_updated');
-
-        return $result;
-    }
-
-    public function numericalOrder(Request $request, $uuid)
-    {
-        $brand = $this->brandRepository->findByUuid($uuid);
-        $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
-
-        // Dispatch event for cache invalidation
-        BrandChanged::dispatch($brand, 'order_updated');
-
-        return $result;
+        return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
 }

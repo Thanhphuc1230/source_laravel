@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id('id_feature');
             $table->uuid();
             $table->string('title_vn');
+            $table->string('title_en')->nullable();
             $table->text('content_vn');
+            $table->text('content_en')->nullable();
             $table->boolean('status')->default(true);
-            $table->string('image')->nullable(); // Có thể dùng cho SVG hoặc image
+            $table->string('image')->nullable(); // Class icon dùng chung
             $table->unsignedInteger('stt')->default(0)->nullable();
             $table->timestamps();
 
