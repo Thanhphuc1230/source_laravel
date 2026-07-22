@@ -43,7 +43,7 @@ class ContactController extends Controller
 
         // Check rate limiting
         if ($this->rateLimitService->isBlocked($ip)) {
-            Alert::error('Quá số lượng yêu cầu', $this->rateLimitService->getErrorMessage());
+            Alert::error('Quá số lượng yêu cầu', $this->rateLimitService->getErrorMessage($ip));
 
             return back();
         }

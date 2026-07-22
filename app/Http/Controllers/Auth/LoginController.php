@@ -33,29 +33,30 @@ class LoginController extends Controller
 
     public function postLogin(LoginRequest $request)
     {
-        $ip = $request->ip();
+        $email = strtolower($request->username ?? '');
+        $throttleKey = $email . '|' . $request->ip();
 
         // Check rate limiting
-        if ($this->rateLimitService->isBlocked($ip)) {
-            return back()->with(['error' => $this->rateLimitService->getErrorMessage()]);
+        if ($this->rateLimitService->isBlocked($throttleKey)) {
+            return back()->with(['error' => $this->rateLimitService->getErrorMessage($throttleKey)])->withInput();
         }
 
         // Validate user exists and verified
         $user = $this->findUser($request->username);
         if (! $user) {
-            return $this->handleFailedLogin($ip, 'Tài khoản này không tồn tại');
+            return $this->handleFailedLogin($throttleKey, 'Tài khoản này không tồn tại');
         }
 
         if (! $this->isUserVerified($user)) {
-            return $this->handleFailedLogin($ip, 'Vui lòng xác thực email');
+            return $this->handleFailedLogin($throttleKey, 'Vui lòng xác thực email');
         }
 
         // Attempt authentication
         if ($this->attemptLogin($request)) {
-            return $this->handleSuccessfulLogin($request, $ip);
+            return $this->handleSuccessfulLogin($request, $throttleKey);
         }
 
-        return $this->handleFailedLogin($ip, 'Email hoặc mật khẩu không đúng. Vui lòng nhập lại');
+        return $this->handleFailedLogin($throttleKey, 'Mật khẩu không đúng. Vui lòng nhập lại');
     }
 
     /**
@@ -100,9 +101,9 @@ class LoginController extends Controller
     /**
      * Handle successful login
      */
-    private function handleSuccessfulLogin(LoginRequest $request, string $ip)
+    private function handleSuccessfulLogin(LoginRequest $request, string $throttleKey)
     {
-        $this->rateLimitService->clearAttempts($ip);
+        $this->rateLimitService->clearAttempts($throttleKey);
 
         $redirectRoute = $this->getRedirectRoute();
         $request->session()->regenerate();
@@ -113,11 +114,18 @@ class LoginController extends Controller
     /**
      * Handle failed login attempt
      */
-    private function handleFailedLogin(string $ip, string $errorMessage)
+    private function handleFailedLogin(string $throttleKey, string $errorMessage)
     {
-        $this->rateLimitService->incrementAttempts($ip);
+        $this->rateLimitService->incrementAttempts($throttleKey);
 
-        return back()->with(['error' => $errorMessage]);
+        // Nếu bị block ngay lập tức sau khi tăng số lần thử
+        if ($this->rateLimitService->isBlocked($throttleKey)) {
+            return back()->with(['error' => $this->rateLimitService->getErrorMessage($throttleKey)])->withInput();
+        }
+
+        $remaining = $this->rateLimitService->getRemainingAttempts($throttleKey);
+
+        return back()->with(['error' => $errorMessage . ". Bạn còn {$remaining} lần thử."])->withInput();
     }
 
     /**

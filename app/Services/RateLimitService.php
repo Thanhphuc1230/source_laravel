@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\RateLimiter;
 
 class RateLimitService
 {
@@ -20,79 +20,79 @@ class RateLimitService
     }
 
     /**
-     * Check if IP is rate limited
+     * Lấy cache key cho rate limit
      */
-    public function isBlocked(string $ip): bool
+    private function getRateLimitKey(string $key): string
     {
-        $attempts = $this->getAttempts($ip);
-
-        return $attempts >= $this->maxAttempts;
+        return "{$this->prefix}_{$key}";
     }
 
     /**
-     * Increment attempts for IP
+     * Check if key is rate limited
      */
-    public function incrementAttempts(string $ip): void
+    public function isBlocked(string $key): bool
     {
-        $key = $this->getRateLimitKey($ip);
-        $attempts = $this->getAttempts($ip);
+        return RateLimiter::tooManyAttempts($this->getRateLimitKey($key), $this->maxAttempts);
+    }
 
-        Cache::put($key, $attempts + 1, now()->addMinutes($this->decayMinutes));
+    /**
+     * Increment attempts for key
+     */
+    public function incrementAttempts(string $key): void
+    {
+        RateLimiter::hit($this->getRateLimitKey($key), $this->decayMinutes * 60);
     }
 
     /**
      * Clear attempts on success
      */
-    public function clearAttempts(string $ip): void
+    public function clearAttempts(string $key): void
     {
-        Cache::forget($this->getRateLimitKey($ip));
+        RateLimiter::clear($this->getRateLimitKey($key));
     }
 
     /**
      * Get current attempts count
      */
-    public function getAttempts(string $ip): int
+    public function getAttempts(string $key): int
     {
-        return Cache::get($this->getRateLimitKey($ip), 0);
+        return RateLimiter::attempts($this->getRateLimitKey($key));
     }
 
     /**
      * Get rate limit error message
      */
-    public function getErrorMessage(): string
+    public function getErrorMessage(string $key = ''): string
     {
-        return "Bạn đã thực hiện quá nhiều lần trong vòng {$this->decayMinutes} phút. Vui lòng thử lại sau.";
+        $seconds = 0;
+        if (!empty($key)) {
+            $seconds = RateLimiter::availableIn($this->getRateLimitKey($key));
+        }
+        
+        $minutes = ceil($seconds / 60);
+        $minutes = $minutes > 0 ? $minutes : $this->decayMinutes;
+
+        if ($this->prefix === 'contact') {
+            return "Bạn đã gửi quá nhiều yêu cầu liên hệ. Vui lòng thử lại sau {$minutes} phút.";
+        }
+
+        return "Bạn đã nhập sai quá {$this->maxAttempts} lần. Vui lòng thử lại sau {$minutes} phút.";
     }
 
     /**
      * Get remaining attempts
      */
-    public function getRemainingAttempts(string $ip): int
+    public function getRemainingAttempts(string $key): int
     {
-        return max(0, $this->maxAttempts - $this->getAttempts($ip));
+        return RateLimiter::remaining($this->getRateLimitKey($key), $this->maxAttempts);
     }
 
     /**
-     * Get remaining time for blocked IP
+     * Get remaining time for blocked key in seconds
      */
-    public function getRemainingTime(string $ip): int
+    public function getRemainingTime(string $key): int
     {
-        $key = $this->getRateLimitKey($ip);
-        $expiresAt = Cache::get($key.'_expires');
-
-        if (! $expiresAt) {
-            return 0;
-        }
-
-        return max(0, $expiresAt - now()->timestamp);
-    }
-
-    /**
-     * Generate cache key for IP
-     */
-    private function getRateLimitKey(string $ip): string
-    {
-        return "{$this->prefix}_attempts_{$ip}";
+        return RateLimiter::availableIn($this->getRateLimitKey($key));
     }
 
     /**
