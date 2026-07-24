@@ -32,18 +32,18 @@
                 <label for="{{ $id ?? $name }}" class="form-label">{{ $label }} {{ $suffix }}</label>
                 
                 @if ($type === 'textarea')
-                    <textarea 
-                        {{ $id ? 'id='.$id : '' }} 
-                        class="form-control @error($name) is-invalid @enderror" 
-                        name="{{ $name }}" 
-                        rows="{{ $rows }}" 
+                    <textarea
+                        @if($id) id="{{ $id }}" data-ckeditor="true" @endif
+                        class="form-control @error($name) is-invalid @enderror"
+                        name="{{ $name }}"
+                        rows="{{ $rows }}"
                         placeholder="Enter {{ $label }}">{{ $value }}</textarea>
                 @else
-                    <input type="text" 
-                        {{ $id ? 'id='.$id : '' }} 
-                        class="form-control @error($name) is-invalid @enderror" 
-                        name="{{ $name }}" 
-                        value="{{ $value }}" 
+                    <input type="text"
+                        @if($id) id="{{ $id }}" @endif
+                        class="form-control @error($name) is-invalid @enderror"
+                        name="{{ $name }}"
+                        value="{{ $value }}"
                         placeholder="Enter {{ $label }}">
                 @endif
                 

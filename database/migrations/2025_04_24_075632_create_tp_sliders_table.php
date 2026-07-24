@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('name_en')->nullable();
             $table->text('link')->nullable();
             $table->boolean('status')->default(true);
-            $table->string('image_vn')->nullable();
-            $table->string('image_en')->nullable();
+            $table->string('image_desktop_vn')->nullable();
+            $table->string('image_desktop_en')->nullable();
+            $table->string('image_mobile_vn')->nullable();
+            $table->string('image_mobile_en')->nullable();
             $table->unsignedInteger('stt')->default(0)->nullable();
             $table->timestamps();
 
