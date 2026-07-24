@@ -63,8 +63,10 @@ class SliderController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list');
 
         // Handle image - Save new images
-        $data['image_vn'] = $this->saveImage($request, null, 'image_vn');
-        $data['image_en'] = $this->saveImage($request, null, 'image_en');
+        $data['image_desktop_vn'] = $this->saveImage($request, null, 'image_desktop_vn');
+        $data['image_desktop_en'] = $this->saveImage($request, null, 'image_desktop_en');
+        $data['image_mobile_vn'] = $this->saveImage($request, null, 'image_mobile_vn');
+        $data['image_mobile_en'] = $this->saveImage($request, null, 'image_mobile_en');
 
         $slider = $this->sliderRepository->create($data);
         toast('Thêm '.$this->nameItem.' thành công', 'success');
@@ -101,8 +103,10 @@ class SliderController extends BaseController
         $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
 
         // Handle image - Update existing images
-        $data['image_vn'] = $this->updateImage($request, $current, null, 'image_vn');
-        $data['image_en'] = $this->updateImage($request, $current, null, 'image_en');
+        $data['image_desktop_vn'] = $this->updateImage($request, $current, null, 'image_desktop_vn');
+        $data['image_desktop_en'] = $this->updateImage($request, $current, null, 'image_desktop_en');
+        $data['image_mobile_vn'] = $this->updateImage($request, $current, null, 'image_mobile_vn');
+        $data['image_mobile_en'] = $this->updateImage($request, $current, null, 'image_mobile_en');
 
         $this->sliderRepository->update($data, $uuid);
         toast('Cập nhật '.$this->nameItem.' thành công', 'success');
