@@ -78,7 +78,8 @@
 
                                 <div class="mb-3">
                                     <label for="content" class="form-label">Nội dung template <span class="text-danger">*</span></label>
-                                    <textarea name="content" id="content" class="form-control @error('content') is-invalid @enderror"
+                                    <textarea name="content" id="content" data-ckeditor="true"
+                                              class="form-control @error('content') is-invalid @enderror"
                                               rows="15" required>{{ $action == 'edit' ? $template->content : old('content') }}</textarea>
                                     @error('content')
                                         <div class="invalid-feedback">{{ $message }}</div>
@@ -160,24 +161,5 @@
 @endsection
 
 @section('scripts')
-<script>
-$(document).ready(function() {
-    // Initialize CKEditor for content field
-    if (typeof CKEDITOR !== 'undefined') {
-        CKEDITOR.replace('content', {
-            height: 400,
-            toolbar: [
-                { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'] },
-                { name: 'editing', items: ['Find', 'Replace', '-', 'SelectAll'] },
-                { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'] },
-                { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
-                { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
-                { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
-                { name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize'] },
-                { name: 'colors', items: ['TextColor', 'BGColor'] }
-            ]
-        });
-    }
-});
-</script>
+    @include('admin.partials.ckeditor')
 @endsection

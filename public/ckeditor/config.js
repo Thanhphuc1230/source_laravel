@@ -22,7 +22,7 @@ CKEDITOR.editorConfig = function(config) {
     config.font_names = 'Chakra Petch;Arial;Comic Sans MS;Courier New;Times New Roman;Roboto;';
 
     // Include custom CSS files to load fonts and other styles
-    config.contentsCss = ['customCKEStyles.css', 'contents.css']; 
+    config.contentsCss = ['/ckeditor/customCKEStyles.css', '/ckeditor/contents.css']; 
     // Thêm plugin html5audio
 
 };
