@@ -3,7 +3,10 @@
     <!-- Slides Wrapper -->
     @foreach($sliders as $key => $slide)
         <div class="absolute inset-0 transition-all duration-1000 ease-in-out transform {{ $key === 0 ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 z-0' }} slide-item" data-slide-index="{{ $key }}">
-            <img src="{{ asset(lang($slide, 'image')) }}" alt="{{ lang($slide, 'name') }}" class="w-full h-full object-cover opacity-75">
+            <picture class="w-full h-full block">
+                <source media="(max-width: 767px)" srcset="{{ asset(lang($slide, 'image_mobile')) }}">
+                <img src="{{ asset(lang($slide, 'image_desktop')) }}" alt="{{ lang($slide, 'name') }}" class="w-full h-full object-cover opacity-75">
+            </picture>
             <!-- Subtle gradient overlay -->
             <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/70 via-emerald-950/20 to-transparent"></div>
             

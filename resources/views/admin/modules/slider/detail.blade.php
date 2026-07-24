@@ -37,7 +37,7 @@
 
                         <div class="card shadow-sm border-0 mb-4">
                             <div class="card-header bg-light border-0 py-3">
-                                <h5 class="card-title mb-0 font-weight-bold">Hình ảnh Slider</h5>
+                                <h5 class="card-title mb-0 font-weight-bold">Hình ảnh Slider (Desktop)</h5>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -46,9 +46,29 @@
                                             'locale' => $locale,
                                             'imageFolder' => $imageFolder,
                                             'model' => $page ?? null,
-                                            'base' => 'image',
-                                            'label' => 'Banner slider',
+                                            'base' => 'image_desktop',
+                                            'label' => 'Banner Desktop',
                                             'dimensions' => '1920x800'
+                                        ])
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-header bg-light border-0 py-3">
+                                <h5 class="card-title mb-0 font-weight-bold">Hình ảnh Slider (Mobile - Tùy chọn)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    @foreach ($adminLanguages as $locale)
+                                        @include('admin.partials.image-upload', [
+                                            'locale' => $locale,
+                                            'imageFolder' => $imageFolder,
+                                            'model' => $page ?? null,
+                                            'base' => 'image_mobile',
+                                            'label' => 'Banner Mobile',
+                                            'dimensions' => '600x600'
                                         ])
                                     @endforeach
                                 </div>
