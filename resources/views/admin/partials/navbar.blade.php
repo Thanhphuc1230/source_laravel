@@ -32,7 +32,7 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link menu-link" href="{{ route('web.home') }}">
+                    <a class="nav-link menu-link" href="{{ route('web.home') }}" target="_blank">
                         <i class="ri-home-line"></i> <span data-key="t-widgets">Trang chủ</span>
                     </a>
                 </li>
