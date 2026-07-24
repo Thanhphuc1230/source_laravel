@@ -19,8 +19,8 @@
     <link href="{{ asset('admin/css/app.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="{{ asset('admin/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
-    <!-- Remix Icon (used across admin views) -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Remix Icon (local) -->
+    <link href="{{ asset('admin/libs/remixicon/remixicon.css') }}" rel="stylesheet">
     <!-- Remix Icon fallback: ensure class selectors use the remix font (helps if other CSS overrides) -->
     <style>
         /* Force remixicon classes to use RemixIcon font-family when available */
@@ -46,6 +46,6 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
-    {{-- Select2 --}}
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {{-- Select2 (local) --}}
+    <link href="{{ asset('admin/libs/select2/select2.min.css') }}" rel="stylesheet" />
 </head>
