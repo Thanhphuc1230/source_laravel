@@ -118,21 +118,37 @@ return [
 
 ---
 
-## Bước 5 – Tạo Frontend Blade Views
+## Bước 5 – Tạo Frontend Blade Views & Assets (WordPress Style + Tailwind)
 
-### Cấu trúc file bắt buộc:
+### Cấu trúc file Assets Local bắt buộc (`public/frontend/`):
+```text
+public/frontend/
+├── css/
+│   ├── tailwind.css         # Tailwind compiled CSS local
+│   ├── fonts.css            # Noto Sans & Roboto local font definition
+│   └── animations.css       # Scroll animation classes
+├── fonts/
+│   ├── NotoSans-Regular.woff2
+│   └── Roboto-Bold.woff2
+└── js/
+    ├── scroll-animate.js    # Intersection Observer trigger class 'is-visible'
+    ├── cart-ajax.js
+    └── main.js
 ```
+
+### Cấu trúc file Blade Views bắt buộc:
+```text
 resources/views/frontend/
 ├── master.blade.php
 ├── partials/
-│   ├── head.blade.php          ← meta SEO, favicon, CSS link
+│   ├── head.blade.php          ← meta SEO, favicon, CSS link (Tailwind, Fonts, Animations)
 │   ├── header.blade.php        ← topbar + logo + search + cart + nav
 │   ├── header-mobi.blade.php   ← logo + cart icon + hamburger
 │   ├── menumobi.blade.php      ← sidebar slide-in mobile
 │   ├── footer.blade.php        ← 4 cột: info + links + contact + về chúng tôi
-│   ├── slider.blade.php        ← loop $sliders
-│   ├── buttons.blade.php       ← floating hotline + zalo + back-to-top
-│   └── script.blade.php        ← JS slider autoplay, AJAX cart, pagination
+│   ├── slider.blade.php        ← loop $sliders (responsive picture tag)
+│   ├── buttons.blade.php       ← floating hotline + zalo + back-to-top (right fixed)
+│   └── script.blade.php        ← JS slider autoplay, AJAX cart, pagination & scroll observer
 └── modules/
     ├── home/index.blade.php
     ├── product/
@@ -145,24 +161,24 @@ resources/views/frontend/
     └── contact/index.blade.php
 ```
 
-### Quy tắc CSS bắt buộc:
-```css
-/* Trong public/frontend/css/style.css */
-:root {
-    --primary-color: #...;   /* Màu chủ đạo theo thương hiệu */
-    --accent-color: #...;    /* Màu nhấn */
-    --font-heading: 'Montserrat', sans-serif;
-    --font-body: 'Inter', sans-serif;
-    --border-radius: 8px;
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-}
-/* Grid responsive */
-.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-/* Mobile: 2 cột cho news và products */
-@media (max-width: 768px) {
-    .grid-4, .grid-3 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-}
+### File `partials/script.blade.php` chuẩn:
+
+```html
+<script src="{{ asset('frontend/js/scroll-animate.js') }}"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Khởi tạo Intersection Observer cho Scroll Animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.scroll-anim').forEach(el => observer.observe(el));
+  });
+</script>
 ```
 
 ---
@@ -217,8 +233,8 @@ php artisan route:list   # Kiểm tra routes đã đăng ký đúng
 - [ ] modules/product/ (category + detail)
 - [ ] modules/news/ (category + detail)
 - [ ] modules/contact/index.blade.php dùng `$website` toàn cục
-- [ ] CSS: variables, grid 4/3/2 col, product-card, news-card, hover animations
-- [ ] Mobile: 2 col cho products và news
+- [ ] CSS/Tailwind: WordPress style, grid 4/3/2 col, product-card, news-card, hover animations
+- [ ] Mobile: 2 col cho products và news (`grid-cols-2`)
 
 ### Routes & Deploy
 - [ ] Routes đăng ký trong routes/frontend/
