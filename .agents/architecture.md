@@ -103,7 +103,7 @@ Từ tháng 07/2026, hệ thống sử dụng cấu trúc lưu trữ phân cấp
 *   **Tương thích ngược (Fallback)**:
     Nếu DB chỉ lưu tên file đơn dạng `slide_1.jpg` (ví dụ từ Seeders cũ), Trait sẽ tự động map về thư mục module tương ứng: `images/{module}/slide_1.jpg`.
 
-> **Ngoại lệ**: `$website->logo` và `$website->favicon` vẫn cần `asset()` thủ công.
+> **Ngoại lệ**: `$web->logo` và `$web->favicon` vẫn cần `asset()` thủ công.
 
 ### Dynamic Accessors đa ngôn ngữ
 ```php

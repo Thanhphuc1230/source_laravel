@@ -7,7 +7,7 @@
 ## 🚀 Tính năng cốt lõi
 
 - **Kiến trúc Layered chuẩn mực**: Phân tách rõ ràng trách nhiệm `Controller → Service → Repository → Model`, không viết SQL rải rác trong Controller.
-- **Dynamic Website Data (Không Hardcode)**: Tự động dùng biến động `$website` (`$website->name_vn`, `$website->phone`, `$website->email`, `$website->logo`, `$website->map`,...).
+- **Dynamic Website Data (Không Hardcode)**: Tự động dùng biến động `$web` (`$web->name_vn`, `$web->phone`, `$web->email`, `$web->logo`, `$web->map`,...).
 - **Slider Responsive 2 Banner (Desktop & Mobile)**: Quản lý banner linh hoạt theo đa ngôn ngữ với các trường `image_desktop_vn`, `image_desktop_en`, `image_mobile_vn`, `image_mobile_en`. Tự động render chuẩn thẻ HTML5 `<picture>` tối ưu trải nghiệm người dùng trên thiết bị di động.
 - **CKEditor 4 Full Package + File Manager 1-Click**: Tích hợp trình soạn thảo CKEditor 4 đầy đủ tính năng, chọn ảnh 1-click bật trực tiếp Laravel File Manager, hỗ trợ định dạng danh sách số/chữ (`a.b.c.`, `1.2.3.`).
 - **Nói Không Với CDN (Local Assets)**: 100% thư viện JS/CSS, Fonts (`RemixIcon`, `Select2`, `Choices.js`, `Flatpickr`, `Toastify`, `HKGrotesk`) được tải về và lưu trữ cục bộ trong `public/admin/libs/` & `public/admin/fonts/`.
@@ -54,7 +54,7 @@ source_laravel/
 ├── .agents/                    # Tài liệu hướng dẫn & Quy tắc cốt lõi cho AI & Dev
 │   ├── AGENTS.md               # 7 Quy tắc cốt lõi của dự án Base
 │   ├── architecture.md         # Quy chuẩn kiến trúc Controller - Service - Repository
-│   ├── frontend-data-map.md    # Danh sách biến động $website & Blade Partials
+│   ├── frontend-data-map.md    # Danh sách biến động $web & Blade Partials
 │   └── new-website-workflow.md # Quy trình khởi tạo website mới
 ├── app/
 │   ├── Http/
@@ -87,7 +87,7 @@ source_laravel/
 
 ## 📌 7 Quy tắc Cốt lõi của Dự án
 
-1. **Tuyệt đối KHÔNG Hardcode**: Trong Blade View bắt buộc dùng biến động `$website` (`$website->name_vn`, `$website->phone`, `$website->email`, `$website->logo`, `$website->map`).
+1. **Tuyệt đối KHÔNG Hardcode**: Trong Blade View bắt buộc dùng biến động `$web` (`$web->name_vn`, `$web->phone`, `$web->email`, `$web->logo`, `$web->map`).
 2. **Kiến trúc Layered**: `Controller → Service → Repository → Model`. Không viết SQL query trực tiếp trong Controller.
 3. **Blade Components Admin**: Dùng 100% Blade Components cho giao diện Admin (`<x-admin.table-wrapper>`, `<x-admin.table-switch>`,...).
 4. **Cache & Performance**: Sau mọi thay đổi code/config chạy `php artisan optimize:clear` hoặc bấm nút **"Xoá cache"** trong Admin.

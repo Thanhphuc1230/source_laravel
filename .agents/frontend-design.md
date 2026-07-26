@@ -104,7 +104,7 @@ Sử dụng thư viện Scroll Animation nhẹ lưu tại local (`public/fronten
         @endif
       </div>
       <button class="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-primary group-hover:text-white flex items-center justify-center transition-colors">
-        <i class="fas font-shopping-bag text-sm"></i>
+        <i class="fas fa-shopping-bag text-sm"></i>
       </button>
     </div>
   </div>
@@ -125,7 +125,7 @@ Sử dụng thư viện Scroll Animation nhẹ lưu tại local (`public/fronten
     </h3>
     <p class="text-slate-500 text-xs md:text-sm line-clamp-2 mb-4">{{ $news->intro_vn }}</p>
     <div class="text-xs text-slate-400 flex items-center gap-2">
-      <i class="far font-calendar"></i>
+      <i class="far fa-calendar-alt"></i>
       <span>{{ $news->created_at->format('d/m/Y') }}</span>
     </div>
   </div>

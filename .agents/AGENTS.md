@@ -8,15 +8,15 @@
 
 Khi viết blade view, **KHÔNG ĐƯỢC** ghi cứng tên công ty, SĐT, email, địa chỉ, logo, Google Map URL, link mạng xã hội.
 
-Phải dùng biến động từ `$website`. Xem chi tiết: `.agents/frontend-data-map.md`
+Phải dùng biến động từ `$web`. Xem chi tiết: `.agents/frontend-data-map.md`
 
 | Sai ❌ | Đúng ✅ |
 |---|---|
-| `Base` | `{{ $website->name_vn }}` |
-| `0979.248.298` | `{{ $website->phone }}` |
-| `contact@base.local` | `{{ $website->email }}` |
-| `src="https://www.google.com/maps/embed..."` | `src="{{ $website->map }}"` |
-| `<img src="/images/logo/logo.png">` | `<img src="{{ asset($website->logo) }}">` |
+| `Base` | `{{ $web->name_vn }}` |
+| `0979.248.298` | `{{ $web->phone }}` |
+| `contact@base.local` | `{{ $web->email }}` |
+| `src="https://www.google.com/maps/embed..."` | `src="{{ $web->map }}"` |
+| `<img src="/images/logo/logo.png">` | `<img src="{{ asset($web->logo) }}">` |
 
 ---
 
@@ -43,16 +43,15 @@ Admin có nút **"Xoá cache"** tại: Admin → Hệ thống → Xoá cache
 
 ---
 
-## QUY TẮC SỐ 5 – THẨM MỸ GIAO DIỆN WORDPRESS-STYLE (TAILWIND CSS)
+## QUY TẮC SỐ 5 – THẨM MỸ GIAO DIỆN CHUẨN UI/UX HIỆN ĐẠI (MODERN PREMIUM WEB DESIGN)
 
-- **Typography chuẩn hệ thống:** Bắt buộc áp dụng Font Stack WordPress-friendly:
-  `font-family: "Noto Sans", Roboto, sans-serif;`
-- **UI/UX chuẩn WordPress:** 
-  - Giao diện thân thiện, khoảng trắng (padding/margin) thoáng đãng, phân cấp chữ rõ ràng.
-  - Card/Button có shadow nhẹ (`shadow-sm` hover thành `shadow-xl`), bo góc viền chuẩn (`rounded-xl`).
+- **Định hướng thẩm mỹ:** Không sử dụng phong cách cũ kỹ. Giao diện phải đạt chuẩn Modern Premium Web: màu sắc hài hòa theo ngành hàng (Niche Palette), Typography cao cấp (Inter, Be Vietnam Pro, Plus Jakarta Sans), khoảng trắng thoáng đãng, phân cấp typography rõ ràng.
+- **UI/UX & Component Details:** 
+  - Card/Button có shadow nhẹ (`shadow-sm` hover thành `shadow-xl`), bo góc viền chuẩn (`rounded-xl` hoặc `rounded-2xl`).
   - Mọi button, card phải có hiệu ứng mượt `transition-all duration-300 ease-in-out`.
   - Floating action buttons đặt bên phải (`fixed bottom-5 right-5 z-50`).
-- **Scroll Animations:** Tích hợp hiệu ứng xuất hiện khi cuộn trang (Fade/Slide/Zoom in) giống các Theme WordPress cao cấp (Flatsome, Astra, Avada).
+- **Icon Safety (An toàn Icon):** Dùng FontAwesome v6 chuẩn syntax (bắt buộc prefix `fa-`, ví dụ: `fas fa-shopping-cart`, `fas fa-phone-alt`, `fab fa-facebook`) hoặc SVG Inline để tuyệt đối KHÔNG bị vỡ/ô vuông icon.
+- **Scroll Animations:** Tích hợp hiệu ứng xuất hiện khi cuộn trang (Fade/Slide/Zoom in) bằng Intersection Observer API (`.scroll-anim.fade-up`).
 - **Responsive:** Chuẩn Responsive 100%. Mobile: tin tức và sản phẩm bắt buộc hiển thị **2 cột** (`grid grid-cols-2 gap-3`).
 
 ---

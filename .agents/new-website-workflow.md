@@ -107,7 +107,7 @@ Nếu cần thêm biến toàn cục mới, cập nhật `app/View/Composers/Fro
 
 ```php
 return [
-    'website'       => System::first(),
+    'web'           => System::first(),
     'menu'          => Menu::with('children')->where('parent_id', 0)->orderBy('stt')->get(),
     'cate_product'  => CateProduct::where('status', 1)->where('parent_id', 0)->orderBy('stt')->get(),
     'footer_pages'  => Page::where('status', 1)->where('footer', 1)->orderBy('stt')->get(),
@@ -232,7 +232,7 @@ php artisan route:list   # Kiểm tra routes đã đăng ký đúng
 - [ ] modules/home/index.blade.php với section slider + features + news + products + brands
 - [ ] modules/product/ (category + detail)
 - [ ] modules/news/ (category + detail)
-- [ ] modules/contact/index.blade.php dùng `$website` toàn cục
+- [ ] modules/contact/index.blade.php dùng `$web` toàn cục
 - [ ] CSS/Tailwind: WordPress style, grid 4/3/2 col, product-card, news-card, hover animations
 - [ ] Mobile: 2 col cho products và news (`grid-cols-2`)
 

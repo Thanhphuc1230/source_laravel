@@ -13,7 +13,7 @@
 
 | Biến | Kiểu | Bảng DB | Mô tả |
 |---|---|---|---|
-| `$website` | `System` | `tp_systems` | Thông tin hệ thống – xem mục 2 |
+| `$web` | `System` | `tp_systems` | Thông tin hệ thống – xem mục 2 |
 | `$menu` | Collection | `tp_menus` | Menu chính (parent_id=0, kèm children) |
 | `$cate_product` | Collection | `tp_cate_products` | Danh mục sản phẩm cấp 1 (status=1, parent_id=0) |
 | `$footer_pages` | Collection | `tp_pages` | Trang tĩnh footer (status=1, footer=1) |
@@ -22,31 +22,31 @@
 
 ---
 
-## 2. Trường của `$website` (bảng `tp_systems`)
+## 2. Trường của `$web` (bảng `tp_systems`)
 
 | Trường | Blade chuẩn | Ghi chú |
 |---|---|---|
-| `$website->name_vn` | `{{ $website->name_vn }}` | Tên công ty tiếng Việt |
-| `$website->name_en` | `{{ $website->name_en }}` | Tên công ty tiếng Anh |
-| `$website->logo` | `{{ asset($website->logo) }}` | Đường dẫn tương đối trong `public/` |
-| `$website->favicon` | `{{ asset('images/logo/' . $website->favicon) }}` | Favicon |
-| `$website->phone` | `{{ $website->phone }}` | Hotline |
-| `$website->email` | `{{ $website->email }}` | Email liên hệ |
-| `$website->address` | `{{ $website->address }}` | Địa chỉ VPGD |
-| `$website->map` | `src="{{ $website->map }}"` | Embed URL Google Maps iframe |
-| `$website->facebook` | `href="{{ $website->facebook }}"` | Fanpage Facebook |
-| `$website->youtube` | `href="{{ $website->youtube }}"` | Kênh YouTube |
-| `$website->twitter` | `href="{{ $website->twitter }}"` | Twitter / X |
-| `$website->instagram` | `href="{{ $website->instagram }}"` | Instagram |
-| `$website->zalo` | `href="{{ $website->zalo }}"` | Zalo OA link |
-| `$website->footer` | `{!! lang($website, 'footer') !!}` | HTML nội dung cột 1 footer (đa ngôn ngữ: `footer_vn` / `footer_en`) |
-| `$website->meta_name` | `{{ $website->meta_name }}` | OG site_name |
-| `$website->meta_keyword` | `{{ $website->meta_keyword }}` | Meta keywords trang chủ |
-| `$website->meta_description` | `{{ $website->meta_description }}` | Meta description trang chủ |
-| `$website->email_alert` | (dùng trong backend) | Email nhận thông báo đơn hàng mới |
-| `$website->header_js` | `{!! $website->header_js !!}` | Custom JS inject vào `<head>` |
-| `$website->body_js` | `{!! $website->body_js !!}` | Custom JS inject sau `<body>` |
-| `$website->footer_js` | `{!! $website->footer_js !!}` | Custom JS inject trước `</body>` |
+| `$web->name_vn` | `{{ $web->name_vn }}` | Tên công ty tiếng Việt |
+| `$web->name_en` | `{{ $web->name_en }}` | Tên công ty tiếng Anh |
+| `$web->logo` | `{{ asset($web->logo) }}` | Đường dẫn tương đối trong `public/` |
+| `$web->favicon` | `{{ asset('images/logo/' . $web->favicon) }}` | Favicon |
+| `$web->phone` | `{{ $web->phone }}` | Hotline |
+| `$web->email` | `{{ $web->email }}` | Email liên hệ |
+| `$web->address` | `{{ $web->address }}` | Địa chỉ VPGD |
+| `$web->map` | `src="{{ $web->map }}"` | Embed URL Google Maps iframe |
+| `$web->facebook` | `href="{{ $web->facebook }}"` | Fanpage Facebook |
+| `$web->youtube` | `href="{{ $web->youtube }}"` | Kênh YouTube |
+| `$web->twitter` | `href="{{ $web->twitter }}"` | Twitter / X |
+| `$web->instagram` | `href="{{ $web->instagram }}"` | Instagram |
+| `$web->zalo` | `href="{{ $web->zalo }}"` | Zalo OA link |
+| `$web->footer` | `{!! lang($web, 'footer') !!}` | HTML nội dung cột 1 footer (đa ngôn ngữ: `footer_vn` / `footer_en`) |
+| `$web->meta_name` | `{{ $web->meta_name }}` | OG site_name |
+| `$web->meta_keyword` | `{{ $web->meta_keyword }}` | Meta keywords trang chủ |
+| `$web->meta_description` | `{{ $web->meta_description }}` | Meta description trang chủ |
+| `$web->email_alert` | (dùng trong backend) | Email nhận thông báo đơn hàng mới |
+| `$web->header_js` | `{!! $web->header_js !!}` | Custom JS inject vào `<head>` |
+| `$web->body_js` | `{!! $web->body_js !!}` | Custom JS inject sau `<body>` |
+| `$web->footer_js` | `{!! $web->footer_js !!}` | Custom JS inject trước `</body>` |
 
 ---
 
@@ -84,15 +84,15 @@
 | `$related_news` | Collection bài viết liên quan |
 
 ### Trang liên hệ
-Không có biến riêng — **toàn bộ lấy từ `$website`** (toàn cục).
+Không có biến riêng — **toàn bộ lấy từ `$web`** (toàn cục).
 
 | Hiển thị | Blade |
 |---|---|
-| Tên công ty | `{{ $website->name_vn }}` |
-| Địa chỉ | `{{ $website->address }}` |
-| Điện thoại | `{{ $website->phone }}` |
-| Email | `{{ $website->email }}` |
-| Google Map | `src="{{ $website->map }}"` |
+| Tên công ty | `{{ $web->name_vn }}` |
+| Địa chỉ | `{{ $web->address }}` |
+| Điện thoại | `{{ $web->phone }}` |
+| Email | `{{ $web->email }}` |
+| Google Map | `src="{{ $web->map }}"` |
 
 ---
 
@@ -100,12 +100,12 @@ Không có biến riêng — **toàn bộ lấy từ `$website`** (toàn cục).
 
 | File Partial | Biến cần dùng |
 |---|---|
-| `partials/head.blade.php` | `$website->favicon`, `$website->meta_name`, `@yield('module')`, `@yield('description')`, `@yield('keywords')`, `@yield('images')` |
-| `partials/header.blade.php` | `$website->phone`, `$website->email`, `$website->address`, `asset($website->logo)`, `$website->name_vn`, `$cate_product`, `$menu`, `$cart_count` |
-| `partials/header-mobi.blade.php` | `asset($website->logo)`, `$website->name_vn`, `$cart_count` |
-| `partials/footer.blade.php` | `lang($website, 'footer')`, `$website->address`, `$website->phone`, `$website->map`, `$website->facebook`, `$website->youtube`, `$website->twitter`, `$website->name_vn`, `$footer_pages` (loop) |
+| `partials/head.blade.php` | `$web->favicon`, `$web->meta_name`, `@yield('module')`, `@yield('description')`, `@yield('keywords')`, `@yield('images')` |
+| `partials/header.blade.php` | `$web->phone`, `$web->email`, `$web->address`, `asset($web->logo)`, `$web->name_vn`, `$cate_product`, `$menu`, `$cart_count` |
+| `partials/header-mobi.blade.php` | `asset($web->logo)`, `$web->name_vn`, `$cart_count` |
+| `partials/footer.blade.php` | `lang($web, 'footer')`, `$web->address`, `$web->phone`, `$web->map`, `$web->facebook`, `$web->youtube`, `$web->twitter`, `$web->name_vn`, `$footer_pages` (loop) |
 | `partials/slider.blade.php` | `$sliders` → loop `$slide->image` |
-| `partials/buttons.blade.php` | `$website->phone` (nút hotline/Zalo nổi) |
+| `partials/buttons.blade.php` | `$web->phone` (nút hotline/Zalo nổi) |
 | `partials/script.blade.php` | Không cần biến — chứa JS slider autoplay, AJAX cart, back-to-top |
 
 ---
@@ -134,6 +134,6 @@ Không có biến riêng — **toàn bộ lấy từ `$website`** (toàn cục).
 
 ## 8. Lưu ý quan trọng
 
-- **AutoImagePathsTrait & Đường dẫn ảnh mới**: Khi gọi `$model->image` đã là URL tuyệt đối — **không cần** bọc thêm `asset()`. Cả ảnh mới lưu theo cấu trúc phân cấp `images/{module}/{YYYY}/{MM}/{hash}.webp` và ảnh cũ lưu tên file đơn đều được tự động phân tích và hiển thị chính xác. Ngoại lệ: `$website->logo` và `$website->favicon` vẫn cần `asset()`.
+- **AutoImagePathsTrait & Đường dẫn ảnh mới**: Khi gọi `$model->image` đã là URL tuyệt đối — **không cần** bọc thêm `asset()`. Cả ảnh mới lưu theo cấu trúc phân cấp `images/{module}/{YYYY}/{MM}/{hash}.webp` và ảnh cũ lưu tên file đơn đều được tự động phân tích và hiển thị chính xác. Ngoại lệ: `$web->logo` và `$web->favicon` vẫn cần `asset()`.
 - **Cache tự xóa**: Khi Admin cập nhật System → tự xóa key `website_data` và `frontend_global_data`.
 - **Xóa cache thủ công**: Admin → Hệ thống → Xoá cache, hoặc `php artisan optimize:clear`.
