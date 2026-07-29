@@ -1,0 +1,103 @@
+/**
+ * Before / After Image Flip 3D Effect
+ * Modern Premium Web Styling
+ */
+
+.image-flip-container {
+    display: block;
+    margin: 1.75rem auto;
+    max-width: 100%;
+    text-align: center;
+    position: relative;
+    user-select: none;
+}
+
+.image-flip-wrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 1rem;
+    perspective: 1000px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.image-flip-wrapper:hover {
+    box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15), 0 10px 15px -5px rgba(0, 0, 0, 0.1);
+}
+
+.image-flip-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+}
+
+/* 3D Flip Rotation States */
+.image-flip-img.flipping-half {
+    transform: rotateY(90deg);
+}
+
+.image-flip-img.flipping-half-reverse {
+    transform: rotateY(-90deg);
+}
+
+.image-flip-btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background-color 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.image-flip-btn:hover {
+    background: rgba(15, 23, 42, 0.85);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.03);
+}
+
+.image-flip-btn:active {
+    transform: scale(0.97);
+}
+
+.image-flip-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform 0.4s ease;
+}
+
+.image-flip-wrapper:hover .image-flip-icon {
+    transform: rotate(180deg);
+}
+
+.image-flip-caption {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: #64748b;
+    font-style: italic;
+    text-align: center;
+}

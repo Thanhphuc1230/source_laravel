@@ -49,8 +49,8 @@
     @endif
 
     {{-- Schema JSON-LD --}}
-    @include('frontend.partials.schema')
     <!-- STYLESHEETS -->
+    <link rel="stylesheet" href="{{ asset('css/image-flip.css') }}">
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
