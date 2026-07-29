@@ -16,7 +16,7 @@
         return;
     }
 
-    // ─── Inject CSS cho Icon nút "Danh sách a.b.c." ─────────────────────────
+    // ─── Inject CSS cho Icon nút "Danh sách a.b.c." & "Image Flip" ───────────
     if (!document.getElementById('cke-custom-alpha-icon-style')) {
         var style = document.createElement('style');
         style.id = 'cke-custom-alpha-icon-style';
@@ -33,6 +33,12 @@
             }
             .cke_button__numberedlistalpha_icon::before {
                 content: "a." !important;
+            }
+            .cke_button__imageflip_icon {
+                background-image: url("/ckeditor/plugins/imageflip/icons/imageflip.png") !important;
+                background-position: center !important;
+                background-repeat: no-repeat !important;
+                background-size: 16px 16px !important;
             }
         `;
         document.head.appendChild(style);
@@ -124,12 +130,12 @@
         filebrowserBrowseUrl:       lfm.fileBrowse,
         filebrowserUploadUrl:       lfm.fileUpload,
 
-        extraPlugins: 'image2,html5audio,youtube,copyformatting,tableselection,tabletools,numberedlistalpha',
+        extraPlugins: 'image2,html5audio,youtube,copyformatting,tableselection,tabletools,numberedlistalpha,imageflip',
         removePlugins: 'elementspath,resize,exportpdf,image',
 
         contentsCss: ['/ckeditor/customCKEStyles.css', '/ckeditor/contents.css'],
         allowedContent: true,
-        extraAllowedContent: 'ol[type,style]; ul[type,style]; li[style]',
+        extraAllowedContent: 'ol[type,style]; ul[type,style]; li[style]; figure[*](*); div[*](*); img[*](*); button[*](*); span[*](*); svg[*](*); path[*](*); figcaption[*](*)',
 
         pasteFilter: null,
         pasteFromWordPromptCleanup: false,
@@ -207,7 +213,7 @@
             },
             {
                 name: 'insert',
-                items: ['Image', 'Html5audio', 'Youtube', 'Table', '-',
+                items: ['Image', 'Imageflip', 'Html5audio', 'Youtube', 'Table', '-',
                         'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']
             }
         ]
