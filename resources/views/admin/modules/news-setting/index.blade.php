@@ -20,7 +20,7 @@
             </div>
             <!-- end page title -->
 
-            <form action="{{ route('admin.news-setting.update') }}" method="POST">
+            <form action="{{ route('admin.news-setting.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <!-- Column 1: Cấu hình chung -->
@@ -116,6 +116,62 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Column 3: Cấu hình Banner -->
+                    <div class="col-12">
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-header bg-light border-0 py-3">
+                                <h5 class="card-title mb-0 font-weight-bold text-emerald-900">3. Cấu hình Banner Tin Tức</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Banner Danh mục tin tức -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label font-weight-semibold" for="file_news_banner_category">
+                                            Banner Danh mục tin tức (Khuyên dùng: 1920x400px)
+                                        </label>
+                                        <input type="file" id="file_news_banner_category" name="news_banner_category" class="form-control" accept="image/*">
+                                        <div id="container_news_banner_category" class="mt-2"></div>
+
+                                        @if (!empty($settings['banner_category']))
+                                            <div class="mt-3 p-2 border rounded bg-light">
+                                                <small class="text-muted d-block mb-1">Banner danh mục hiện tại:</small>
+                                                <img src="{{ asset($settings['banner_category']) }}" alt="Banner Danh mục tin tức" class="img-fluid rounded shadow-xs" style="max-height: 140px; object-fit: cover;">
+                                                <div class="form-check mt-2">
+                                                    <input class="form-check-input" type="checkbox" name="delete_news_banner_category" value="1" id="delete_news_banner_category">
+                                                    <label class="form-check-label text-danger font-weight-semibold" for="delete_news_banner_category">
+                                                        Xóa banner danh mục hiện tại
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <!-- Banner Chi tiết tin tức -->
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label font-weight-semibold" for="file_news_banner_detail">
+                                            Banner Chi tiết tin tức (Khuyên dùng: 1920x400px)
+                                        </label>
+                                        <input type="file" id="file_news_banner_detail" name="news_banner_detail" class="form-control" accept="image/*">
+                                        <div id="container_news_banner_detail" class="mt-2"></div>
+
+                                        @if (!empty($settings['banner_detail']))
+                                            <div class="mt-3 p-2 border rounded bg-light">
+                                                <small class="text-muted d-block mb-1">Banner chi tiết hiện tại:</small>
+                                                <img src="{{ asset($settings['banner_detail']) }}" alt="Banner Chi tiết tin tức" class="img-fluid rounded shadow-xs" style="max-height: 140px; object-fit: cover;">
+                                                <div class="form-check mt-2">
+                                                    <input class="form-check-input" type="checkbox" name="delete_news_banner_detail" value="1" id="delete_news_banner_detail">
+                                                    <label class="form-check-label text-danger font-weight-semibold" for="delete_news_banner_detail">
+                                                        Xóa banner chi tiết hiện tại
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Submit Button -->
@@ -130,3 +186,14 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof previewImage === 'function') {
+            previewImage('file_news_banner_category', 'container_news_banner_category');
+            previewImage('file_news_banner_detail', 'container_news_banner_detail');
+        }
+    });
+</script>
+@endpush

@@ -67,6 +67,24 @@ class ProductSettingSeeder extends Seeder
                 'sort_order' => 6,
                 'is_active' => true,
             ],
+            [
+                'key' => 'products_banner_category',
+                'value' => '',
+                'type' => 'text',
+                'group' => 'banner',
+                'description' => 'Banner danh mục sản phẩm',
+                'sort_order' => 7,
+                'is_active' => true,
+            ],
+            [
+                'key' => 'products_banner_detail',
+                'value' => '',
+                'type' => 'text',
+                'group' => 'banner',
+                'description' => 'Banner chi tiết sản phẩm',
+                'sort_order' => 8,
+                'is_active' => true,
+            ],
         ];
 
         ProductSetting::truncate();

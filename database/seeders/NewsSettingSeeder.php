@@ -67,6 +67,24 @@ class NewsSettingSeeder extends Seeder
                 'sort_order' => 6,
                 'is_active' => true,
             ],
+            [
+                'key' => 'news_banner_category',
+                'value' => '',
+                'type' => 'text',
+                'group' => 'banner',
+                'description' => 'Banner danh mục tin tức',
+                'sort_order' => 7,
+                'is_active' => true,
+            ],
+            [
+                'key' => 'news_banner_detail',
+                'value' => '',
+                'type' => 'text',
+                'group' => 'banner',
+                'description' => 'Banner chi tiết tin tức',
+                'sort_order' => 8,
+                'is_active' => true,
+            ],
         ];
 
         NewsSetting::truncate();

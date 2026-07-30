@@ -39,6 +39,8 @@ class NewsSettingController extends BaseController
                 'click_image_detail' => NewsSetting::get('news_click_image_detail', true),
                 'title_color' => NewsSetting::get('news_title_color', '#064e3b'),
                 'category_color' => NewsSetting::get('news_category_color', '#b45309'),
+                'banner_category' => NewsSetting::get('news_banner_category', ''),
+                'banner_detail' => NewsSetting::get('news_banner_detail', ''),
             ]
         ];
 
@@ -50,7 +52,7 @@ class NewsSettingController extends BaseController
      */
     public function updateSettings(Request $request)
     {
-        // 1. Lưu các giá trị cấu hình vào DB
+        // 1. Lưu các giá trị cấu hình chữ, màu sắc vào DB
         NewsSetting::set('news_pagination', (int) $request->input('news_pagination', 8), 'number', 'general');
         NewsSetting::set('news_font_size', $request->input('news_font_size', '16px'), 'text', 'style');
         NewsSetting::set('news_show_intro', $request->has('news_show_intro') ? '1' : '0', 'boolean', 'general');
@@ -58,7 +60,43 @@ class NewsSettingController extends BaseController
         NewsSetting::set('news_title_color', $request->input('news_title_color', '#064e3b'), 'text', 'style');
         NewsSetting::set('news_category_color', $request->input('news_category_color', '#b45309'), 'text', 'style');
 
-        // 2. Dọn dẹp cache để frontend cập nhật ngay lập tức
+        // 2. Xử lý upload Banner Danh mục
+        if ($request->has('delete_news_banner_category')) {
+            $oldPath = NewsSetting::get('news_banner_category');
+            if ($oldPath) {
+                $this->imageService->deleteImage($oldPath, 'news-setting');
+            }
+            NewsSetting::set('news_banner_category', '', 'text', 'banner');
+        } elseif ($request->hasFile('news_banner_category')) {
+            $oldPath = NewsSetting::get('news_banner_category');
+            if ($oldPath) {
+                $this->imageService->deleteImage($oldPath, 'news-setting');
+            }
+            $newPath = $this->imageService->saveImage($request, 'news-setting', 'news_banner_category', $this->defaultImageConfig);
+            if ($newPath) {
+                NewsSetting::set('news_banner_category', $newPath, 'text', 'banner');
+            }
+        }
+
+        // 3. Xử lý upload Banner Chi tiết
+        if ($request->has('delete_news_banner_detail')) {
+            $oldPath = NewsSetting::get('news_banner_detail');
+            if ($oldPath) {
+                $this->imageService->deleteImage($oldPath, 'news-setting');
+            }
+            NewsSetting::set('news_banner_detail', '', 'text', 'banner');
+        } elseif ($request->hasFile('news_banner_detail')) {
+            $oldPath = NewsSetting::get('news_banner_detail');
+            if ($oldPath) {
+                $this->imageService->deleteImage($oldPath, 'news-setting');
+            }
+            $newPath = $this->imageService->saveImage($request, 'news-setting', 'news_banner_detail', $this->defaultImageConfig);
+            if ($newPath) {
+                NewsSetting::set('news_banner_detail', $newPath, 'text', 'banner');
+            }
+        }
+
+        // 4. Dọn dẹp cache để frontend cập nhật ngay lập tức
         if (class_exists(\App\Services\CacheService::class)) {
             \App\Services\CacheService::forgetTags(['frontend', 'news', 'categories']);
         }
