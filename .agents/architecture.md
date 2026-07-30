@@ -158,7 +158,8 @@ INDEX (status, stt)
 | `MailTemplate` | `tp_mail_templates` | - | Mẫu email gửi đơn hàng |
 | `Analytic` | `tp_analytics` | - | Thống kê lượt truy cập |
 | `Font` | `tp_fonts` | - | Custom fonts admin |
-| `ProductSetting` | `tp_product_settings` | - | Cài đặt hiển thị sản phẩm |
+| `ProductSetting` | `tp_product_settings` | `id` | Cài đặt hiển thị sản phẩm (màu sắc, font size, banner_category, banner_detail) |
+| `NewsSetting` | `news_settings` | `id` | Cài đặt hiển thị tin tức (màu sắc, font size, banner_category, banner_detail) |
 | `ChatSession` | `tp_chat_sessions` | - | Phiên chat hỗ trợ |
 | `ChatMessage` | `tp_chat_messages` | - | Tin nhắn chat |
 

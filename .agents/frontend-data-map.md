@@ -18,6 +18,8 @@
 | `$cate_product` | Collection | `tp_cate_products` | Danh mục sản phẩm cấp 1 (status=1, parent_id=0) |
 | `$footer_pages` | Collection | `tp_pages` | Trang tĩnh footer (status=1, footer=1) |
 | `$products_hot` | Collection | `tp_products` | Sản phẩm hot (hot=1, status=1, limit 10) |
+| `$product_settings` | `array` | `tp_product_settings` | Cấu hình sản phẩm (xem mục 8) |
+| `$news_settings` | `array` | `news_settings` | Cấu hình tin tức (xem mục 8) |
 | `$cart_count` | `int` | Session | Số lượng sản phẩm giỏ hàng (không cache) |
 
 ---
@@ -132,7 +134,27 @@ Không có biến riêng — **toàn bộ lấy từ `$web`** (toàn cục).
 
 ---
 
-## 8. Lưu ý quan trọng
+## 8. Cấu hình Cài đặt Sản Phẩm (`$product_settings`) & Tin Tức (`$news_settings`)
+
+Toàn bộ được inject tự động qua `FrontendComposer` vào mọi view frontend.
+
+### Cấu trúc mảng `$product_settings` & `$news_settings`:
+| Key | Loại | Mô tả | Cách sử dụng chuẩn ở Blade |
+|---|---|---|---|
+| `font_size` | `string` | Cỡ chữ tiêu đề (vd: `16px`) | `style="font-size: {{ $settings['font_size'] }}"` |
+| `show_intro` | `bool` | Hiển thị đoạn giới thiệu ngắn | `@if($settings['show_intro']) ... @endif` |
+| `click_image_detail` | `bool` | Cho bọc link xem chi tiết vào ảnh | `@if($settings['click_image_detail']) <a href="..."> <img ...> </a> @endif` |
+| `title_color` | `string` | Màu tiêu đề Hex (vd: `#064e3b`) | `style="color: {{ $settings['title_color'] }}"` |
+| `category_color` | `string` | Màu danh mục Hex (vd: `#b45309`) | `style="color: {{ $settings['category_color'] }}"` |
+| `banner_category` | `string` | Đường dẫn tương đối banner danh mục | `@if(!empty($settings['banner_category'])) url('{{ asset($settings['banner_category']) }}') @endif` |
+| `banner_detail` | `string` | Đường dẫn tương đối banner chi tiết | `@if(!empty($settings['banner_detail'])) url('{{ asset($settings['banner_detail']) }}') @endif` |
+
+> **QUY TẮC VIẾT CODE BLADE**:
+> Không viết các khối xử lý logic `@php ... @endphp` trong các file Blade view. Blade chỉ đóng vai trò hiển thị UI và dùng câu lệnh rẽ nhánh điều kiện chuẩn `@if(!empty($settings['banner_category']))`.
+
+---
+
+## 9. Lưu ý quan trọng
 
 - **AutoImagePathsTrait & Đường dẫn ảnh mới**: Khi gọi `$model->image` đã là URL tuyệt đối — **không cần** bọc thêm `asset()`. Cả ảnh mới lưu theo cấu trúc phân cấp `images/{module}/{YYYY}/{MM}/{hash}.webp` và ảnh cũ lưu tên file đơn đều được tự động phân tích và hiển thị chính xác. Ngoại lệ: `$web->logo` và `$web->favicon` vẫn cần `asset()`.
 - **Cache tự xóa**: Khi Admin cập nhật System → tự xóa key `website_data` và `frontend_global_data`.
