@@ -5,10 +5,16 @@
 @section('images', lang($category_detail, 'image') ?? $web->logo)
 
 @section('content')
-    <div class="bg-emerald-950 text-white py-16 text-center space-y-2">
-        <span class="text-xs font-bold uppercase tracking-widest" style="color: {{ $news_settings['category_color'] ?? '#b45309' }}">Cẩm nang du lịch</span>
-        <h1 class="text-3xl font-heading font-extrabold">{{ lang($category_detail, 'name') }}</h1>
-        <p class="text-3xs text-gray-300">Tổng hợp tin tức, bí quyết du lịch hữu ích nhất dành cho bạn</p>
+    <div class="bg-emerald-950 text-white py-16 text-center space-y-2 relative overflow-hidden">
+        @if(!empty($news_settings['banner_category']))
+            <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{{ asset($news_settings['banner_category']) }}');"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-950/70 to-emerald-950/40"></div>
+        @endif
+        <div class="relative z-10 max-w-7xl mx-auto px-4 space-y-2">
+            <span class="text-xs font-bold uppercase tracking-widest" style="color: {{ $news_settings['category_color'] ?? '#b45309' }}">Cẩm nang du lịch</span>
+            <h1 class="text-3xl font-heading font-extrabold">{{ lang($category_detail, 'name') }}</h1>
+            <p class="text-3xs text-gray-300">Tổng hợp tin tức, bí quyết du lịch hữu ích nhất dành cho bạn</p>
+        </div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

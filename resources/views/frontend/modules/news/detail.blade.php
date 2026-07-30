@@ -5,17 +5,38 @@
 @section('images', lang($news_detail, 'image') ?? $web->logo)
 
 @section('content')
-    <div class="bg-gray-100 py-4 border-b border-gray-200/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-2xs text-gray-500 flex items-center space-x-2">
-            <a href="{{ route('web.home') }}" class="hover:text-emerald-950">Trang chủ</a>
-            <i class="fa-solid fa-chevron-right text-3xs"></i>
-            @if($news_detail->cate)
-                <a href="{{ route('web.resolve', ['slug' => $news_detail->cate->slug]) }}" class="hover:text-emerald-950">{{ lang($news_detail->cate, 'name') }}</a>
-                <i class="fa-solid fa-chevron-right text-3xs"></i>
-            @endif
-            <span class="text-gray-700 font-semibold truncate">{{ lang($news_detail, 'name') }}</span>
+    @if(!empty($news_settings['banner_detail']))
+        <div class="bg-emerald-950 text-white py-14 text-center space-y-2 relative overflow-hidden">
+            <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{{ asset($news_settings['banner_detail']) }}');"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-950/70 to-emerald-950/40"></div>
+            <div class="relative z-10 max-w-7xl mx-auto px-4 space-y-2">
+                <div class="text-2xs text-gray-300 flex items-center justify-center space-x-2">
+                    <a href="{{ route('web.home') }}" class="hover:text-white">Trang chủ</a>
+                    <i class="fa-solid fa-chevron-right text-3xs"></i>
+                    @if($news_detail->cate)
+                        <a href="{{ route('web.resolve', ['slug' => $news_detail->cate->slug]) }}" class="hover:text-white">{{ lang($news_detail->cate, 'name') }}</a>
+                        <i class="fa-solid fa-chevron-right text-3xs"></i>
+                    @endif
+                    <span class="text-gold-400 font-semibold truncate">{{ lang($news_detail, 'name') }}</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-heading font-extrabold text-white max-w-4xl mx-auto leading-snug pt-2">
+                    {{ lang($news_detail, 'name') }}
+                </h1>
+            </div>
         </div>
-    </div>
+    @else
+        <div class="bg-gray-100 py-4 border-b border-gray-200/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-2xs text-gray-500 flex items-center space-x-2">
+                <a href="{{ route('web.home') }}" class="hover:text-emerald-950">Trang chủ</a>
+                <i class="fa-solid fa-chevron-right text-3xs"></i>
+                @if($news_detail->cate)
+                    <a href="{{ route('web.resolve', ['slug' => $news_detail->cate->slug]) }}" class="hover:text-emerald-950">{{ lang($news_detail->cate, 'name') }}</a>
+                    <i class="fa-solid fa-chevron-right text-3xs"></i>
+                @endif
+                <span class="text-gray-700 font-semibold truncate">{{ lang($news_detail, 'name') }}</span>
+            </div>
+        </div>
+    @endif
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">

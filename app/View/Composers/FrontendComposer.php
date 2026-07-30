@@ -75,6 +75,8 @@ class FrontendComposer
                 'click_image_detail' => \App\Models\ProductSetting::get('products_click_image_detail', true),
                 'title_color' => \App\Models\ProductSetting::get('products_title_color', '#064e3b'),
                 'category_color' => \App\Models\ProductSetting::get('products_category_color', '#b45309'),
+                'banner_category' => \App\Models\ProductSetting::get('products_banner_category', ''),
+                'banner_detail' => \App\Models\ProductSetting::get('products_banner_detail', ''),
             ],
 
             // 9. Toàn bộ cấu hình tin tức (Tag: news)
@@ -84,6 +86,8 @@ class FrontendComposer
                 'click_image_detail' => \App\Models\NewsSetting::get('news_click_image_detail', true),
                 'title_color' => \App\Models\NewsSetting::get('news_title_color', '#064e3b'),
                 'category_color' => \App\Models\NewsSetting::get('news_category_color', '#b45309'),
+                'banner_category' => \App\Models\NewsSetting::get('news_banner_category', ''),
+                'banner_detail' => \App\Models\NewsSetting::get('news_banner_detail', ''),
             ],
 
             // Giỏ hàng (Session-based, không cache)
