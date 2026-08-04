@@ -18,21 +18,7 @@ class SlugService
      */
     public function generateUniqueSlug(string $name, string $table, string $column = 'slug_vn', ?int $id = null): string
     {
-        $baseSlug = Str::slug($name);
-        if (empty($baseSlug)) {
-            $baseSlug = 'n-a';
-        }
-        $slug = $baseSlug;
-
-        $idColumn = $this->getIdColumnName($table);
-        $counter = 1;
-
-        while (DB::table($table)->where($column, $slug)->when($id, fn($q) => $q->where($idColumn, '!=', $id))->exists()) {
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
-        }
-
-        return $slug;
+        return $this->generateUniqueSlugGlobal($name, $table, $column, $id);
     }
 
     /**
@@ -40,7 +26,7 @@ class SlugService
      */
     public function generateUniqueSlugWithId(string $name, int $id, string $table, string $column = 'slug_vn'): string
     {
-        return $this->generateUniqueSlug($name, $table, $column, $id > 0 ? $id : null);
+        return $this->generateUniqueSlugGlobal($name, $table, $column, $id > 0 ? $id : null);
     }
 
     protected function getIdColumnName(string $table): string
@@ -73,7 +59,7 @@ class SlugService
             $query = DB::table($table)->where(function($q) use ($slug) {
                 $q->where('slug_vn', $slug)
                   ->orWhere('slug_en', $slug);
-            })->where('status', 1);
+            });
 
             if ($excludeTable === $table && $excludeId) {
                 $query->where($idColumn, '!=', $excludeId);
