@@ -18,3 +18,10 @@
 - KHÔNG BAO GIỜ tự động commit/push code nếu không có yêu cầu trực tiếp từ user trong phiên chat.
 - Mỗi lệnh commit từ user chỉ có giá trị cho LẦN ĐÓ cho task hiện tại.
 - Mọi task tiếp theo bắt buộc phải HỎI XIN PHÉP user trước khi commit (`"Tôi đã hoàn thành task [Tên Task]. Bạn có muốn tôi commit các thay đổi này không?"`).
+
+---
+
+## 🔗 QUY TẮC KHỞI TẠO SLUG & DỌN DẸP DATABASE (Chốt T08/2026)
+- **Slug sạch nguyên bản:** Slug khi khởi tạo/cập nhật BẮT BUỘC là chuỗi sạch `Str::slug($name)`. TUYỆT ĐỐI KHÔNG cưỡng ép nối đuôi ID hoặc `-0` (`$slug = $baseSlug . '-' . $id`).
+- **Kiểm tra Duy nhất Toàn hệ thống (Global Cross-Tables):** Đảm bảo tính duy nhất qua cả 5 bảng nội dung (`tp_pages`, `tp_products`, `tp_news`, `tp_cate_products`, `tp_cate_news`). CHỈ KHI phát hiện trùng tên với bản ghi khác mới nối thêm hậu tố số tăng dần (`-1`, `-2`, `-3`...).
+- **Lệnh dọn dẹp:** Dùng lệnh `php artisan slug:clean` để tự động quét & đưa các slug dính đuôi thừa trong CSDL về bản chuẩn SEO nguyên bản.

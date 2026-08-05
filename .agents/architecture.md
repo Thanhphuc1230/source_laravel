@@ -72,6 +72,7 @@ public/
 | Service | Chức năng |
 |---|---|
 | `HomeService` | Tổng hợp dữ liệu trang chủ (Sliders, Products, News, Brands) |
+| `SlugService` | Tạo slug sạch nguyên bản (`Str::slug`), kiểm tra unique toàn hệ thống (cross-tables 5 bảng), loại bỏ hoàn toàn đuôi `-0`/`-ID`, chỉ thêm `-1`, `-2` khi trùng lặp |
 | `SlugResolutionService` | UNION ALL resolve slug → Page / Product / News / CateProduct / CateNews |
 | `ProductService` | Lọc sản phẩm, phân trang, chi tiết |
 | `NewsService` | Danh sách tin tức, bài viết chi tiết |
@@ -317,6 +318,9 @@ php artisan admin:create
 
 # Tạo sitemap SEO
 php artisan sitemap:generate
+
+# Dọn dẹp slug dư thừa đuôi số (-0, -ID) trong CSDL
+php artisan slug:clean
 ```
 
 ---
