@@ -26,9 +26,9 @@ class NewsRequest extends BaseAdminRequest
             'status' => 'required|in:0,1',
             'stt' => 'required|integer|min:0',
             'image_vn' => request()->route('uuid')
-            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp'
-            : 'required|image|mimes:jpeg,png,jpg,gif,webp',
-            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp',
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200'
+            : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
+            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
             'keyword_vn' => 'required|string|max:255',
             'keyword_en' => 'nullable|string|max:255',
             'description_vn' => 'required|string|max:255',

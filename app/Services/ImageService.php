@@ -170,99 +170,117 @@ class ImageService
     }
 
     /**
-     * Chuyển đổi ảnh sang định dạng WebP với queue processing
+     * Chuyển đổi ảnh sang định dạng WebP (hoặc fallback lưu file gốc)
      *
-     * @param  string  $sourcePath  Đường dẫn file nguồn
+     * @param  UploadedFile|string  $file  Đối tượng file upload hoặc đường dẫn vật lý
      * @param  string  $targetPath  Đường dẫn file đích (webp)
      * @param  int  $quality  Chất lượng ảnh (1-100)
+     * @return string|bool Tên file thực tế đã lưu (ví dụ: 'hash.webp' hoặc 'hash.jpg'), hoặc false nếu lỗi
      */
-    public function convertToWebp(string $sourcePath, string $targetPath, int $quality = 80): bool
+    public function convertToWebp(UploadedFile|string $file, string $targetPath, int $quality = 80): string|bool
     {
+        // 1. Phân loại đối tượng file và lấy đường dẫn vật lý
+        if ($file instanceof UploadedFile) {
+            $sourcePath = $file->getPathname();
+        } else {
+            $sourcePath = (string) $file;
+        }
+
+        // 2. Kiểm tra file nguồn tồn tại
+        if (empty($sourcePath) || ! file_exists($sourcePath)) {
+            return false;
+        }
+
+        // 3. Tăng giới hạn bộ nhớ PHP lên 512M để xử lý ảnh độ phân giải siêu cao (40MP+)
+        @ini_set('memory_limit', '512M');
+
+        // 4. Kiểm tra kích thước file (cho phép tối đa 100MB)
+        $fileSize = filesize($sourcePath);
+        if ($fileSize > 100 * 1024 * 1024) { // 100MB
+            return $this->fallbackToOriginal($file, $targetPath);
+        }
+
+        // 5. Đảm bảo thư mục đích tồn tại và có quyền ghi
+        $targetDir = dirname($targetPath);
+        if (! File::exists($targetDir)) {
+            File::makeDirectory($targetDir, 0755, true);
+        }
+
+        if (! is_writable($targetDir)) {
+            return $this->fallbackToOriginal($file, $targetPath);
+        }
+
+        // 6. Xử lý convert WebP với Intervention Image
+        $image = null;
         try {
-            // Kiểm tra file nguồn
-            if (! file_exists($sourcePath)) {
-                throw new Exception("File nguồn không tồn tại: {$sourcePath}");
-            }
-
-            // Kiểm tra file size - skip nếu quá lớn
-            $fileSize = filesize($sourcePath);
-            if ($fileSize > 10 * 1024 * 1024) { // 10MB
-                return $this->fallbackToOriginal($sourcePath, $targetPath);
-            }
-
-            // Kiểm tra memory available
-            $memoryLimit = $this->getMemoryLimit();
-            $estimatedMemory = $fileSize * 4; // Rough estimate
-
-            if ($estimatedMemory > $memoryLimit * 0.8) {
-                return $this->fallbackToOriginal($sourcePath, $targetPath);
-            }
-
-            // Kiểm tra và tạo thư mục đích
-            $targetDir = dirname($targetPath);
-            if (! File::exists($targetDir)) {
-                File::makeDirectory($targetDir, 0755, true);
-            }
-
-            // Kiểm tra quyền ghi
-            if (! is_writable($targetDir)) {
-                throw new Exception("Không có quyền ghi vào thư mục: {$targetDir}");
-            }
-
-            // Tải và xử lý ảnh với memory optimization
             $image = Image::make($sourcePath);
 
-            // Kiểm tra xem ảnh có được tải thành công không
             if (! $image) {
-                throw new Exception('Không thể tải ảnh từ nguồn');
+                return $this->fallbackToOriginal($file, $targetPath);
             }
 
-            // Resize nếu ảnh quá lớn
-            if ($image->width() > 2048 || $image->height() > 2048) {
-                $image->resize(2048, 2048, function ($constraint) {
+            // Tự động resize nếu chiều rộng hoặc chiều cao > 2560px (giữ aspect ratio & upsize constraint)
+            if ($image->width() > 2560 || $image->height() > 2560) {
+                $image->resize(2560, 2560, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 });
             }
 
-            // Encode sang WebP với quality optimization
+            // Encode sang WebP
             $result = $image->encode('webp', $quality);
-
-            // Lưu file
             $result->save($targetPath);
 
-            // Destroy image object để free memory
-            $image->destroy();
-
-            // Kiểm tra file đã được tạo
             if (! file_exists($targetPath)) {
-                throw new Exception('File WebP không được tạo thành công');
+                return $this->fallbackToOriginal($file, $targetPath);
             }
 
-            // WebP conversion successful - no logging needed for production
-
-            return true;
-
+            return pathinfo($targetPath, PATHINFO_BASENAME);
         } catch (Exception $e) {
-            // WebP conversion failed - fallback to original format
-            return $this->fallbackToOriginal($sourcePath, $targetPath);
+            return $this->fallbackToOriginal($file, $targetPath);
+        } finally {
+            if ($image && method_exists($image, 'destroy')) {
+                $image->destroy();
+            }
         }
     }
 
     /**
-     * Fallback to original image format
+     * Fallback lưu file gốc chính xác định dạng đuôi file khi WebP thất bại
+     *
+     * @param  UploadedFile|string  $file
+     * @param  string  $targetPath
+     * @return string|bool Tên file đã lưu thành công hoặc false
      */
-    private function fallbackToOriginal(string $sourcePath, string $targetPath): bool
+    private function fallbackToOriginal(UploadedFile|string $file, string $targetPath): string|bool
     {
         try {
-            $originalExt = pathinfo($sourcePath, PATHINFO_EXTENSION);
-            $fallbackPath = str_replace('.webp', '.'.$originalExt, $targetPath);
+            if ($file instanceof UploadedFile) {
+                $sourcePath = $file->getPathname();
+                $originalExt = $file->getClientOriginalExtension() ?: ($file->guessExtension() ?: 'jpg');
+            } else {
+                $sourcePath = (string) $file;
+                $originalExt = pathinfo($sourcePath, PATHINFO_EXTENSION) ?: 'jpg';
+            }
 
-            if (copy($sourcePath, $fallbackPath)) {
-                return true;
+            if (empty($sourcePath) || ! file_exists($sourcePath)) {
+                return false;
+            }
+
+            $fallbackFileName = pathinfo($targetPath, PATHINFO_FILENAME) . '.' . strtolower($originalExt);
+            $fallbackPath = dirname($targetPath) . '/' . $fallbackFileName;
+
+            if ($file instanceof UploadedFile) {
+                $file->move(dirname($targetPath), $fallbackFileName);
+            } else {
+                copy($sourcePath, $fallbackPath);
+            }
+
+            if (file_exists($fallbackPath)) {
+                return $fallbackFileName;
             }
         } catch (Exception $copyError) {
-            // Fallback copy failed - return false
+            // Fallback copy failed
         }
 
         return false;
@@ -298,27 +316,28 @@ class ImageService
      * Xử lý chuyển đổi và lưu ảnh dạng WebP
      *
      * @param  UploadedFile  $file  File ảnh gốc
-     * @param  string  $imageFolder  Thư mục lưu ảnh
-     * @param  string  $fileName  Tên file (sẽ được đổi đuôi thành .webp)
+     * @param  string  $subPath  Thư mục con lưu ảnh
+     * @param  string  $fileName  Tên file (sẽ được đổi đuôi thành .webp hoặc giữ nguyên nếu fallback)
      * @param  array  $options  Tùy chọn (quality)
-     * @return string Tên file WebP đã lưu
+     * @return string Tên file thực tế đã lưu
      *
      * @throws Exception
      */
     private function handleWebpConversion(UploadedFile $file, string $subPath, string $fileName, array $options = []): string
     {
-        // Đảm bảo thư mục tồn tại
         $this->ensureDirectoryExists($subPath);
 
         $webpFileName = pathinfo($fileName, PATHINFO_FILENAME).'.webp';
         $targetPath = public_path("uploads/{$subPath}/{$webpFileName}");
         $quality = $options['quality'] ?? 80;
 
-        if (! $this->convertToWebp($file->getPathname(), $targetPath, $quality)) {
-            throw new Exception('Không thể chuyển đổi ảnh sang WebP');
+        $savedFileName = $this->convertToWebp($file, $targetPath, $quality);
+
+        if (! $savedFileName) {
+            throw new Exception('Không thể chuyển đổi hoặc lưu ảnh');
         }
 
-        return $webpFileName;
+        return $savedFileName;
     }
 
     // xử lý hình ảnh chi tiết
@@ -431,21 +450,11 @@ class ImageService
             }
 
             $subPath = $this->getSubPath($imageFolder);
+            $fileName = $this->generateFileName($file, $options);
 
-            // Tạo tên file WebP
-            $fileName = pathinfo($this->generateFileName($file, $options), PATHINFO_FILENAME).'.webp';
+            $savedFileName = $this->handleWebpConversion($file, $subPath, $fileName, $options);
 
-            // Đảm bảo thư mục tồn tại
-            $this->ensureDirectoryExists($subPath);
-
-            // Đường dẫn file đích
-            $targetPath = public_path("uploads/{$subPath}/{$fileName}");
-
-            // Chuyển đổi và lưu ảnh dạng WebP
-            $quality = $options['quality'] ?? 80;
-            $this->convertToWebp($file->getPathname(), $targetPath, $quality);
-
-            return "uploads/{$subPath}/{$fileName}";
+            return "uploads/{$subPath}/{$savedFileName}";
         } catch (Exception $e) {
             throw $e;
         }

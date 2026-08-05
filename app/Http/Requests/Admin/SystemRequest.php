@@ -44,8 +44,8 @@ class SystemRequest extends BaseAdminRequest
             'zalo' => 'nullable|string|max:255',
 
             // SEO & Branding
-            'favicon' => 'nullable|image|mimes:ico,png,jpg,jpeg|max:512',
-            'logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
+            'favicon' => 'nullable|image|mimes:ico,png,jpg,jpeg|max:5120',
+            'logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:51200',
             'name_vn' => 'nullable|string|max:255',
             'name_en' => 'nullable|string|max:255',
             'description_vn' => 'nullable|string|max:500',

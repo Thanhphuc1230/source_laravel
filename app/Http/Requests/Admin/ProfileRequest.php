@@ -18,7 +18,7 @@ class ProfileRequest extends BaseAdminRequest
         return [
             'fullname' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$userId,
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:51200',
             'username' => 'required|string|max:255|unique:users,username,'.$userId,
         ];
     }

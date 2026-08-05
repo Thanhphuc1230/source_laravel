@@ -14,15 +14,15 @@ class BrandRequest extends BaseAdminRequest
     public function rules(): array
     {
         $imageRule = request()->route('uuid')
-            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
-            : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200'
+            : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:51200';
 
         return [
             'name_vn' => 'required|max:255',
             'name_en' => 'nullable|max:255',
             'stt' => 'required|integer',
             'image_vn' => $imageRule,
-            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
         ];
     }
 

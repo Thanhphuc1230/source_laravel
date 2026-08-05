@@ -22,8 +22,8 @@ class CateNewRequest extends BaseAdminRequest
             'keyword_en' => 'nullable|max:255',
             'description_vn' => 'required',
             'description_en' => 'nullable',
-            'image_vn' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
-            'image_en' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
+            'image_vn' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:51200'],
+            'image_en' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:51200'],
         ];
     }
 
