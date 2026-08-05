@@ -333,9 +333,7 @@ abstract class BaseRepository implements RepositoryInterface
                 $id = $record ? $record->{$primaryKey} : null;
             }
 
-            return !$id 
-                ? $this->slugService->generateUniqueSlugWithId($name, 0, $tableName, $slugField)
-                : $this->slugService->generateUniqueSlugWithIdGlobal($name, $id, $tableName, $slugField);
+            return $this->slugService->generateUniqueSlugGlobal($name, $tableName, $slugField, $id);
         }
 
         // Fallback: simple slug generation without SlugService
