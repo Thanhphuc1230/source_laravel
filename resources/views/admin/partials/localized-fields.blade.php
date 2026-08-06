@@ -1,26 +1,26 @@
 @props(['fields' => [], 'model' => $page ?? null])
 
-@foreach ($fields as $field)
-    @php
-        $type = $field['type'] ?? 'text';
-        $base = $field['base'];
-        $label = $field['label'] ?? ucfirst($base);
-        $rows = $field['rows'] ?? 6;
-        $col = $field['col'] ?? 'col-12'; // Mặc định là full width
-        $useEditor = $field['ckeditor'] ?? false;
-        
-        // Đọc active languages từ global systemConfig
-        $activeLocales = isset($systemConfig) ? ($systemConfig->active_languages ?? ['vi', 'en']) : ['vi', 'en'];
-        $languages = [];
-        if (in_array('vi', $activeLocales)) {
-            $languages['vn'] = 'VN';
-        }
-        if (in_array('en', $activeLocales)) {
-            $languages['en'] = 'EN';
-        }
-    @endphp
+<div class="row">
+    @foreach ($fields as $field)
+        @php
+            $type = $field['type'] ?? 'text';
+            $base = $field['base'];
+            $label = $field['label'] ?? ucfirst($base);
+            $rows = $field['rows'] ?? 6;
+            $col = $field['col'] ?? 'col-12'; // Mặc định col-12 nếu không khai báo
+            $useEditor = $field['ckeditor'] ?? false;
+            
+            // Đọc active languages từ global systemConfig
+            $activeLocales = isset($systemConfig) ? ($systemConfig->active_languages ?? ['vi', 'en']) : ['vi', 'en'];
+            $languages = [];
+            if (in_array('vi', $activeLocales)) {
+                $languages['vn'] = 'VN';
+            }
+            if (in_array('en', $activeLocales)) {
+                $languages['en'] = 'EN';
+            }
+        @endphp
 
-    <div class="row">
         @foreach ($languages as $locale => $suffix)
             @php
                 $name = $base.'_'.$locale;
@@ -50,5 +50,5 @@
                 @error($name)<span class="text-danger">{{ $message }}</span>@enderror
             </div>
         @endforeach
-    </div>
-@endforeach
+    @endforeach
+</div>
