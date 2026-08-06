@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Brand;
 use App\Models\CateNew;
 use App\Models\CateProduct;
 use App\Models\Menu;
@@ -55,19 +56,13 @@ class AppServiceProvider extends ServiceProvider
         // Clear frontend cache dynamically when data changes
         $clearFrontendCache = function() {
             if (class_exists(\App\Services\CacheService::class)) {
-                \App\Services\CacheService::forgetTag('frontend');
-                \App\Services\CacheService::forgetTag('system');
-                \App\Services\CacheService::forgetTag('menu');
-                \App\Services\CacheService::forgetTag('sliders');
-                \App\Services\CacheService::forgetTag('categories');
-                \App\Services\CacheService::forgetTag('pages');
-                \App\Services\CacheService::forgetTag('products');
+                \App\Services\CacheService::forgetTags(['brands', 'frontend', 'system', 'menu', 'sliders', 'categories', 'pages', 'products']);
             }
             Cache::forget('frontend_global_data');
             Cache::forget('admin_system_config');
         };
 
-        foreach ([System::class, Menu::class, Slider::class, CateProduct::class, CateNew::class, Page::class, Product::class] as $model) {
+        foreach ([System::class, Menu::class, Slider::class, CateProduct::class, CateNew::class, Page::class, Product::class, Brand::class] as $model) {
             $model::saved($clearFrontendCache);
             $model::deleted($clearFrontendCache);
         }

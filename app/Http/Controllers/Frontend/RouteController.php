@@ -75,10 +75,13 @@ class RouteController extends Controller
                 UNION ALL
                 SELECT 'page' as type, id_page as id, {$slugColumn} as slug, {$titleColumn} as title
                 FROM tp_pages WHERE ({$slugColumn} = ? OR slug_vn = ? OR slug_en = ?) AND status = 1
+                UNION ALL
+                SELECT 'brand' as type, id_brand as id, {$titleColumn} as slug, {$titleColumn} as title
+                FROM tp_brands WHERE ({$slugColumn} = ? OR slug_vn = ? OR slug_en = ? OR name_vn = ?) AND status = 1
                 LIMIT 1
             ";
             
-            $params = [$slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug];
+            $params = array_fill(0, 19, $slug);
             $result = DB::select($query, $params);
             
             if ($result) {
@@ -114,6 +117,9 @@ class RouteController extends Controller
 
                 case 'page':
                     return app(PageController::class)->page($content['id']);
+
+                case 'brand':
+                    return app(ProductController::class)->brandProduct($content['id']);
 
                 default:
                     return view('errors.404');

@@ -49,6 +49,9 @@ class FrontendComposer
             'cate_product' => \App\Services\CacheService::remember('categories', 'frontend_cate_product_data', $cacheTtl, function() {
                 return CateProduct::where('status', 1)->where('parent_id', 0)->orderBy('stt', 'asc')->get();
             }),
+            'brands' => \App\Services\CacheService::remember('brands', 'frontend_brands_data', $cacheTtl, function() {
+                return \App\Models\Brand::where('status', 1)->orderBy('stt', 'asc')->get();
+            }),
             'category_product_footer' => \App\Services\CacheService::remember('categories', 'frontend_cate_product_footer_data', $cacheTtl, function() {
                 return CateProduct::where('status', 1)->whereIn('parent_id', [0, 1])->orderBy('stt', 'asc')->get();
             }),

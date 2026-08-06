@@ -53,6 +53,9 @@
         </div>
     </div>
 
+    <!-- Featured Showroom Brands Section -->
+    @include('frontend.partials.brand')
+
     <!-- Features Section (Tại sao chọn chúng tôi - Dynamic Values) -->
     <section class="max-w-7xl mx-auto px-4 py-16">
         <div class="text-center max-w-xl mx-auto mb-10">

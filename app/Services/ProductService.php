@@ -221,4 +221,53 @@ class ProductService
             $this->getChildCategoryIds($childId, $categoryIds);
         }
     }
+
+    /**
+     * Get data for brand product page
+     *
+     * @param int $id_brand
+     * @param Request|null $request
+     * @return array
+     */
+    public function getBrandProductData($id_brand, Request $request = null)
+    {
+        if (!$request) {
+            $request = request();
+        }
+        $data = [];
+
+        $data['brand_detail'] = \App\Models\Brand::where('status', 1)->where('id_brand', $id_brand)->firstOrFail();
+        
+        $data['category_detail'] = (object) [
+            'id_cate_product' => 0,
+            'name_vn' => $data['brand_detail']->name_vn,
+            'name_en' => $data['brand_detail']->name_en ?? $data['brand_detail']->name_vn,
+            'name' => $data['brand_detail']->name_vn,
+            'slug' => $data['brand_detail']->slug ?? \Illuminate\Support\Str::slug($data['brand_detail']->name_vn),
+            'intro_vn' => 'Xe / Sản phẩm thương hiệu ' . $data['brand_detail']->name_vn,
+            'description_vn' => 'Danh sách xe thuộc thương hiệu ' . $data['brand_detail']->name_vn,
+            'keyword_vn' => $data['brand_detail']->name_vn,
+            'image' => $data['brand_detail']->image,
+        ];
+
+        $data['category_product'] = CateProduct::with(['products', 'children.products'])
+            ->where('status', 1)
+            ->orderBy('stt', 'asc')
+            ->get()
+            ->groupBy('parent_id');
+
+        $query = Product::with(['cate:id_cate_product,name_vn,name_en,slug_vn,slug_en'])
+            ->select('id_product', 'uuid', 'name_vn', 'name_en', 'slug_vn', 'slug_en', 'price', 'price_old', 'image_vn', 'image_en', 'intro_vn', 'intro_en', 'category_id', 'brand_id', 'status', 'stt', 'created_at')
+            ->where('brand_id', $id_brand)
+            ->where('status', 1)
+            ->orderBy('created_at', 'desc');
+
+        $query = $this->applyProductFilters($query, $request);
+        $query = $this->applyProductSorting($query, $request);
+        $perPage = $this->getPerPageValue($request);
+
+        $data['products'] = $query->paginate($perPage)->appends($request->query());
+
+        return $data;
+    }
 }

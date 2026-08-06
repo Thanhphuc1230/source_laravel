@@ -28,4 +28,11 @@ class ProductController extends Controller
 
         return view('frontend.modules.product.detail', $data);
     }
+
+    public function brandProduct($id_brand)
+    {
+        $data = $this->productService->getBrandProductData($id_brand, request());
+
+        return view('frontend.modules.product.category', $data);
+    }
 }
