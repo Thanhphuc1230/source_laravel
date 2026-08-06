@@ -246,6 +246,27 @@
                         </div>
                         <!-- end card -->
 
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Thương hiệu</h5>
+                            </div>
+                            <div class="card-body">
+                                <select class="form-select" id="choices-brand-input" name="brand_id">
+                                    <option value="">-- Chọn thương hiệu --</option>
+                                    @if (isset($brands))
+                                        @foreach ($brands as $b)
+                                            <option value="{{ $b->id_brand }}"
+                                                {{ (old('brand_id') ?: $page->brand_id ?? '') == $b->id_brand ? 'selected' : '' }}>
+                                                {{ $b->name_vn }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <!-- end card body -->
+                        </div>
+                        <!-- end card -->
+
                     </div>
                     <!-- end col -->
                 </div>

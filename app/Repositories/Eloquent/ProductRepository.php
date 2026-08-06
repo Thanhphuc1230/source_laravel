@@ -67,4 +67,14 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
             ->where('parent_id', 0)
             ->get();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getActiveBrands()
+    {
+        return \App\Models\Brand::where('status', 1)
+            ->orderBy('stt', 'asc')
+            ->get();
+    }
 }

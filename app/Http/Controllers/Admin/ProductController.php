@@ -54,6 +54,7 @@ class ProductController extends BaseController
     public function create()
     {
         $data['category'] = $this->productRepository->getActiveCategories();
+        $data['brands'] = $this->productRepository->getActiveBrands();
         $data['action'] = 'create';
         $data['nameItem'] = $this->nameItem;
         $data['imageFolder'] = $this->imageFolder;
@@ -87,6 +88,7 @@ class ProductController extends BaseController
         $data = [
             'page' => $page,
             'category' => $this->productRepository->getActiveCategories(),
+            'brands' => $this->productRepository->getActiveBrands(),
             'action' => 'edit',
             'nameItem' => $this->nameItem,
             'currentPage' => $currentPage,

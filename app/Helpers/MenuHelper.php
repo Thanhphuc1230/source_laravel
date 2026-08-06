@@ -81,6 +81,18 @@ if (!function_exists('getUrlMenuRaw')) {
 
                 return route('web.resolve', ['slug' => $slug]);
 
+            case 'brand':
+                $brand = \App\Models\Brand::where('id_brand', $item->object_id)
+                    ->where('status', 1)
+                    ->first();
+                $slug = $brand ? ($brand->slug ?? \Illuminate\Support\Str::slug($brand->name_vn)) : null;
+
+                if (empty($slug)) {
+                    return route('web.404');
+                }
+
+                return route('web.resolve', ['slug' => $slug]);
+
             default:
                 return route('web.home');
         }
@@ -155,9 +167,9 @@ if (!function_exists('searchInTree')) {
 if (!function_exists('getMenuBelongName')) {
     /**
      * Lấy tên object dựa trên type và object_id
-     * Trả về tên của page/category mà menu đang trỏ tới
+     * Trả về tên của page/category/brand mà menu đang trỏ tới
      */
-    function getMenuBelongName($menuItem, $page_content = null, $cate_new = null, $cate_product = null)
+    function getMenuBelongName($menuItem, $page_content = null, $cate_new = null, $cate_product = null, $brands = null)
     {
         if (!$menuItem || !isset($menuItem->type)) {
             return null;
@@ -179,6 +191,14 @@ if (!function_exists('getMenuBelongName')) {
                 $obj = searchInTree($cate_product, $menuItem->object_id, 'id_cate_product');
                 return $obj->name_vn ?? null;
 
+            case 'brand':
+                if ($brands) {
+                    $obj = searchInTree($brands, $menuItem->object_id, 'id_brand');
+                    if ($obj) return $obj->name_vn;
+                }
+                $brand = \App\Models\Brand::find($menuItem->object_id);
+                return $brand ? $brand->name_vn : null;
+
             case 'link':
                 return $menuItem->link ?? null;
 
@@ -198,6 +218,7 @@ if (!function_exists('getMenuTypeLabel')) {
             'page' => 'Trang nội dung',
             'cate_new' => 'Danh mục tin tức',
             'cate_product' => 'Danh mục sản phẩm',
+            'brand' => 'Thương hiệu',
             'link' => 'Liên kết',
         ];
 

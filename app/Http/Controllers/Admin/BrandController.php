@@ -26,7 +26,7 @@ class BrandController extends BaseController
     {
         $this->module = 'brand';
         $this->model = new Brand;
-        $this->nameItem = 'Đối tác';
+        $this->nameItem = 'Thương hiệu';
         $this->imageFolder = $imageFolder;
         $this->brandRepository = $brandRepository;
         $this->repository = $brandRepository; // For trait

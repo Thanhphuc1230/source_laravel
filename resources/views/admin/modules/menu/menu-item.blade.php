@@ -1,9 +1,9 @@
 {{-- resources/views/admin/modules/menu/menu-item.blade.php --}}
-@props(['item', 'level' => 1, 'pageContent' => null, 'cateNew' => null, 'cateProduct' => null])
+@props(['item', 'level' => 1, 'pageContent' => null, 'cateNew' => null, 'cateProduct' => null, 'brands' => null])
 
 @php
     $nestedClass = 'nested-' . $level;
-    $belongName = getMenuBelongName($item, $pageContent, $cateNew, $cateProduct);
+    $belongName = getMenuBelongName($item, $pageContent, $cateNew, $cateProduct, $brands);
     $typeLabel = getMenuTypeLabel($item->type);
     $viewUrl = getUrlMenu($item);
 @endphp
@@ -42,7 +42,8 @@
                     'level' => $level + 1,
                     'pageContent' => $pageContent,
                     'cateNew' => $cateNew,
-                    'cateProduct' => $cateProduct
+                    'cateProduct' => $cateProduct,
+                    'brands' => $brands
                 ])
             @endforeach
         </div>

@@ -19,4 +19,11 @@ interface ProductRepositoryInterface extends RepositoryInterface
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getActiveCategories();
+
+    /**
+     * Get active brands for products
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getActiveBrands();
 }

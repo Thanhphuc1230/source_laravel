@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\Menu\MenuChanged;
 use App\Http\Requests\Admin\MenuRequest;
+use App\Repositories\Interfaces\BrandRepositoryInterface;
 use App\Repositories\Interfaces\MenuRepositoryInterface;
 use App\Repositories\Interfaces\PageRepositoryInterface;
 use App\Repositories\Interfaces\CateNewRepositoryInterface;
@@ -22,12 +23,15 @@ class MenuController extends BaseController
 
     const TYPE_CATE_PRODUCT = 'cate_product';
 
+    const TYPE_BRAND = 'brand';
+
     protected $module;
 
     protected $menuRepository;
     protected $pageRepository;
     protected $cateNewRepository;
     protected $cateProductRepository;
+    protected $brandRepository;
 
     protected $nameItem;
 
@@ -38,6 +42,7 @@ class MenuController extends BaseController
         PageRepositoryInterface $pageRepository,
         CateNewRepositoryInterface $cateNewRepository,
         CateProductRepositoryInterface $cateProductRepository,
+        BrandRepositoryInterface $brandRepository,
         $imageFolder = 'menu'
     ) {
         $this->module = 'menu';
@@ -45,6 +50,7 @@ class MenuController extends BaseController
         $this->pageRepository = $pageRepository;
         $this->cateNewRepository = $cateNewRepository;
         $this->cateProductRepository = $cateProductRepository;
+        $this->brandRepository = $brandRepository;
         $this->nameItem = 'Trang Menu';
         $this->imageFolder = $imageFolder;
 
@@ -72,6 +78,7 @@ class MenuController extends BaseController
         // get category new
         $data['cate_new'] = $this->cateNewRepository->getCategoriesWithChildren();
         $data['cate_product'] = $this->cateProductRepository->getCategoriesWithChildren();
+        $data['brands'] = $this->brandRepository->getActiveBrands();
 
         $data['menus'] = $this->menuRepository->getMenuTree();
 
@@ -138,6 +145,13 @@ class MenuController extends BaseController
             case self::TYPE_CATE_PRODUCT:
                 $cateProduct = $this->cateProductRepository->find($id);
                 return $cateProduct ? ['name_vn' => $cateProduct->name_vn, 'slug' => $this->cateProductRepository->generateUniqueSlug($cateProduct->name_vn, $cateProduct->uuid)] : null;
+            case self::TYPE_BRAND:
+                $brand = $this->brandRepository->find($id);
+                return $brand ? [
+                    'name_vn' => $brand->name_vn,
+                    'name_en' => $brand->name_en ?? $brand->name_vn,
+                    'slug' => $brand->slug ?? Str::slug($brand->name_vn)
+                ] : null;
             default:
                 return null;
         }

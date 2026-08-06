@@ -67,7 +67,7 @@
                 @hasPermission('brand.view')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.brand.index') }}">
-                        <i class="ri-building-line"></i> <span data-key="t-widgets">Đối tác</span>
+                        <i class="ri-building-line"></i> <span data-key="t-widgets">Thương hiệu</span>
                     </a>
                 </li>
                 @endhasPermission

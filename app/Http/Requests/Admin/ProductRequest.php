@@ -40,6 +40,7 @@ class ProductRequest extends BaseAdminRequest
             'content_en' => 'nullable|string',
 
             'category_id' => 'required|exists:tp_cate_products,id_cate_product',
+            'brand_id' => 'nullable|exists:tp_brands,id_brand',
 
             'status' => 'required|boolean',
             'hot' => 'nullable|boolean',

@@ -36,6 +36,7 @@ class Product extends Model
         'description_vn',
         'description_en',
         'category_id',
+        'brand_id',
     ];
 
     public function getSlugAttribute()
@@ -83,5 +84,10 @@ class Product extends Model
     public function cate()
     {
         return $this->belongsTo(CateProduct::class, 'category_id', 'id_cate_product');
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id', 'id_brand');
     }
 }

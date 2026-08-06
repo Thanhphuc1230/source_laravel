@@ -169,6 +169,61 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {{-- Brand --}}
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="genques-headingBrand">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#genques-collapseBrand" aria-expanded="false"
+                                                            aria-controls="genques-collapseBrand">
+                                                            Thương hiệu
+                                                        </button>
+                                                    </h2>
+                                                    <div id="genques-collapseBrand" class="accordion-collapse collapse"
+                                                        aria-labelledby="genques-headingBrand"
+                                                        data-bs-parent="#genques-accordion">
+                                                        <div class="accordion-body">
+                                                            <form action="{{ route('admin.menu.store') }}" method="POST">
+                                                                @csrf
+                                                                @if(isset($brands) && count($brands) > 0)
+                                                                    @foreach ($brands as $item)
+                                                                        <div class="form-check mb-2">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                name="object_ids[]" value="{{ $item->id_brand }}"
+                                                                                id="formCheckBrand{{ $item->id_brand }}">
+                                                                            <label class="form-check-label d-flex align-items-center gap-2"
+                                                                                for="formCheckBrand{{ $item->id_brand }}">
+                                                                                @if ($item->image)
+                                                                                    <img src="{{ $item->image }}" alt="{{ $item->name_vn }}" style="height: 20px; width: auto; object-fit: contain;">
+                                                                                @endif
+                                                                                <span>{{ $item->name_vn }}</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    @endforeach
+                                                                @else
+                                                                    <p class="text-muted">Chưa có thương hiệu nào.</p>
+                                                                @endif
+                                                                <p class="text-muted">Chọn vị trí thêm vào</p>
+                                                                <select class="form-select"
+                                                                    aria-label=".form-select-sm example" name="parent_id">
+                                                                    <option value="0" selected="">Chủ đề cha
+                                                                    </option>
+                                                                    @foreach ($menus as $item)
+                                                                        {!! renderMenuOptions($item) !!}
+                                                                    @endforeach
+                                                                </select>
+                                                                <input type="hidden" name="type" value="brand">
+                                                                <div class="col-lg-12" style="padding-top: 1rem">
+                                                                    <div class="text-start">
+                                                                        <input type="submit"
+                                                                            class="btn btn-secondary waves-effect waves-light"
+                                                                            value="Thêm vào menu">
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="accordion-item">
                                                     <h2 class="accordion-header" id="genques-headingFour">
                                                         <button class="accordion-button collapsed" type="button"
@@ -242,6 +297,7 @@
                                                         'pageContent' => $page_content,
                                                         'cateNew' => $cate_new,
                                                         'cateProduct' => $cate_product,
+                                                        'brands' => $brands ?? null,
                                                     ])
                                                 @endforeach
                                             </div>
