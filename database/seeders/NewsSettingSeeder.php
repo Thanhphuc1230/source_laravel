@@ -69,7 +69,7 @@ class NewsSettingSeeder extends Seeder
             ],
             [
                 'key' => 'news_banner_category',
-                'value' => '',
+                'value' => 'uploads/news-setting/banner_category.jpg',
                 'type' => 'text',
                 'group' => 'banner',
                 'description' => 'Banner danh mục tin tức',
@@ -78,7 +78,7 @@ class NewsSettingSeeder extends Seeder
             ],
             [
                 'key' => 'news_banner_detail',
-                'value' => '',
+                'value' => 'uploads/news-setting/banner_detail.jpg',
                 'type' => 'text',
                 'group' => 'banner',
                 'description' => 'Banner chi tiết tin tức',

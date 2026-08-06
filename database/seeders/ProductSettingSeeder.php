@@ -69,7 +69,7 @@ class ProductSettingSeeder extends Seeder
             ],
             [
                 'key' => 'products_banner_category',
-                'value' => '',
+                'value' => 'uploads/product-setting/banner_category.jpg',
                 'type' => 'text',
                 'group' => 'banner',
                 'description' => 'Banner danh mục sản phẩm',
@@ -78,7 +78,7 @@ class ProductSettingSeeder extends Seeder
             ],
             [
                 'key' => 'products_banner_detail',
-                'value' => '',
+                'value' => 'uploads/product-setting/banner_detail.jpg',
                 'type' => 'text',
                 'group' => 'banner',
                 'description' => 'Banner chi tiết sản phẩm',

@@ -6,9 +6,9 @@
 
 @section('content')
     @if(!empty($news_settings['banner_detail']))
-        <div class="bg-emerald-950 text-white py-14 text-center space-y-2 relative overflow-hidden">
-            <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('{{ asset($news_settings['banner_detail']) }}');"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-950/70 to-emerald-950/40"></div>
+        <div class="bg-slate-900 text-white py-14 text-center space-y-2 relative overflow-hidden">
+            <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('{{ asset($news_settings['banner_detail']) }}');"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/70 to-slate-900/40"></div>
             <div class="relative z-10 max-w-7xl mx-auto px-4 space-y-2">
                 <div class="text-2xs text-gray-300 flex items-center justify-center space-x-2">
                     <a href="{{ route('web.home') }}" class="hover:text-white">Trang chủ</a>
