@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MailConfigSeeder::class);
         $this->call(MailTemplateSeeder::class);
         $this->call(FeatureSeeder::class);
+        $this->call(BrandSeeder::class);
         $this->call(SliderSeeder::class);
         $this->call(AnalyticSeeder::class);
     }

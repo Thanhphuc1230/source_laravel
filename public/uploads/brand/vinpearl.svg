@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <rect width="200" height="60" rx="8" fill="#4c1d95"/>
+  <path d="M30 18h6l5 15 5-15h6l-8.5 24h-5L30 18z" fill="#f43f5e"/>
+  <text x="60" y="37" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="18" fill="#ffffff" letter-spacing="1.5">VINPEARL</text>
+</svg>

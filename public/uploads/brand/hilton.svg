@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <rect width="200" height="60" rx="8" fill="#0f172a"/>
+  <path d="M30 18h5v10h10V18h5v24h-5V32H35v10h-5V18z" fill="#38bdf8"/>
+  <text x="60" y="37" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="20" fill="#ffffff" letter-spacing="2">HILTON</text>
+</svg>

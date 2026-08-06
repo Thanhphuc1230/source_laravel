@@ -37,6 +37,7 @@ return new class extends Migration
             $table->text('description_vn')->nullable();
             $table->text('description_en')->nullable();
             $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('brand_id')->nullable()->index();
             $table->timestamps();
 
             $table->foreign('category_id')->references('id_cate_product')->on('tp_cate_products')->onDelete('cascade');

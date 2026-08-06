@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <rect width="200" height="60" rx="8" fill="#1e293b"/>
+  <path d="M30 42V18h6l6 14 6-14h6v24h-5V26.5L47.5 40h-3L35 26.5V42h-5z" fill="#f87171"/>
+  <text x="65" y="37" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="18" fill="#ffffff" letter-spacing="1">MARRIOTT</text>
+</svg>

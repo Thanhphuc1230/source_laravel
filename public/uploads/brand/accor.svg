@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <rect width="200" height="60" rx="8" fill="#1e1b4b"/>
+  <path d="M40 18l10 24h-5.5l-2.2-5.5H31.7L29.5 42H24l10-24h6zm-1 5.2l-4.8 11.8h9.6L39 23.2z" fill="#fbbf24"/>
+  <text x="60" y="37" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="20" fill="#ffffff" letter-spacing="2">ACCOR</text>
+</svg>

@@ -16,6 +16,8 @@ return new class extends Migration
             $table->uuid();
             $table->string('name_vn');
             $table->string('name_en')->nullable();
+            $table->string('slug_vn')->nullable()->index();
+            $table->string('slug_en')->nullable()->index();
             $table->boolean('status')->default(true);
             $table->string('image_vn')->nullable();
             $table->string('image_en')->nullable();

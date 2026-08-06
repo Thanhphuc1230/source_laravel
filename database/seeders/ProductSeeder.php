@@ -26,6 +26,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_6.jpg',
                 'image_en' => 'tour_6.jpg',
                 'category_id' => 1,
+                'brand_id' => 1,
                 'hot' => true,
             ],
             [
@@ -40,6 +41,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_10.jpg',
                 'image_en' => 'tour_10.jpg',
                 'category_id' => 1,
+                'brand_id' => 2,
                 'hot' => true,
             ],
             [
@@ -54,6 +56,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_3.jpg',
                 'image_en' => 'tour_3.jpg',
                 'category_id' => 1,
+                'brand_id' => 3,
                 'hot' => false,
             ],
             [
@@ -68,6 +71,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_5.jpg',
                 'image_en' => 'tour_5.jpg',
                 'category_id' => 1,
+                'brand_id' => 5,
                 'hot' => false,
             ],
 
@@ -84,6 +88,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_2.jpg',
                 'image_en' => 'tour_2.jpg',
                 'category_id' => 2,
+                'brand_id' => 1,
                 'hot' => true,
             ],
             [
@@ -98,6 +103,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_8.jpg',
                 'image_en' => 'tour_8.jpg',
                 'category_id' => 2,
+                'brand_id' => 4,
                 'hot' => true,
             ],
             [
@@ -112,6 +118,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_1.jpg',
                 'image_en' => 'tour_1.jpg',
                 'category_id' => 2,
+                'brand_id' => 6,
                 'hot' => false,
             ],
             [
@@ -126,6 +133,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_4.jpg',
                 'image_en' => 'tour_4.jpg',
                 'category_id' => 2,
+                'brand_id' => 2,
                 'hot' => false,
             ],
 
@@ -142,6 +150,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_7.jpg',
                 'image_en' => 'tour_7.jpg',
                 'category_id' => 3,
+                'brand_id' => 1,
                 'hot' => true,
             ],
             [
@@ -156,6 +165,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_9.jpg',
                 'image_en' => 'tour_9.jpg',
                 'category_id' => 3,
+                'brand_id' => 3,
                 'hot' => true,
             ],
             [
@@ -170,6 +180,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_11.jpg',
                 'image_en' => 'tour_11.jpg',
                 'category_id' => 3,
+                'brand_id' => 4,
                 'hot' => false,
             ],
             [
@@ -184,6 +195,7 @@ class ProductSeeder extends Seeder
                 'image_vn' => 'tour_12.jpg',
                 'image_en' => 'tour_12.jpg',
                 'category_id' => 3,
+                'brand_id' => 6,
                 'hot' => false,
             ],
         ];
@@ -209,6 +221,7 @@ class ProductSeeder extends Seeder
                 'description_vn' => $tourData['intro_vn'],
                 'description_en' => $tourData['intro_en'],
                 'category_id' => $tourData['category_id'],
+                'brand_id' => $tourData['brand_id'],
                 'uuid' => Str::uuid()->toString(),
             ]);
         }
