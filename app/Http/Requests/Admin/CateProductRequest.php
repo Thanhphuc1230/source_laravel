@@ -22,8 +22,8 @@ class CateProductRequest extends BaseAdminRequest
             'keyword_en' => 'nullable|max:255',
             'description_vn' => 'required',
             'description_en' => 'nullable',
-            'image_vn' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:51200'],
-            'image_en' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:51200'],
+            'image_vn' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'],
+            'image_en' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'],
         ];
     }
 
@@ -40,7 +40,9 @@ class CateProductRequest extends BaseAdminRequest
             'keyword_vn.required' => 'Vui lòng nhập từ khóa VN',
             'description_vn.required' => 'Vui lòng nhập mô tả ngắn VN',
             'image_vn.image' => 'File hình ảnh VN phải là hình ảnh',
+            'image_vn.max' => 'File hình ảnh VN không được vượt quá 10MB',
             'image_en.image' => 'File hình ảnh EN phải là hình ảnh',
+            'image_en.max' => 'File hình ảnh EN không được vượt quá 10MB',
         ];
     }
 }

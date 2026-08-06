@@ -14,8 +14,8 @@ class FeatureRequest extends BaseAdminRequest
     public function rules(): array
     {
         $imageRule = request()->route('uuid')
-            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:51200'
-            : 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:51200';
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240'
+            : 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:10240';
 
         return [
             'title_vn' => 'required|max:255',
@@ -37,7 +37,7 @@ class FeatureRequest extends BaseAdminRequest
             'image.required' => 'Hình ảnh không được để trống',
             'image.image' => 'File phải là hình ảnh',
             'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, webp, svg',
-            'image.max' => 'Hình ảnh phải nhỏ hơn 2MB',
+            'image.max' => 'Hình ảnh không được vượt quá 10MB',
         ];
     }
 }

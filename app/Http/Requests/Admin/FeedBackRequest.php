@@ -17,8 +17,8 @@ class FeedBackRequest extends BaseAdminRequest
             'name' => 'required|string|max:255|regex:/^[a-zA-Z0-9\s\p{L}]+$/u',
             'message' => 'required|string|max:2000', // Reduced from 65535 for security
             'image' => request()->route('uuid')
-            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200'
-            : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240'
+            : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
         ];
     }
 
@@ -33,7 +33,7 @@ class FeedBackRequest extends BaseAdminRequest
             'image.required' => 'Hình ảnh không được để trống',
             'image.image' => 'Hình ảnh không đúng định dạng',
             'image.mimes' => 'Hình ảnh không đúng định dạng',
-            'image.max' => 'Hình ảnh không được vượt quá 2MB',
+            'image.max' => 'Hình ảnh không được vượt quá 10MB',
         ];
     }
 }

@@ -28,8 +28,8 @@ class PageRequest extends BaseAdminRequest
             'keyword_en' => 'nullable|max:255',
             'description_vn' => 'required',
             'description_en' => 'nullable',
-            'image_vn' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
-            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
+            'image_vn' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
         ];
     }
 
@@ -53,7 +53,9 @@ class PageRequest extends BaseAdminRequest
             'content_en.max' => 'Nội dung trang tiếng Anh không được quá 65535 ký tự',
             'image.image' => 'File phải là hình ảnh',
             'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif hoặc webp',
-            'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB',
+            'image.max' => 'Kích thước hình ảnh không được vượt quá 10MB',
+            'image_vn.max' => 'Hình ảnh tiếng Việt không được vượt quá 10MB',
+            'image_en.max' => 'Hình ảnh tiếng Anh không được vượt quá 10MB',
         ];
     }
 }

@@ -26,12 +26,12 @@ class ProductRequest extends BaseAdminRequest
             'description_en' => 'nullable|max:255',
 
             'image_vn' => request()->route('uuid')
-            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200'
-            : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
-            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240'
+            : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
 
             'image_detail' => 'nullable|array',
-            'image_detail.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:51200',
+            'image_detail.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:10240',
 
             'price' => 'required|numeric|min:0',
             'price_old' => 'nullable|numeric|min:0',
@@ -67,11 +67,13 @@ class ProductRequest extends BaseAdminRequest
             'image.required' => 'Ảnh là bắt buộc.',
             'image.image' => 'Ảnh phải là file ảnh.',
             'image.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg, gif, svg.',
-            'image.max' => 'Ảnh không được vượt quá 2MB.',
+            'image.max' => 'Ảnh không được vượt quá 10MB.',
+            'image_vn.max' => 'Ảnh tiếng Việt không được vượt quá 10MB.',
+            'image_en.max' => 'Ảnh tiếng Anh không được vượt quá 10MB.',
             'image_detail.array' => 'Ảnh chi tiết phải là mảng.',
             'image_detail.*.image' => 'Ảnh chi tiết phải là file ảnh.',
             'image_detail.*.mimes' => 'Ảnh chi tiết phải có định dạng jpeg, png, jpg, gif, svg.',
-            'image_detail.*.max' => 'Ảnh chi tiết không được vượt quá 2MB.',
+            'image_detail.*.max' => 'Ảnh chi tiết không được vượt quá 10MB.',
 
             'price.required' => 'Giá sản phẩm là bắt buộc.',
             'price.numeric' => 'Giá sản phẩm phải là số.',

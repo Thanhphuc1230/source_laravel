@@ -45,7 +45,7 @@ class SystemRequest extends BaseAdminRequest
 
             // SEO & Branding
             'favicon' => 'nullable|image|mimes:ico,png,jpg,jpeg|max:5120',
-            'logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:51200',
+            'logo' => 'nullable|image|mimes:png,jpg,jpeg,svg|max:10240',
             'name_vn' => 'nullable|string|max:255',
             'name_en' => 'nullable|string|max:255',
             'description_vn' => 'nullable|string|max:500',
@@ -91,10 +91,10 @@ class SystemRequest extends BaseAdminRequest
             // Files
             'favicon.image' => 'Favicon phải là file hình ảnh',
             'favicon.mimes' => 'Favicon phải có định dạng: ico, png, jpg, jpeg',
-            'favicon.max' => 'Favicon không được quá 512KB',
+            'favicon.max' => 'Favicon không được quá 5MB',
             'logo.image' => 'Logo phải là file hình ảnh',
             'logo.mimes' => 'Logo phải có định dạng: png, jpg, jpeg, svg',
-            'logo.max' => 'Logo không được quá 2MB',
+            'logo.max' => 'Logo không được quá 10MB',
 
             // SEO
             'name_vn.max' => 'Tên website không được quá 255 ký tự',

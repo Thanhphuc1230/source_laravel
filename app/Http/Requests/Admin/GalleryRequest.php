@@ -17,8 +17,8 @@ class GalleryRequest extends BaseAdminRequest
             'name_vn' => 'required|max:255',
             'stt' => 'required|integer',
             'image' => request()->route('uuid')
-                ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200'
-                : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
+                ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240'
+                : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
         ];
     }
 
@@ -32,7 +32,7 @@ class GalleryRequest extends BaseAdminRequest
             'image.required' => 'Ảnh không được để trống',
             'image.image' => 'Ảnh phải là hình ảnh',
             'image.mimes' => 'Ảnh phải là hình ảnh',
-            'image.max' => 'Ảnh phải nhỏ hơn 2MB',
+            'image.max' => 'Ảnh không được vượt quá 10MB',
         ];
     }
 }

@@ -18,7 +18,7 @@ class ProfileRequest extends BaseAdminRequest
         return [
             'fullname' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$userId,
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:51200',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
             'username' => 'required|string|max:255|unique:users,username,'.$userId,
         ];
     }
@@ -34,7 +34,7 @@ class ProfileRequest extends BaseAdminRequest
             'email.unique' => 'Email đã tồn tại',
             'avatar.image' => 'File ảnh không đúng định dạng',
             'avatar.mimes' => 'File ảnh không đúng định dạng',
-            'avatar.max' => 'File ảnh không được vượt quá 2MB',
+            'avatar.max' => 'File ảnh không được vượt quá 10MB',
             'username.required' => 'Tên tài khoản không được để trống',
             'username.string' => 'Tên tài khoản không được chứa ký tự đặc biệt',
             'username.max' => 'Tên tài khoản không được vượt quá 255 ký tự',

@@ -26,9 +26,9 @@ class NewsRequest extends BaseAdminRequest
             'status' => 'required|in:0,1',
             'stt' => 'required|integer|min:0',
             'image_vn' => request()->route('uuid')
-            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200'
-            : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
-            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:51200',
+            ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240'
+            : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'image_en' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
             'keyword_vn' => 'required|string|max:255',
             'keyword_en' => 'nullable|string|max:255',
             'description_vn' => 'required|string|max:255',
@@ -57,7 +57,9 @@ class NewsRequest extends BaseAdminRequest
             'image.required' => 'Vui lòng chọn hình ảnh tin tức',
             'image.image' => 'Hình ảnh không hợp lệ',
             'image.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg, gif, webp',
-            'image.max' => 'Hình ảnh không được quá 2MB',
+            'image.max' => 'Hình ảnh không được quá 10MB',
+            'image_vn.max' => 'Hình ảnh tiếng Việt không được quá 10MB',
+            'image_en.max' => 'Hình ảnh tiếng Anh không được quá 10MB',
             'category_id.exists' => 'Chủ đề tin tức không tồn tại',
             'keyword_vn.required' => 'Vui lòng nhập từ khóa tiếng Việt',
             'keyword_vn.max' => 'Từ khóa tiếng Việt không được quá 255 ký tự',
