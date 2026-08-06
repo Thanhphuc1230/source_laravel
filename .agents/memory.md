@@ -36,6 +36,7 @@
 5. **Đồng bộ Request Rules & Helpers:** Kiểm tra kỹ Validation Request (`MenuRequest`) và Helper (`MenuHelper`) đảm bảo đồng bộ 100% các key/type (ví dụ `brand` vs `brands`).
 6. **Tối ưu Cache & Clear Cache Event:** Bọc `Cache::remember` cho `FrontendComposer` & Services (giữ query ở 0-2 queries khi warm). Luôn đăng ký Observer `saved`/`deleted` cho 100% Models trong `AppServiceProvider` để tự xóa cache khi Admin sửa dữ liệu.
 7. **Mobile Responsive Standard:** Breadcrumb/Nav trên mobile bắt buộc có `whitespace-nowrap overflow-x-auto`. Card sản phẩm/tin tức trên mobile bắt buộc dạng **2 cột** (`grid-cols-2 gap-3`) với `truncate` chống tràn text.
+8. **Thống nhất Key Thương hiệu & Repository Pattern:** Type thương hiệu trong Menu, Request Validation và Helpers thống nhất dùng duy nhất 1 key `'brand'` (tuyệt đối không dùng `'brands'`). Trong Controller Admin, lấy danh sách thương hiệu active qua Repository tương ứng (ví dụ: `$this->productRepository->getActiveBrands()`) để giữ Controller luôn sạch và tuân thủ Layered Architecture.
 
 ---
 

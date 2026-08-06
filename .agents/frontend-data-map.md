@@ -16,6 +16,7 @@
 | `$web` | `System` | `tp_systems` | Thông tin hệ thống – xem mục 2 |
 | `$menu` | Collection | `tp_menus` | Menu chính (parent_id=0, kèm children) |
 | `$cate_product` | Collection | `tp_cate_products` | Danh mục sản phẩm cấp 1 (status=1, parent_id=0) |
+| `$brands` | Collection | `tp_brands` | Danh sách thương hiệu đối tác (status=1, stt asc) |
 | `$footer_pages` | Collection | `tp_pages` | Trang tĩnh footer (status=1, footer=1) |
 | `$products_hot` | Collection | `tp_products` | Sản phẩm hot (hot=1, status=1, limit 10) |
 | `$product_settings` | `array` | `tp_product_settings` | Cấu hình sản phẩm (xem mục 8) |

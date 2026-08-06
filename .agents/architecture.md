@@ -139,12 +139,12 @@ INDEX (status, stt)
 | `System` | `tp_systems` | `id_system` | Thông tin website, logo, SĐT, map, mạng xã hội |
 | `Menu` | `tp_menus` | `id_menu` | Menu điều hướng, có `children()` đệ quy |
 | `CateProduct` | `tp_cate_products` | `id_cate_product` | Danh mục sản phẩm, có `products()`, `children()`, `parent()` |
-| `Product` | `tp_products` | `id_product` | Sản phẩm, có `cate()` belongsTo CateProduct |
+| `Product` | `tp_products` | `id_product` | Sản phẩm, có `cate()` belongsTo CateProduct, `brand()` belongsTo Brand (`brand_id`) |
 | `CateNew` | `tp_cate_news` | `id_cate_new` | Danh mục tin tức, có `news()` |
 | `News` | `tp_news` | `id_new` | Bài viết, có `cate()` belongsTo CateNew |
 | `Page` | `tp_pages` | `id_page` | Trang tĩnh, `footer=1` → hiển thị cột footer |
 | `Slider` | `tp_sliders` | `id_slider` | Ảnh slider trang chủ |
-| `Brand` | `tp_brands` | `id_brand` | Thương hiệu đối tác |
+| `Brand` | `tp_brands` | `id_brand` | Thương hiệu đối tác (có `products()`, `slug_vn`, `slug_en`) |
 | `Feature` | `tp_features` | `id_feature` | Tính năng nổi bật (icon FontAwesome + tiêu đề + mô tả) |
 | `Gallery` | `tp_galleries` | `id_gallery` | Thư viện ảnh |
 | `Contact` | `tp_contacts` | `id_contact` | Form liên hệ đã gửi |
@@ -167,9 +167,11 @@ INDEX (status, stt)
 ### Quan hệ chính:
 ```
 CateProduct  →  hasMany → Product       (category_id → id_cate_product)
+Brand        →  hasMany → Product       (brand_id → id_brand)
 CateNew      →  hasMany → News          (category_id → id_cate_new)
 Menu         →  hasMany → Menu          (parent_id → id_menu) [tự tham chiếu]
 Product      →  belongsTo → CateProduct
+Product      →  belongsTo → Brand       (brand_id → id_brand)
 News         →  belongsTo → CateNew
 OrderStatus  →  hasMany → OrderProduct
 ```
