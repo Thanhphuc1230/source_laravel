@@ -31,3 +31,9 @@ Route::group(['prefix' => 'admin/files', 'middleware' => ['web', 'auth', 'permis
     Route::post('/create-folder', [FileManagerController::class, 'createFolder'])->name('admin.files.create-folder');
     Route::get('/ckeditor', [FileManagerController::class, 'ckeditor'])->name('admin.files.ckeditor');
 });
+
+// UniSharp Laravel Filemanager Routes (CKEditor & Standalone LFM)
+Route::group(['prefix' => 'filemanager', 'middleware' => ['web', 'auth']], function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+    Route::any('/upload', [\App\Http\Controllers\Admin\LfmUploadController::class, 'upload'])->name('unisharp.lfm.upload');
+});

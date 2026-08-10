@@ -191,8 +191,8 @@ class ImageService
             return false;
         }
 
-        // 3. Tăng giới hạn bộ nhớ PHP lên 512M để xử lý ảnh độ phân giải siêu cao (40MP+)
-        @ini_set('memory_limit', '512M');
+        // 3. Tăng giới hạn bộ nhớ PHP lên 1024M để xử lý ảnh độ phân giải siêu cao (40MP+)
+        @ini_set('memory_limit', '1024M');
 
         // 4. Kiểm tra kích thước file (cho phép tối đa 100MB)
         $fileSize = filesize($sourcePath);
@@ -219,9 +219,9 @@ class ImageService
                 return $this->fallbackToOriginal($file, $targetPath);
             }
 
-            // Tự động resize nếu chiều rộng hoặc chiều cao > 2560px (giữ aspect ratio & upsize constraint)
-            if ($image->width() > 2560 || $image->height() > 2560) {
-                $image->resize(2560, 2560, function ($constraint) {
+            // Tự động resize nếu chiều rộng hoặc chiều cao > 1920px (giữ aspect ratio & upsize constraint)
+            if ($image->width() > 1920 || $image->height() > 1920) {
+                $image->resize(1920, 1920, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 });
@@ -236,7 +236,7 @@ class ImageService
             }
 
             return pathinfo($targetPath, PATHINFO_BASENAME);
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             return $this->fallbackToOriginal($file, $targetPath);
         } finally {
             if ($image && method_exists($image, 'destroy')) {

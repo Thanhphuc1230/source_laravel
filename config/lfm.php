@@ -15,7 +15,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'use_package_routes' => true,
+    'use_package_routes' => false,
     'use_absolute_path' => false,
 
     /*

@@ -238,6 +238,8 @@ class FileManagerController extends Controller
      */
     private function processFileUpload($file, $currentPath = '')
     {
+        @ini_set('memory_limit', '1024M');
+
         $originalName = $file->getClientOriginalName();
         $extension = strtolower($file->getClientOriginalExtension());
 
@@ -246,42 +248,80 @@ class FileManagerController extends Controller
             return false;
         }
 
-        // Generate unique filename
-        $filename = Str::slug(pathinfo($originalName, PATHINFO_FILENAME)) . '_' . time() . '.' . $extension;
-        $fullPath = trim($currentPath . '/' . $filename, '/');
+        $baseFilename = Str::slug(pathinfo($originalName, PATHINFO_FILENAME)) . '_' . time();
 
         try {
-            // Handle image optimization
+            // Handle image optimization and WebP conversion
             if (in_array($extension, $this->imageExtensions) && $extension !== 'svg') {
+                $webpFilename = $baseFilename . '.webp';
+                $fullPath = trim($currentPath . '/' . $webpFilename, '/');
+                $targetStoragePath = storage_path('app/' . $this->basePath . '/' . $fullPath);
+
+                // Ensure directory exists
+                $directory = dirname($targetStoragePath);
+                if (!File::exists($directory)) {
+                    File::makeDirectory($directory, 0755, true);
+                }
+
                 $image = Image::make($file);
 
-                // Resize if too large
-                if ($image->width() > 1920) {
-                    $image->resize(1920, null, function ($constraint) {
+                // Resize if too large (width or height > 1920px)
+                if ($image->width() > 1920 || $image->height() > 1920) {
+                    $image->resize(1920, 1920, function ($constraint) {
                         $constraint->aspectRatio();
                         $constraint->upsize();
                     });
                 }
 
-                // Compress quality
-                $image->save(storage_path('app/' . $this->basePath . '/' . $fullPath), 85);
+                // Compress & encode to WebP with 80% quality
+                $image->encode('webp', 80)->save($targetStoragePath);
+                $image->destroy();
+
+                return [
+                    'name' => $webpFilename,
+                    'original_name' => $originalName,
+                    'path' => $fullPath,
+                    'url' => Storage::url($this->basePath . '/' . $fullPath),
+                    'size' => File::size($targetStoragePath),
+                    'extension' => 'webp'
+                ];
             } else {
                 // Save non-image files directly
+                $filename = $baseFilename . '.' . $extension;
+                $fullPath = trim($currentPath . '/' . $filename, '/');
                 $file->storeAs($this->basePath . '/' . dirname($fullPath), $filename);
+
+                return [
+                    'name' => $filename,
+                    'original_name' => $originalName,
+                    'path' => $fullPath,
+                    'url' => Storage::url($this->basePath . '/' . $fullPath),
+                    'size' => $file->getSize(),
+                    'extension' => $extension
+                ];
             }
 
-            return [
-                'name' => $filename,
-                'original_name' => $originalName,
-                'path' => $fullPath,
-                'url' => Storage::url($this->basePath . '/' . $fullPath),
-                'size' => $file->getSize(),
-                'extension' => $extension
-            ];
-
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('File upload error: ' . $e->getMessage());
-            return false;
+
+            // Fallback: Save original file safely
+            try {
+                $filename = $baseFilename . '.' . $extension;
+                $fullPath = trim($currentPath . '/' . $filename, '/');
+                $file->storeAs($this->basePath . '/' . dirname($fullPath), $filename);
+
+                return [
+                    'name' => $filename,
+                    'original_name' => $originalName,
+                    'path' => $fullPath,
+                    'url' => Storage::url($this->basePath . '/' . $fullPath),
+                    'size' => $file->getSize(),
+                    'extension' => $extension
+                ];
+            } catch (\Throwable $fallbackErr) {
+                Log::error('Fallback upload error: ' . $fallbackErr->getMessage());
+                return false;
+            }
         }
     }
 }
