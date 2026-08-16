@@ -88,4 +88,41 @@ class BrandController extends BaseController
 
         return $this->route_admin('index', [], [], $request->input('currentPage'));
     }
+
+    public function edit($uuid, $currentPage)
+    {
+        return $this->performEdit($uuid, $currentPage);
+    }
+
+    public function status($uuid, $status, $field)
+    {
+        $brand = $this->brandRepository->findByUuid($uuid);
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $field, $this->model::class);
+        BrandChanged::dispatch($brand, 'status_updated');
+        return $result;
+    }
+
+    public function numericalOrder(Request $request, $uuid)
+    {
+        $brand = $this->brandRepository->findByUuid($uuid);
+        $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+        BrandChanged::dispatch($brand, 'order_updated');
+        return $result;
+    }
+
+    public function destroy(string $uuid)
+    {
+        $brand = $this->brandRepository->findByUuid($uuid);
+        $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+        BrandChanged::dispatch($brand, 'deleted');
+        return $result;
+    }
+
+    public function destroyAll(Request $request)
+    {
+        $uuids = $request->input('uuids', []);
+        $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
+        BrandChanged::dispatch(null, 'deleted');
+        return $result;
+    }
 }
