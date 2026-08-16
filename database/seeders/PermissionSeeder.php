@@ -607,6 +607,31 @@ class PermissionSeeder extends Seeder
                 'group_name' => 'font',
                 'description' => 'Quyền xóa font chữ'
             ],
+            // About permissions (Giới thiệu)
+            [
+                'name' => 'about.view',
+                'display_name' => 'Xem giới thiệu',
+                'group_name' => 'about',
+                'description' => 'Quyền xem giới thiệu'
+            ],
+            [
+                'name' => 'about.create',
+                'display_name' => 'Tạo giới thiệu',
+                'group_name' => 'about',
+                'description' => 'Quyền tạo giới thiệu mới'
+            ],
+            [
+                'name' => 'about.edit',
+                'display_name' => 'Sửa giới thiệu',
+                'group_name' => 'about',
+                'description' => 'Quyền chỉnh sửa giới thiệu'
+            ],
+            [
+                'name' => 'about.delete',
+                'display_name' => 'Xóa giới thiệu',
+                'group_name' => 'about',
+                'description' => 'Quyền xóa giới thiệu'
+            ],
         ];
 
         foreach ($permissions as $permission) {

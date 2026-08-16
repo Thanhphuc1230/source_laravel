@@ -102,7 +102,9 @@ class RoleSeeder extends Seeder
             // Site Setting - đầy đủ
             'site_setting.view', 'site_setting.create', 'site_setting.edit', 'site_setting.delete',
             // Font - đầy đủ
-            'font.view', 'font.create', 'font.edit', 'font.delete'
+            'font.view', 'font.create', 'font.edit', 'font.delete',
+            // About - đầy đủ
+            'about.view', 'about.create', 'about.edit', 'about.delete'
         ])->pluck('id')->toArray();
         
         $managerRole->syncPermissions($managerPermissions);
@@ -146,7 +148,9 @@ class RoleSeeder extends Seeder
             // Site Setting - xem và sửa
             'site_setting.view', 'site_setting.edit',
             // Font - chỉ xem
-            'font.view'
+            'font.view',
+            // About - xem và sửa
+            'about.view', 'about.edit'
         ])->pluck('id')->toArray();
         
         $staffRole->syncPermissions($staffPermissions);
@@ -198,7 +202,9 @@ class RoleSeeder extends Seeder
             // Site Setting - chỉ xem
             'site_setting.view',
             // Font - chỉ xem
-            'font.view'
+            'font.view',
+            // About - chỉ xem
+            'about.view'
         ])->pluck('id')->toArray();
         
         $viewerRole->syncPermissions($viewerPermissions);

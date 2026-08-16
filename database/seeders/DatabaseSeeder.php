@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FeatureSeeder::class);
         $this->call(BrandSeeder::class);
         $this->call(SliderSeeder::class);
+        $this->call(AboutSeeder::class);
         $this->call(AnalyticSeeder::class);
     }
 }
