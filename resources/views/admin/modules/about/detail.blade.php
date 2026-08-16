@@ -32,12 +32,14 @@
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link active" data-bs-toggle="tab" href="#tab-vi"
                                             role="tab" aria-selected="true">
+                                            <img src="{{ asset('uploads/icon/vietnam.png') }}" alt="vi" class="me-1 align-middle" style="width: 18px; height: 12px; object-fit: cover; border-radius: 2px; margin-top: -2px;">
                                             Tiếng Việt
                                         </a>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" data-bs-toggle="tab" href="#tab-en"
                                             role="tab" aria-selected="false">
+                                            <img src="{{ asset('uploads/icon/usa.png') }}" alt="en" class="me-1 align-middle" style="width: 18px; height: 12px; object-fit: cover; border-radius: 2px; margin-top: -2px;">
                                             Tiếng Anh (EN)
                                         </a>
                                     </li>

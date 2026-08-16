@@ -1,2 +1,18 @@
-
-/*# sourceMappingURL=custom.min.css.map */
+/* Fix CKEditor vỡ hiển thị trong Bootstrap tab ẩn của localized fields */
+.tab-content-localized > .tab-pane:not(.active) {
+    display: block !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 100% !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+}
+.tab-content-localized > .active {
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+    height: auto !important;
+    opacity: 1 !important;
+}
