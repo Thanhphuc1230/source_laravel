@@ -50,6 +50,13 @@
                     </a>
                 </li>
                 @endhasPermission
+                @hasPermission('about.view')
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('admin.about.index') }}">
+                        <i class="ri-information-line"></i> <span data-key="t-widgets">Giới thiệu</span>
+                    </a>
+                </li>
+                @endhasPermission
                 @hasPermission('slider.view')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.slider.index') }}">

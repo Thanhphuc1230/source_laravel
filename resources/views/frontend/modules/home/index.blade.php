@@ -56,6 +56,53 @@
     <!-- Featured Showroom Brands Section -->
     @include('frontend.partials.brand')
 
+    <!-- About Stats Grid Section (Customizable) -->
+    @if(isset($about_section) && $about_section)
+        <section class="max-w-7xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                <!-- Left: Worker/Solar panel Image -->
+                @if(!empty($about_section->image))
+                    @if(!empty($about_section->link))
+                        <a href="{{ $about_section->link }}" class="lg:col-span-6 rounded-2xl overflow-hidden shadow-sm hover:shadow-md aspect-[4/3] lg:aspect-auto relative group bg-gray-50 min-h-[350px] block">
+                            <img src="{{ $about_section->image }}" 
+                                 alt="{{ lang($about_section, 'name') }}" 
+                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-in-out">
+                        </a>
+                    @else
+                        <div class="lg:col-span-6 rounded-2xl overflow-hidden shadow-sm hover:shadow-md aspect-[4/3] lg:aspect-auto relative group bg-gray-50 min-h-[350px]">
+                            <img src="{{ $about_section->image }}" 
+                                 alt="{{ lang($about_section, 'name') }}" 
+                                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-in-out">
+                        </div>
+                    @endif
+                @endif
+                
+                <!-- Right: Stats Grid (Dynamic JSON array matching user's image) -->
+                <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    @if(!empty($about_section->stats) && is_array($about_section->stats))
+                        @foreach($about_section->stats as $stat)
+                            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-305 flex flex-col justify-center min-h-[160px]">
+                                <div class="w-12 h-12 rounded-full bg-amber-50 flex items-center justify-center mb-4 overflow-hidden p-2">
+                                    @if(!empty($stat['icon']) && (str_contains($stat['icon'], '/') || str_contains($stat['icon'], '.')))
+                                        <img src="{{ asset($stat['icon']) }}" alt="icon" class="w-full h-full object-contain">
+                                    @else
+                                        <i class="{{ $stat['icon'] ?? 'fa-solid fa-award' }} text-amber-500 text-lg"></i>
+                                    @endif
+                                </div>
+                                <div class="text-3xl font-heading font-extrabold text-emerald-950 mb-1">
+                                    {{ $stat['value'] ?? '' }}
+                                </div>
+                                <div class="text-3xs font-extrabold text-gray-500 uppercase tracking-widest leading-normal">
+                                    {{ app()->getLocale() === 'en' ? ($stat['name_en'] ?? $stat['name_vn'] ?? '') : ($stat['name_vn'] ?? '') }}
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+            </div>
+        </section>
+    @endif
+
     <!-- Features Section (Tại sao chọn chúng tôi - Dynamic Values) -->
     <section class="max-w-7xl mx-auto px-4 py-16">
         <div class="text-center max-w-xl mx-auto mb-10">
