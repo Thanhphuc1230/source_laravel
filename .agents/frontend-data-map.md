@@ -61,6 +61,7 @@
 | Biến | Mô tả | Trường hay dùng |
 |---|---|---|
 | `$sliders` | Slider ảnh (status=1, stt asc) | `$slide->image` (auto full URL) |
+| `$about_section` | Object giới thiệu (status=1) | `name_vn`, `name_en`, `content_vn`, `content_en`, `image`, `link`, `stats` (mảng JSON chứa `icon`, `value`, `name_vn`, `name_en` để loop render stats) |
 | `$brands` | Thương hiệu đối tác (status=1, stt asc) | `$brand->name_vn`, `$brand->image` |
 | `$category_product` | Danh mục trang chủ (home=1, eager load products) | `$cat->name`, `$cat->slug`, `$cat->products->take(8)` |
 | `$hot_products` | Sản phẩm bán chạy (hot=1, limit 8) | `name`, `slug`, `image`, `price`, `price_old`, `uuid`, `cate->name` |

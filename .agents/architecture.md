@@ -163,6 +163,7 @@ INDEX (status, stt)
 | `NewsSetting` | `news_settings` | `id` | Cài đặt hiển thị tin tức (màu sắc, font size, banner_category, banner_detail) |
 | `ChatSession` | `tp_chat_sessions` | - | Phiên chat hỗ trợ |
 | `ChatMessage` | `tp_chat_messages` | - | Tin nhắn chat |
+| `About` | `tp_abouts` | `id_about` | Giới thiệu (lưu stats JSON động) |
 
 ### Quan hệ chính:
 ```
@@ -218,6 +219,7 @@ OrderStatus  →  hasMany → OrderProduct
 | Tính năng | `/admin/feature` | `admin.feature.` | `FeatureController` |
 | Đơn hàng | `/admin/order` | `admin.order.` | `OrderController` |
 | Liên hệ | `/admin/contact` | `admin.contact.` | `ContactController` |
+| Giới thiệu | `/admin/about` | `admin.about.` | `AboutController` |
 | Người dùng | `/admin/user` | `admin.user.` | `UserController` |
 | Vai trò & Quyền | `/admin/user-role` | `admin.user-role.` | `UserRoleController` |
 | Thư viện ảnh | `/admin/gallery` | `admin.gallery.` | `GalleryController` |
