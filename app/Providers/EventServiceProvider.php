@@ -11,6 +11,7 @@ use App\Events\Feedback\FeedbackChanged;
 use App\Events\Menu\MenuChanged;
 use App\Events\News\NewsChanged;
 use App\Events\Page\PageChanged;
+use App\Events\About\AboutChanged;
 use App\Events\Product\ProductChanged;
 use App\Events\Slider\SliderChanged;
 use App\Listeners\Brand\ClearBrandCache;
@@ -22,6 +23,7 @@ use App\Listeners\Feedback\ClearFeedbackCache;
 use App\Listeners\Menu\ClearMenuCache;
 use App\Listeners\News\ClearNewsCache;
 use App\Listeners\Page\ClearPageCache;
+use App\Listeners\About\ClearAboutCache;
 use App\Listeners\Product\ClearProductCache;
 use App\Listeners\Slider\ClearSliderCache;
 use Illuminate\Auth\Events\Registered;
@@ -64,6 +66,11 @@ class EventServiceProvider extends ServiceProvider
         // Page Events
         PageChanged::class => [
             ClearPageCache::class,
+        ],
+
+        // About Events
+        AboutChanged::class => [
+            ClearAboutCache::class,
         ],
 
         // CateProduct Events

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\About;
 use App\Models\Brand;
 use App\Models\Feature;
 use App\Models\CateNew;
@@ -55,6 +56,15 @@ class HomeService
             ->where('status', 1)
             ->orderBy('created_at', 'desc')
             ->limit(3)
+            ->get();
+
+        $data['about_section'] = About::where('status', 1)
+            ->orderBy('stt', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $data['features'] = Feature::where('status', 1)
+            ->orderBy('stt', 'asc')
             ->get();
 
         return $data;
