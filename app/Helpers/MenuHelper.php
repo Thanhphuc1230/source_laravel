@@ -93,6 +93,54 @@ if (!function_exists('getUrlMenuRaw')) {
 
                 return route('web.resolve', ['slug' => $slug]);
 
+            case 'cate_service':
+                $cateService = \App\Models\CateService::where('id_cate_service', $item->object_id)
+                    ->where('status', 1)
+                    ->first();
+                $slug = $cateService ? $cateService->slug : null;
+
+                if (empty($slug)) {
+                    return route('web.404');
+                }
+
+                return route('web.resolve', ['slug' => $slug]);
+
+            case 'service':
+                $service = \App\Models\Service::where('id_service', $item->object_id)
+                    ->where('status', 1)
+                    ->first();
+                $slug = $service ? $service->slug : null;
+
+                if (empty($slug)) {
+                    return route('web.404');
+                }
+
+                return route('web.resolve', ['slug' => $slug]);
+
+            case 'cate_project':
+                $cateProject = \App\Models\CateProject::where('id_cate_project', $item->object_id)
+                    ->where('status', 1)
+                    ->first();
+                $slug = $cateProject ? $cateProject->slug : null;
+
+                if (empty($slug)) {
+                    return route('web.404');
+                }
+
+                return route('web.resolve', ['slug' => $slug]);
+
+            case 'project':
+                $project = \App\Models\Project::where('id_project', $item->object_id)
+                    ->where('status', 1)
+                    ->first();
+                $slug = $project ? $project->slug : null;
+
+                if (empty($slug)) {
+                    return route('web.404');
+                }
+
+                return route('web.resolve', ['slug' => $slug]);
+
             default:
                 return route('web.home');
         }
@@ -169,7 +217,7 @@ if (!function_exists('getMenuBelongName')) {
      * Lấy tên object dựa trên type và object_id
      * Trả về tên của page/category/brand mà menu đang trỏ tới
      */
-    function getMenuBelongName($menuItem, $page_content = null, $cate_new = null, $cate_product = null, $brands = null)
+    function getMenuBelongName($menuItem, $page_content = null, $cate_new = null, $cate_product = null, $brands = null, $cate_service = null, $cate_project = null)
     {
         if (!$menuItem || !isset($menuItem->type)) {
             return null;
@@ -190,6 +238,30 @@ if (!function_exists('getMenuBelongName')) {
                 if (!$cate_product) return null;
                 $obj = searchInTree($cate_product, $menuItem->object_id, 'id_cate_product');
                 return $obj->name_vn ?? null;
+
+            case 'cate_service':
+                if ($cate_service) {
+                    $obj = searchInTree($cate_service, $menuItem->object_id, 'id_cate_service');
+                    if ($obj) return $obj->name_vn;
+                }
+                $cs = \App\Models\CateService::find($menuItem->object_id);
+                return $cs ? $cs->name_vn : null;
+
+            case 'service':
+                $s = \App\Models\Service::find($menuItem->object_id);
+                return $s ? $s->name_vn : null;
+
+            case 'cate_project':
+                if ($cate_project) {
+                    $obj = searchInTree($cate_project, $menuItem->object_id, 'id_cate_project');
+                    if ($obj) return $obj->name_vn;
+                }
+                $cp = \App\Models\CateProject::find($menuItem->object_id);
+                return $cp ? $cp->name_vn : null;
+
+            case 'project':
+                $p = \App\Models\Project::find($menuItem->object_id);
+                return $p ? $p->name_vn : null;
 
             case 'brand':
                 if ($brands) {
@@ -218,6 +290,10 @@ if (!function_exists('getMenuTypeLabel')) {
             'page' => 'Trang nội dung',
             'cate_new' => 'Danh mục tin tức',
             'cate_product' => 'Danh mục sản phẩm',
+            'cate_service' => 'Danh mục dịch vụ',
+            'service' => 'Dịch vụ',
+            'cate_project' => 'Danh mục dự án',
+            'project' => 'Dự án',
             'brand' => 'Thương hiệu',
             'link' => 'Liên kết',
         ];

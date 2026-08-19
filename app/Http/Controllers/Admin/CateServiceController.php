@@ -1,0 +1,165 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Requests\Admin\CateServiceRequest;
+use App\Models\CateService;
+use App\Repositories\Interfaces\CateServiceRepositoryInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
+
+class CateServiceController extends BaseController
+{
+    protected $module;
+    protected $model;
+    protected $nameItem;
+    protected $imageFolder;
+    protected $cateServiceRepository;
+
+    public function __construct(CateServiceRepositoryInterface $cateServiceRepository, $imageFolder = 'cate_service')
+    {
+        $this->module = 'cate_service';
+        $this->model = new CateService;
+        $this->nameItem = 'Danh mục dịch vụ';
+        $this->imageFolder = $imageFolder;
+        $this->cateServiceRepository = $cateServiceRepository;
+
+        parent::__construct($this->module, $imageFolder);
+
+        View::share('nameClass', $imageFolder);
+    }
+
+    public function index(Request $request)
+    {
+        $filters = [
+            'search' => $request->input('search'),
+            'category' => $request->input('category'),
+            'parent_id' => ($request->has('category') && $request->input('category') != 0) ? $request->input('category') : null,
+            'sort_field' => 'created_at',
+            'sort_direction' => 'desc'
+        ];
+
+        $data['list'] = $this->cateServiceRepository->getFilteredCategories($filters);
+        $data['nameItem'] = $this->nameItem;
+        $data['category'] = $this->cateServiceRepository->getCategoriesWithChildren();
+
+        return $this->view_admin('list', $data);
+    }
+
+    public function create()
+    {
+        $data['category'] = $this->cateServiceRepository->getActiveParentCategories();
+        $data['action'] = 'create';
+        $data['nameItem'] = $this->nameItem;
+        $data['imageFolder'] = $this->imageFolder;
+
+        return $this->view_admin('detail', $data);
+    }
+
+    public function store(CateServiceRequest $request)
+    {
+        $data = $request->except('_token', 'return_back', 'return_list');
+        $data['status'] = 1;
+        $data['image_vn'] = $this->saveImage($request, null, 'image_vn');
+        $data['image_en'] = $this->saveImage($request, null, 'image_en');
+
+        $cateService = $this->cateServiceRepository->createWithAutoSlug($data);
+        toast('Thêm '.$this->nameItem.' thành công', 'success');
+
+        if (class_exists(\App\Events\CateService\CateServiceChanged::class)) {
+            event(new \App\Events\CateService\CateServiceChanged($cateService, 'created'));
+        }
+
+        return $request->has('return_back') ? back() : ($request->has('return_list') ? $this->route_admin('index') : null);
+    }
+
+    public function edit($uuid, $currentPage = 1)
+    {
+        $category = $this->cateServiceRepository->findByUuid($uuid);
+
+        if (! $category) {
+            toast('Không tìm thấy '.$this->nameItem, 'error');
+            return back();
+        }
+
+        $data = [
+            'page' => $category,
+            'category' => $this->cateServiceRepository->getActiveParentCategories(),
+            'action' => 'edit',
+            'nameItem' => $this->nameItem,
+            'currentPage' => $currentPage,
+            'imageFolder' => $this->imageFolder,
+        ];
+
+        return $this->view_admin('detail', $data);
+    }
+
+    public function update(CateServiceRequest $request, string $uuid)
+    {
+        $current = $this->cateServiceRepository->findByUuid($uuid);
+        $data = $request->except('_token', 'return_back', 'return_list', 'currentPage');
+        $data['slug_vn'] = empty($data['slug_vn']) ? $this->cateServiceRepository->generateUniqueSlug($data['name_vn'], $uuid, null, 'slug_vn') : Str::slug($data['slug_vn']);
+        $data['slug_en'] = empty($data['slug_en']) && !empty($data['name_en']) ? $this->cateServiceRepository->generateUniqueSlug($data['name_en'], $uuid, null, 'slug_en') : (empty($data['slug_en']) ? null : Str::slug($data['slug_en']));
+
+        $data['image_vn'] = $this->updateImage($request, $current, null, 'image_vn');
+        $data['image_en'] = $this->updateImage($request, $current, null, 'image_en');
+
+        $this->cateServiceRepository->update($data, $uuid);
+        toast('Cập nhật '.$this->nameItem.' thành công', 'success');
+
+        if (class_exists(\App\Events\CateService\CateServiceChanged::class)) {
+            event(new \App\Events\CateService\CateServiceChanged($current, 'updated', $data['slug_vn'], $data['slug_en']));
+        }
+
+        return $this->route_admin('index', [], [], $request->input('currentPage'));
+    }
+
+    public function status($uuid, $status, $field)
+    {
+        $cateService = $this->cateServiceRepository->findByUuid($uuid);
+        $result = $this->toggleService->toggleModelStatus($uuid, $status, $field, $this->model::class);
+
+        if (class_exists(\App\Events\CateService\CateServiceChanged::class)) {
+            event(new \App\Events\CateService\CateServiceChanged($cateService, 'status_updated'));
+        }
+
+        return $result;
+    }
+
+    public function numericalOrder(Request $request, $uuid)
+    {
+        $cateService = $this->cateServiceRepository->findByUuid($uuid);
+        $result = $this->toggleService->updateModelOrder($request, $uuid, $this->model::class);
+
+        if (class_exists(\App\Events\CateService\CateServiceChanged::class)) {
+            event(new \App\Events\CateService\CateServiceChanged($cateService, 'order_updated'));
+        }
+
+        return $result;
+    }
+
+    public function destroy(string $uuid)
+    {
+        $cateService = $this->cateServiceRepository->findByUuid($uuid);
+        $result = $this->dataRemovalService->destroyData($this->model::class, $uuid, $this->imageFolder);
+
+        if (class_exists(\App\Events\CateService\CateServiceChanged::class)) {
+            event(new \App\Events\CateService\CateServiceChanged($cateService, 'deleted'));
+        }
+
+        return $result;
+    }
+
+    public function destroyAll(Request $request)
+    {
+        $uuids = $request->input('uuids', []);
+        $result = $this->dataRemovalService->destroyAllByUUIDs($this->model::class, $uuids, $this->imageFolder);
+
+        if (class_exists(\App\Events\CateService\CateServiceChanged::class)) {
+            event(new \App\Events\CateService\CateServiceChanged(null, 'deleted'));
+        }
+
+        return $result;
+    }
+}

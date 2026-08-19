@@ -27,6 +27,10 @@ Route::prefix('admin')
         require __DIR__.'/admin/news.php';
         require __DIR__.'/admin/page.php';
         require __DIR__.'/admin/about.php';
+        require __DIR__.'/admin/cate_service.php';
+        require __DIR__.'/admin/service.php';
+        require __DIR__.'/admin/cate_project.php';
+        require __DIR__.'/admin/project.php';
         require __DIR__.'/admin/slider.php';
         require __DIR__.'/admin/brand.php';
         require __DIR__.'/admin/feedback.php';

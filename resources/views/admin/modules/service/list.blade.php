@@ -1,0 +1,162 @@
+@extends('admin.master')
+@section('module', $nameItem)
+@section('action', 'Danh sách')
+@section('content')
+    <div class="page-content">
+        <div class="container-fluid">
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">Quản lý {{ $nameItem }}</h4>
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                            <div class="listjs-table" id="customerList">
+                                <div class="row g-4 mb-3">
+                                    <div class="col-sm-auto">
+                                        <div>
+                                            <a type="button" href="{{ route('admin.' . $nameClass . '.create') }}"
+                                                class="btn btn-success add-btn"><i
+                                                    class="ri-add-line align-bottom me-1"></i> Thêm </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-auto">
+                                        <a id="deleteSelectedItems" class="btn btn-danger add-btn">
+                                            <i class="ri-delete-bin-5-line"></i> Xóa hết
+                                        </a>
+                                    </div>
+                                    <div class="col-sm">
+                                        <div class="d-flex justify-content-sm-end">
+                                            <div class="search-box ms-2">
+                                                <form action="{{ route('admin.' . $nameClass . '.index') }}" method="get"
+                                                    style="display: flex">
+                                                    @csrf
+                                                    <select class="form-select mb-3" name="category">
+                                                        <option value="0" selected>Chọn danh mục</option>
+                                                        @foreach ($category as $item)
+                                                            <option value="{{ $item->id_cate_service }}">
+                                                                {{ $item->name_vn }}
+                                                            </option>
+                                                            @if ($item->children)
+                                                                @foreach ($item->children as $child)
+                                                                    <option value="{{ $child->id_cate_service }}">
+                                                                        |---{{ $child->name_vn }}
+                                                                    </option>
+                                                                @endforeach
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                    <input type="text" class="form-control search" name="search"
+                                                        placeholder="Search..." style="height: 37.5px">
+                                                    <button type="submit"
+                                                        class="btn btn-success w-lg waves-effect waves-light"
+                                                        style="height: 37.5px">Search</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive table-card mt-3 mb-1">
+                                    <table class="table align-middle table-nowrap" id="customerTable">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th><input type="checkbox" id="checkAll"></th>
+                                                <th class="sort">ID</th>
+                                                <th class="sort">Hình ảnh</th>
+                                                <th class="sort">Tiêu đề</th>
+                                                <th class="sort">Hiển thị</th>
+                                                <th class="sort">Trang chủ</th>
+                                                <th class="sort">STT</th>
+                                                <th class="sort">Ngày cập nhật</th>
+                                                <th class="sort">Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list form-check-all">
+                                            @if (count($list) > 0)
+                                                <form id="delete-form-all"
+                                                    action="{{ route('admin.' . $nameClass . '.destroyAll') }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @foreach ($list as $item)
+                                                        <tr>
+                                                            <td><input class="form-check-input" type="checkbox" name="uuids[]"
+                                                                    value="{{ $item->uuid }}"></td>
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td><img src="{{ $item->image }}" alt=""
+                                                                    style="height: 100px;"></td>
+                                                            <td>{{ $item->name_vn }}<br>Danh mục: {{ $item->cate->name_vn ?? 'N/A' }}</td>
+                                                            <td class="status">
+                                                                <div
+                                                                    class="form-check form-switch form-switch-success mb-3">
+                                                                    <input class="form-check-input status-checkbox"
+                                                                        type="checkbox" role="switch"
+                                                                        value="{{ $item->status }}"
+                                                                        data-uuid="{{ $item->uuid }}" data-field="status"
+                                                                        data-status="{{ $item->status }}"
+                                                                        {{ $item->status == 1 ? 'checked' : '' }}>
+                                                                </div>
+                                                            </td>
+                                                            <td class="home">
+                                                                <div
+                                                                    class="form-check form-switch form-switch-success mb-3">
+                                                                    <input class="form-check-input status-checkbox"
+                                                                        type="checkbox" role="switch"
+                                                                        value="{{ $item->home }}"
+                                                                        data-uuid="{{ $item->uuid }}" data-field="home"
+                                                                        data-status="{{ $item->home }}"
+                                                                        {{ $item->home == 1 ? 'checked' : '' }}>
+                                                                </div>
+                                                            </td>
+                                                            <td class="stt">
+                                                                <input type="text"
+                                                                    class="form-control form-control-sm update-stt-input"
+                                                                    data-uuid="{{ $item->uuid }}"
+                                                                    value="{{ $item->stt }}"
+                                                                    style="width: 50px; text-align: center;">
+                                                            </td>
+                                                            <td class="date">{{ $item->created_at->format('d/m/Y H:i:s') }}
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex gap-2">
+                                                                    <div class="edit">
+                                                                        <a href="{{ route('admin.' . $nameClass . '.edit', ['uuid' => $item->uuid, 'page' => request()->query('page', 1)]) }}"
+                                                                            class="btn btn-sm btn-success edit-item-btn"><i
+                                                                                class="ri-edit-2-line"></i> Sửa</a>
+                                                                    </div>
+                                                                    <div class="remove">
+                                                                        <a href="{{ route('admin.' . $nameClass . '.destroy', ['uuid' => $item->uuid]) }}"
+                                                                            class="btn btn-sm btn-danger remove-item-btn"><i
+                                                                                class="ri-delete-bin-line"></i> Xóa</a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </form>
+                                            @else
+                                                <tr>
+                                                    <td colspan="9" class="text-center">Không có dữ liệu</td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="d-flex justify-content-end">
+                                    <div class="pagination-wrap hstack gap-2">
+                                        {{ $list->links('pagination::bootstrap-4') }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+    </div>
+@endsection

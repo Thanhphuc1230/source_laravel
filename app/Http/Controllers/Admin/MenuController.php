@@ -9,6 +9,8 @@ use App\Repositories\Interfaces\MenuRepositoryInterface;
 use App\Repositories\Interfaces\PageRepositoryInterface;
 use App\Repositories\Interfaces\CateNewRepositoryInterface;
 use App\Repositories\Interfaces\CateProductRepositoryInterface;
+use App\Repositories\Interfaces\CateServiceRepositoryInterface;
+use App\Repositories\Interfaces\CateProjectRepositoryInterface;
 use App\Models\Menu; // Importing Menu model
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -25,6 +27,10 @@ class MenuController extends BaseController
 
     const TYPE_BRAND = 'brand';
 
+    const TYPE_CATE_SERVICE = 'cate_service';
+
+    const TYPE_CATE_PROJECT = 'cate_project';
+
     protected $module;
 
     protected $menuRepository;
@@ -32,6 +38,8 @@ class MenuController extends BaseController
     protected $cateNewRepository;
     protected $cateProductRepository;
     protected $brandRepository;
+    protected $cateServiceRepository;
+    protected $cateProjectRepository;
 
     protected $nameItem;
 
@@ -43,6 +51,8 @@ class MenuController extends BaseController
         CateNewRepositoryInterface $cateNewRepository,
         CateProductRepositoryInterface $cateProductRepository,
         BrandRepositoryInterface $brandRepository,
+        CateServiceRepositoryInterface $cateServiceRepository,
+        CateProjectRepositoryInterface $cateProjectRepository,
         $imageFolder = 'menu'
     ) {
         $this->module = 'menu';
@@ -51,6 +61,8 @@ class MenuController extends BaseController
         $this->cateNewRepository = $cateNewRepository;
         $this->cateProductRepository = $cateProductRepository;
         $this->brandRepository = $brandRepository;
+        $this->cateServiceRepository = $cateServiceRepository;
+        $this->cateProjectRepository = $cateProjectRepository;
         $this->nameItem = 'Trang Menu';
         $this->imageFolder = $imageFolder;
 
@@ -78,6 +90,8 @@ class MenuController extends BaseController
         // get category new
         $data['cate_new'] = $this->cateNewRepository->getCategoriesWithChildren();
         $data['cate_product'] = $this->cateProductRepository->getCategoriesWithChildren();
+        $data['cate_service'] = $this->cateServiceRepository->getCategoriesWithChildren();
+        $data['cate_project'] = $this->cateProjectRepository->getCategoriesWithChildren();
         $data['brands'] = $this->brandRepository->getActiveBrands();
 
         $data['menus'] = $this->menuRepository->getMenuTree();
@@ -152,6 +166,12 @@ class MenuController extends BaseController
                     'name_en' => $brand->name_en ?? $brand->name_vn,
                     'slug' => $brand->slug ?? Str::slug($brand->name_vn)
                 ] : null;
+            case self::TYPE_CATE_SERVICE:
+                $cateService = $this->cateServiceRepository->find($id);
+                return $cateService ? ['name_vn' => $cateService->name_vn, 'slug' => $this->cateServiceRepository->generateUniqueSlug($cateService->name_vn, $cateService->uuid)] : null;
+            case self::TYPE_CATE_PROJECT:
+                $cateProject = $this->cateProjectRepository->find($id);
+                return $cateProject ? ['name_vn' => $cateProject->name_vn, 'slug' => $this->cateProjectRepository->generateUniqueSlug($cateProject->name_vn, $cateProject->uuid)] : null;
             default:
                 return null;
         }

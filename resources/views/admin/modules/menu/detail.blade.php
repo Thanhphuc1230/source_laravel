@@ -169,6 +169,94 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {{-- category service --}}
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="genques-headingService">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#genques-collapseService" aria-expanded="false"
+                                                            aria-controls="genques-collapseService">
+                                                            Danh mục dịch vụ
+                                                        </button>
+                                                    </h2>
+                                                    <div id="genques-collapseService" class="accordion-collapse collapse"
+                                                        aria-labelledby="genques-headingService"
+                                                        data-bs-parent="#genques-accordion">
+                                                        <div class="accordion-body">
+                                                            <form action="{{ route('admin.menu.store') }}" method="POST">
+                                                                @csrf
+                                                                @if(isset($cate_service) && count($cate_service) > 0)
+                                                                    @foreach ($cate_service as $item)
+                                                                        {!! renderCategoryCheckbox($item, 'id_cate_service') !!}
+                                                                    @endforeach
+                                                                @else
+                                                                    <p class="text-muted">Chưa có danh mục dịch vụ nào.</p>
+                                                                @endif
+                                                                <p class="text-muted">Chọn vị trí thêm vào</p>
+                                                                <select class="form-select"
+                                                                    aria-label=".form-select-sm example" name="parent_id">
+                                                                    <option value="0" selected="">Chủ đề cha
+                                                                    </option>
+                                                                    @foreach ($menus as $item)
+                                                                        {!! renderMenuOptions($item) !!}
+                                                                    @endforeach
+                                                                </select>
+                                                                <input type="hidden" name="type" value="cate_service">
+                                                                <div class="col-lg-12" style="padding-top: 1rem">
+                                                                    <div class="text-start">
+                                                                        <input type="submit"
+                                                                            class="btn btn-secondary waves-effect waves-light"
+                                                                            value="Thêm vào menu">
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {{-- category project --}}
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="genques-headingProject">
+                                                        <button class="accordion-button collapsed" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#genques-collapseProject" aria-expanded="false"
+                                                            aria-controls="genques-collapseProject">
+                                                            Danh mục dự án
+                                                        </button>
+                                                    </h2>
+                                                    <div id="genques-collapseProject" class="accordion-collapse collapse"
+                                                        aria-labelledby="genques-headingProject"
+                                                        data-bs-parent="#genques-accordion">
+                                                        <div class="accordion-body">
+                                                            <form action="{{ route('admin.menu.store') }}" method="POST">
+                                                                @csrf
+                                                                @if(isset($cate_project) && count($cate_project) > 0)
+                                                                    @foreach ($cate_project as $item)
+                                                                        {!! renderCategoryCheckbox($item, 'id_cate_project') !!}
+                                                                    @endforeach
+                                                                @else
+                                                                    <p class="text-muted">Chưa có danh mục dự án nào.</p>
+                                                                @endif
+                                                                <p class="text-muted">Chọn vị trí thêm vào</p>
+                                                                <select class="form-select"
+                                                                    aria-label=".form-select-sm example" name="parent_id">
+                                                                    <option value="0" selected="">Chủ đề cha
+                                                                    </option>
+                                                                    @foreach ($menus as $item)
+                                                                        {!! renderMenuOptions($item) !!}
+                                                                    @endforeach
+                                                                </select>
+                                                                <input type="hidden" name="type" value="cate_project">
+                                                                <div class="col-lg-12" style="padding-top: 1rem">
+                                                                    <div class="text-start">
+                                                                        <input type="submit"
+                                                                            class="btn btn-secondary waves-effect waves-light"
+                                                                            value="Thêm vào menu">
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 {{-- Brand --}}
                                                 <div class="accordion-item">
                                                     <h2 class="accordion-header" id="genques-headingBrand">
