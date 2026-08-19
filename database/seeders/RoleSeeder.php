@@ -104,7 +104,15 @@ class RoleSeeder extends Seeder
             // Font - đầy đủ
             'font.view', 'font.create', 'font.edit', 'font.delete',
             // About - đầy đủ
-            'about.view', 'about.create', 'about.edit', 'about.delete'
+            'about.view', 'about.create', 'about.edit', 'about.delete',
+            // Category Service - đầy đủ
+            'cate_service.view', 'cate_service.create', 'cate_service.edit', 'cate_service.delete',
+            // Service - đầy đủ
+            'service.view', 'service.create', 'service.edit', 'service.delete',
+            // Category Project - đầy đủ
+            'cate_project.view', 'cate_project.create', 'cate_project.edit', 'cate_project.delete',
+            // Project - đầy đủ
+            'project.view', 'project.create', 'project.edit', 'project.delete'
         ])->pluck('id')->toArray();
         
         $managerRole->syncPermissions($managerPermissions);
@@ -150,7 +158,15 @@ class RoleSeeder extends Seeder
             // Font - chỉ xem
             'font.view',
             // About - xem và sửa
-            'about.view', 'about.edit'
+            'about.view', 'about.edit',
+            // Category Service - xem, tạo, sửa
+            'cate_service.view', 'cate_service.create', 'cate_service.edit',
+            // Service - xem, tạo, sửa
+            'service.view', 'service.create', 'service.edit',
+            // Category Project - xem, tạo, sửa
+            'cate_project.view', 'cate_project.create', 'cate_project.edit',
+            // Project - xem, tạo, sửa
+            'project.view', 'project.create', 'project.edit'
         ])->pluck('id')->toArray();
         
         $staffRole->syncPermissions($staffPermissions);
@@ -204,7 +220,15 @@ class RoleSeeder extends Seeder
             // Font - chỉ xem
             'font.view',
             // About - chỉ xem
-            'about.view'
+            'about.view',
+            // Category Service - chỉ xem
+            'cate_service.view',
+            // Service - chỉ xem
+            'service.view',
+            // Category Project - chỉ xem
+            'cate_project.view',
+            // Project - chỉ xem
+            'project.view'
         ])->pluck('id')->toArray();
         
         $viewerRole->syncPermissions($viewerPermissions);

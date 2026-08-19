@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\AutoImagePathsTrait;
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Project extends Model
+{
+    use AutoImagePathsTrait, Cachable, HasFactory;
+
+    protected $table = 'tp_projects';
+
+    protected $primaryKey = 'id_project';
+
+    protected $fillable = [
+        'uuid',
+        'name_vn',
+        'name_en',
+        'intro_vn',
+        'intro_en',
+        'content_vn',
+        'content_en',
+        'category_id',
+        'stt',
+        'slug_vn',
+        'slug_en',
+        'image_vn',
+        'image_en',
+        'keyword_vn',
+        'keyword_en',
+        'description_vn',
+        'description_en',
+    ];
+
+    public function getSlugAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{'slug_' . $locale} ?: ($this->slug_vn ?: $this->slug_en);
+    }
+
+    public function getNameAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{'name_' . $locale} ?: ($this->name_vn ?: $this->name_en);
+    }
+
+    public function getImageAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{'image_' . $locale} ?: ($this->image_vn ?: $this->image_en);
+    }
+
+    public function getKeywordAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{'keyword_' . $locale} ?: ($this->keyword_vn ?: $this->keyword_en);
+    }
+
+    public function getKeywordsAttribute()
+    {
+        return $this->getKeywordAttribute();
+    }
+
+    public function getDescriptionAttribute()
+    {
+        $locale = app()->getLocale();
+        return $this->{'description_' . $locale} ?: ($this->description_vn ?: $this->description_en);
+    }
+
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+
+    public function cate()
+    {
+        return $this->belongsTo(CateProject::class, 'category_id', 'id_cate_project');
+    }
+}

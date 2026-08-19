@@ -632,6 +632,110 @@ class PermissionSeeder extends Seeder
                 'group_name' => 'about',
                 'description' => 'Quyền xóa giới thiệu'
             ],
+
+            // Category Service permissions (Danh mục dịch vụ)
+            [
+                'name' => 'cate_service.view',
+                'display_name' => 'Xem danh mục dịch vụ',
+                'group_name' => 'cate_service',
+                'description' => 'Quyền xem danh sách danh mục dịch vụ'
+            ],
+            [
+                'name' => 'cate_service.create',
+                'display_name' => 'Tạo danh mục dịch vụ',
+                'group_name' => 'cate_service',
+                'description' => 'Quyền tạo danh mục dịch vụ mới'
+            ],
+            [
+                'name' => 'cate_service.edit',
+                'display_name' => 'Sửa danh mục dịch vụ',
+                'group_name' => 'cate_service',
+                'description' => 'Quyền chỉnh sửa danh mục dịch vụ'
+            ],
+            [
+                'name' => 'cate_service.delete',
+                'display_name' => 'Xóa danh mục dịch vụ',
+                'group_name' => 'cate_service',
+                'description' => 'Quyền xóa danh mục dịch vụ'
+            ],
+
+            // Service permissions (Dịch vụ)
+            [
+                'name' => 'service.view',
+                'display_name' => 'Xem dịch vụ',
+                'group_name' => 'service',
+                'description' => 'Quyền xem danh sách dịch vụ'
+            ],
+            [
+                'name' => 'service.create',
+                'display_name' => 'Tạo dịch vụ',
+                'group_name' => 'service',
+                'description' => 'Quyền tạo dịch vụ mới'
+            ],
+            [
+                'name' => 'service.edit',
+                'display_name' => 'Sửa dịch vụ',
+                'group_name' => 'service',
+                'description' => 'Quyền chỉnh sửa dịch vụ'
+            ],
+            [
+                'name' => 'service.delete',
+                'display_name' => 'Xóa dịch vụ',
+                'group_name' => 'service',
+                'description' => 'Quyền xóa dịch vụ'
+            ],
+
+            // Category Project permissions (Danh mục dự án)
+            [
+                'name' => 'cate_project.view',
+                'display_name' => 'Xem danh mục dự án',
+                'group_name' => 'cate_project',
+                'description' => 'Quyền xem danh sách danh mục dự án'
+            ],
+            [
+                'name' => 'cate_project.create',
+                'display_name' => 'Tạo danh mục dự án',
+                'group_name' => 'cate_project',
+                'description' => 'Quyền tạo danh mục dự án mới'
+            ],
+            [
+                'name' => 'cate_project.edit',
+                'display_name' => 'Sửa danh mục dự án',
+                'group_name' => 'cate_project',
+                'description' => 'Quyền chỉnh sửa danh mục dự án'
+            ],
+            [
+                'name' => 'cate_project.delete',
+                'display_name' => 'Xóa danh mục dự án',
+                'group_name' => 'cate_project',
+                'description' => 'Quyền xóa danh mục dự án'
+            ],
+
+            // Project permissions (Dự án)
+            [
+                'name' => 'project.view',
+                'display_name' => 'Xem dự án',
+                'group_name' => 'project',
+                'description' => 'Quyền xem danh sách dự án'
+            ],
+            [
+                'name' => 'project.create',
+                'display_name' => 'Tạo dự án',
+                'group_name' => 'project',
+                'description' => 'Quyền tạo dự án mới'
+            ],
+            [
+                'name' => 'project.edit',
+                'display_name' => 'Sửa dự án',
+                'group_name' => 'project',
+                'description' => 'Quyền chỉnh sửa dự án'
+            ],
+            [
+                'name' => 'project.delete',
+                'display_name' => 'Xóa dự án',
+                'group_name' => 'project',
+                'description' => 'Quyền xóa dự án'
+            ],
         ];
 
         foreach ($permissions as $permission) {
