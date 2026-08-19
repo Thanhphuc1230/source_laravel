@@ -26,6 +26,12 @@ use App\Listeners\Page\ClearPageCache;
 use App\Listeners\About\ClearAboutCache;
 use App\Listeners\Product\ClearProductCache;
 use App\Listeners\Slider\ClearSliderCache;
+use App\Events\Service\ServiceChanged;
+use App\Events\CateService\CateServiceChanged;
+use App\Events\Project\ProjectChanged;
+use App\Events\CateProject\CateProjectChanged;
+use App\Listeners\Service\ClearServiceCache;
+use App\Listeners\Project\ClearProjectCache;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -61,6 +67,22 @@ class EventServiceProvider extends ServiceProvider
         // News Events
         NewsChanged::class => [
             ClearNewsCache::class,
+        ],
+
+        // Service Events
+        ServiceChanged::class => [
+            ClearServiceCache::class,
+        ],
+        CateServiceChanged::class => [
+            ClearServiceCache::class,
+        ],
+
+        // Project Events
+        ProjectChanged::class => [
+            ClearProjectCache::class,
+        ],
+        CateProjectChanged::class => [
+            ClearProjectCache::class,
         ],
 
         // Page Events

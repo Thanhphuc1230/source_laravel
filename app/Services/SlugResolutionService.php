@@ -56,9 +56,21 @@ class SlugResolutionService
                 UNION ALL
                 SELECT 'cate_news' as type, id_cate_new as id, slug_vn as slug, name_vn as title
                 FROM tp_cate_news WHERE (slug_vn = ? OR slug_en = ?) AND status = 1
+                UNION ALL
+                SELECT 'service' as type, id_service as id, slug_vn as slug, name_vn as title
+                FROM tp_services WHERE (slug_vn = ? OR slug_en = ?) AND status = 1
+                UNION ALL
+                SELECT 'cate_service' as type, id_cate_service as id, slug_vn as slug, name_vn as title
+                FROM tp_cate_services WHERE (slug_vn = ? OR slug_en = ?) AND status = 1
+                UNION ALL
+                SELECT 'project' as type, id_project as id, slug_vn as slug, name_vn as title
+                FROM tp_projects WHERE (slug_vn = ? OR slug_en = ?) AND status = 1
+                UNION ALL
+                SELECT 'cate_project' as type, id_cate_project as id, slug_vn as slug, name_vn as title
+                FROM tp_cate_projects WHERE (slug_vn = ? OR slug_en = ?) AND status = 1
                 LIMIT 1
             ";
-            $params = [$slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug, $slug];
+            $params = array_fill(0, 18, $slug);
 
             $result = DB::select($query, $params);
             return $result ? (array) $result[0] : null;

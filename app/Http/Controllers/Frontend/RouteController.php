@@ -73,6 +73,18 @@ class RouteController extends Controller
                 SELECT 'cate_news' as type, id_cate_new as id, {$slugColumn} as slug, {$titleColumn} as title
                 FROM tp_cate_news WHERE ({$slugColumn} = ? OR slug_vn = ? OR slug_en = ?) AND status = 1
                 UNION ALL
+                SELECT 'service' as type, id_service as id, {$slugColumn} as slug, {$titleColumn} as title
+                FROM tp_services WHERE ({$slugColumn} = ? OR slug_vn = ? OR slug_en = ?) AND status = 1
+                UNION ALL
+                SELECT 'cate_service' as type, id_cate_service as id, {$slugColumn} as slug, {$titleColumn} as title
+                FROM tp_cate_services WHERE ({$slugColumn} = ? OR slug_vn = ? OR slug_en = ?) AND status = 1
+                UNION ALL
+                SELECT 'project' as type, id_project as id, {$slugColumn} as slug, {$titleColumn} as title
+                FROM tp_projects WHERE ({$slugColumn} = ? OR slug_vn = ? OR slug_en = ?) AND status = 1
+                UNION ALL
+                SELECT 'cate_project' as type, id_cate_project as id, {$slugColumn} as slug, {$titleColumn} as title
+                FROM tp_cate_projects WHERE ({$slugColumn} = ? OR slug_vn = ? OR slug_en = ?) AND status = 1
+                UNION ALL
                 SELECT 'page' as type, id_page as id, {$slugColumn} as slug, {$titleColumn} as title
                 FROM tp_pages WHERE ({$slugColumn} = ? OR slug_vn = ? OR slug_en = ?) AND status = 1
                 UNION ALL
@@ -81,7 +93,7 @@ class RouteController extends Controller
                 LIMIT 1
             ";
             
-            $params = array_fill(0, 19, $slug);
+            $params = array_fill(0, 31, $slug);
             $result = DB::select($query, $params);
             
             if ($result) {
@@ -114,6 +126,18 @@ class RouteController extends Controller
 
                 case 'cate_news':
                     return app(NewsController::class)->categoryNews($content['id']);
+
+                case 'service':
+                    return app(ServiceController::class)->detailService($content['id']);
+
+                case 'cate_service':
+                    return app(ServiceController::class)->categoryService($content['id']);
+
+                case 'project':
+                    return app(ProjectController::class)->detailProject($content['id']);
+
+                case 'cate_project':
+                    return app(ProjectController::class)->categoryProject($content['id']);
 
                 case 'page':
                     return app(PageController::class)->page($content['id']);
