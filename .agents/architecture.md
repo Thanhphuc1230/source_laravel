@@ -164,6 +164,10 @@ INDEX (status, stt)
 | `ChatSession` | `tp_chat_sessions` | - | Phiên chat hỗ trợ |
 | `ChatMessage` | `tp_chat_messages` | - | Tin nhắn chat |
 | `About` | `tp_abouts` | `id_about` | Giới thiệu (lưu stats JSON động) |
+| `CateService` | `tp_cate_services` | `id_cate_service` | Danh mục dịch vụ, có `services()`, `children()` |
+| `Service` | `tp_services` | `id_service` | Bài viết dịch vụ chi tiết, có `cate()` belongsTo CateService |
+| `CateProject` | `tp_cate_projects` | `id_cate_project` | Danh mục dự án, có `projects()`, `children()` |
+| `Project` | `tp_projects` | `id_project` | Bài viết dự án chi tiết, có `cate()` belongsTo CateProject |
 
 ### Quan hệ chính:
 ```
@@ -220,6 +224,10 @@ OrderStatus  →  hasMany → OrderProduct
 | Đơn hàng | `/admin/order` | `admin.order.` | `OrderController` |
 | Liên hệ | `/admin/contact` | `admin.contact.` | `ContactController` |
 | Giới thiệu | `/admin/about` | `admin.about.` | `AboutController` |
+| Danh mục dịch vụ | `/admin/cate-service` | `admin.cate-service.` | `CateServiceController` |
+| Dịch vụ | `/admin/service` | `admin.service.` | `ServiceController` |
+| Danh mục dự án | `/admin/cate-project` | `admin.cate-project.` | `CateProjectController` |
+| Dự án | `/admin/project` | `admin.project.` | `ProjectController` |
 | Người dùng | `/admin/user` | `admin.user.` | `UserController` |
 | Vai trò & Quyền | `/admin/user-role` | `admin.user-role.` | `UserRoleController` |
 | Thư viện ảnh | `/admin/gallery` | `admin.gallery.` | `GalleryController` |
