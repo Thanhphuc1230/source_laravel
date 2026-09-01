@@ -76,12 +76,21 @@ Admin có nút **"Xoá cache"** tại: Admin → Hệ thống → Xoá cache
 2. **COMMIT THEO YÊU CẦU ĐƠN LẺ:** Khi user yêu cầu *"Commit code giúp tôi"*, AI CHỈ ĐƯỢC COMMIT DUY NHẤT LẦN ĐÓ cho công việc/task hiện tại.
 3. **LUÔN HỎI LẠI Ở TASK TIẾP THEO:** Sau khi hoàn thành một task mới tiếp theo, AI KHÔNG ĐƯỢC tự động commit dựa trên lệnh cũ. AI phải dừng lại và hỏi user: *"Tôi đã hoàn thành task [Tên Task]. Bạn có muốn tôi commit các thay đổi này không?"*.
 
+## QUY TẮC SỐ 9 – QUY TRÌNH CHUYỂN ĐỔI CHỦ ĐỀ/THEME (TOPIC REBUILD)
+
+Khi người dùng yêu cầu đổi chủ đề website sang ngành hàng mới (ví dụ: Đồng hồ, Mỹ phẩm, Spa, Du lịch...):
+1. BẮT BUỘC thực thi Artisan command đầu tiên: `php artisan site:rebuild --topic="<tên_topic>"` (Để hệ thống dọn sạch media rác, reset DB và seed đúng bộ dữ liệu/hình ảnh của ngành hàng đó).
+2. SAU ĐÓ MỚI tiến hành tùy biến file Blade và CSS (`theme-style.css`).
+3. Chạy lệnh xóa cache: `php artisan optimize:clear`.
+
 ---
 
 ## CÁC FILE THAM KHẢO CHI TIẾT
 
 | File | Nội dung |
 |---|---|
+| `.agents/rules/01-architecture-boundary.md` | Ranh giới kiến trúc & quy tắc Zero-Hardcode khi làm Theme |
+| `.agents/rules/02-theme-building-process.md` | Quy trình 3 bước chuẩn hóa khởi tạo & tùy biến Theme |
 | `.agents/frontend-design.md` | Quy chuẩn thiết kế Frontend (Font, Tailwind, Scroll Animation, UI/UX) |
 | `.agents/frontend-data-map.md` | Bảng đầy đủ biến động, partials, helper functions |
 | `.agents/architecture.md` | Cấu trúc thư mục, Models, Services, Repositories |

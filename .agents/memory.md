@@ -53,11 +53,11 @@
   * Trong controller action `index()`, nếu DB trống sẽ tự động khởi tạo 1 bản ghi nháp có sẵn các dữ liệu và stats mặc định rồi redirect thẳng sang route `edit`.
 - **Multi-language Tabbed Form dùng chung**:
   * Form đa ngôn ngữ phải sử dụng tab Bootstrap 5 (`Tiếng Việt` và `Tiếng Anh (EN)`) kèm biểu tượng lá cờ tương ứng (`vietnam.png`, `usa.png`) để thu gọn giao diện, tránh làm trôi dài trang.
-  * Được triển khai tập trung trong partial [`localized-fields.blade.php`](file:///d:/laragon/www/base/source_laravel/resources/views/admin/partials/localized-fields.blade.php) bằng cách bọc toàn bộ danh sách trường đa ngôn ngữ vào trong tab panel.
+  * Được triển khai tập trung trong partial `resources/views/admin/partials/localized-fields.blade.php` bằng cách bọc toàn bộ danh sách trường đa ngôn ngữ vào trong tab panel.
   * Mỗi lần gọi partial này bắt buộc sinh mã ngẫu nhiên `$tabSuffix = uniqid()` để tránh trùng ID tab gây xung đột JS khi nhúng nhiều lần trên cùng 1 trang.
 - **Khắc phục lỗi vỡ hiển thị CKEditor trong Tab ẩn**:
   * Khi khởi tạo CKEditor 4 trong tab ẩn, editor sẽ bị lỗi vỡ giao diện (chiều rộng co về 0px hoặc mất toolbar) do Bootstrap áp dụng `display: none`.
-  * Khắc phục triệt để bằng cách ghi đè class `.tab-content-localized > .tab-pane:not(.active)` trong [`custom.min.css`](file:///d:/laragon/www/base/source_laravel/public/admin/css/custom.min.css): thay `display: none` bằng cách ẩn qua toạ độ tuyệt đối (`position: absolute; left: -9999px; height: 0; overflow: hidden; opacity: 0;`). Điều này giúp container của CKEditor vẫn giữ nguyên kích thước vật lý thật khi render.
+  * Khắc phục triệt để bằng cách ghi đè class `.tab-content-localized > .tab-pane:not(.active)` trong `public/admin/css/custom.min.css`: thay `display: none` bằng cách ẩn qua toạ độ tuyệt đối (`position: absolute; left: -9999px; height: 0; overflow: hidden; opacity: 0;`). Điều này giúp container của CKEditor vẫn giữ nguyên kích thước vật lý thật khi render.
 - **Lưu trữ Chỉ số thống kê động dạng JSON**:
   * Thay vì tạo hàng loạt cột cứng trong DB (`stat1_icon`, `stat1_value`...) gây cồng kềnh bảng, gom dữ liệu lưu vào 1 cột duy nhất kiểu `json` (cast `'array'` trong Model).
   * Cho phép upload tệp ảnh làm icon cho từng thống kê bằng cách truyền mảng file upload `stats_files[INDEX][icon]` song song với dữ liệu text. Controller tự động kiểm tra và lưu tệp vào thư mục `uploads/about/`.
