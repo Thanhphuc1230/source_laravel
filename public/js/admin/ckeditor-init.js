@@ -219,7 +219,7 @@
         ]
     };
 
-    // ─── Khởi tạo & Ghi đè sự kiện nút Hình ảnh ─────────────────────────────
+    // ─── Khởi tạo & Ghi đè sự kiện nút Hình ảnh trên Toolbar ─────────────────
     function initEditors() {
         var textareas = document.querySelectorAll('textarea[data-ckeditor]');
         if (textareas.length === 0) return;
@@ -234,25 +234,13 @@
 
             var editor = CKEDITOR.replace(id, editorConfig);
 
-            // Ghi đè hành vi nút Hình ảnh: Mở trực tiếp LFM nếu không chọn ảnh sẵn có
             editor.on('instanceReady', function () {
-                var imgCmd = editor.getCommand('image2') || editor.getCommand('image');
-                if (imgCmd) {
-                    imgCmd.exec = function () {
-                        var sel = editor.getSelection();
-                        var selectedElement = sel ? sel.getSelectedElement() : null;
-
-                        // Nếu đang nhấp vào 1 ảnh sẵn có trong bài -> Mở popup chỉnh sửa thuộc tính ảnh
-                        if (selectedElement && selectedElement.is && selectedElement.is('img')) {
-                            if (editor.plugins.image2) {
-                                editor.openDialog('image2');
-                            } else {
-                                editor.openDialog('image');
-                            }
-                        } else {
-                            // Nếu chèn ảnh mới -> Mở TRỰC TIẾP cửa sổ File Manager
-                            openDirectLfmImage(editor);
-                        }
+                // Ghi đè sự kiện nút "Image" trên Toolbar: Mở TRỰC TIẾP File Manager (1-click)
+                var imgBtn = editor.ui.get('Image');
+                if (imgBtn) {
+                    imgBtn.click = function (editorInstance) {
+                        var targetEditor = editorInstance || editor;
+                        openDirectLfmImage(targetEditor);
                     };
                 }
             });

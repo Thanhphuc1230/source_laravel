@@ -11,7 +11,7 @@ return [
     'dir' => [
         'images' => [
             'driver' => 'local',
-            'root' => public_path('uploads/upload'),
+            'root' => public_path('uploads'),
             'path' => '/',
             'shared' => true,
         ],

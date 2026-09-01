@@ -13,7 +13,7 @@
 - **Nói Không Với CDN (Local Assets)**: 100% thư viện JS/CSS, Fonts (`RemixIcon`, `Select2`, `Choices.js`, `Flatpickr`, `Toastify`, `HKGrotesk`) được tải về và lưu trữ cục bộ trong `public/admin/libs/` & `public/admin/fonts/`.
 - **Tách biệt CSS & JS (No Inline Style/Script)**: Tuân thủ quy tắc không viết CSS inline hoặc thẻ `<style>`/`<script>` trực tiếp trong file Blade.
 - **Blade Components Admin**: Trang quản trị dùng 100% Blade Components (`<x-admin.table-wrapper>`, `<x-admin.table-switch>`, `<x-admin.localized-fields>`, `<x-admin.image-upload>`).
-- **Xử lý Media & File Manager**: Quản lý upload tập trung tại `public/uploads/upload/...`, tự động convert WebP và tối ưu kích thước.
+- **Xử lý Media & File Manager**: Quản lý upload tập trung tại `public/uploads/...`, tự động convert WebP và tối ưu kích thước.
 - **Hệ thống Phân quyền (RBAC)**: Phân quyền chi tiết theo từng module và hành động với 61 permissions cho 13 modules.
 - **SEO & Multi-Language**: Hỗ trợ SEO friendly, slug tự động đa ngôn ngữ (Việt - Anh), sitemap generator.
 
@@ -74,7 +74,7 @@ source_laravel/
 │   │   └── libs/               # Local Vendor Libraries (Select2, Choices, Flatpickr, Toastify,...)
 │   ├── ckeditor/               # CKEditor 4 Full Build + Custom Styles
 │   ├── js/admin/               # Custom Admin JS (ckeditor-init.js, system-lang.js,...)
-│   └── uploads/                # Thư mục lưu trữ media & file upload (`public/uploads/upload/...`)
+│   └── uploads/                # Thư mục lưu trữ media & file upload (`public/uploads/...`)
 └── resources/
     └── views/
         ├── admin/              # Giao diện Admin
