@@ -8,8 +8,29 @@ use Illuminate\Support\Facades\Log;
 
 class DataRemovalService
 {
-    // Danh sách các field ảnh có thể có
-    private $imageFields = ['image', 'image_vn', 'image_en', 'avatar', 'logo', 'favicon'];
+    // Danh sách các field ảnh chuẩn
+    private $imageFields = [
+        'image',
+        'image_vn',
+        'image_en',
+        'image_desktop',
+        'image_desktop_vn',
+        'image_desktop_en',
+        'image_mobile',
+        'image_mobile_vn',
+        'image_mobile_en',
+        'avatar',
+        'logo',
+        'logo_footer',
+        'favicon',
+        'icon',
+        'bg',
+        'bg_header',
+        'bg_footer',
+        'background',
+        'banner',
+        'thumbnail',
+    ];
 
     public function destroyAllByUUIDs($model, $uuids, $imageFolder)
     {
@@ -70,8 +91,26 @@ class DataRemovalService
      */
     private function deleteAllImages($item, $imageFolder)
     {
-        // Xóa các ảnh đơn (image, avatar, logo, favicon)
-        foreach ($this->imageFields as $field) {
+        $fields = $this->imageFields;
+
+        // Quét động các attribute trong model để phát hiện bất kỳ trường ảnh nào
+        if (method_exists($item, 'getAttributes')) {
+            foreach ($item->getAttributes() as $attrKey => $attrVal) {
+                if ($attrKey === 'image_detail') {
+                    continue;
+                }
+                if (! in_array($attrKey, $fields)) {
+                    if (str_contains($attrKey, 'image') || str_contains($attrKey, 'avatar') || str_contains($attrKey, 'logo') || str_contains($attrKey, 'icon') || str_contains($attrKey, 'favicon') || str_contains($attrKey, 'banner') || str_contains($attrKey, 'bg')) {
+                        $fields[] = $attrKey;
+                    } elseif (is_string($attrVal) && (str_starts_with($attrVal, 'uploads/') || str_starts_with($attrVal, '/uploads/'))) {
+                        $fields[] = $attrKey;
+                    }
+                }
+            }
+        }
+
+        // Xóa các ảnh đơn
+        foreach ($fields as $field) {
             $this->deleteSingleImage($item, $field, $imageFolder);
         }
 
@@ -84,26 +123,24 @@ class DataRemovalService
      */
     private function deleteSingleImage($item, $field, $imageFolder)
     {
-        if (isset($item->$field) && $item->$field) {
-            $fileName = method_exists($item, 'getRawOriginal') ? $item->getRawOriginal($field) : $item->$field;
-            if (!$fileName) {
-                return;
-            }
+        $fileName = method_exists($item, 'getRawOriginal') ? $item->getRawOriginal($field) : ($item->$field ?? null);
+        if (! $fileName || ! is_string($fileName)) {
+            return;
+        }
 
-            if (filter_var($fileName, FILTER_VALIDATE_URL)) {
-                $path = parse_url($fileName, PHP_URL_PATH);
-                $search = "uploads/";
-                $pos = strpos($path, $search);
-                $imagePath = $pos !== false ? public_path(substr($path, $pos)) : public_path(ltrim($path, '/'));
-            } elseif (str_starts_with($fileName, 'uploads/')) {
-                $imagePath = public_path($fileName);
-            } else {
-                $imagePath = public_path("uploads/{$imageFolder}/{$fileName}");
-            }
+        if (filter_var($fileName, FILTER_VALIDATE_URL)) {
+            $path = parse_url($fileName, PHP_URL_PATH);
+            $search = "uploads/";
+            $pos = strpos($path, $search);
+            $imagePath = $pos !== false ? public_path(substr($path, $pos)) : public_path(ltrim($path, '/'));
+        } elseif (str_starts_with($fileName, 'uploads/') || str_starts_with($fileName, '/uploads/')) {
+            $imagePath = public_path(ltrim($fileName, '/'));
+        } else {
+            $imagePath = public_path("uploads/{$imageFolder}/{$fileName}");
+        }
 
-            if (File::exists($imagePath)) {
-                File::delete($imagePath);
-            }
+        if (File::exists($imagePath) && ! File::isDirectory($imagePath)) {
+            File::delete($imagePath);
         }
     }
 
@@ -117,20 +154,31 @@ class DataRemovalService
         }
 
         $rawDetail = method_exists($item, 'getRawOriginal') ? $item->getRawOriginal('image_detail') : $item->image_detail;
-        $imageDetail = json_decode($rawDetail, true);
+        if (is_string($rawDetail)) {
+            $imageDetail = json_decode($rawDetail, true);
+        } elseif (is_array($rawDetail)) {
+            $imageDetail = $rawDetail;
+        } else {
+            $imageDetail = null;
+        }
 
         if (! is_array($imageDetail)) {
             return;
         }
 
         foreach ($imageDetail as $imageName) {
-            if ($imageName) {
-                if (str_starts_with($imageName, 'uploads/')) {
-                    $imagePath = public_path($imageName);
+            if ($imageName && is_string($imageName)) {
+                if (filter_var($imageName, FILTER_VALIDATE_URL)) {
+                    $path = parse_url($imageName, PHP_URL_PATH);
+                    $search = "uploads/";
+                    $pos = strpos($path, $search);
+                    $imagePath = $pos !== false ? public_path(substr($path, $pos)) : public_path(ltrim($path, '/'));
+                } elseif (str_starts_with($imageName, 'uploads/') || str_starts_with($imageName, '/uploads/')) {
+                    $imagePath = public_path(ltrim($imageName, '/'));
                 } else {
                     $imagePath = public_path("uploads/{$imageFolder}/{$imageName}");
                 }
-                if (File::exists($imagePath)) {
+                if (File::exists($imagePath) && ! File::isDirectory($imagePath)) {
                     File::delete($imagePath);
                 }
             }

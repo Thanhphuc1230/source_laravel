@@ -54,6 +54,7 @@ class SliderController extends BaseController
     {
         $data['action'] = 'create';
         $data['nameItem'] = $this->nameItem;
+        $data['imageFolder'] = $this->imageFolder;
 
         return $this->view_admin('detail', $data);
     }

@@ -111,6 +111,10 @@ class UserController extends BaseController
         }
 
         try {
+            $rawAvatar = method_exists($user, 'getRawOriginal') ? $user->getRawOriginal('avatar') : $user->avatar;
+            if ($rawAvatar) {
+                $this->imageService->deleteImage($rawAvatar, 'users');
+            }
             $this->userRepository->delete($uuid);
             toast('Xóa người dùng thành công!', 'success');
         } catch (\Exception $e) {
@@ -135,6 +139,10 @@ class UserController extends BaseController
 
         foreach ($users as $user) {
             if ($user->level != 1 && $user->id != auth()->id()) {
+                $rawAvatar = method_exists($user, 'getRawOriginal') ? $user->getRawOriginal('avatar') : $user->avatar;
+                if ($rawAvatar) {
+                    $this->imageService->deleteImage($rawAvatar, 'users');
+                }
                 $deletableUuids[] = $user->uuid;
             }
         }

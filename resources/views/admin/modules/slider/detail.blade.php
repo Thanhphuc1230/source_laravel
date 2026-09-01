@@ -44,7 +44,7 @@
                                     @foreach ($adminLanguages as $locale)
                                         @include('admin.partials.image-upload', [
                                             'locale' => $locale,
-                                            'imageFolder' => $imageFolder,
+                                            'imageFolder' => $imageFolder ?? 'slider',
                                             'model' => $page ?? null,
                                             'base' => 'image_desktop',
                                             'label' => 'Banner Desktop',
@@ -64,7 +64,7 @@
                                     @foreach ($adminLanguages as $locale)
                                         @include('admin.partials.image-upload', [
                                             'locale' => $locale,
-                                            'imageFolder' => $imageFolder,
+                                            'imageFolder' => $imageFolder ?? 'slider',
                                             'model' => $page ?? null,
                                             'base' => 'image_mobile',
                                             'label' => 'Banner Mobile',
