@@ -15,21 +15,21 @@ class AboutSeeder extends Seeder
     {
         About::create([
             'uuid' => Str::uuid()->toString(),
-            'name_vn' => 'Giới thiệu về chúng tôi',
-            'name_en' => 'About Us',
-            'intro_vn' => 'Đội ngũ phục vụ chuyên nghiệp, tận tâm mang lại dịch vụ du lịch hoàn hảo nhất.',
-            'intro_en' => 'Professional, dedicated team bringing the most perfect travel services.',
-            'content_vn' => '<p>Chúng tôi là công ty lữ hành hàng đầu chuyên cung cấp các giải pháp tour du lịch cao cấp.</p>',
-            'content_en' => '<p>We are a leading travel agency specializing in premium tour solutions.</p>',
-            'image' => 'uploads/slider/slide_1.jpg', // Dùng tạm slide_1.jpg làm ảnh demo
-            'link' => '/lien-he.html', // Link mặc định
+            'name_vn' => 'Về Thương Hiệu AURA LUXURY',
+            'name_en' => 'About AURA LUXURY WATCHES',
+            'intro_vn' => 'Nơi quy tụ những kiệt tác đồng hồ Thụy Sĩ đỉnh cao dành cho giới thượng lưu và nhà sưu tầm.',
+            'intro_en' => 'Curating the world most exceptional Swiss timepieces for connoisseurs and collectors.',
+            'content_vn' => '<p>AURA LUXURY WATCHES là điểm đến uy tín hàng đầu tại Việt Nam cho những người đam mê đồng hồ xa xỉ. Mỗi chiếc đồng hồ trao tay khách hàng đều là tác phẩm hoàn mỹ đi kèm chứng thư kiểm định độc lập và bảo hiểm quốc tế trọn gói.</p>',
+            'content_en' => '<p>AURA LUXURY WATCHES is the premier destination in Vietnam for haute horlogerie enthusiasts. Every timepiece delivered is an authentic masterpiece accompanied by independent certification and global warranty.</p>',
+            'image' => '',
+            'link' => '/lien-he.html',
             'status' => 1,
             'stt' => 1,
             'stats' => [
-                ['icon' => 'uploads/icon/vietnam.png', 'value' => '10+', 'name_vn' => 'Năm kinh nghiệm', 'name_en' => 'Years of Experience'],
-                ['icon' => 'uploads/icon/usa.png', 'value' => '900+', 'name_vn' => 'Khách hàng & Dự án', 'name_en' => 'Clients & Projects'],
-                ['icon' => 'uploads/icon/ytb.png', 'value' => '20+', 'name_vn' => 'Giải pháp chuyên ngành', 'name_en' => 'Professional Solutions'],
-                ['icon' => 'uploads/icon/zalo.png', 'value' => '50+', 'name_vn' => 'Đối tác uy tín chất lượng', 'name_en' => 'Prestigious Partners'],
+                ['icon' => 'fa-solid fa-gem', 'value' => '100%', 'name_vn' => 'Chính Hãng 100%', 'name_en' => '100% Authentic'],
+                ['icon' => 'fa-solid fa-crown', 'value' => '15+', 'name_vn' => 'Năm Uy Tín', 'name_en' => 'Years of Excellence'],
+                ['icon' => 'fa-solid fa-award', 'value' => '5.000+', 'name_vn' => 'Khách Hàng Thượng Lưu', 'name_en' => 'VIP Clients'],
+                ['icon' => 'fa-solid fa-shield-halved', 'value' => '5 Năm', 'name_vn' => 'Bảo Hành Quốc Tế', 'name_en' => 'Global Warranty'],
             ]
         ]);
     }

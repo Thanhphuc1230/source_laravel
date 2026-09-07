@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Brand;
 use Illuminate\Support\Str;
 
 class BrandSeeder extends Seeder
@@ -15,78 +14,73 @@ class BrandSeeder extends Seeder
     {
         $brands = [
             [
-                'name_vn' => 'Marriott International',
-                'name_en' => 'Marriott International',
-                'slug_vn' => 'marriott-international',
-                'slug_en' => 'marriott-international',
-                'image_vn' => 'marriott.svg',
-                'image_en' => 'marriott.svg',
+                'name_vn' => 'Rolex',
+                'name_en' => 'Rolex',
+                'slug_vn' => 'rolex',
+                'slug_en' => 'rolex',
+                'image_vn' => '',
+                'image_en' => '',
                 'status' => 1,
                 'stt' => 1,
                 'uuid' => Str::uuid()->toString(),
             ],
             [
-                'name_vn' => 'Hilton Hotels & Resorts',
-                'name_en' => 'Hilton Hotels & Resorts',
-                'slug_vn' => 'hilton-hotels-resorts',
-                'slug_en' => 'hilton-hotels-resorts',
-                'image_vn' => 'hilton.svg',
-                'image_en' => 'hilton.svg',
+                'name_vn' => 'Patek Philippe',
+                'name_en' => 'Patek Philippe',
+                'slug_vn' => 'patek-philippe',
+                'slug_en' => 'patek-philippe',
+                'image_vn' => '',
+                'image_en' => '',
                 'status' => 1,
                 'stt' => 2,
                 'uuid' => Str::uuid()->toString(),
             ],
             [
-                'name_vn' => 'Accor Hotels Group',
-                'name_en' => 'Accor Hotels Group',
-                'slug_vn' => 'accor-hotels-group',
-                'slug_en' => 'accor-hotels-group',
-                'image_vn' => 'accor.svg',
-                'image_en' => 'accor.svg',
+                'name_vn' => 'Audemars Piguet',
+                'name_en' => 'Audemars Piguet',
+                'slug_vn' => 'audemars-piguet',
+                'slug_en' => 'audemars-piguet',
+                'image_vn' => '',
+                'image_en' => '',
                 'status' => 1,
                 'stt' => 3,
                 'uuid' => Str::uuid()->toString(),
             ],
             [
-                'name_vn' => 'InterContinental Hotels',
-                'name_en' => 'InterContinental Hotels',
-                'slug_vn' => 'intercontinental-hotels',
-                'slug_en' => 'intercontinental-hotels',
-                'image_vn' => 'intercontinental.svg',
-                'image_en' => 'intercontinental.svg',
+                'name_vn' => 'Omega',
+                'name_en' => 'Omega',
+                'slug_vn' => 'omega',
+                'slug_en' => 'omega',
+                'image_vn' => '',
+                'image_en' => '',
                 'status' => 1,
                 'stt' => 4,
                 'uuid' => Str::uuid()->toString(),
             ],
             [
-                'name_vn' => 'Vinpearl Resorts',
-                'name_en' => 'Vinpearl Resorts',
-                'slug_vn' => 'vinpearl-resorts',
-                'slug_en' => 'vinpearl-resorts',
-                'image_vn' => 'vinpearl.svg',
-                'image_en' => 'vinpearl.svg',
+                'name_vn' => 'Hublot',
+                'name_en' => 'Hublot',
+                'slug_vn' => 'hublot',
+                'slug_en' => 'hublot',
+                'image_vn' => '',
+                'image_en' => '',
                 'status' => 1,
                 'stt' => 5,
                 'uuid' => Str::uuid()->toString(),
             ],
             [
-                'name_vn' => 'Hyatt Hotels',
-                'name_en' => 'Hyatt Hotels',
-                'slug_vn' => 'hyatt-hotels',
-                'slug_en' => 'hyatt-hotels',
-                'image_vn' => 'hyatt.svg',
-                'image_en' => 'hyatt.svg',
+                'name_vn' => 'Cartier',
+                'name_en' => 'Cartier',
+                'slug_vn' => 'cartier',
+                'slug_en' => 'cartier',
+                'image_vn' => '',
+                'image_en' => '',
                 'status' => 1,
                 'stt' => 6,
                 'uuid' => Str::uuid()->toString(),
             ],
         ];
 
-        foreach ($brands as $brandData) {
-            Brand::updateOrCreate(
-                ['slug_vn' => $brandData['slug_vn']],
-                $brandData
-            );
-        }
+        \Illuminate\Support\Facades\DB::table('tp_brands')->insert($brands);
     }
 }
