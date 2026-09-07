@@ -11,9 +11,9 @@
             <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/70 to-slate-900/40"></div>
         @endif
         <div class="relative z-10 max-w-7xl mx-auto px-4 space-y-2">
-            <span class="text-xs font-bold uppercase tracking-widest" style="color: {{ $news_settings['category_color'] ?? '#b45309' }}">Cẩm nang du lịch</span>
+            <span class="text-xs font-bold uppercase tracking-widest text-gold-400">Kiến thức & Nghệ thuật chế tác</span>
             <h1 class="text-3xl font-heading font-extrabold">{{ lang($category_detail, 'name') }}</h1>
-            <p class="text-3xs text-gray-300">Tổng hợp tin tức, bí quyết du lịch hữu ích nhất dành cho bạn</p>
+            <p class="text-3xs text-gray-300">Tổng hợp tin tức, câu chuyện và nghệ thuật chế tác đồng hồ đỉnh cao</p>
         </div>
     </div>
 
@@ -82,30 +82,30 @@
                 @endif
             </div>
 
-            <!-- Right Column: Sidebar (Hot Tours & Category products) -->
+            <!-- Right Column: Sidebar (Hot Products & Categories) -->
             <div class="space-y-6">
-                <!-- Related Categories / Hot tours -->
+                <!-- Related Categories / Hot products -->
                 @if(isset($product_hot) && $product_hot->isNotEmpty())
-                    <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm space-y-4">
-                        <h3 class="font-heading font-bold text-sm text-emerald-950 border-b border-gray-100 pb-3 flex items-center">
-                            <i class="fa-solid fa-fire text-red-500 mr-2"></i>
-                            <span>Tour nổi bật nhất</span>
+                    <div class="bg-white rounded-2xl border border-slate-100 p-5 shadow-xs space-y-4">
+                        <h3 class="font-heading font-bold text-sm text-slate-900 border-b border-slate-100 pb-3 flex items-center">
+                            <i class="fa-solid fa-gem text-gold-500 mr-2"></i>
+                            <span>Sản phẩm nổi bật</span>
                         </h3>
                         <div class="space-y-4">
-                            @foreach($product_hot as $tour)
+                            @foreach($product_hot as $prod)
                                 <div class="flex items-center space-x-3 group">
-                                    <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                                        <a href="{{ route('web.resolve', ['slug' => $tour->slug_vn]) }}">
-                                            <img src="{{ asset($tour->image_vn) }}" alt="{{ $tour->name_vn }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0 flex items-center justify-center p-1">
+                                        <a href="{{ route('web.resolve', ['slug' => $prod->slug_vn]) }}" class="w-full h-full flex items-center justify-center">
+                                            <img src="{{ asset($prod->image_vn) }}" alt="{{ $prod->name_vn }}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
                                         </a>
                                     </div>
                                     <div class="space-y-0.5 min-w-0">
-                                        <h4 class="font-bold text-2xs text-emerald-950 leading-snug line-clamp-2 hover:text-emerald-700 transition-colors">
-                                            <a href="{{ route('web.resolve', ['slug' => $tour->slug_vn]) }}">
-                                                {{ $tour->name_vn }}
+                                        <h4 class="font-bold text-2xs text-slate-900 leading-snug line-clamp-2 hover:text-gold-600 transition-colors">
+                                            <a href="{{ route('web.resolve', ['slug' => $prod->slug_vn]) }}">
+                                                {{ $prod->name_vn }}
                                             </a>
                                         </h4>
-                                        <span class="text-xs font-black text-red-650 block">{{ number_format($tour->price, 0, ',', '.') }}đ</span>
+                                        <span class="text-xs font-black text-slate-900 block">{{ number_format($prod->price, 0, ',', '.') }}đ</span>
                                     </div>
                                 </div>
                             @endforeach

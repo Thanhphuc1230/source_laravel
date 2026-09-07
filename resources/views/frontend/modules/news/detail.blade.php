@@ -67,7 +67,7 @@
                 </article>
             </div>
 
-            <!-- Right Column: Sidebar (Related News & Hot Tours) -->
+            <!-- Right Column: Sidebar (Related News & Hot Products) -->
             <div class="space-y-6">
                 <!-- Related News Widget -->
                 @if(isset($related_news) && $related_news->isNotEmpty())

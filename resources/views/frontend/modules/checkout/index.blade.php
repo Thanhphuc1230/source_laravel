@@ -97,16 +97,16 @@
                             <label class="flex items-start p-4 rounded-xl border border-gray-200 cursor-pointer hover:bg-gray-50 transition-all select-none">
                                 <input type="radio" name="payment_method" value="bank_transfer" checked class="mt-1 mr-3 text-emerald-800 focus:ring-emerald-850">
                                 <div class="space-y-0.5">
-                                    <span class="text-xs font-bold text-emerald-950 block">Chuyển khoản ngân hàng</span>
-                                    <span class="text-3xs text-gray-500 leading-normal block">Thực hiện thanh toán chuyển khoản qua tài khoản ngân hàng của chúng tôi để nhận vé ngay.</span>
+                                    <span class="text-xs font-bold text-slate-900 block">Chuyển khoản ngân hàng</span>
+                                    <span class="text-3xs text-slate-500 leading-normal block">Thực hiện thanh toán chuyển khoản qua tài khoản ngân hàng của chúng tôi để xác nhận đơn hàng.</span>
                                 </div>
                             </label>
 
-                            <label class="flex items-start p-4 rounded-xl border border-gray-200 cursor-pointer hover:bg-gray-50 transition-all select-none">
-                                <input type="radio" name="payment_method" value="cash" class="mt-1 mr-3 text-emerald-800 focus:ring-emerald-850">
+                            <label class="flex items-start p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all select-none">
+                                <input type="radio" name="payment_method" value="cash" class="mt-1 mr-3 text-gold-600 focus:ring-gold-500">
                                 <div class="space-y-0.5">
-                                    <span class="text-xs font-bold text-emerald-950 block">Thanh toán tại văn phòng (Tiền mặt)</span>
-                                    <span class="text-3xs text-gray-500 leading-normal block">Đến trực tiếp văn phòng giao dịch của BASE TRAVEL để thanh toán tiền mặt.</span>
+                                    <span class="text-xs font-bold text-slate-900 block">Thanh toán tại showroom / Khi nhận hàng (COD)</span>
+                                    <span class="text-3xs text-slate-500 leading-normal block">Nhận hàng, kiểm tra sản phẩm và thanh toán trực tiếp.</span>
                                 </div>
                             </label>
 

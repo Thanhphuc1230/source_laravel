@@ -109,13 +109,13 @@
                     </div>
 
                     <div class="space-y-3">
-                        <a href="{{ route('web.checkout') }}" class="w-full bg-emerald-950 hover:bg-emerald-900 text-white font-bold py-3.5 rounded-xl transition-all duration-300 shadow-md hover:scale-102 flex items-center justify-center space-x-2">
+                        <a href="{{ route('web.checkout') }}" class="w-full bg-slate-900 hover:bg-gold-500 text-white font-bold py-3.5 rounded-xl transition-all duration-300 shadow-md hover:scale-102 flex items-center justify-center space-x-2">
                             <span>Tiến hành thanh toán</span>
                             <i class="fa-solid fa-chevron-right text-3xs"></i>
                         </a>
-                        <a href="{{ route('web.home') }}" class="w-full bg-gray-50 hover:bg-gray-100 border border-gray-200 text-emerald-950 font-bold py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2">
+                        <a href="{{ route('web.home') }}" class="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 font-bold py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2">
                             <i class="fa-solid fa-arrow-left text-xs"></i>
-                            <span>Tiếp tục chọn Tour</span>
+                            <span>Tiếp tục mua sắm</span>
                         </a>
                     </div>
                 </div>

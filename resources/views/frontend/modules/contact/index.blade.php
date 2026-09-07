@@ -105,8 +105,8 @@
                         </div>
 
                         <div>
-                            <label class="block text-3xs font-extrabold text-gray-500 uppercase mb-1">Tiêu đề liên hệ <span class="text-red-500">*</span></label>
-                            <input type="text" name="subject" value="{{ old('subject') }}" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-600 placeholder-gray-400 @error('subject') is-invalid @enderror" placeholder="Ví dụ: Đăng ký tư vấn tour, phản hồi dịch vụ...">
+                            <label class="block text-3xs font-extrabold text-slate-500 uppercase mb-1">Tiêu đề liên hệ <span class="text-red-500">*</span></label>
+                            <input type="text" name="subject" value="{{ old('subject') }}" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-gold-500 placeholder-slate-400 @error('subject') is-invalid @enderror" placeholder="Ví dụ: Tư vấn sản phẩm, đặt hàng, hỗ trợ bảo hành...">
                             @error('subject')
                                 <span class="text-red-550 text-3xs mt-1 block">{{ $message }}</span>
                             @enderror
