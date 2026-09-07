@@ -4,6 +4,18 @@
 
 ---
 
+## 0. ĐỊNH HƯỚNG PHONG CÁCH "LIGHT LUXURY & MODERN RETAIL" (TIÊU CHUẨN MẶC ĐỊNH)
+
+- **Nền chủ đạo:** Sáng thoáng (`bg-[#F9FAFB]` hoặc `bg-white`), điểm xuyết các mảng viền và nền phụ nhẹ nhàng (`bg-slate-50`, `border-slate-100`) tạo chiều sâu tinh tế, sạch sẽ và thoáng đãng.
+- **Tone màu nhấn (Accent/Primary):** Dùng màu Đen Vàng Kim (`#1A1A1A` kết hợp Vàng Gold `#C5A880` / `#D4AF37`) hoặc Đen Xám Luxury (`#1F2937`) nổi bật trên nền trắng/sáng để tạo cảm giác cao cấp, tinh xảo, thanh lịch và dễ quan sát.
+- **Typography & Phân cấp chữ:**
+  - Tiêu đề (`h1`-`h6`): Dùng font serif sang trọng (như `Playfair Display`) hoặc sans-serif đậm nổi bật (`Montserrat`, `Plus Jakarta Sans`, `Inter`).
+  - Nội dung/Mô tả: Sử dụng màu xám đậm chuẩn mực (`text-slate-700`, `text-slate-600`), đảm bảo độ tương phản cao, dễ đọc.
+- **Card sản phẩm:** Hiệu ứng hover mượt mà (`hover:-translate-y-1 hover:shadow-xl transition-all duration-300 ease-in-out`), nền card trắng tinh tế kết hợp viền mỏng (`border border-slate-100 hover:border-slate-300`).
+- **Ảnh sản phẩm:** Bắt buộc dùng `aspect-square` (tỉ lệ 1:1), `object-cover` hoặc `object-contain` có padding nhẹ (`p-3` hoặc `p-4`) để sản phẩm luôn nằm trọn vẹn, nổi bật và sắc nét trên nền sáng.
+
+---
+
 ## 1. TYPOGRAPHY & FONTS (WORDPRESS STYLE)
 
 Tất cả các file CSS/Tailwind phải cấu hình font family theo chuẩn:

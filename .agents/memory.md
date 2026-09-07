@@ -11,6 +11,7 @@
 - **Icon Safety:** Tuyệt đối ghi đúng class FontAwesome (`fas fa-...`, `fab fa-...`) hoặc SVG Inline để tránh lỗi ô vuông.
 - **Animation:** Dùng Intersection Observer JS (`.scroll-anim.fade-up`) tạo hiệu ứng cuộn mượt.
 - **Mobile Grid:** Sản phẩm & Tin tức luôn chia 2 cột trên Mobile (`grid-cols-2`).
+- **Không dùng Dark Theme nguyên khối cho bán lẻ:** Tuyệt đối không dùng Dark Theme nguyên khối (nền đen tuyền) cho các website bán lẻ commercial trừ khi người dùng yêu cầu riêng. Mặc định ưu tiên Light Modern Premium Design để tối ưu trải nghiệm mua sắm.
 
 ---
 
