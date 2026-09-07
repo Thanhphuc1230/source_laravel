@@ -51,77 +51,51 @@
     {{-- Schema JSON-LD --}}
     <!-- STYLESHEETS -->
     <link rel="stylesheet" href="{{ asset('css/image-flip.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/theme-style.css') }}">
 
-<!-- Google Fonts -->
+<!-- Google Fonts (Playfair Display & Montserrat & Plus Jakarta Sans) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- FontAwesome 6 Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Tailwind CSS Play CDN (V4 style configuration) -->
+<!-- Tailwind CSS Play CDN (Luxury Dark & Gold configuration) -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
     tailwind.config = {
         theme: {
             extend: {
                 colors: {
-                    emerald: {
-                        50: '#f0fdf4',
-                        100: '#dcfce7',
-                        200: '#bbf7d0',
-                        300: '#86efac',
-                        400: '#4ade80',
-                        500: '#22c55e',
-                        600: '#16a34a',
-                        700: '#15803d',
-                        800: '#166534',
-                        900: '#14532d',
-                        950: '#064e3b', // Deep green accent
+                    dark: {
+                        950: '#0A0A0A',
+                        900: '#0F0F0F', // Deep luxury background
+                        850: '#141414',
+                        800: '#181818', // Card background
+                        700: '#222222', // Hover surface
+                        600: '#2A2A2A', // Border color
                     },
                     gold: {
-                        50: '#fffbeb',
-                        100: '#fef3c7',
-                        200: '#fde68a',
-                        300: '#fcd34d',
-                        400: '#fbbf24',
-                        500: '#f59e0b', // Amber/gold highlight
-                        600: '#d97706',
-                        700: '#b45309',
-                        800: '#92400e',
-                        900: '#78350f',
+                        50: '#fffdf5',
+                        100: '#fef9e7',
+                        200: '#fcf0c3',
+                        300: '#f9e494',
+                        400: '#f3d258',
+                        500: '#D4AF37', // Royal Gold Metallic
+                        600: '#c59d29',
+                        700: '#a37b1c',
+                        800: '#84601b',
+                        900: '#6f4f1a',
+                        950: '#422c09',
                     }
                 },
                 fontFamily: {
-                    sans: ['Inter', 'sans-serif'],
-                    heading: ['Montserrat', 'sans-serif'],
+                    sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                    serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                    heading: ['"Playfair Display"', 'Montserrat', 'serif'],
                 }
             }
         }
     }
 </script>
-
-<style>
-    :root {
-        --primary-color: #064e3b;
-        --accent-color: #f59e0b;
-        --font-heading: 'Montserrat', sans-serif;
-        --font-body: 'Inter', sans-serif;
-    }
-    body {
-        font-family: var(--font-body);
-    }
-    h1, h2, h3, h4, h5, h6 {
-        font-family: var(--font-heading);
-    }
-    .zoom-effect {
-        overflow: hidden;
-    }
-    .zoom-effect img {
-        transition: transform 0.5s ease;
-    }
-    .zoom-effect:hover img {
-        transform: scale(1.06);
-    }
-</style>

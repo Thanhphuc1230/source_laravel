@@ -1,27 +1,33 @@
-<!-- Floating Contact Sidebar (Fixed Bottom-Left) -->
-<div class="fixed left-4 bottom-10 md:bottom-20 z-50 flex flex-col space-y-4">
+<!-- Floating Contact Buttons (Luxury Dark & Gold) -->
+<div class="fixed right-5 bottom-8 z-50 flex flex-col space-y-3">
+    @if(!empty($web->phone))
     <!-- Hotline Call Button -->
-    <a href="tel:{{ $web->phone ?? '18006700' }}" class="group relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-red-500 text-white shadow-lg hover:scale-110 transition-transform duration-300">
-        <span class="absolute inset-0 rounded-full bg-red-500/30 animate-ping"></span>
-        <i class="fa-solid fa-phone text-lg md:text-xl"></i>
-        <span class="absolute left-16 bg-red-650 text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md whitespace-nowrap pointer-events-none">
-            Gọi Hotline: {{ $web->phone ?? '1800 6700' }}
+    <a href="tel:{{ $web->phone }}" class="group relative flex items-center justify-center w-12 h-12 md:w-13 md:h-13 rounded-full bg-gold-gradient text-dark-950 shadow-2xl hover:scale-110 transition-all duration-300 gold-border-glow">
+        <span class="absolute inset-0 rounded-full bg-gold-400/40 animate-ping"></span>
+        <i class="fa-solid fa-phone text-base md:text-lg"></i>
+        <span class="absolute right-15 bg-dark-850 border border-gold-500/40 text-gold-400 text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-2xl whitespace-nowrap pointer-events-none">
+            Hotline: {{ $web->phone }}
         </span>
     </a>
+    @endif
 
+    @if(!empty($web->zalo))
     <!-- Zalo Chat Button -->
-    <a href="{{ $web->zalo ?? 'https://zalo.me' }}" target="_blank" class="group relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#0084FF] text-white shadow-lg hover:scale-110 transition-transform duration-300">
-        <i class="fa-solid fa-comments text-lg md:text-xl"></i>
-        <span class="absolute left-16 bg-[#0084FF] text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md whitespace-nowrap pointer-events-none">
-            Chat Zalo tư vấn
+    <a href="{{ $web->zalo }}" target="_blank" class="group relative flex items-center justify-center w-12 h-12 md:w-13 md:h-13 rounded-full bg-dark-850 border border-gold-500/40 text-gold-400 shadow-2xl hover:border-gold-500 hover:bg-dark-700 hover:scale-110 transition-all duration-300">
+        <i class="fa-solid fa-comments text-base md:text-lg"></i>
+        <span class="absolute right-15 bg-dark-850 border border-gold-500/40 text-gold-400 text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-2xl whitespace-nowrap pointer-events-none">
+            Tư vấn VIP Zalo
         </span>
     </a>
+    @endif
 
+    @if(!empty($web->facebook))
     <!-- Facebook Messenger Button -->
-    <a href="{{ $web->facebook ?? 'https://m.me' }}" target="_blank" class="group relative flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#1877F2] text-white shadow-lg hover:scale-110 transition-transform duration-300">
-        <i class="fa-brands fa-facebook-messenger text-lg md:text-xl"></i>
-        <span class="absolute left-16 bg-[#1877F2] text-white text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-md whitespace-nowrap pointer-events-none">
-            Facebook Fanpage
+    <a href="{{ $web->facebook }}" target="_blank" class="group relative flex items-center justify-center w-12 h-12 md:w-13 md:h-13 rounded-full bg-dark-850 border border-gold-500/40 text-gold-400 shadow-2xl hover:border-gold-500 hover:bg-dark-700 hover:scale-110 transition-all duration-300">
+        <i class="fa-brands fa-facebook-messenger text-base md:text-lg"></i>
+        <span class="absolute right-15 bg-dark-850 border border-gold-500/40 text-gold-400 text-xs font-bold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-2xl whitespace-nowrap pointer-events-none">
+            Messenger VIP
         </span>
     </a>
+    @endif
 </div>

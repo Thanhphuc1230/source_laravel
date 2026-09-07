@@ -1,0 +1,267 @@
+/**
+ * =========================================================================
+ * THEME STYLING: LIGHT LUXURY WATCH RETAIL (ĐỒNG HỒ CAO CẤP - BẢN SÁNG)
+ * Phong cách: Nền Sáng Thoáng - Sang Trọng - Tinh Tế - Mượt Mà
+ * =========================================================================
+ */
+
+:root {
+    /* Color Palette */
+    --color-bg-main: #FAFAFA;          /* Light Airy Background */
+    --color-bg-surface: #FFFFFF;       /* Pure White Surface */
+    --color-bg-subtle: #F8FAFC;        /* Subtle Light Slate Surface */
+    --color-primary: #111111;          /* Premium Pitch Black */
+    --color-primary-dark: #0A0A0A;
+    
+    --color-gold: #D4AF37;             /* Royal Gold Metallic */
+    --color-gold-hover: #B8973A;       /* Refined Deep Gold */
+    --color-gold-light: #FBF5E5;       /* Soft Warm Gold Wash */
+    --color-gold-gradient: linear-gradient(135deg, #DFBA49 0%, #C5A028 50%, #9E7D17 100%);
+    --color-gold-badge: linear-gradient(135deg, #FDF8ED 0%, #F5E8C7 100%);
+
+    --color-text-main: #111111;        /* Crisp Charcoal Heading Text */
+    --color-text-body: #475569;        /* Soft Slate Body Text */
+    --color-text-muted: #64748B;       /* Secondary Muted Text */
+    --color-text-dim: #94A3B8;         /* Subtle Border / Icon Color */
+    
+    --color-border: #E2E8F0;          /* Clean Border */
+    --color-border-subtle: #F1F5F9;   /* Very Soft Border */
+    --color-border-gold: rgba(212, 175, 55, 0.4);
+
+    /* Typography */
+    --font-heading: 'Playfair Display', 'Montserrat', serif;
+    --font-sans: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.02);
+    --shadow-card-hover: 0 20px 35px -10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-gold-glow: 0 0 20px rgba(212, 175, 55, 0.2);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================================================================
+   Base & Typography
+   ========================================================================= */
+body {
+    background-color: var(--color-bg-main);
+    color: var(--color-text-body);
+    font-family: var(--font-sans);
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: var(--font-heading);
+    color: var(--color-text-main);
+    letter-spacing: 0.01em;
+}
+
+/* =========================================================================
+   Gold Gradients & Metallic Accents
+   ========================================================================= */
+.text-gold-gradient {
+    background: var(--color-gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.bg-gold-gradient {
+    background: var(--color-gold-gradient);
+}
+
+.gold-divider {
+    height: 2px;
+    background: var(--color-gold-gradient);
+    width: 50px;
+    margin: 12px auto;
+    border-radius: 2px;
+}
+
+/* =========================================================================
+   Luxury Buttons
+   ========================================================================= */
+.btn-gold {
+    background: var(--color-gold-gradient);
+    color: #FFFFFF;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.75rem 1.75rem;
+    border-radius: 9999px;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+    filter: brightness(1.05);
+}
+
+.btn-outline-gold {
+    background: transparent;
+    color: var(--color-gold);
+    border: 1px solid var(--color-gold);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.75rem 1.75rem;
+    border-radius: 9999px;
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-outline-gold:hover {
+    background: var(--color-gold);
+    color: #FFFFFF;
+    box-shadow: 0 4px 18px rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-dark-luxury {
+    background: var(--color-primary);
+    color: #FFFFFF;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0.75rem 1.75rem;
+    border-radius: 9999px;
+    transition: var(--transition-smooth);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-dark-luxury:hover {
+    background: var(--color-gold);
+    color: #FFFFFF;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+}
+
+/* =========================================================================
+   Light Luxury Cards & Hover Effects
+   ========================================================================= */
+.luxury-card {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-soft);
+}
+
+.luxury-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-border-gold);
+    box-shadow: var(--shadow-card-hover);
+}
+
+.zoom-container {
+    overflow: hidden;
+    position: relative;
+}
+
+.zoom-container img {
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.luxury-card:hover .zoom-container img {
+    transform: scale(1.06);
+}
+
+/* =========================================================================
+   Header & Navigation (Light Luxury)
+   ========================================================================= */
+.nav-link-luxury {
+    color: #334155;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding-bottom: 0.35rem;
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.nav-link-luxury:hover,
+.nav-link-luxury.active {
+    color: var(--color-gold);
+}
+
+.nav-link-luxury::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--color-gold-gradient);
+    transition: width 0.3s ease, left 0.3s ease;
+    border-radius: 2px;
+}
+
+.nav-link-luxury:hover::after,
+.nav-link-luxury.active::after {
+    width: 100%;
+    left: 0;
+}
+
+/* =========================================================================
+   Scroll Animations (Intersection Observer)
+   ========================================================================= */
+.scroll-anim {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.scroll-anim.fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+}
+
+.scroll-anim.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.scroll-anim.zoom-in {
+    transform: scale(0.95);
+}
+
+.scroll-anim.zoom-in.is-visible {
+    transform: scale(1);
+}
+
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+
+/* =========================================================================
+   Custom Scrollbar
+   ========================================================================= */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F8FAFC;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #D4AF37;
+}

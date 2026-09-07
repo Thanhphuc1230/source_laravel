@@ -4,7 +4,7 @@
     @include('frontend.partials.head')
     @yield('styles')
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased font-sans flex flex-col min-h-screen">
+<body class="bg-[#FAFAFA] text-slate-800 antialiased font-sans flex flex-col min-h-screen selection:bg-gold-500 selection:text-white">
 
     <!-- Header Navbar -->
     @include('frontend.partials.header')
