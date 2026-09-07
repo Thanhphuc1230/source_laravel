@@ -65,9 +65,11 @@ php artisan migrate
 - ✅ `map` trong SystemSeeder: embed URL Google Maps đầy đủ
 
 ```bash
+# Lệnh chuẩn tự động (Dọn sạch media rác, reset DB & tải demo WebP theo chủ đề):
+php artisan site:rebuild --topic="<tên_topic>"
+
+# Hoặc seed thủ công:
 php artisan db:seed
-# Hoặc reset toàn bộ:
-php artisan migrate:fresh --seed
 ```
 
 ---

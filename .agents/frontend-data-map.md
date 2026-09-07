@@ -100,17 +100,18 @@ Không có biến riêng — **toàn bộ lấy từ `$web`** (toàn cục).
 
 ---
 
-## 5. Ánh xạ Partials → Biến sử dụng
+## 5. Ánh xạ Components & Partials → Biến sử dụng
 
-| File Partial | Biến cần dùng |
-|---|---|
-| `partials/head.blade.php` | `$web->favicon`, `$web->meta_name`, `@yield('module')`, `@yield('description')`, `@yield('keywords')`, `@yield('images')` |
-| `partials/header.blade.php` | `$web->phone`, `$web->email`, `$web->address`, `asset($web->logo)`, `$web->name_vn`, `$cate_product`, `$menu`, `$cart_count` |
-| `partials/header-mobi.blade.php` | `asset($web->logo)`, `$web->name_vn`, `$cart_count` |
-| `partials/footer.blade.php` | `lang($web, 'footer')`, `$web->address`, `$web->phone`, `$web->map`, `$web->facebook`, `$web->youtube`, `$web->twitter`, `$web->name_vn`, `$footer_pages` (loop) |
-| `partials/slider.blade.php` | `$sliders` → loop `$slide->image` |
-| `partials/buttons.blade.php` | `$web->phone` (nút hotline/Zalo nổi) |
-| `partials/script.blade.php` | Không cần biến — chứa JS slider autoplay, AJAX cart, back-to-top |
+| File Component / Partial | Biến cần dùng | Mô tả chức năng |
+|---|---|---|
+| `components/product-card.blade.php` | `$product` (Object sản phẩm) | Thẻ card sản phẩm bán lẻ chuẩn tỷ lệ 1:1, badge Hot, hover bóng đổ |
+| `partials/head.blade.php` | `$web->favicon`, `$web->meta_name`, `@yield('module')`, `@yield('description')`, `@yield('keywords')`, `@yield('images')` | Thẻ meta, SEO, font Google, Tailwind config và stylesheet |
+| `partials/header.blade.php` | `$web->phone`, `$web->email`, `$web->address`, `asset($web->logo)`, `$web->name_vn`, `$cate_product`, `$menu`, `$cart_count` | Header navigation bar động hoàn toàn |
+| `partials/footer.blade.php` | `lang($web, 'footer')`, `$web->address`, `$web->phone`, `$web->map`, `$web->facebook`, `$web->youtube`, `$web->twitter`, `$web->name_vn`, `$footer_pages` (loop) | Footer chân trang đa cột, newsletter form |
+| `partials/slider.blade.php` | `$sliders` → loop `$slide->image` | Banner carousel chuyển động mượt mà |
+| `partials/brand.blade.php` | `$brands` (loop) | Showroom logo các thương hiệu đối tác |
+| `partials/contact_buttons.blade.php` | `$web->phone`, `$web->zalo` | Nút liên hệ nổi: Hotline (Đỏ quầng sóng), Zalo (Xanh), Move to Top (Navy) |
+| `partials/script.blade.php` | Không cần biến | JS cuộn trang `scroll-animate.js`, image flip, stack scripts |
 
 ---
 
