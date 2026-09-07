@@ -12,6 +12,7 @@
 - **Animation:** Dùng Intersection Observer JS (`.scroll-anim.fade-up`) tạo hiệu ứng cuộn mượt.
 - **Mobile Grid:** Sản phẩm & Tin tức luôn chia 2 cột trên Mobile (`grid-cols-2`).
 - **Không dùng Dark Theme nguyên khối cho bán lẻ:** Tuyệt đối không dùng Dark Theme nguyên khối (nền đen tuyền) cho các website bán lẻ commercial trừ khi người dùng yêu cầu riêng. Mặc định ưu tiên Light Modern Premium Design để tối ưu trải nghiệm mua sắm.
+- **Tập trung Asset (Quy tắc số 10):** Tuyệt đối không tạo các file `.js`/`.css` lẻ tẻ cho từng component nhỏ (như `back-to-top.js`). Mọi JS UI/UX gom vào `main.js` hoặc `script.blade.php`; CSS tùy biến viết vào `theme-style.css`; các nút UI nổi tái sử dụng tập trung trong `buttons.blade.php` (hoặc `contact_buttons.blade.php`). Ưu tiên Vanilla JS ngắn gọn và Tailwind CSS.
 
 ---
 

@@ -85,6 +85,17 @@ Khi người dùng yêu cầu đổi chủ đề website sang ngành hàng mới
 
 ---
 
+## QUY TẮC SỐ 10 – QUY TẮC TẬP TRUNG ASSET (KHÔNG TẠO FILE JS/CSS RÁC)
+
+- **Cấm phân mảnh File:** Tuyệt đối KHÔNG TẠO thêm các file `.js` hoặc `.css` lẻ cho từng component nhỏ (ví dụ: KHÔNG tạo `back-to-top.js`, `cart-fix.js`, `popup.js`).
+- **Gom về File chuẩn:** 
+  - Mọi JS tương tác UI/UX phải viết nối tiếp vào `public/frontend/js/main.js` (hoặc `resources/views/frontend/partials/script.blade.php`).
+  - Mọi CSS tùy biến phải viết vào `public/frontend/css/theme-style.css`.
+- **Tái sử dụng Partials:** Các phần tử UI nổi (như nút Cuộn lên đầu trang, Hotline, Zalo) BẮT BUỘC nằm chung trong `resources/views/frontend/partials/buttons.blade.php`, không tạo file Blade mới.
+- **Tối giản Code:** Ưu tiên dùng Vanilla JS ngắn gọn hoặc Tailwind CSS classes thay vì viết thêm các thư viện/script cồng kềnh.
+
+---
+
 ## CÁC FILE THAM KHẢO CHI TIẾT
 
 | File | Nội dung |
